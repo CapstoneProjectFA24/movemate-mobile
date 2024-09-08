@@ -25,6 +25,7 @@ class AppRouter extends _$AppRouter {
         // auth
         AutoRoute(
           page: SignInScreenRoute.page,
+      
         ),
         AutoRoute(
           page: SignUpScreenRoute.page,
@@ -32,7 +33,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình Onboarding
         AutoRoute(
           page: OnboardingScreenRoute.page,
-          initial: true,
+              initial: true,
 
         ),
         AutoRoute(

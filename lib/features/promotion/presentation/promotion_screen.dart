@@ -1,41 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:movemate/features/promotion/presentation/promotion_list.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/utils/commons/widgets/promotion_layout/widget/promotion_list.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
-@RoutePage()
-class PromotionScreen extends StatefulWidget {
+class PromotionScreen extends HookConsumerWidget {
   const PromotionScreen({super.key});
 
   @override
-  State<PromotionScreen> createState() => _PromotionScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tabController = useTabController(initialLength: 4);
 
-class _PromotionScreenState extends State<PromotionScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+    List<String> tabs = ["Tất cả", "Sale 1", "Sale 2", "Sale 3"];
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).unfocus();
-    });
-  }
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusScope.of(context).unfocus();
+      });
+      return null;
+    }, []);
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.orange,
+        backgroundColor: AssetsConstants.primaryMain,
         elevation: 0,
         title: const Text(
           'Deals',
@@ -44,44 +32,48 @@ class _PromotionScreenState extends State<PromotionScreen>
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
             color: Colors.white,
             child: TabBar(
-              controller: _tabController,
+              controller: tabController,
               indicatorColor: Colors.orange,
               indicatorWeight: 2,
               labelColor: Colors.orange,
               unselectedLabelColor: Colors.grey,
-              tabs: const [
-                Tab(text: 'All'),
-                Tab(text: 'Flights'),
-                Tab(text: 'Trains'),
-                Tab(text: 'Hotels'),
-              ],
+              tabs: tabs.map((tab) => Tab(text: tab)).toList(),
             ),
           ),
         ),
       ),
       body: TabBarView(
-        controller: _tabController,
-        children: [
-          const PromotionList(),
-          _buildTabContent('Flights Deals'),
-          _buildTabContent('Trains Deals'),
-          _buildTabContent('Hotels Deals'),
+        controller: tabController,
+        children: const [
+          PromotionList(),
+          _TabContent(content: 'Flights Deals'),
+          _TabContent(content: 'Trains Deals'),
+          _TabContent(content: 'Hotels Deals'),
         ],
       ),
     );
   }
+}
 
-  Widget _buildTabContent(String content) {
+class _TabContent extends StatelessWidget {
+  final String content;
+
+  const _TabContent({required this.content});
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Text(
         content,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

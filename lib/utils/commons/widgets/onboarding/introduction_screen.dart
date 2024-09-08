@@ -50,7 +50,7 @@ class _IntroScreenOnboardingState extends State<IntroScreenOnboarding> {
                       alignment: Alignment.topRight,
                       child: TextButton(
                         onPressed: widget.onTapSkipButton,
-                        child: Text('Skip', style: widget.skipTextStyle),
+                        child: Text('Bỏ qua', style: widget.skipTextStyle),
                       ),
                     ),
                   ],
