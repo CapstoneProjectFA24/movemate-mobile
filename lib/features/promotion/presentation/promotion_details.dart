@@ -172,7 +172,8 @@ class PromotionDetails extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.local_offer, size: 14, color: Colors.blue),
+                      const Icon(Icons.local_offer,
+                          size: 14, color: Colors.blue),
                       const SizedBox(width: 4),
                       Text(
                         code,
