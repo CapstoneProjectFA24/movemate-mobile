@@ -35,10 +35,26 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const OrderScreen(),
       );
     },
+    PackageDetailScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PackageDetailScreen(),
+      );
+    },
     ProfileScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileScreen(),
+      );
+    },
+    PromotionDetailScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<PromotionDetailScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PromotionDetailScreen(
+          key: args.key,
+          promotion: args.promotion,
+        ),
       );
     },
     PromotionScreenRoute.name: (routeData) {
@@ -130,6 +146,20 @@ class OrderScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PackageDetailScreen]
+class PackageDetailScreenRoute extends PageRouteInfo<void> {
+  const PackageDetailScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          PackageDetailScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PackageDetailScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProfileScreen]
 class ProfileScreenRoute extends PageRouteInfo<void> {
   const ProfileScreenRoute({List<PageRouteInfo>? children})
@@ -141,6 +171,45 @@ class ProfileScreenRoute extends PageRouteInfo<void> {
   static const String name = 'ProfileScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PromotionDetailScreen]
+class PromotionDetailScreenRoute
+    extends PageRouteInfo<PromotionDetailScreenRouteArgs> {
+  PromotionDetailScreenRoute({
+    Key? key,
+    required PromotionModel promotion,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PromotionDetailScreenRoute.name,
+          args: PromotionDetailScreenRouteArgs(
+            key: key,
+            promotion: promotion,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PromotionDetailScreenRoute';
+
+  static const PageInfo<PromotionDetailScreenRouteArgs> page =
+      PageInfo<PromotionDetailScreenRouteArgs>(name);
+}
+
+class PromotionDetailScreenRouteArgs {
+  const PromotionDetailScreenRouteArgs({
+    this.key,
+    required this.promotion,
+  });
+
+  final Key? key;
+
+  final PromotionModel promotion;
+
+  @override
+  String toString() {
+    return 'PromotionDetailScreenRouteArgs{key: $key, promotion: $promotion}';
+  }
 }
 
 /// generated route for

@@ -1,30 +1,21 @@
 // promotion_card.dart
 
 import 'package:flutter/material.dart';
+import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
 
 class PromotionCard extends StatelessWidget {
-  final String title;
-  final String discount;
-  final String description;
-  final String code;
-  final String imagePath;
-  final Color bgcolor;
+  final PromotionModel promotion;
 
   const PromotionCard({
     super.key,
-    required this.title,
-    required this.discount,
-    required this.description,
-    required this.code,
-    required this.imagePath,
-    required this.bgcolor,
+    required this.promotion,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: bgcolor,
+        color: promotion.bgcolor,
         borderRadius: BorderRadius.circular(12),
       ),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -40,7 +31,7 @@ class PromotionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        promotion.title,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,
@@ -48,7 +39,7 @@ class PromotionCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        discount,
+                        promotion.discount,
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -57,7 +48,7 @@ class PromotionCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        description,
+                        promotion.description,
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.white,
@@ -72,7 +63,7 @@ class PromotionCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          code,
+                          promotion.code,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.blue,
@@ -94,7 +85,7 @@ class PromotionCard extends StatelessWidget {
                 bottomRight: Radius.circular(12),
               ),
               child: Image.asset(
-                imagePath,
+                promotion.imagePath,
                 width: 160,
                 height: 160,
                 fit: BoxFit.fill,

@@ -1,38 +1,25 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
-class PromotionDetails extends StatelessWidget {
-  final String title;
-  final String discount;
-  final String description;
-  final String code;
-  final String imagePath;
-  final Color bgcolor;
-  final String promoPeriod;
-  final String minTransaction;
-  final String type;
-  final String destination;
 
-  const PromotionDetails({
+@RoutePage()
+class PromotionDetailScreen extends StatelessWidget {
+  final PromotionModel promotion;
+
+  const PromotionDetailScreen({
     super.key,
-    required this.title,
-    required this.discount,
-    required this.description,
-    required this.code,
-    required this.imagePath,
-    required this.bgcolor,
-    required this.promoPeriod,
-    required this.minTransaction,
-    required this.type,
-    required this.destination,
+    required this.promotion,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Voucher Details'),
-        backgroundColor: bgcolor,
+        title: const Text('Chi tiết khuyến mãi'),
+        backgroundColor: AssetsConstants.primaryMain,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -45,7 +32,7 @@ class PromotionDetails extends StatelessWidget {
               const SizedBox(height: 16),
               // Promotion Description
               Text(
-                'Get a Discount up to $discount on domestic flights, maximum discount \$30.',
+                "Get a Discount up to ${promotion.discount} on domestic flights, maximum discount \$30.",
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -54,10 +41,8 @@ class PromotionDetails extends StatelessWidget {
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
               const SizedBox(height: 16),
-              // Refined Promo Details Card
               buildDetailCard(),
               const SizedBox(height: 16),
-              // Voucher Code Section
               const Text(
                 'Voucher Code',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -72,13 +57,13 @@ class PromotionDetails extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(code,
+                    Text(promotion.code,
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     IconButton(
                       icon: const Icon(Icons.copy),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: code));
+                        Clipboard.setData(ClipboardData(text: promotion.code));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Promo code copied to clipboard!')),
@@ -94,14 +79,14 @@ class PromotionDetails extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Clipboard.setData(ClipboardData(text: code));
+                    Clipboard.setData(ClipboardData(text: promotion.code));
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Promo code copied to clipboard!')),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: bgcolor,
+                    backgroundColor: promotion.bgcolor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -136,7 +121,7 @@ class PromotionDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  promotion.title,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
@@ -145,7 +130,7 @@ class PromotionDetails extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  discount,
+                  promotion.discount,
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -154,7 +139,7 @@ class PromotionDetails extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  description,
+                  promotion.description,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.black54,
@@ -175,7 +160,7 @@ class PromotionDetails extends StatelessWidget {
                       Icon(Icons.local_offer, size: 14, color: Colors.blue),
                       const SizedBox(width: 4),
                       Text(
-                        code,
+                        promotion.code,
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.blue,
@@ -194,7 +179,7 @@ class PromotionDetails extends StatelessWidget {
               borderRadius:
                   BorderRadius.circular(8), // Rounded corners for image
               child: Image.asset(
-                imagePath,
+                promotion.imagePath,
                 fit: BoxFit.cover,
                 height: 100, // Fixed height to maintain aspect ratio
               ),
@@ -224,16 +209,16 @@ class PromotionDetails extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                detailItem('Promo Period', promoPeriod),
-                detailItem('Min. Transaction', '\$$minTransaction'),
+                detailItem('Promo Period', promotion.propromoPeriod!),
+                detailItem('Min. Transaction', '\$${promotion.minTransaction}'),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                detailItem('Type', type),
-                detailItem('Destination', destination),
+                detailItem('Type', promotion.type!),
+                detailItem('Destination', promotion.description),
               ],
             ),
           ],
@@ -250,7 +235,7 @@ class PromotionDetails extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 14, color: Colors.white),
           ),
           const SizedBox(height: 4),
           Text(

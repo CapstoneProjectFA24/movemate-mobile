@@ -4,20 +4,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/features/auth/presentation/sign_up/sign_up_screen.dart';
 import '../custom_scaford.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../../../../utils/constants/asset_constant.dart';
 import '../../../../utils/commons/widgets/widgets_common_export.dart';
+import '../../../../utils/commons/functions/functions_common_export.dart';
 import '../../../../utils/resources/validations.dart';
 
 @RoutePage()
 class SignInScreen extends HookConsumerWidget with Validations {
   SignInScreen({super.key});
 
-  final TextEditingController email =
-      TextEditingController(text: 'example@email.com');
-  final TextEditingController password =
-      TextEditingController(text: 'password123');
+ 
 
   // handle submit
   void submit({
@@ -27,14 +26,18 @@ class SignInScreen extends HookConsumerWidget with Validations {
     required String email,
     required String password,
   }) async {
-    // if (formKey.currentState!.validate()) {
-    //   unfocus(context);
-    //   await ref.read(signInControllerProvider.notifier).signIn(
-    //         email,
-    //         password,
-    //         context,
-    //       );
-    // }
+      print('Submit function called');
+    if (formKey.currentState!.validate()) {
+      unfocus(context);
+      print('Email: $email, Password: $password');
+      // await ref.read(signInControllerProvider.notifier).signIn(
+      //       email,
+      //       password,
+      //       context,
+      //     );
+    }else {
+       print("fail to valid");
+    }
   }
 
   @override
@@ -66,7 +69,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
               ),
               child: SingleChildScrollView(
                 child: Form(
-                  // key: _formSignInKey,
+                  key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -92,8 +95,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                         textEditingController: password,
                         hintTextLable: "Mật khẩu",
                         hintText: 'Nhập mật khẩu',
-                        // onValidate: (val) => passwordMinErrorText(val),
-                        onValidate: (val) => (val),
+                        onValidate: (val) => passwordMinErrorText(val),
                         autoFocus: false,
                       ),
                       const SizedBox(
@@ -233,8 +235,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  // builder: (e) => const SignUpScreen(),
-                                  builder: (context) => SignInScreen(),
+                                  builder: (e) => SignUpScreen(),
                                 ),
                               );
                             },

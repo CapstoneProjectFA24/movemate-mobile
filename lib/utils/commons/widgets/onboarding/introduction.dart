@@ -28,7 +28,7 @@ class Introduction extends StatefulWidget {
 class IntroductionState extends State<Introduction> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(40),
         child: Column(
@@ -48,12 +48,13 @@ class IntroductionState extends State<Introduction> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                Flexible(child:   Text(
                   widget.title,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.clip,
                   style: widget.titleTextStyle,
-                ),
+                ),)
+              
               ],
             ),
             const SizedBox(
