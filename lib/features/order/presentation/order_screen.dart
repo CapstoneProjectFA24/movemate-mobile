@@ -1,7 +1,8 @@
-
+//order_screen.dart
 import 'package:flutter/material.dart';
-
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
+import '../../../utils/commons/widgets/order_layout/order_layout.dart';
 
 @RoutePage()
 class OrderScreen extends StatelessWidget {
@@ -10,12 +11,24 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('OrderScreen Screen'),
+      appBar: _buildAppBar(),
+      body: const OrderLayout(),
+    );
+  }
+
+  // AppBar
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: const Text(
+        'Thông tin đặt hàng',
+        style: TextStyle(
+          color: AssetsConstants.whiteColor,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      body: const Center(
-        child: Text('Welcome to Order Screen!'),
-      ),
+      backgroundColor: AssetsConstants.mainColor,
+      elevation: 0,
+      centerTitle: true,
     );
   }
 }
