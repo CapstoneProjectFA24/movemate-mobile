@@ -1,3 +1,4 @@
+//order_details.dart
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -15,11 +16,7 @@ class OrderDetail extends StatelessWidget {
 
   // Room images
   final List<String> livingRoomImages = [];
-  final List<String> bedroomImages = [
-    // "assets/images/bedroom1.png",
-    // "assets/images/bedroom2.png",
-    // "assets/images/bedroom3.png"
-  ];
+  final List<String> bedroomImages = [];
   final List<String> diningRoomImages = [];
   final List<String> officeRoomImages = [];
   final List<String> bathroomImages = [];
