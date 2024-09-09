@@ -1,145 +1,35 @@
-// promotion_list.dart
-
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/promotion/presentation/promotion_details.dart';
 import 'package:movemate/utils/commons/widgets/promotion_layout/widget/promotion_card.dart';
+import 'package:movemate/utils/commons/widgets/promotion_layout/widget/promotion_provider.dart';
 
-class PromotionList extends StatelessWidget {
+class PromotionList extends HookConsumerWidget {
   const PromotionList({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ListView(
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Promotion provider (this could be updated dynamically via API)
+    final promotions = ref.watch(promotionProvider);
+
+    return ListView.builder(
       padding: const EdgeInsets.all(16),
-      children: [
-        GestureDetector(
+      itemCount: promotions.length,
+      itemBuilder: (context, index) {
+        final promotion = promotions[index];
+        return GestureDetector(
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const PromotionDetails(
-                  title: 'up to',
-                  discount: '50% Off',
-                  description:
-                      'Get a Discount up to 50% on domestic flights, maximum discount \$30.',
-                  code: 'OCTHAPPYFLIGHT',
-                  imagePath: 'assets/images/promotion/Ellipse171.png',
-                  bgcolor: Colors.deepOrangeAccent,
-                  promoPeriod: '1 - 31 Oct, 2023',
-                  minTransaction: '120',
-                  type: 'All class',
-                  destination: 'Domestic',
-                ),
+                builder: (context) => PromotionDetails(promotion: promotion),
               ),
             );
             FocusScope.of(context).unfocus();
           },
-          child: const PromotionCard(
-            title: 'up to',
-            discount: '50% Off',
-            description: 'On domestic flights',
-            code: 'DOMESTIC50',
-            imagePath: 'assets/images/promotion/Ellipse171.png',
-            bgcolor: Colors.deepOrangeAccent,
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PromotionDetails(
-                  title: 'up to',
-                  discount: '37% Off',
-                  description:
-                      'Get a Discount up to 50% on domestic flights, maximum discount \$30.',
-                  code: 'OCTHAPPYFLIGHT',
-                  imagePath: 'assets/images/promotion/Ellipse171.png',
-                  bgcolor: Colors.deepOrangeAccent,
-                  promoPeriod: '1 - 31 Oct, 2023',
-                  minTransaction: '120',
-                  type: 'All class',
-                  destination: 'Domestic',
-                ),
-              ),
-            );
-            FocusScope.of(context).unfocus();
-          },
-          child: const PromotionCard(
-            title: 'up to',
-            discount: '37% Off',
-            description: 'On domestic flights',
-            code: 'DOMESTIC50',
-            imagePath: 'assets/images/promotion/Ellipse171.png',
-            bgcolor: Colors.tealAccent,
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PromotionDetails(
-                  title: 'up to',
-                  discount: '30% Off',
-                  description:
-                      'Get a Discount up to 50% on domestic flights, maximum discount \$30.',
-                  code: 'OCTHAPPYFLIGHT',
-                  imagePath: 'assets/images/promotion/Ellipse171.png',
-                  bgcolor: Colors.deepOrangeAccent,
-                  promoPeriod: '1 - 31 Oct, 2023',
-                  minTransaction: '120',
-                  type: 'All class',
-                  destination: 'Domestic',
-                ),
-              ),
-            );
-            FocusScope.of(context).unfocus();
-          },
-          child: const PromotionCard(
-            title: 'up to',
-            discount: '30% Off',
-            description: 'On domestic flights',
-            code: 'DOMESTIC30',
-            imagePath: 'assets/images/promotion/Ellipse171.png',
-            bgcolor: Colors.deepPurple,
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const PromotionDetails(
-                  title: 'up to',
-                  discount: '25% Off',
-                  description:
-                      'Get a Discount up to 50% on domestic flights, maximum discount \$25.',
-                  code: 'OCTHAPPYFLIGHT',
-                  imagePath: 'assets/images/promotion/Ellipse171.png',
-                  bgcolor: Colors.deepOrangeAccent,
-                  promoPeriod: '1 - 31 Oct, 2023',
-                  minTransaction: '120',
-                  type: 'All class',
-                  destination: 'Domestic',
-                ),
-              ),
-            );
-            FocusScope.of(context).unfocus();
-          },
-          child: const PromotionCard(
-            title: 'up to',
-            discount: '25% Off',
-            description: 'On domestic flights',
-            code: 'DOMESTIC30',
-            imagePath: 'assets/images/promotion/Ellipse171.png',
-            bgcolor: Colors.lightGreenAccent,
-          ),
-        ),
-      ],
+          child: PromotionCard(promotion: promotion),
+        );
+      },
     );
   }
 }
