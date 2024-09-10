@@ -49,7 +49,7 @@ class _OrderLayoutState extends State<OrderLayout> {
                 },
               ),
               const SizedBox(height: 16),
-              // OrderDetail renders the actual details
+// OrderDetail renders the actual details
               OrderDetail(
                 houseType: houseType,
                 numberOfRooms: numberOfRooms,
