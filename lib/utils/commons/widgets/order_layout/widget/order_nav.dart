@@ -1,6 +1,5 @@
+//order_nav.dart
 import 'package:flutter/material.dart';
-import 'package:movemate/features/order/presentation/vehicles_available_screen.dart';
-import 'package:movemate/features/order/domain/models/order_models.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class OrderNav extends StatelessWidget {
@@ -12,18 +11,7 @@ class OrderNav extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          // Navigate to AvailableVehiclesScreen
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AvailableVehiclesScreen(
-                avalble: AvailableVehicles(
-                  initialSelectedVehicleIndex: 0, // Example initial index
-                  initialTotalPrice: 300000, // Example initial price
-                ),
-              ),
-            ),
-          );
+          // Handle continue button press
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
@@ -32,13 +20,8 @@ class OrderNav extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: const Text(
-          'Tiếp tục',
-          style: TextStyle(
-            fontSize: 16,
-            color: AssetsConstants.whiteColor,
-          ),
-        ),
+        child: const Text('Tiếp tục',
+            style: TextStyle(fontSize: 16, color: AssetsConstants.whiteColor)),
       ),
     );
   }
