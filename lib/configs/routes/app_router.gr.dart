@@ -15,6 +15,17 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AvailableVehiclesScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<AvailableVehiclesScreenRouteArgs>(
+          orElse: () => const AvailableVehiclesScreenRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: AvailableVehiclesScreen(
+          key: args.key,
+          avalble: args.avalble,
+        ),
+      );
+    },
     HomeScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -33,6 +44,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const OrderScreen(),
+      );
+    },
+    OrderSelectPackageScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OrderSelectPackageScreen(),
       );
     },
     PackageDetailScreenRoute.name: (routeData) {
@@ -89,6 +106,45 @@ abstract class _$AppRouter extends RootStackRouter {
 }
 
 /// generated route for
+/// [AvailableVehiclesScreen]
+class AvailableVehiclesScreenRoute
+    extends PageRouteInfo<AvailableVehiclesScreenRouteArgs> {
+  AvailableVehiclesScreenRoute({
+    Key? key,
+    AvailableVehicles? avalble,
+    List<PageRouteInfo>? children,
+  }) : super(
+          AvailableVehiclesScreenRoute.name,
+          args: AvailableVehiclesScreenRouteArgs(
+            key: key,
+            avalble: avalble,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'AvailableVehiclesScreenRoute';
+
+  static const PageInfo<AvailableVehiclesScreenRouteArgs> page =
+      PageInfo<AvailableVehiclesScreenRouteArgs>(name);
+}
+
+class AvailableVehiclesScreenRouteArgs {
+  const AvailableVehiclesScreenRouteArgs({
+    this.key,
+    this.avalble,
+  });
+
+  final Key? key;
+
+  final AvailableVehicles? avalble;
+
+  @override
+  String toString() {
+    return 'AvailableVehiclesScreenRouteArgs{key: $key, avalble: $avalble}';
+  }
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeScreenRoute extends PageRouteInfo<void> {
   const HomeScreenRoute({List<PageRouteInfo>? children})
@@ -141,6 +197,20 @@ class OrderScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'OrderScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OrderSelectPackageScreen]
+class OrderSelectPackageScreenRoute extends PageRouteInfo<void> {
+  const OrderSelectPackageScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          OrderSelectPackageScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderSelectPackageScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

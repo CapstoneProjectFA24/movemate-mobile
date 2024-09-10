@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // screen
 import 'package:movemate/features/auth/presentation/sign_in/sign_in_screen.dart';
 import 'package:movemate/features/auth/presentation/sign_up/sign_up_screen.dart';
+import 'package:movemate/features/order/domain/models/order_models.dart';
+import 'package:movemate/features/order/presentation/order_select_package_screen.dart';
+import 'package:movemate/features/order/presentation/vehicles_available_screen.dart';
 import 'package:movemate/features/promotion/presentation/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/promotion_detail_screen/promotion_details.dart';
 import 'package:movemate/features/home/presentation/home_screen.dart';
@@ -14,7 +17,6 @@ import 'package:movemate/features/order/presentation/order_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
 import 'guard/onboarding_guard.dart';
-
 
 // model
 import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
@@ -43,7 +45,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: TabViewScreenRoute.page,
-          initial: true,
+          // initial: true,
           guards: [OnboardingGuard(ref: _ref)],
           // guards: [AuthGuard(ref: _ref)],
           children: [
@@ -60,13 +62,15 @@ class AppRouter extends _$AppRouter {
           page: OrderScreenRoute.page,
         ),
         AutoRoute(
-          // initial: true,
           page: PromotionScreenRoute.page,
         ),
         AutoRoute(page: PromotionDetailScreenRoute.page),
+        AutoRoute(
+          page: AvailableVehiclesScreenRoute.page,
+        ),
 
-
-        AutoRoute(page: PackageDetailScreenRoute.page)
+        AutoRoute(page: PackageDetailScreenRoute.page),
+        AutoRoute(initial: true, page: OrderSelectPackageScreenRoute.page)
       ];
 }
 
