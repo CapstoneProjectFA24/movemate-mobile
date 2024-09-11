@@ -6,7 +6,7 @@ class AssetsConstants {
   static const primaryLighter = Color(0xffFF9B63);
   static const primaryLight = Color(0xffFF9B63);
 
-  static const primaryMain = Color(0xffFF5C00 );
+  static const primaryMain = Color(0xffFF5C00);
   static const primaryDark = Color(0xffFF5C00);
   static const primaryDarker = Color(0xffFF5C00);
 
@@ -133,6 +133,104 @@ class AssetsConstants {
   static const Icon iconSuccess = Icon(
     Icons.check_circle,
     size: defaultFontSize - 10.0,
+  );
+
+  //font
+  static const TextStyle appFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: defaultFontSize,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    letterSpacing: -0.2,
+  );
+  static const TextStyle titleFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: defaultPadding,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    letterSpacing: -0.2,
+  );
+  static const TextStyle descriptionFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: defaultMargin,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+    letterSpacing: -0.2,
+  );
+
+  // Font sizes based on the text elements in the image
+  static const double filterTitleFontSize = 18.0;
+  static const double sectionTitleFontSize = 16.0;
+  static const double labelFontSize = 14.0;
+  static const double inputFontSize = 13.0;
+  static const double buttonFontSize = 15.0;
+  static const double priceDetailTitleFontSize = 16.0;
+  static const double priceItemFontSize = 14.0;
+  static const double totalPriceFontSize = 20.0;
+  static const double disclaimerFontSize = 12.0;
+
+  // Font family settings (assuming Poppins is used)
+  static const TextStyle filterTitleFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: filterTitleFontSize,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+
+  static const TextStyle sectionTitleFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: sectionTitleFontSize,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
+  static const TextStyle labelFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: labelFontSize,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  );
+
+  static const TextStyle inputFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: inputFontSize,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  );
+
+  static const TextStyle buttonFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: buttonFontSize,
+    fontWeight: FontWeight.w500,
+    color: Colors.white,
+  );
+
+  static const TextStyle priceDetailTitleFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: priceDetailTitleFontSize,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
+  static const TextStyle priceItemFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: priceItemFontSize,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  );
+
+  static const TextStyle totalPriceFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: totalPriceFontSize,
+    fontWeight: FontWeight.bold,
+    color: Colors.green,
+  );
+
+  static const TextStyle disclaimerFont = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: disclaimerFontSize,
+    fontWeight: FontWeight.w400,
+    color: Colors.grey,
   );
 
   // Others
