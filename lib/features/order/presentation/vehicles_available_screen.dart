@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/domain/models/order_models.dart';
 import 'package:movemate/features/order/presentation/order_select_package_screen.dart';
 
@@ -58,8 +59,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
               ),
             ),
             // Total Price and Continue Button
-            _buildTotalPriceSection(
-                totalPrice.value, selectedVehicleIndex.value != null),
+            _buildTotalPriceSection(300.0, true, context),
           ],
         ),
       ),
@@ -171,7 +171,9 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
   }
 
   // Helper function to build the total price section and button
-  Widget _buildTotalPriceSection(double totalPrice, bool isButtonEnabled) {
+
+  Widget _buildTotalPriceSection(
+      double totalPrice, bool isButtonEnabled, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
@@ -187,7 +189,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Total Price
+          // Tổng cộng và nút Tiếp theo
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -200,15 +202,19 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // Continue Button
+          // Nút Tiếp tục
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: isButtonEnabled ? () => _onContinue() : null,
+              onPressed: isButtonEnabled
+                  ? () {
+                      // Điều hướng sang màn hình OrderSelectPackageScreen
+                      context.router
+                          .push(const OrderSelectPackageScreenRoute());
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isButtonEnabled
-                    ? Colors.orange
-                    : Colors.grey, // Disable button if no selection
+                backgroundColor: isButtonEnabled ? Colors.orange : Colors.grey,
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child:
@@ -227,9 +233,8 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
   }
 
   // Continue button action
-  void _onContinue() {
-    // Handle the continue button press here
-    // For example, navigating to the next screen or processing the order
-    const OrderSelectPackageScreen();
+  void _onContinue(BuildContext context) {
+    // Điều hướng đến OrderSelectPackageScreen
+    context.router.push(const OrderSelectPackageScreenRoute());
   }
 }

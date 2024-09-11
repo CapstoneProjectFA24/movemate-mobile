@@ -1,6 +1,6 @@
-//order_nav.dart
 import 'package:flutter/material.dart';
-import 'package:movemate/features/order/presentation/vehicles_available_screen.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class OrderNav extends StatelessWidget {
@@ -11,17 +11,13 @@ class OrderNav extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AssetsConstants.primaryLight,
+        ),
         onPressed: () {
           // Handle continue button press
-          const AvailableVehiclesScreen();
+          context.router.push(AvailableVehiclesScreenRoute());
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orange,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
         child: const Text('Tiếp tục',
             style: TextStyle(fontSize: 16, color: AssetsConstants.whiteColor)),
       ),
