@@ -1,5 +1,6 @@
 //order_nav.dart
 import 'package:flutter/material.dart';
+import 'package:movemate/features/order/presentation/vehicles_available_screen.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class OrderNav extends StatelessWidget {
@@ -12,6 +13,7 @@ class OrderNav extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           // Handle continue button press
+          const AvailableVehiclesScreen();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,

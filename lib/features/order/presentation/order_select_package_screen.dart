@@ -1,284 +1,217 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/ChecklistSection.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/NotesSection.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/PackageSelection.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/RoundTripCheckbox.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/SummarySection.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/order_dropdown_button.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/order_package_provider.dart';
+import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/service_table.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-class OrderSelectPackageScreen extends StatefulWidget {
+class OrderSelectPackageScreen extends ConsumerStatefulWidget {
   const OrderSelectPackageScreen({super.key});
 
   @override
-  State<OrderSelectPackageScreen> createState() =>
+  ConsumerState<OrderSelectPackageScreen> createState() =>
       _OrderSelectPackageScreenState();
 }
 
-class _OrderSelectPackageScreenState extends State<OrderSelectPackageScreen> {
-  // Track if each dropdown is expanded or not
+class _OrderSelectPackageScreenState
+    extends ConsumerState<OrderSelectPackageScreen> {
+  int selectedPeopleCount = 1; // Biến lưu trữ số người được chọn
+
   bool isBocXepExpanded = false;
   bool isThaoLapExpanded = false;
 
-  int selectedService = 0; // Initially select the first service option
-  int selectedPeopleCount = 1; // Default people count
-  int selectedAirConditionersCount = 1; // Default air conditioner count
+  int selectedAirConditionersCount = 1;
+  bool isRoundTrip = false;
+  double totalPrice = 0;
+  TextEditingController noteController = TextEditingController();
 
-  // Service options for each dropdown
-  List<String> bocXepServices = [
-    'Bốc xếp (Bởi tài xế)',
-    'Bốc xếp (Có người hỗ trợ)'
-  ];
-  List<String> bocXepServicePrices = ['120.000đ', '400.000đ'];
+  // Define the packageSelected state and selectedPackageIndex
+  List<bool> packageSelected = [];
+  int? selectedPackageIndex;
 
-  List<String> thaoLapServices = [
-    'Tháo lắp (loại 1)',
-    'Tháo lắp (loại 2)',
-    'Tháo lắp (loại 3)'
-  ];
-  List<String> thaoLapServicePrices = ['300.000đ', '500.000đ', '700.000đ'];
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the packageSelected list with false values based on the number of package titles
+    final packageData = ref.read(packageDataProvider);
+    packageSelected =
+        List<bool>.filled(packageData['packageTitles'].length, false);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final thaoLapServices = ref.watch(thaoLapServicesProvider);
+
+    // Fetch checklist options and values
+    final checklistOptions = ref.watch(checklistOptionsProvider);
+    final checklistValues = ref.watch(checklistDataProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Thông tin đặt hàng'),
-        backgroundColor: Colors.orange,
+        backgroundColor: AssetsConstants.primaryMain,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Dropdown for "Dịch vụ bốc xếp"
-              _buildDropdownButton(
-                'Dịch vụ bốc xếp',
-                isBocXepExpanded,
-                () {
-                  setState(() {
-                    isBocXepExpanded = !isBocXepExpanded;
-                    isThaoLapExpanded = false; // Collapse the other dropdown
-                  });
-                },
-              ),
-              if (isBocXepExpanded)
-                _buildServiceTable(
-                  bocXepServices,
-                  bocXepServicePrices,
-                  selectedService,
-                  selectedPeopleCount,
-                  onServiceChanged: (int? newValue) {
-                    setState(() {
-                      if (newValue != null) {
-                        selectedService = newValue;
-                      }
-                    });
-                  },
-                  onPeopleCountChanged: (int? newValue) {
-                    setState(() {
-                      if (newValue != null) {
-                        selectedPeopleCount = newValue;
-                      }
-                    });
-                  },
-                  isThaoLapService: false, // This is "Dịch vụ bốc xếp"
-                ),
-              const SizedBox(height: 16),
-
-              // Dropdown for "Dịch vụ tháo lắp máy lạnh"
-              _buildDropdownButton(
-                'Dịch vụ tháo lắp máy lạnh',
-                isThaoLapExpanded,
-                () {
-                  setState(() {
-                    isThaoLapExpanded = !isThaoLapExpanded;
-                    isBocXepExpanded = false; // Collapse the other dropdown
-                  });
-                },
-              ),
-              if (isThaoLapExpanded)
-                _buildServiceTable(
-                  thaoLapServices,
-                  thaoLapServicePrices,
-                  null, // No people count for this service
-                  selectedAirConditionersCount, // This is where we handle air conditioner count
-                  isThaoLapService: true, // This is "Dịch vụ tháo lắp máy lạnh"
-                  onAirConditionersCountChanged: (int? newValue) {
-                    setState(() {
-                      if (newValue != null) {
-                        selectedAirConditionersCount = newValue;
-                      }
-                    });
-                  },
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Helper method to create the dropdown button
-  Widget _buildDropdownButton(
-      String title, bool isExpanded, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: isExpanded ? Colors.blue : Colors.grey,
-          ),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
         children: [
-          Text(title),
-          Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Dropdown for "Dịch vụ bốc xếp"
+                  OrderDropdownButton(
+                    title: 'Dịch vụ bốc xếp',
+                    isExpanded: isBocXepExpanded,
+                    onPressed: () {
+                      setState(() {
+                        isBocXepExpanded = !isBocXepExpanded;
+                        isThaoLapExpanded = false;
+                      });
+                    },
+                  ),
+
+                  if (isBocXepExpanded)
+                    Column(
+                      children: [
+                        // PackageSelection là radio button selection
+                        PackageSelection(
+                          selectedPackageIndex: selectedPackageIndex,
+                          onChanged: (index) {
+                            setState(() {
+                              selectedPackageIndex = index;
+                              _updateTotalPrice();
+                            });
+                          },
+                          selectedPeopleCount:
+                              selectedPeopleCount, // Truyền giá trị hiện tại của số lượng người
+                          onPeopleCountChanged: (value) {
+                            setState(() {
+                              selectedPeopleCount =
+                                  value; // Cập nhật số lượng người
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+
+                  const SizedBox(height: 16),
+
+                  // Dropdown for "Dịch vụ tháo lắp máy lạnh"
+                  OrderDropdownButton(
+                    title: 'Dịch vụ tháo lắp máy lạnh',
+                    isExpanded: isThaoLapExpanded,
+                    onPressed: () {
+                      setState(() {
+                        isThaoLapExpanded = !isThaoLapExpanded;
+                        isBocXepExpanded = false;
+                      });
+                    },
+                  ),
+                  if (isThaoLapExpanded)
+                    ServiceTable(
+                      options: thaoLapServices
+                          .map((e) => e['service'] as String)
+                          .toList(),
+                      prices: thaoLapServices
+                          .map((e) => e['price'] as String)
+                          .toList(),
+                      selectedService: null,
+                      selectedPeopleOrAirConditionersCount:
+                          selectedAirConditionersCount,
+                      isThaoLapService: true,
+                      onAirConditionersCountChanged: (value) {
+                        setState(() {
+                          selectedAirConditionersCount = value ?? 1;
+                        });
+                      },
+                    ),
+                  const SizedBox(height: 16),
+
+                  // Round trip checkbox
+                  RoundTripCheckbox(
+                    isRoundTrip: isRoundTrip,
+                    onChanged: (value) {
+                      setState(() {
+                        isRoundTrip = value ?? false;
+                        _updateTotalPrice();
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Checklist
+                  ChecklistSection(
+                    checklistOptions: checklistOptions,
+                    checklistValues: checklistValues,
+                    onChanged: (index) {
+                      ref
+                          .read(checklistDataProvider.notifier)
+                          .toggleValue(index);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Notes section
+                  NotesSection(noteController: noteController),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+          // Summary and place order section at the bottom
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SummarySection(
+              totalPrice: totalPrice,
+              onPlaceOrder: _placeOrder,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // Method to build the service table (for both services)
-  Widget _buildServiceTable(
-    List<String> options,
-    List<String> prices,
-    int? selectedService,
-    int? selectedPeopleOrAirConditionersCount, {
-    required bool
-        isThaoLapService, // Required to differentiate between the two services
-    ValueChanged<int?>? onServiceChanged,
-    ValueChanged<int?>? onPeopleCountChanged,
-    ValueChanged<int?>? onAirConditionersCountChanged,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Table(
-        border: TableBorder.all(color: Colors.black, width: 0.5),
-        children: [
-          for (int i = 0; i < options.length; i++)
-            TableRow(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(options[i], style: const TextStyle(fontSize: 14)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(prices[i], style: const TextStyle(fontSize: 14)),
-                ),
-              ],
-            ),
-          if (!isThaoLapService) // Show dropdown for "Bốc xếp (Có người hỗ trợ)"
-            TableRow(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Số người'),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildPeopleDropdown(
-                      selectedPeopleOrAirConditionersCount ?? 1,
-                      onPeopleCountChanged!),
-                ),
-              ],
-            ),
-          if (isThaoLapService) // Show dropdown for "Số máy lạnh"
-            TableRow(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Số máy lạnh'),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildAirConditionersDropdown(
-                      selectedPeopleOrAirConditionersCount ?? 1,
-                      onAirConditionersCountChanged!),
-                ),
-              ],
-            ),
-        ],
-      ),
-    );
+  void _updateTotalPrice() {
+    // Example total price calculation logic
+    double basePrice = 1794.000;
+    if (isRoundTrip) {
+      basePrice *= 1.7;
+    }
+
+    for (int i = 0; i < packageSelected.length; i++) {
+      if (packageSelected[i]) {
+        switch (i) {
+          case 0:
+            basePrice += 730.000;
+            break;
+          case 1:
+            basePrice += 660.000;
+            break;
+          case 2:
+            basePrice += 120.000;
+            break;
+        }
+      }
+    }
+
+    setState(() {
+      totalPrice = basePrice;
+    });
   }
 
-// People count dropdown for 'Bốc xếp (Có người hỗ trợ)'
-  Widget _buildPeopleDropdown(int selectedValue, ValueChanged<int?> onChanged) {
-    return Container(
-      width: 120, // Fixed width for the dropdown
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-            color: Colors.grey.shade300), // Border around the dropdown
-        color: Colors.white, // Background color for dropdown button
-      ),
-      padding: const EdgeInsets.symmetric(
-          horizontal: 8.0), // Padding inside the dropdown
-      child: DropdownButton<int>(
-        isDense: false, // Makes the dropdown dense and consistent in size
-        isExpanded:
-            false, // Prevents the dropdown from expanding with the value
-        style: const TextStyle(color: Colors.black), // Text style for dropdown
-        dropdownColor: Colors.white, // Background color for dropdown items
-        value: selectedValue,
-        items: List.generate(
-          10,
-          (index) => DropdownMenuItem(
-            value: index + 1,
-            child: Text('${index + 1} người'),
-          ),
-        ),
-        onChanged: onChanged,
-        underline: const SizedBox(), // Removes the default dropdown underline
-      ),
-    );
-  }
-
-  // Air conditioners count dropdown for 'Dịch vụ tháo lắp máy lạnh'
-  Widget _buildAirConditionersDropdown(
-      int selectedValue, ValueChanged<int?> onChanged) {
-    return Container(
-      width: 150, // Fixed width for the dropdown to prevent jumping
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-            color: Colors.grey.shade300), // Border around the dropdown
-        color: Colors.white, // Background color for dropdown button
-      ),
-      padding: const EdgeInsets.symmetric(
-          horizontal: 8.0), // Padding inside the dropdown
-      child: DropdownButton<int>(
-        isDense: false, // Makes the dropdown dense and prevents resizing
-        isExpanded: false, // Ensures the dropdown doesn't expand with the value
-        style: const TextStyle(color: Colors.black), // Text style for dropdown
-        dropdownColor: Colors.white, // Background color for dropdown items
-        value: selectedValue,
-        items: List.generate(
-          10,
-          (index) => DropdownMenuItem(
-            value: index + 1,
-            child: Text('${index + 1} máy lạnh'),
-          ),
-        ),
-        onChanged: onChanged,
-        underline: const SizedBox(), // Removes the default dropdown underline
-      ),
-    );
+  void _placeOrder() {
+    final notes = noteController.text;
+    print('Placing order with notes: $notes');
+    print('Total price: $totalPrice');
+    // Add your API call here
   }
 }

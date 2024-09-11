@@ -66,6 +66,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(page: PromotionDetailScreenRoute.page),
         AutoRoute(
+          // initial: true,
           page: AvailableVehiclesScreenRoute.page,
         ),
 

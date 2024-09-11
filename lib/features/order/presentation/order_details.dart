@@ -1,6 +1,5 @@
 //order_details.dart
 import 'package:flutter/material.dart';
-import 'package:movemate/utils/constants/asset_constant.dart';
 
 class OrderDetail extends StatelessWidget {
   final String? houseType;
