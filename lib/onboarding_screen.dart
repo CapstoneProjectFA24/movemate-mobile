@@ -43,7 +43,7 @@ class OnboardingScreen extends ConsumerWidget {
 
     return IntroScreenOnboarding(
       backgroudColor: AssetsConstants.whiteColor,
-      foregroundColor: AssetsConstants.primaryLight,
+      foregroundColor: AssetsConstants.mainColor,
       introductionList: list,
       onTapSkipButton: () async {
         try {
