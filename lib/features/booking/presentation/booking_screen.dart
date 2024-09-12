@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/data_sources/booking_shared_preferences.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/features/booking/presentation/booking_details.dart';
 import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_selection.dart';
@@ -26,7 +27,7 @@ class BookingScreen extends HookWidget {
       }
 
       loadState();
-      return null; // Clean-up function, not needed here
+      return null;
     }, []);
 
     void _saveState() async {
@@ -36,17 +37,12 @@ class BookingScreen extends HookWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Thông tin đặt hàng',
-          style: TextStyle(
-            color: AssetsConstants.whiteColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+      appBar: const CustomAppBar(
+        title: "Thông tin đặt hàng",
         backgroundColor: AssetsConstants.mainColor,
-        elevation: 0,
+        backButtonColor: AssetsConstants.whiteColor,
         centerTitle: true,
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         child: Padding(

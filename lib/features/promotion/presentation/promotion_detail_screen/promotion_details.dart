@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 
@@ -16,10 +17,12 @@ class PromotionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chi tiết khuyến mãi'),
+    return  Scaffold(
+      appBar: const CustomAppBar(
+        title:  "Chi tiết khuyến mãi",
         backgroundColor: AssetsConstants.primaryMain,
+        backButtonColor: AssetsConstants.whiteColor,
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 
 import 'package:movemate/utils/commons/widgets/promotion_layout/promotion_list.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -79,10 +80,9 @@ class PromotionScreen extends HookConsumerWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
+      appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        elevation: 0,
-        title: const Text('Khuyến mãi'),
+        title: "Khuyến mãi",
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
@@ -107,8 +107,8 @@ class PromotionScreen extends HookConsumerWidget {
                 .where((p) => p.code.contains('DOMESTIC'))
                 .toList(),
           ),
-          _TabContent(content: 'Trains Deals'),
-          _TabContent(content: 'Hotels Deals'),
+          const _TabContent(content: 'Trains Deals'),
+          const _TabContent(content: 'Hotels Deals'),
         ],
       ),
     );

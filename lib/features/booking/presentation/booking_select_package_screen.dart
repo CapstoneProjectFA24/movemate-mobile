@@ -33,6 +33,7 @@ class BookingSelectPackageScreenState
   double totalPrice = 0;
   TextEditingController noteController = TextEditingController();
 
+  int i = 0;
   // Define the packageSelected state and selectedPackageIndex
   List<bool> packageSelected = [];
   int? selectedPackageIndex;
