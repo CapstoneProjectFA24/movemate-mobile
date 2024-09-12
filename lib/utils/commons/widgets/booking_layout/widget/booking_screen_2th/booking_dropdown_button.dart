@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-class OrderDropdownButton extends StatelessWidget {
+class BookingDropdownButton extends StatelessWidget {
   final String title;
   final bool isExpanded;
   final VoidCallback onPressed;
 
-  const OrderDropdownButton({
+  const BookingDropdownButton({
     super.key,
     required this.title,
     required this.isExpanded,

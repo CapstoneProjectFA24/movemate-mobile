@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/order/domain/models/order_models.dart';
-import 'package:movemate/features/order/presentation/order_select_package_screen.dart';
+import 'package:movemate/features/booking/domain/models/booking_models.dart';
+import 'package:movemate/features/booking/presentation/booking_select_package_screen.dart';
 
 import 'package:movemate/utils/providers/vehicle_provider.dart';
 
@@ -210,7 +210,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                   ? () {
                       // Điều hướng sang màn hình OrderSelectPackageScreen
                       context.router
-                          .push(const OrderSelectPackageScreenRoute());
+                          .push(const BookingSelectPackageScreenRoute());
                     }
                   : null,
               style: ElevatedButton.styleFrom(
@@ -235,6 +235,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
   // Continue button action
   void _onContinue(BuildContext context) {
     // Điều hướng đến OrderSelectPackageScreen
-    context.router.push(const OrderSelectPackageScreenRoute());
+    context.router.push(const BookingSelectPackageScreenRoute());
   }
 }

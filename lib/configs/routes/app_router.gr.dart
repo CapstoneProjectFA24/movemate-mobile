@@ -26,6 +26,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    BookingScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BookingScreen(),
+      );
+    },
+    BookingSelectPackageScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BookingSelectPackageScreen(),
+      );
+    },
     HomeScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -44,12 +56,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const OrderScreen(),
-      );
-    },
-    OrderSelectPackageScreenRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OrderSelectPackageScreen(),
       );
     },
     PackageDetailScreenRoute.name: (routeData) {
@@ -145,6 +151,34 @@ class AvailableVehiclesScreenRouteArgs {
 }
 
 /// generated route for
+/// [BookingScreen]
+class BookingScreenRoute extends PageRouteInfo<void> {
+  const BookingScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          BookingScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BookingScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BookingSelectPackageScreen]
+class BookingSelectPackageScreenRoute extends PageRouteInfo<void> {
+  const BookingSelectPackageScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          BookingSelectPackageScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BookingSelectPackageScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeScreenRoute extends PageRouteInfo<void> {
   const HomeScreenRoute({List<PageRouteInfo>? children})
@@ -197,20 +231,6 @@ class OrderScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'OrderScreenRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OrderSelectPackageScreen]
-class OrderSelectPackageScreenRoute extends PageRouteInfo<void> {
-  const OrderSelectPackageScreenRoute({List<PageRouteInfo>? children})
-      : super(
-          OrderSelectPackageScreenRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OrderSelectPackageScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

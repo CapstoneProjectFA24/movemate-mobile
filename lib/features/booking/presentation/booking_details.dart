@@ -1,12 +1,12 @@
 //order_details.dart
 import 'package:flutter/material.dart';
 
-class OrderDetail extends StatelessWidget {
+class BookingDetails extends StatelessWidget {
   final String? houseType;
   final int numberOfRooms;
   final int numberOfFloors;
 
-  OrderDetail({
+  BookingDetails({
     super.key,
     this.houseType,
     this.numberOfRooms = 1,

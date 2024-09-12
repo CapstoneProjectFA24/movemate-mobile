@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/ChecklistSection.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/NotesSection.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/PackageSelection.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/RoundTripCheckbox.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/SummarySection.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/order_dropdown_button.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/order_package_provider.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/widget/order_screen_2th/service_table.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/ChecklistSection.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/NotesSection.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/PackageSelection.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/RoundTripCheckbox.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/SummarySection.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/booking_dropdown_button.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/booking_package_provider.dart';
+import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/service_table.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-class OrderSelectPackageScreen extends ConsumerStatefulWidget {
-  const OrderSelectPackageScreen({super.key});
+import 'package:auto_route/auto_route.dart';
+
+@RoutePage()
+class BookingSelectPackageScreen extends ConsumerStatefulWidget {
+  const BookingSelectPackageScreen({super.key});
 
   @override
-  ConsumerState<OrderSelectPackageScreen> createState() =>
-      _OrderSelectPackageScreenState();
+  ConsumerState<BookingSelectPackageScreen> createState() =>
+      BookingSelectPackageScreenState();
 }
 
-class _OrderSelectPackageScreenState
-    extends ConsumerState<OrderSelectPackageScreen> {
+class BookingSelectPackageScreenState
+    extends ConsumerState<BookingSelectPackageScreen> {
   int selectedPeopleCount = 1; // Biến lưu trữ số người được chọn
 
   bool isBocXepExpanded = false;
@@ -66,7 +69,7 @@ class _OrderSelectPackageScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Dropdown for "Dịch vụ bốc xếp"
-                  OrderDropdownButton(
+                  BookingDropdownButton(
                     title: 'Dịch vụ bốc xếp',
                     isExpanded: isBocXepExpanded,
                     onPressed: () {
@@ -104,7 +107,7 @@ class _OrderSelectPackageScreenState
                   const SizedBox(height: 16),
 
                   // Dropdown for "Dịch vụ tháo lắp máy lạnh"
-                  OrderDropdownButton(
+                  BookingDropdownButton(
                     title: 'Dịch vụ tháo lắp máy lạnh',
                     isExpanded: isThaoLapExpanded,
                     onPressed: () {

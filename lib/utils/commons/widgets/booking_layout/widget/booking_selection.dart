@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-class OrderModel extends StatefulWidget {
+class BookingSelection extends StatefulWidget {
   final Function(String)? onHouseTypeSelected;
   final Function(int)? onRoomCountSelected;
   final Function(int)? onFloorCountSelected;
 
-  const OrderModel({
+  const BookingSelection({
     super.key,
     this.onHouseTypeSelected,
     this.onRoomCountSelected,
@@ -15,10 +15,10 @@ class OrderModel extends StatefulWidget {
   });
 
   @override
-  _OrderModelState createState() => _OrderModelState();
+  _BookingSelectionState createState() => _BookingSelectionState();
 }
 
-class _OrderModelState extends State<OrderModel> {
+class _BookingSelectionState extends State<BookingSelection> {
   String? selectedHouseType;
   int numberOfRooms = 1;
   int numberOfFloors = 1;
