@@ -79,6 +79,10 @@ class AppRouter extends _$AppRouter {
           // initial: true,
           page: BookingSelectPackageScreenRoute.page,
         ),
+        AutoRoute(
+          // initial: true,
+          page: OrderScreenRoute.page,
+        ),
       ];
 }
 

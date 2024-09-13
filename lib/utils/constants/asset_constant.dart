@@ -59,6 +59,8 @@ class AssetsConstants {
   static const green4 = Color(0xff2D8F4E);
   static const green5 = Color(0xff228B22);
   static const green6 = Color(0xff116530);
+  static const greenish = Color(0xFFC8E6C9);
+
   static const darkGreen1 = Color(0xff536732);
   static const darkGreen2 = Color(0xff556B2F);
   static const blue3 = Color(0xff30D5C8);
