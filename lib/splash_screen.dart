@@ -1,61 +1,43 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/splash/splash.png', // Path to your background image
-              fit: BoxFit.cover,
-            ),
+          Image.asset(
+            AssetsConstants.spashImage,
+            fit: BoxFit.cover,
           ),
-          // Centered orange container with logo and text
           Center(
             child: Container(
-              width: 350, // Adjust width if necessary
-              height: 600, // Adjust height if necessary
+              width: 350,
+              height: 600,
               decoration: BoxDecoration(
-                color: const Color(0xFFFF6F00), // Orange color
+                color: AssetsConstants.primaryMain,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo
-                    Image.asset(
-                      'assets/images/splash/Vectortruck.png', // Path to your logo
-                      width: 60, // Adjust size as needed
-                      height: 60, // Adjust size as needed
-                      scale: 0.7,
-                    ),
-
-                    // Text "MoveMate"
-                    const Text(
-                      'MoveMate',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: String.fromEnvironment('Inknut Antiqua'),
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    AssetsConstants.spashLogo,
+                    width: 60,
+                    height: 60,
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    AssetsConstants.appTitle,
+                    style: AssetsConstants.appFont,
+                  ),
+                ],
               ),
             ),
           ),
@@ -64,3 +46,79 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+
+
+
+
+// import 'package:auto_route/auto_route.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_hooks/flutter_hooks.dart';
+// import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:movemate/utils/constants/asset_constant.dart';
+// import 'package:movemate/configs/routes/app_router.dart'; // Đảm bảo import này đúng
+
+// @RoutePage()
+// class SplashScreen extends HookConsumerWidget {
+//   const SplashScreen({super.key});
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final animationController = useAnimationController(
+//       duration: const Duration(milliseconds: 2000),
+//     );
+
+//     final opacityAnimation = useAnimation(
+//       Tween<double>(begin: 1.0, end: 0.0).animate(animationController),
+//     );
+
+//     useEffect(() {
+//       Future.delayed(const Duration(seconds: 2), () {
+//         animationController.forward().then((_) {
+//           ref.watch(appRouterProvider).config();
+//         });
+//       });
+//       return animationController.dispose;
+//     }, []);
+
+//     return Scaffold(
+//       body: Opacity(
+//         opacity: opacityAnimation,
+//         child: Stack(
+//           fit: StackFit.expand,
+//           children: [
+//             Image.asset(
+//               AssetsConstants.spashImage,
+//               fit: BoxFit.cover,
+//             ),
+//             Center(
+//               child: Container(
+//                 width: 350,
+//                 height: 600,
+//                 decoration: BoxDecoration(
+//                   color: AssetsConstants.primaryMain,
+//                   borderRadius: BorderRadius.circular(20),
+//                 ),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     Image.asset(
+//                       AssetsConstants.spashLogo,
+//                       width: 60,
+//                       height: 60,
+//                     ),
+//                     const SizedBox(width: 10),
+//                     const Text(
+//                       AssetsConstants.appTitle,
+//                       style: AssetsConstants.appFont,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

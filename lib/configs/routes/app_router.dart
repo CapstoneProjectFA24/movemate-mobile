@@ -36,6 +36,7 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         // auth
         AutoRoute(
+          // initial: true,
           page: SignInScreenRoute.page,
         ),
         AutoRoute(
