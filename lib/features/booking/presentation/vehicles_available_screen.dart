@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/models/booking_models.dart';
-import 'package:movemate/features/booking/presentation/booking_select_package_screen.dart';
 
 import 'package:movemate/utils/providers/vehicle_provider.dart';
 

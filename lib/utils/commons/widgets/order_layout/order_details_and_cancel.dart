@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/features/order/domain/models/order_models.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class OrderDetailsAndCancel extends StatelessWidget {

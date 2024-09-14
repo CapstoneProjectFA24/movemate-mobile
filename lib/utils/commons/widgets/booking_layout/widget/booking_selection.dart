@@ -121,7 +121,8 @@ class _BookingSelectionState extends State<BookingSelection> {
                       return ListTile(
                         title: Text(
                           houseTypes[index],
-                          style: TextStyle(color: AssetsConstants.blackColor),
+                          style: const TextStyle(
+                              color: AssetsConstants.blackColor),
                         ),
                         onTap: () {
                           setState(() {
@@ -173,7 +174,8 @@ class _BookingSelectionState extends State<BookingSelection> {
                       return ListTile(
                         title: Text(
                           (index + 1).toString(),
-                          style: TextStyle(color: AssetsConstants.blackColor),
+                          style: const TextStyle(
+                              color: AssetsConstants.blackColor),
                         ),
                         onTap: () {
                           setState(() {
@@ -225,7 +227,8 @@ class _BookingSelectionState extends State<BookingSelection> {
                       return ListTile(
                         title: Text(
                           (index + 1).toString(),
-                          style: TextStyle(color: AssetsConstants.blackColor),
+                          style: const TextStyle(
+                              color: AssetsConstants.blackColor),
                         ),
                         onTap: () {
                           setState(() {

@@ -14,6 +14,7 @@ import 'package:movemate/features/package/presentation/package_detail_screen/pac
 import 'package:movemate/features/profile/presentation/profile_screen.dart';
 import 'package:movemate/features/booking/presentation/booking_screen.dart';
 import 'package:movemate/features/order/presentation/order.screen.dart';
+import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
 import 'guard/onboarding_guard.dart';
@@ -82,6 +83,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           // initial: true,
           page: OrderScreenRoute.page,
+        ),
+        AutoRoute(
+          // initial: true,
+          page: SplashScreenRoute.page,
         ),
       ];
 }

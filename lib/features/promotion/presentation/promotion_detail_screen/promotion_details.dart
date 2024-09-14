@@ -5,7 +5,6 @@ import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-
 @RoutePage()
 class PromotionDetailScreen extends StatelessWidget {
   final PromotionModel promotion;
@@ -17,9 +16,9 @@ class PromotionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: const CustomAppBar(
-        title:  "Chi tiết khuyến mãi",
+        title: "Chi tiết khuyến mãi",
         backgroundColor: AssetsConstants.primaryMain,
         backButtonColor: AssetsConstants.whiteColor,
         showBackButton: true,
@@ -160,7 +159,8 @@ class PromotionDetailScreen extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.local_offer, size: 14, color: Colors.blue),
+                      const Icon(Icons.local_offer,
+                          size: 14, color: Colors.blue),
                       const SizedBox(width: 4),
                       Text(
                         promotion.code,
@@ -238,7 +238,7 @@ class PromotionDetailScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 14, color: Colors.white),
+            style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
           const SizedBox(height: 4),
           Text(

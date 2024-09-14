@@ -1,5 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 class OrderState {
   final bool isFindingDriver;
   final String? driverName;

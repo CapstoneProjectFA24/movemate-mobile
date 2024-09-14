@@ -30,7 +30,7 @@ class BookingScreen extends HookWidget {
       return null;
     }, []);
 
-    void _saveState() async {
+    void saveState() async {
       await BookingSharedPreferences.setHouseType(houseType.value);
       await BookingSharedPreferences.setNumberOfRooms(numberOfRooms.value);
       await BookingSharedPreferences.setNumberOfFloors(numberOfFloors.value);
@@ -53,15 +53,15 @@ class BookingScreen extends HookWidget {
               BookingSelection(
                 onHouseTypeSelected: (selectedType) {
                   houseType.value = selectedType;
-                  _saveState();
+                  saveState();
                 },
                 onRoomCountSelected: (count) {
                   numberOfRooms.value = count;
-                  _saveState();
+                  saveState();
                 },
                 onFloorCountSelected: (count) {
                   numberOfFloors.value = count;
-                  _saveState();
+                  saveState();
                 },
               ),
               const SizedBox(height: 16),
