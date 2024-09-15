@@ -12,13 +12,13 @@ class AddNewCardComponent extends StatelessWidget {
       title: Row(
         children: [
           SizedBox(
-            width: 40, // Fixed width
-            height: 40, // Fixed height
+            width: 40,
+            height: 40,
             child: Image.asset(
               iconPath,
-              width: 40, // Set image width
-              height: 40, // Set image height
-              fit: BoxFit.cover, // Ensure the image fits within the box
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 16),
@@ -28,7 +28,7 @@ class AddNewCardComponent extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: AssetsConstants.blackColor, // Text color in black
+                color: AssetsConstants.blackColor,
               ),
             ),
           ),
@@ -41,7 +41,7 @@ class AddNewCardComponent extends StatelessWidget {
         child: const Text(
           'Thêm',
           style: TextStyle(
-            color: AssetsConstants.primaryDark, // Orange text for "Thêm"
+            color: AssetsConstants.primaryDark,
           ),
         ),
       ),
