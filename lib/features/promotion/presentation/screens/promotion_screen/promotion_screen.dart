@@ -4,11 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 
-import 'package:movemate/utils/commons/widgets/promotion_layout/promotion_list.dart';
+import 'package:movemate/features/promotion/presentation/widgets/promotion_list.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 // model
-import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
+import 'package:movemate/features/promotion/data/models/promotion_model.dart';
 
 @RoutePage()
 class PromotionScreen extends HookConsumerWidget {

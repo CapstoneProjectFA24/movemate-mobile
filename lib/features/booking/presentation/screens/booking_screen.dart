@@ -4,8 +4,8 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/data_sources/booking_shared_preferences.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/features/booking/presentation/booking_details.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_selection.dart';
+import 'package:movemate/features/booking/presentation/screens/booking_details.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_selection.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 @RoutePage()

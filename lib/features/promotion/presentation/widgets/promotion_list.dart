@@ -5,8 +5,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 //
 
-import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
-import 'package:movemate/utils/commons/widgets/promotion_layout/promotion_card.dart';
+import 'package:movemate/features/promotion/data/models/promotion_model.dart';
+import 'package:movemate/features/promotion/presentation/widgets/promotion_card.dart';
 
 class PromotionList extends StatelessWidget {
   final List<PromotionModel> promotions;

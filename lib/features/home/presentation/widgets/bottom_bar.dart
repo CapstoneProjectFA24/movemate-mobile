@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import '../../../configs/routes/app_router.dart';
-import '../../../utils/constants/asset_constant.dart';
+import '../../../../configs/routes/app_router.dart';
+import '../../../../utils/constants/asset_constant.dart';
 
 class CustomBottomBar extends HookWidget {
   const CustomBottomBar({

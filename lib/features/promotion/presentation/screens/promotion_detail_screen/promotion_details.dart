@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
+import 'package:movemate/features/promotion/data/models/promotion_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 

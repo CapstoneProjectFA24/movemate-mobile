@@ -4,13 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:movemate/features/auth/presentation/sign_in/sign_in_screen.dart';
-import '../custom_scaford.dart';
+import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
+import '../../widgets/custom_scaford.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-import '../../../../utils/constants/asset_constant.dart';
-import '../../../../utils/commons/widgets/widgets_common_export.dart';
-import '../../../../utils/resources/validations.dart';
+import '../../../../../utils/constants/asset_constant.dart';
+import '../../../../../utils/commons/widgets/widgets_common_export.dart';
+import '../../../../../utils/resources/validations.dart';
 
 @RoutePage()
 class SignUpScreen extends HookConsumerWidget with Validations {

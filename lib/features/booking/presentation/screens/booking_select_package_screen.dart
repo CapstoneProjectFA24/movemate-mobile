@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/ChecklistSection.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/NotesSection.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/PackageSelection.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/RoundTripCheckbox.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/SummarySection.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/booking_dropdown_button.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/booking_package_provider.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/service_table.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/ChecklistSection.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/NotesSection.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/PackageSelection.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/RoundTripCheckbox.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/SummarySection.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_dropdown_button.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package_provider.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_table.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 import 'package:auto_route/auto_route.dart';

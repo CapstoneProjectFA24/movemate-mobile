@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'configs/routes/app_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'features/home/presentation/bottom_bar.dart';
+import 'features/home/presentation/widgets/bottom_bar.dart';
 import 'utils/commons/widgets/loading_overlay.dart';
 import 'utils/providers/common_provider.dart';
 

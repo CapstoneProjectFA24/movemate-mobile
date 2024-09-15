@@ -1,7 +1,7 @@
 // promotion_card.dart
 
 import 'package:flutter/material.dart';
-import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
+import 'package:movemate/features/promotion/data/models/promotion_model.dart';
 
 class PromotionCard extends StatelessWidget {
   final PromotionModel promotion;

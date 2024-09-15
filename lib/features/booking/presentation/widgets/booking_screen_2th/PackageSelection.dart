@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/booking_package_provider.dart';
-import 'package:movemate/utils/commons/widgets/booking_layout/widget/booking_screen_2th/service_table.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package_provider.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_table.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class PackageSelection extends ConsumerWidget {

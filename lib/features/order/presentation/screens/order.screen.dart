@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/order/domain/models/order_models.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/driver_arrived_section.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/finding_driver_section.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/order_and_delivery_info.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/order_details_and_cancel.dart';
-import 'package:movemate/utils/commons/widgets/order_layout/payment_info.dart';
+import 'package:movemate/features/order/data/models/order_models.dart';
+import 'package:movemate/features/order/presentation/widgets/driver_arrived_section.dart';
+import 'package:movemate/features/order/presentation/widgets/finding_driver_section.dart';
+import 'package:movemate/features/order/presentation/widgets/order_and_delivery_info.dart';
+import 'package:movemate/features/order/presentation/widgets/order_details_and_cancel.dart';
+import 'package:movemate/features/order/presentation/widgets/payment_info.dart';
 
 @RoutePage()
 class OrderScreen extends HookConsumerWidget {
