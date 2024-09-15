@@ -15,7 +15,6 @@ import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
 import 'guard/onboarding_guard.dart';
 
-
 // model
 import 'package:movemate/features/promotion/domain/models/promotion_model.dart';
 
@@ -32,6 +31,7 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         // auth
         AutoRoute(
+          initial: true,
           page: SignInScreenRoute.page,
         ),
         AutoRoute(
@@ -43,7 +43,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: TabViewScreenRoute.page,
-          initial: true,
+          // initial: true,
           guards: [OnboardingGuard(ref: _ref)],
           // guards: [AuthGuard(ref: _ref)],
           children: [
@@ -64,7 +64,6 @@ class AppRouter extends _$AppRouter {
           page: PromotionScreenRoute.page,
         ),
         AutoRoute(page: PromotionDetailScreenRoute.page),
-
 
         AutoRoute(page: PackageDetailScreenRoute.page)
       ];

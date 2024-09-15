@@ -16,8 +16,7 @@ import '../../../../utils/resources/validations.dart';
 class SignUpScreen extends HookConsumerWidget with Validations {
   SignUpScreen({super.key});
 
-
-    // handle submit
+  // handle submit
   void submit({
     required GlobalKey<FormState> formKey,
     required BuildContext context,
@@ -26,16 +25,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     required String email,
     required String phoneNumber,
     required String password,
-  }) async {
-    // if (formKey.currentState!.validate()) {
-    //   unfocus(context);
-    //   await ref.read(signInControllerProvider.notifier).signIn(
-    //         email,
-    //         password,
-    //         context,
-    //       );
-    // }
-  }
+  }) async {}
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +36,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     final password = useTextEditingController();
     final phoneNumber = useTextEditingController();
 
-        final formKey = useMemoized(GlobalKey<FormState>.new, const []);
+    final formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
     return CustomScaffold(
       child: Column(
@@ -123,9 +113,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                       const SizedBox(
                         height: 25.0,
                       ),
-
-
-              Row(
+                      Row(
                         children: [
                           Checkbox(
                             value: true,
@@ -151,8 +139,8 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                         first: username,
                         second: email,
                         third: phoneNumber,
-                        fourth: password ,
-                        builder: (_, a, b,c,d, __) => SizedBox(
+                        fourth: password,
+                        builder: (_, a, b, c, d, __) => SizedBox(
                           width: double.infinity,
                           child: CustomButton(
                             width: size.width * 1,
@@ -241,9 +229,8 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  // builder: (e) => const SignUpScreen(),
-                                  builder: (context) => SignInScreen()
-                                ),
+                                    // builder: (e) => const SignUpScreen(),
+                                    builder: (context) => SignInScreen()),
                               );
                             },
                             child: const LabelText(
