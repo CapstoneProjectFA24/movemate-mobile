@@ -64,7 +64,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-
 # config launcher icon
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -112,6 +111,13 @@ flutter:
     - assets/images/splash/Vectortruck.png
     - assets/images/splash/splash.png
     - assets/icons/
+      #image wallets
+    - assets/images/logo_wallets/viettel_Money.png
+    - assets/images/logo_wallets/Logo_ShopeePay.png
+    - assets/images/logo_wallets/MoMo_Logo.png
+    - assets/images/logo_wallets/new_Card.png
+    - assets/images/logo_wallets/viettelpay.png
+    - assets/images/logo_wallets/zaloPay.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

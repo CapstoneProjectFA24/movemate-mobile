@@ -64,6 +64,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PackageDetailScreen(),
       );
     },
+    PaymentScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PaymentScreen(),
+      );
+    },
     ProfileScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -251,6 +257,20 @@ class PackageDetailScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PackageDetailScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PaymentScreen]
+class PaymentScreenRoute extends PageRouteInfo<void> {
+  const PaymentScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          PaymentScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PaymentScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
