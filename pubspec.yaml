@@ -118,7 +118,9 @@ flutter:
     - assets/images/logo_wallets/new_Card.png
     - assets/images/logo_wallets/viettelpay.png
     - assets/images/logo_wallets/zaloPay.png
-
+    - assets/images/logo_wallets/cash_sender.png
+    - assets/images/logo_wallets/cash_depositor.png
+    - assets/images/logo_wallets/wallet_acc.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

@@ -4,8 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/payment/presentation/widget/custom_app_bar.dart';
 import 'package:movemate/features/payment/presentation/widget/payment_body.dart';
 
-// Import các component
-
 @RoutePage()
 class PaymentScreen extends HookConsumerWidget {
   const PaymentScreen({super.key});

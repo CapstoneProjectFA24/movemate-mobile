@@ -71,6 +71,7 @@ class PaymentBody extends HookConsumerWidget {
       (method) => method.methodName == paymentMethod.value,
       orElse: () => paymentMethods[0],
     );
+
     final fakeCoupon = PaymentModelsCoupon(
       couponHint:
           couponCode.value.isEmpty ? "Bạn có 7 mã coupons" : couponCode.value,
@@ -96,18 +97,16 @@ class PaymentBody extends HookConsumerWidget {
               paymentMethod.value = newMethod;
               // Lưu phương thức mới vào SharedPreferences hoặc xử lý logic khác
             },
-            onSeeAll: () {
-              // Handle 'Xem tất cả' click event
-              Navigator.pushNamed(
-                  context, '/all-payment-methods'); // Example navigation
-            },
           ),
           const SizedBox(height: 16),
           CouponInput(paymentModelsCoupon: fakeCoupon),
           const SizedBox(height: 16),
           TotalPrice(paymentModelsTotalPrice: fakeTotalPrice),
           const SizedBox(height: 16),
-          const CompletePaymentButton(),
+          CompletePaymentButton(
+            selectedPaymentMethod: selectedPaymentMethod
+                .methodName, // Truyền giá trị phương thức thanh toán hiện tại
+          ),
         ],
       ),
     );

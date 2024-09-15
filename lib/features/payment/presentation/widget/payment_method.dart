@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/features/payment/presentation/screens/payment_all_method_screen.dart';
+
 import 'package:movemate/features/payment/data/models/payment_models.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -6,14 +8,12 @@ class PaymentMethod extends StatelessWidget {
   final PaymentModelsMethod paymentModelsMethod;
   final void Function(String) onMethodChanged;
   final List<PaymentModelsMethod> paymentMethods;
-  final VoidCallback onSeeAll; // Callback when 'Xem tất cả' is clicked
 
   const PaymentMethod({
     super.key,
     required this.paymentModelsMethod,
     required this.onMethodChanged,
     required this.paymentMethods,
-    required this.onSeeAll, // Add this for 'Xem tất cả' action
   });
 
   @override
@@ -29,12 +29,26 @@ class PaymentMethod extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             GestureDetector(
-              onTap: onSeeAll,
+              onTap: () {
+                // Show bottom modal with SeeAllPaymentMethod
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                  ),
+                  builder: (BuildContext context) {
+                    return const SeeAllPaymentMethodScreen();
+                  },
+                );
+              },
               child: const Text(
                 'Xem tất cả',
                 style: TextStyle(
                   fontSize: 16,
-                  color: AssetsConstants.primaryDark,
+                  color: AssetsConstants.primaryLight,
                 ),
               ),
             ),

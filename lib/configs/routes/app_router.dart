@@ -7,7 +7,7 @@ import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_scre
 import 'package:movemate/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
-import 'package:movemate/features/payment/presentation/screens/peyment_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
 import 'package:movemate/features/home/presentation/screens/home_screen.dart';

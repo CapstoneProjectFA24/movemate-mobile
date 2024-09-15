@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class PaymentModelsVehicleInfo {
   final String struckName;
   final String quantity;
@@ -47,5 +49,25 @@ class PaymentModelsTotalPrice {
 
   PaymentModelsTotalPrice({
     required this.totalPrice,
+  });
+}
+
+class PaymentModelsSeeAllPaymentMethodItems {
+  final String iconPath;
+  final String methodName;
+  final bool isLinked;
+  final String linkedText;
+  final String methodValue;
+  final ValueNotifier<String> selectedMethod;
+  final String? additionalText;
+
+  const PaymentModelsSeeAllPaymentMethodItems({
+    required this.iconPath,
+    required this.methodName,
+    required this.isLinked,
+    required this.linkedText,
+    required this.methodValue,
+    required this.selectedMethod,
+    this.additionalText,
   });
 }
