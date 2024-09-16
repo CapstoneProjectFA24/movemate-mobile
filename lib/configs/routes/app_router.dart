@@ -37,7 +37,6 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         // auth
         AutoRoute(
-          // initial: true,
           page: SignInScreenRoute.page,
         ),
         AutoRoute(
@@ -47,6 +46,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: OnboardingScreenRoute.page,
         ),
+
+        // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
           initial: true,
@@ -62,10 +63,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: HomeScreenRoute.page,
         ),
+
+        // màn hình khuyến mãi
         AutoRoute(
           page: PromotionScreenRoute.page,
         ),
-        AutoRoute(page: PromotionDetailScreenRoute.page),
+        AutoRoute(
+          page: PromotionDetailScreenRoute.page,
+        ),
 
         // flow booking
         AutoRoute(
@@ -77,21 +82,23 @@ class AppRouter extends _$AppRouter {
           page: AvailableVehiclesScreenRoute.page,
         ),
 
-        AutoRoute(page: PackageDetailScreenRoute.page),
+        //TODO
         AutoRoute(
-          // initial: true,
+          page: PackageDetailScreenRoute.page,
+        ),
+
+        AutoRoute(
           page: BookingSelectPackageScreenRoute.page,
         ),
+
+        //  order flow
         AutoRoute(
-          // initial: true,
           page: OrderScreenRoute.page,
         ),
         AutoRoute(
-          // initial: true,
           page: PaymentScreenRoute.page,
         ),
         AutoRoute(
-          // initial: true,
           page: SplashScreenRoute.page,
         ),
       ];
