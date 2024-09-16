@@ -7,6 +7,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import '../../widgets/custom_scaford.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:flutter/gestures.dart';
 
 import '../../../../../utils/constants/asset_constant.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
@@ -16,8 +17,7 @@ import '../../../../../utils/resources/validations.dart';
 class SignUpScreen extends HookConsumerWidget with Validations {
   SignUpScreen({super.key});
 
-
-    // handle submit
+  // handle submit
   void submit({
     required GlobalKey<FormState> formKey,
     required BuildContext context,
@@ -26,16 +26,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     required String email,
     required String phoneNumber,
     required String password,
-  }) async {
-    // if (formKey.currentState!.validate()) {
-    //   unfocus(context);
-    //   await ref.read(signInControllerProvider.notifier).signIn(
-    //         email,
-    //         password,
-    //         context,
-    //       );
-    // }
-  }
+  }) async {}
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,7 +37,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     final password = useTextEditingController();
     final phoneNumber = useTextEditingController();
 
-        final formKey = useMemoized(GlobalKey<FormState>.new, const []);
+    final formKey = useMemoized(GlobalKey<FormState>.new, const []);
 
     return CustomScaffold(
       child: Column(
@@ -82,77 +73,188 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                       const SizedBox(
                         height: 40.0,
                       ),
-                      TextInput(
-                        textController: username,
-                        hintTextLable: "Tên đăng nhập",
-                        hintText: 'Nhập tên',
-                        onValidate: (val) => '',
-                        autoFocus: true,
+                      TextFormField(
+                        controller: username,
+                        decoration: const InputDecoration(
+                          labelText: 'Tên', // Label that remains visible
+                          hintText: 'Nhập tên của bạn', // Hint text
+                          hintStyle: TextStyle(
+                            color: Colors.grey, // Color of the hint text
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.black, // Color of the label text
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey, // Border color
+                              width: 2.0, // Border width
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AssetsConstants
+                                  .mainColor, // Border color when focused
+                              width: 2.0, // Border width when focused
+                            ),
+                          ),
+                        ),
+                        autofocus: true,
+                        style: const TextStyle(
+                          color: Colors.black, // Color of the input text
+                        ),
+                        validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                       ),
-                      const SizedBox(
-                        height: 25.0,
+                      const SizedBox(height: 25.0),
+                      TextFormField(
+                        controller: email,
+                        decoration: const InputDecoration(
+                          labelText: 'Email', // Label that remains visible
+                          hintText: 'Nhập email của bạn', // Hint text
+                          hintStyle: TextStyle(
+                            color: Colors.grey, // Color of the hint text
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.black, // Color of the label text
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey, // Border color
+                              width: 2.0, // Border width
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AssetsConstants
+                                  .mainColor, // Border color when focused
+                              width: 2.0, // Border width when focused
+                            ),
+                          ),
+                        ),
+                        autofocus: true,
+                        style: const TextStyle(
+                          color: Colors.black, // Color of the input text
+                        ),
+                        validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                       ),
-                      TextInput(
-                        textController: email,
-                        hintTextLable: "Email",
-                        hintText: 'Nhập email',
-                        onValidate: (val) => '',
-                        autoFocus: true,
+                      const SizedBox(height: 25.0),
+                      TextFormField(
+                        controller: phoneNumber,
+                        decoration: const InputDecoration(
+                          labelText:
+                              'Số điện thoại', // Label that remains visible
+                          hintText: 'Nhập số điện thoại', // Hint text
+                          hintStyle: TextStyle(
+                            color: Colors.grey, // Color of the hint text
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.black, // Color of the label text
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey, // Border color
+                              width: 2.0, // Border width
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AssetsConstants
+                                  .mainColor, // Border color when focused
+                              width: 2.0, // Border width when focused
+                            ),
+                          ),
+                        ),
+                        autofocus: true,
+                        style: const TextStyle(
+                          color: Colors.black, // Color of the input text
+                        ),
+                        validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                       ),
-                      const SizedBox(
-                        height: 25.0,
+                      const SizedBox(height: 25.0),
+                      TextFormField(
+                        controller: password,
+                        decoration: const InputDecoration(
+                          labelText: 'Mật khẩu', // Label that remains visible
+                          hintText: 'Nhập mật khẩu', // Hint text
+                          hintStyle: TextStyle(
+                            color: Colors.grey, // Color of the hint text
+                          ),
+                          labelStyle: TextStyle(
+                            color: Colors.black, // Color of the label text
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey, // Border color
+                              width: 2.0, // Border width
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: AssetsConstants
+                                  .mainColor, // Border color when focused
+                              width: 2.0, // Border width when focused
+                            ),
+                          ),
+                        ),
+                        autofocus: true,
+                        style: const TextStyle(
+                          color: Colors.black, // Color of the input text
+                        ),
+                        validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                       ),
-                      TextInput(
-                        textController: phoneNumber,
-                        hintTextLable: "Điện thoại",
-                        hintText: 'Nhập số điện thoại',
-                        onValidate: (val) => '',
-                        autoFocus: true,
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      PasswordInput(
-                        textEditingController: password,
-                        hintTextLable: "Mật khẩu",
-                        hintText: 'Nhập mật khẩu',
-                        // onValidate: (val) => passwordMinErrorText(val),
-                        onValidate: (val) => (val),
-                        autoFocus: false,
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-
-
-              Row(
+                      const SizedBox(height: 25.0),
+                      // Terms and Conditions Checkbox with TapGestureRecognizer
+                      Row(
                         children: [
                           Checkbox(
-                            value: true,
+                            value: false,
                             onChanged: (bool? value) {
-                              // setState(() {
-                              //   agreePersonalData = value!;
-                              // });
+                              // Handle checkbox state
                             },
-                            activeColor: AssetsConstants.mainColor,
                           ),
-                          const Text(
-                            'I agree to the processing of ',
-                            style: TextStyle(
-                              color: Colors.black45,
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Tôi đồng ý với các ',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                                children: [
+                                  TextSpan(
+                                    text: 'Điều khoản sử dụng',
+                                    style: const TextStyle(
+                                      color: Colors.blue,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        // Handle terms tap
+                                        print('Tapped on Điều khoản sử dụng');
+                                      },
+                                  ),
+                                  const TextSpan(text: ' và '),
+                                  TextSpan(
+                                    text: 'Chính sách bảo mật',
+                                    style: const TextStyle(
+                                      color: Colors.blue,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        // Handle privacy policy tap
+                                        print('Tapped on Chính sách bảo mật');
+                                      },
+                                  ),
+                                  const TextSpan(text: ' của MoveMate.'),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+
+                      const SizedBox(height: 24),
                       ValueListenableBuilder4(
                         first: username,
                         second: email,
                         third: phoneNumber,
-                        fourth: password ,
-                        builder: (_, a, b,c,d, __) => SizedBox(
+                        fourth: password,
+                        builder: (_, a, b, c, d, __) => SizedBox(
                           width: double.infinity,
                           child: CustomButton(
                             width: size.width * 1,
@@ -196,7 +298,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                               horizontal: 10,
                             ),
                             child: LabelText(
-                              content: 'Hoặc đăng nhập với',
+                              content: 'hoặc tiếp tục với',
                               size: AssetsConstants.defaultFontSize - 10.0,
                               fontWeight: FontWeight.w700,
                               color: AssetsConstants.subtitleColor,
@@ -215,49 +317,68 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                         height: 25.0,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Logo(Logos.facebook_f),
-                          Logo(Logos.google),
-                          Logo(Logos.apple),
-                          Logo(Logos.whatsapp),
+                          Container(
+                            width: size.width * 0.8, // Adjust width as needed
+                            decoration: BoxDecoration(
+                              color: Colors
+                                  .white, // Background color of the button
+                              borderRadius:
+                                  BorderRadius.circular(8.0), // Rounded corners
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withOpacity(0.2), // Shadow color
+                                  spreadRadius: 2, // Spread radius
+                                  blurRadius: 5, // Blur radius
+                                  offset: const Offset(0, 3), // Shadow offset
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Logo(Logos.google), // Google icon
+                                const SizedBox(
+                                    width: 20), // Space between icon and text
+                                const Text(
+                                  'Google',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 40.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const LabelText(
-                            content: 'Bạn đã có tài khoản?',
-                            size: AssetsConstants.defaultFontSize - 10.0,
-                            fontWeight: FontWeight.w700,
-                            color: AssetsConstants.subtitleColorM,
-                            textDecoration: TextDecoration.none,
-                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  // builder: (e) => const SignUpScreen(),
-                                  builder: (context) => SignInScreen()
-                                ),
+                                    // builder: (e) => const SignUpScreen(),
+                                    builder: (context) => SignInScreen()),
                               );
                             },
                             child: const LabelText(
-                              content: 'Đăng nhập',
+                              content: 'Đã có tài khoản?',
                               size: AssetsConstants.defaultFontSize - 10.0,
                               fontWeight: FontWeight.w700,
-                              color: AssetsConstants.blackColor,
-                              textDecoration: TextDecoration.underline,
+                              color: AssetsConstants.mainColor,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(
-                        height: 20.0,
+                        height: 10.0,
                       ),
                     ],
                   ),
