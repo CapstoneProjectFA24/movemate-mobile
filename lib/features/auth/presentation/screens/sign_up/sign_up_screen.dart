@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
+import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import '../../widgets/custom_scaford.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -38,6 +40,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     final phoneNumber = useTextEditingController();
 
     final formKey = useMemoized(GlobalKey<FormState>.new, const []);
+    final agreeToTerms = useState(false);
 
     return CustomScaffold(
       child: Column(
@@ -206,10 +209,13 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                       Row(
                         children: [
                           Checkbox(
-                            value: false,
+                            value: agreeToTerms.value,
                             onChanged: (bool? value) {
-                              // Handle checkbox state
+                              // Toggle checkbox state
+                              agreeToTerms.value = value ?? false;
                             },
+                            activeColor: AssetsConstants.mainColor,
+                            checkColor: Colors.white,
                           ),
                           Expanded(
                             child: RichText(
@@ -225,7 +231,13 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         // Handle terms tap
-                                        print('Tapped on Điều khoản sử dụng');
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                TermOfUseScreen(),
+                                          ),
+                                        );
                                       },
                                   ),
                                   const TextSpan(text: ' và '),
@@ -237,7 +249,13 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         // Handle privacy policy tap
-                                        print('Tapped on Chính sách bảo mật');
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PrivacyPolicyScreen(),
+                                          ),
+                                        );
                                       },
                                   ),
                                   const TextSpan(text: ' của MoveMate.'),
@@ -247,8 +265,9 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 24),
+
+                      // Button with ValueListenableBuilder for form fields
                       ValueListenableBuilder4(
                         first: username,
                         second: email,
@@ -271,18 +290,25 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                                 password: password.text.trim(),
                               );
                             },
-                            isActive: a.text.isNotEmpty && b.text.isNotEmpty,
+                            // Enable the button only when fields are not empty AND checkbox is checked
+                            isActive: a.text.isNotEmpty &&
+                                b.text.isNotEmpty &&
+                                c.text.isNotEmpty &&
+                                d.text.isNotEmpty &&
+                                agreeToTerms.value, // <-- Checkbox condition
                             size: AssetsConstants.defaultFontSize - 8.0,
-                            backgroundColor:
-                                (a.text.isNotEmpty && b.text.isNotEmpty)
-                                    ? AssetsConstants.mainColor
-                                    : AssetsConstants.primaryLighter,
+                            backgroundColor: (a.text.isNotEmpty &&
+                                    b.text.isNotEmpty &&
+                                    c.text.isNotEmpty &&
+                                    d.text.isNotEmpty &&
+                                    agreeToTerms
+                                        .value) // <-- Checkbox condition
+                                ? AssetsConstants.mainColor
+                                : AssetsConstants.primaryLighter,
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
