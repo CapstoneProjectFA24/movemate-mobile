@@ -1,4 +1,3 @@
-//order_model.dart
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -42,30 +41,85 @@ class _BookingSelectionState extends State<BookingSelection> {
 
         // Room and Floor Count Buttons
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: GestureDetector(
+              child: _buildRoomFloorCountButton(
+                label: 'Số phòng ngủ',
+                value: numberOfRooms,
                 onTap: () => _showRoomCountModal(context),
-                child: _buildSelectionButton(
-                  label: 'Số phòng ngủ: $numberOfRooms',
-                  icon: Icons.arrow_drop_down,
-                ),
               ),
             ),
-            const SizedBox(width: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text('-',
+                  style: TextStyle(
+                      fontSize: 24, color: AssetsConstants.greyColor)),
+            ),
             Expanded(
-              child: GestureDetector(
+              child: _buildRoomFloorCountButton(
+                label: 'Số tầng',
+                value: numberOfFloors,
                 onTap: () => _showFloorCountModal(context),
-                child: _buildSelectionButton(
-                  label: 'Số tầng: $numberOfFloors',
-                  icon: Icons.arrow_drop_down,
-                ),
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  // Room/Floor count button with customized style
+  Widget _buildRoomFloorCountButton({
+    required String label,
+    required int value,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: AssetsConstants.greyColor.withOpacity(0.2), // Nền xám mờ
+          borderRadius: BorderRadius.circular(16), // Bo góc tròn
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AssetsConstants.greyColor, // Màu xám cho nhãn
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: const BoxDecoration(
+                    color: AssetsConstants.whiteColor, // Nền trắng cho số lượng
+                    shape: BoxShape.circle, // Hình tròn
+                  ),
+                  child: Text(
+                    value.toString(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AssetsConstants.blackColor, // Màu đen cho số
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4), // Khoảng cách giữa số và icon
+                const Icon(Icons.arrow_drop_down,
+                    color: AssetsConstants.primaryDark), // Màu xanh cho icon
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -75,16 +129,20 @@ class _BookingSelectionState extends State<BookingSelection> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
-        color: AssetsConstants.greyColor[400],
+        color: AssetsConstants.whiteColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AssetsConstants.greyColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: const TextStyle(color: AssetsConstants.blackColor)),
-          Icon(icon, color: AssetsConstants.blue1),
+          Text(
+            label,
+            style: const TextStyle(
+              color: AssetsConstants.blackColor,
+            ),
+          ),
+          Icon(icon, color: AssetsConstants.primaryDark),
         ],
       ),
     );
@@ -103,7 +161,7 @@ class _BookingSelectionState extends State<BookingSelection> {
             height: 300, // Adjust height as needed
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AssetsConstants.whiteColor,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -156,7 +214,7 @@ class _BookingSelectionState extends State<BookingSelection> {
             height: 300, // Adjust height as needed
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AssetsConstants.whiteColor,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -176,6 +234,7 @@ class _BookingSelectionState extends State<BookingSelection> {
                           (index + 1).toString(),
                           style: const TextStyle(
                               color: AssetsConstants.blackColor),
+                          textAlign: TextAlign.center,
                         ),
                         onTap: () {
                           setState(() {
@@ -209,7 +268,7 @@ class _BookingSelectionState extends State<BookingSelection> {
             height: 300, // Adjust height as needed
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AssetsConstants.whiteColor,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -229,6 +288,7 @@ class _BookingSelectionState extends State<BookingSelection> {
                           (index + 1).toString(),
                           style: const TextStyle(
                               color: AssetsConstants.blackColor),
+                          textAlign: TextAlign.center,
                         ),
                         onTap: () {
                           setState(() {

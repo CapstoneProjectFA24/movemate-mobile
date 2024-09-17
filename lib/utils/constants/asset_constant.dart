@@ -89,6 +89,7 @@ class AssetsConstants {
   static const whiteColor = Color(0xffFFFFFF);
   static const blackColor = Color(0xff000000);
   static const greyColor = Colors.grey;
+  static const pinkColor = Colors.pinkAccent;
   static const scaffoldColor = Color(0xffF6F7FC);
   static const borderColor = Color(0xffB3B9C1);
   static const textBlur = Color(0xff7F858D);

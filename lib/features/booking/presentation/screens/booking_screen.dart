@@ -44,50 +44,63 @@ class BookingScreen extends HookWidget {
         centerTitle: true,
         showBackButton: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BookingSelection(
-                onHouseTypeSelected: (selectedType) {
-                  houseType.value = selectedType;
-                  saveState();
-                },
-                onRoomCountSelected: (count) {
-                  numberOfRooms.value = count;
-                  saveState();
-                },
-                onFloorCountSelected: (count) {
-                  numberOfFloors.value = count;
-                  saveState();
-                },
-              ),
-              const SizedBox(height: 16),
-              BookingDetails(
-                houseType: houseType.value,
-                numberOfRooms: numberOfRooms.value,
-                numberOfFloors: numberOfFloors.value,
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AssetsConstants.primaryLight,
-                  ),
-                  onPressed: () {
-                    context.router.push(AvailableVehiclesScreenRoute());
-                  },
-                  child: const Text('Tiếp tục',
-                      style: TextStyle(
-                          fontSize: 16, color: AssetsConstants.whiteColor)),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    BookingSelection(
+                      onHouseTypeSelected: (selectedType) {
+                        houseType.value = selectedType;
+                        saveState();
+                      },
+                      onRoomCountSelected: (count) {
+                        numberOfRooms.value = count;
+                        saveState();
+                      },
+                      onFloorCountSelected: (count) {
+                        numberOfFloors.value = count;
+                        saveState();
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    BookingDetails(
+                      houseType: houseType.value,
+                      numberOfRooms: numberOfRooms.value,
+                      numberOfFloors: numberOfFloors.value,
+                    ),
+                    const SizedBox(height: 8),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AssetsConstants.primaryDark, // Màu nền cam
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8), // Bo góc nút
+                  ),
+                ),
+                onPressed: () {
+                  context.router.push(AvailableVehiclesScreenRoute());
+                },
+                child: const Text('Tiếp tục',
+                    style: TextStyle(
+                        fontSize: 16, color: AssetsConstants.whiteColor)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

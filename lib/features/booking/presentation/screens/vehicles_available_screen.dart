@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/models/booking_models.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 import 'package:movemate/utils/providers/vehicle_provider.dart';
 
@@ -28,10 +29,10 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Phương tiện có sẵn'),
-        backgroundColor: Colors.orange,
+        backgroundColor: AssetsConstants.primaryDark,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(0.0),
         child: Column(
           children: [
             Expanded(
@@ -77,17 +78,18 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white, // Background color
+        color: AssetsConstants.whiteColor, // Background color
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
-              ? Colors.orange
-              : Colors.grey.shade300, // Active border for selected card
+              ? AssetsConstants.primaryDark
+              : AssetsConstants
+                  .greyColor.shade300, // Active border for selected card
           width: 2, // Wider border for the selected card
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade200, // Shadow color
+            color: AssetsConstants.greyColor.shade200, // Shadow color
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3), // Shadow position
@@ -104,7 +106,8 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
             height: 60, // Fixed image height
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Colors.grey.shade100, // Background color for image
+              color: AssetsConstants
+                  .greyColor.shade100, // Background color for image
             ),
             child: Image.asset(
               imagePath,
@@ -125,7 +128,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    color: Colors.black,
+                    color: AssetsConstants.blackColor,
                   ),
                   maxLines: 1, // Limit to 1 line
                   overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
@@ -139,7 +142,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                     description,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade700,
+                      color: AssetsConstants.greyColor.shade700,
                     ),
                     maxLines: 2, // Limit to 2 lines
                     overflow:
@@ -156,7 +159,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                   size,
                   style: const TextStyle(
                     fontSize: 12,
-                    color: Colors.black54,
+                    color: AssetsConstants.blackColor,
                   ),
                   maxLines: 1, // Limit to 1 line
                   overflow: TextOverflow.visible, // Show ellips
@@ -174,12 +177,13 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
   Widget _buildTotalPriceSection(
       double totalPrice, bool isButtonEnabled, BuildContext context) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AssetsConstants.whiteColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: AssetsConstants.greyColor.shade300,
             offset: const Offset(0, -2),
             blurRadius: 5,
           ),
@@ -212,12 +216,22 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                           .push(const BookingSelectPackageScreenRoute());
                     }
                   : null,
+              // style: ElevatedButton.styleFrom(
+              //   backgroundColor: isButtonEnabled
+              // /      ? AssetsConstants.primaryDark
+              //       : AssetsConstants.whiteColor,
+              //   padding: const EdgeInsets.symmetric(vertical: 16),
+              // ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isButtonEnabled ? Colors.orange : Colors.grey,
+                backgroundColor: AssetsConstants.primaryDark, // Màu nền cam
                 padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Bo góc nút
+                ),
               ),
-              child:
-                  const Text('Bước tiếp theo', style: TextStyle(fontSize: 16)),
+              child: const Text('Bước tiếp theo',
+                  style: TextStyle(
+                      fontSize: 16, color: AssetsConstants.whiteColor)),
             ),
           ),
         ],

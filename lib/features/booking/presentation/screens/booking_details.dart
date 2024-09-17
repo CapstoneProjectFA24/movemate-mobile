@@ -1,5 +1,6 @@
-//order_details.dart
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 class BookingDetails extends StatelessWidget {
   final String? houseType;
@@ -15,7 +16,11 @@ class BookingDetails extends StatelessWidget {
 
   // Room images
   final List<String> livingRoomImages = [];
-  final List<String> bedroomImages = [];
+  final List<String> bedroomImages = [
+    'assets/images/booking/bedroom/bedroom1.png',
+    'assets/images/booking/bedroom/bedroom2.png',
+    'assets/images/booking/bedroom/bedroom3.png'
+  ];
   final List<String> diningRoomImages = [];
   final List<String> officeRoomImages = [];
   final List<String> bathroomImages = [];
@@ -23,22 +28,18 @@ class BookingDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(right: 16.0, left: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDetailSection('Loại nhà:', houseType ?? 'Chưa chọn'),
-          _buildDetailSection('Số phòng ngủ:', numberOfRooms.toString()),
-          _buildDetailSection('Số tầng:', numberOfFloors.toString()),
-          const SizedBox(height: 16),
           _buildRoomImageSection('Phòng khách', livingRoomImages),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
           _buildRoomImageSection('Phòng ngủ', bedroomImages),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
           _buildRoomImageSection('Phòng ăn/ bếp', diningRoomImages),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
           _buildRoomImageSection('Phòng làm việc', officeRoomImages),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
           _buildRoomImageSection('Phòng vệ sinh', bathroomImages),
         ],
       ),
@@ -54,17 +55,20 @@ class BookingDetails extends StatelessWidget {
           roomTitle,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: images.length + 1,
-            itemBuilder: (context, index) {
-              return (index == images.length)
-                  ? _buildAddImageButton()
-                  : _buildRoomImage(images[index]);
-            },
+        // const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: 70,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: images.length + 1, // +1 for "Thêm ảnh" button
+              itemBuilder: (context, index) {
+                return (index == images.length)
+                    ? _buildAddImageButton() // "Thêm ảnh" button
+                    : _buildRoomImage(images[index]); // Room image
+              },
+            ),
           ),
         ),
       ],
@@ -73,31 +77,35 @@ class BookingDetails extends StatelessWidget {
 
   // Widget for room image
   Widget _buildRoomImage(String imagePath) {
-    return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 4,
-            right: 4,
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.pinkAccent,
-              ),
-              child: const Icon(Icons.delete, color: Colors.white, size: 16),
-            ),
+    return Center(
+      child: Container(
+        width: 71,
+        height: 56,
+        margin: const EdgeInsets.only(right: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          image: DecorationImage(
+            image: AssetImage(imagePath),
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 4,
+              right: 4,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AssetsConstants.pinkColor,
+                ),
+                child: const Icon(Icons.delete,
+                    color: AssetsConstants.whiteColor, size: 16),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -108,28 +116,32 @@ class BookingDetails extends StatelessWidget {
       onTap: () {
         // Handle add image
       },
-      child: Container(
-        width: 100,
-        margin: const EdgeInsets.only(right: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Center(
-          child: Text('Thêm ảnh', style: TextStyle(color: Colors.grey)),
+      child: Center(
+        child: Container(
+          width: 295,
+          height: 44,
+          margin: const EdgeInsets.only(right: 8),
+          // decoration: BoxDecoration(
+          //   border: Border.all(
+          //     color: AssetsConstants.greyColor,
+          // style: BorderStyle.solid, // Viền đứt đoạn
+          //   ),
+          //   borderRadius: BorderRadius.circular(12),
+          // ),
+          child: DottedBorder(
+            color: AssetsConstants.greyColor, // Màu viền đứt đoạn
+            strokeWidth: 2,
+            borderType: BorderType.RRect,
+            radius: const Radius.circular(12),
+            dashPattern: const [8, 4], // Đặt pattern cho viền đứt đoạn
+
+            child: const Center(
+              child: Text('Thêm ảnh',
+                  style: TextStyle(color: AssetsConstants.greyColor)),
+            ),
+          ),
         ),
       ),
-    );
-  }
-
-  // Helper method for detail section
-  Widget _buildDetailSection(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-      ],
     );
   }
 }
