@@ -5,15 +5,17 @@ import 'price_detail_modal.dart'; // Import modal component
 class SummarySection extends StatelessWidget {
   final double totalPrice;
   final VoidCallback onPlaceOrder;
-
   const SummarySection({
     super.key,
     required this.totalPrice,
     required this.onPlaceOrder,
   });
 
+
   @override
   Widget build(BuildContext context) {
+
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       color: AssetsConstants.whiteColor,

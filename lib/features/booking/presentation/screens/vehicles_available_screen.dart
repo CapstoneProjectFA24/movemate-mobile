@@ -1,30 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/data/models/booking_models.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/providers/vehicle_provider.dart';
 
 @RoutePage()
 class AvailableVehiclesScreen extends HookConsumerWidget {
-  final AvailableVehicles? avalble; // Nullable
-
-  const AvailableVehiclesScreen({
-    super.key,
-    this.avalble,
-  });
+  const AvailableVehiclesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bookingState = ref.watch(bookingProvider);
+    final bookingNotifier = ref.read(bookingProvider.notifier);
     final availableVehicles = ref.watch(availableVehiclesProvider);
-
-    // Use initial values if provided, otherwise start with defaults
-    final selectedVehicleIndex =
-        useState<int?>(avalble?.initialSelectedVehicleIndex);
-    final totalPrice = useState<double>(avalble?.initialTotalPrice ?? 0);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,89 +30,87 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                 itemCount: availableVehicles.length,
                 itemBuilder: (context, index) {
                   final vehicle = availableVehicles[index];
+                  final isSelected = bookingState.selectedVehicleIndex == index;
+
                   return GestureDetector(
                     onTap: () {
-                      // Update selected vehicle and total price
-                      selectedVehicleIndex.value = index;
-                      totalPrice.value = calculatePrice(
-                          index); // Update total price based on the selected vehicle
+                      bookingNotifier.updateSelectedVehicle(
+                        index,
+                        calculatePrice(index),
+                      );
                     },
                     child: _buildVehicleCard(
                       vehicle['title']!,
                       vehicle['description']!,
                       vehicle['size']!,
                       vehicle['imagePath']!,
-                      selectedVehicleIndex.value == index, // Check if selected
+                      isSelected,
                     ),
                   );
                 },
               ),
             ),
-            // Total Price and Continue Button
-            _buildTotalPriceSection(300.0, true, context),
+            _buildTotalPriceSection(
+              bookingState.totalPrice,
+              bookingState.selectedVehicleIndex != null,
+              context,
+            ),
           ],
         ),
       ),
     );
   }
 
-  // Helper function to build each vehicle card with fixed dimensions
   Widget _buildVehicleCard(
     String title,
     String description,
     String size,
     String imagePath,
-    bool isSelected, // Whether the card is selected
+    bool isSelected,
   ) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AssetsConstants.whiteColor, // Background color
+        color: AssetsConstants.whiteColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
               ? AssetsConstants.primaryDark
-              : AssetsConstants
-                  .greyColor.shade300, // Active border for selected card
-          width: 2, // Wider border for the selected card
+              : AssetsConstants.greyColor.shade300,
+          width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: AssetsConstants.greyColor.shade200, // Shadow color
+            color: AssetsConstants.greyColor.shade200,
             spreadRadius: 2,
             blurRadius: 5,
-            offset: const Offset(0, 3), // Shadow position
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      height: 124, // Fixed card height
-      width: double.infinity, // Card width to fill the parent
+      height: 124,
+      width: double.infinity,
       child: Row(
         children: [
-          // Image with fixed width and height
           Container(
-            width: 60, // Fixed image width
-            height: 60, // Fixed image height
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: AssetsConstants
-                  .greyColor.shade100, // Background color for image
+              color: AssetsConstants.greyColor.shade100,
             ),
             child: Image.asset(
               imagePath,
-              fit: BoxFit.contain, // Ensure image fits within the container
+              fit: BoxFit.contain,
             ),
           ),
-          const SizedBox(width: 16), // Space between image and text
-
-          // Text section
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Title with fixed color and bold font
                 Text(
                   title,
                   style: const TextStyle(
@@ -130,39 +118,27 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                     fontSize: 16,
                     color: AssetsConstants.blackColor,
                   ),
-                  maxLines: 1, // Limit to 1 line
-                  overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(
-                    height: 6), // Spacing between title and description
-
-                // Description with fixed color and font size, and limited lines
-                SizedBox(
-                  child: Text(
-                    description,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AssetsConstants.greyColor.shade700,
-                    ),
-                    maxLines: 2, // Limit to 2 lines
-                    overflow:
-                        TextOverflow.ellipsis, // Show ellipsis for overflow
+                const SizedBox(height: 6),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AssetsConstants.greyColor.shade700,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-
-                const SizedBox(
-                    height: 6), // Spacing between description and size
-
-                // Size information
-
+                const SizedBox(height: 6),
                 Text(
                   size,
                   style: const TextStyle(
                     fontSize: 12,
                     color: AssetsConstants.blackColor,
                   ),
-                  maxLines: 1, // Limit to 1 line
-                  overflow: TextOverflow.visible, // Show ellips
+                  maxLines: 1,
                 ),
               ],
             ),
@@ -171,8 +147,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       ),
     );
   }
-
-  // Helper function to build the total price section and button
 
   Widget _buildTotalPriceSection(
       double totalPrice, bool isButtonEnabled, BuildContext context) {
@@ -192,46 +166,39 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tổng cộng và nút Tiếp theo
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Tổng cộng', style: TextStyle(fontSize: 16)),
               Text(
-                '₫${totalPrice.toStringAsFixed(3)}',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                '₫${totalPrice.toStringAsFixed(0)}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          // Nút Tiếp tục
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: isButtonEnabled
                   ? () {
-                      // Điều hướng sang màn hình OrderSelectPackageScreen
-                      context.router
-                          .push(const BookingSelectPackageScreenRoute());
+                      context.router.push(const BookingSelectPackageScreenRoute());
                     }
                   : null,
-              // style: ElevatedButton.styleFrom(
-              //   backgroundColor: isButtonEnabled
-              // /      ? AssetsConstants.primaryDark
-              //       : AssetsConstants.whiteColor,
-              //   padding: const EdgeInsets.symmetric(vertical: 16),
-              // ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AssetsConstants.primaryDark, // Màu nền cam
+                backgroundColor: AssetsConstants.primaryDark,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8), // Bo góc nút
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('Bước tiếp theo',
-                  style: TextStyle(
-                      fontSize: 16, color: AssetsConstants.whiteColor)),
+              child: const Text(
+                'Bước tiếp theo',
+                style: TextStyle(fontSize: 16, color: AssetsConstants.whiteColor),
+              ),
             ),
           ),
         ],
@@ -239,15 +206,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     );
   }
 
-  // Calculate the price based on the selected vehicle index
   double calculatePrice(int index) {
-    // Sample price calculation based on the selected vehicle index
     return 300000 + (index * 50000);
-  }
-
-  // Continue button action
-  void _onContinue(BuildContext context) {
-    // Điều hướng đến OrderSelectPackageScreen
-    context.router.push(const BookingSelectPackageScreenRoute());
   }
 }

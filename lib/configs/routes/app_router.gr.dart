@@ -16,14 +16,9 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     AvailableVehiclesScreenRoute.name: (routeData) {
-      final args = routeData.argsAs<AvailableVehiclesScreenRouteArgs>(
-          orElse: () => const AvailableVehiclesScreenRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: AvailableVehiclesScreen(
-          key: args.key,
-          avalble: args.avalble,
-        ),
+        child: const AvailableVehiclesScreen(),
       );
     },
     BookingScreenRoute.name: (routeData) {
@@ -68,6 +63,14 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const PaymentScreen(),
+      );
+    },
+    PrivacyPolicyScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<PrivacyPolicyScreenRouteArgs>(
+          orElse: () => const PrivacyPolicyScreenRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PrivacyPolicyScreen(key: args.key),
       );
     },
     ProfileScreenRoute.name: (routeData) {
@@ -120,46 +123,29 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TabViewScreen(),
       );
     },
+    TermOfUseScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<TermOfUseScreenRouteArgs>(
+          orElse: () => const TermOfUseScreenRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TermOfUseScreen(key: args.key),
+      );
+    },
   };
 }
 
 /// generated route for
 /// [AvailableVehiclesScreen]
-class AvailableVehiclesScreenRoute
-    extends PageRouteInfo<AvailableVehiclesScreenRouteArgs> {
-  AvailableVehiclesScreenRoute({
-    Key? key,
-    AvailableVehicles? avalble,
-    List<PageRouteInfo>? children,
-  }) : super(
+class AvailableVehiclesScreenRoute extends PageRouteInfo<void> {
+  const AvailableVehiclesScreenRoute({List<PageRouteInfo>? children})
+      : super(
           AvailableVehiclesScreenRoute.name,
-          args: AvailableVehiclesScreenRouteArgs(
-            key: key,
-            avalble: avalble,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'AvailableVehiclesScreenRoute';
 
-  static const PageInfo<AvailableVehiclesScreenRouteArgs> page =
-      PageInfo<AvailableVehiclesScreenRouteArgs>(name);
-}
-
-class AvailableVehiclesScreenRouteArgs {
-  const AvailableVehiclesScreenRouteArgs({
-    this.key,
-    this.avalble,
-  });
-
-  final Key? key;
-
-  final AvailableVehicles? avalble;
-
-  @override
-  String toString() {
-    return 'AvailableVehiclesScreenRouteArgs{key: $key, avalble: $avalble}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -273,6 +259,36 @@ class PaymentScreenRoute extends PageRouteInfo<void> {
   static const String name = 'PaymentScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PrivacyPolicyScreen]
+class PrivacyPolicyScreenRoute
+    extends PageRouteInfo<PrivacyPolicyScreenRouteArgs> {
+  PrivacyPolicyScreenRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PrivacyPolicyScreenRoute.name,
+          args: PrivacyPolicyScreenRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'PrivacyPolicyScreenRoute';
+
+  static const PageInfo<PrivacyPolicyScreenRouteArgs> page =
+      PageInfo<PrivacyPolicyScreenRouteArgs>(name);
+}
+
+class PrivacyPolicyScreenRouteArgs {
+  const PrivacyPolicyScreenRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'PrivacyPolicyScreenRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -426,4 +442,33 @@ class TabViewScreenRoute extends PageRouteInfo<void> {
   static const String name = 'TabViewScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TermOfUseScreen]
+class TermOfUseScreenRoute extends PageRouteInfo<TermOfUseScreenRouteArgs> {
+  TermOfUseScreenRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TermOfUseScreenRoute.name,
+          args: TermOfUseScreenRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'TermOfUseScreenRoute';
+
+  static const PageInfo<TermOfUseScreenRouteArgs> page =
+      PageInfo<TermOfUseScreenRouteArgs>(name);
+}
+
+class TermOfUseScreenRouteArgs {
+  const TermOfUseScreenRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TermOfUseScreenRouteArgs{key: $key}';
+  }
 }

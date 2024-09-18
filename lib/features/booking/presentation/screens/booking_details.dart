@@ -1,8 +1,10 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
-class BookingDetails extends StatelessWidget {
+class BookingDetails extends HookConsumerWidget {
   final String? houseType;
   final int numberOfRooms;
   final int numberOfFloors;
@@ -26,7 +28,9 @@ class BookingDetails extends StatelessWidget {
   final List<String> bathroomImages = [];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final bookingState = ref.watch(bookingProvider);
+
     return Padding(
       padding: const EdgeInsets.only(right: 16.0, left: 16),
       child: Column(
