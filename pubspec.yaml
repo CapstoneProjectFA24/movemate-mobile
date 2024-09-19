@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^2.0.15
   dotted_border: ^2.1.0
   carousel_slider: ^4.0.0
+  image_picker: ^1.1.2
 
   # Intro
   # intro_screen_onboarding_flutter: ^1.0.0
@@ -122,9 +123,13 @@ flutter:
     - assets/images/logo_wallets/cash_depositor.png
     - assets/images/logo_wallets/wallet_acc.png
       #image booking
+
     - assets/images/booking/bedroom/bedroom1.png
     - assets/images/booking/bedroom/bedroom2.png
     - assets/images/booking/bedroom/bedroom3.png
+    - assets/images/booking/vehicles/truck1.png
+    - assets/images/booking/vehicles/truck2.png
+    - assets/images/booking/vehicles/truck3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -1,4 +1,3 @@
-
 // code rác -> làm clear
 
 class Booking {

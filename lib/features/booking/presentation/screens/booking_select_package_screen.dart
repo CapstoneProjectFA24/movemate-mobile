@@ -31,13 +31,13 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
       List<bool>.filled(packageData['packageTitles'].length, false),
     );
 
-    void _updateTotalPrice() {
+    void updateTotalPrice() {
       double basePrice = 1794.000;
       if (bookingState.isRoundTrip) {
         basePrice *= 1.7;
       }
 
-      for (int i = 0; i < packageSelected.value.length; i++) {  
+      for (int i = 0; i < packageSelected.value.length; i++) {
         if (packageSelected.value[i]) {
           switch (i) {
             case 0:
@@ -56,7 +56,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
       bookingNotifier.updateTotalPrice(basePrice);
     }
 
-    void _placeOrder() {
+    void placeOrder() {
       final notes = noteController.text;
       bookingNotifier.updateNotes(notes);
       // Add your API call here
@@ -86,12 +86,13 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                   if (isBocXepExpanded.value)
                     PackageSelection(
                       selectedPackageIndex: bookingState.selectedPackageIndex,
-                       selectedPeopleCount:1,
-                       onPeopleCountChanged: (value) {},
+                      selectedPeopleCount: 1,
+                      onPeopleCountChanged: (value) {},
                       onChanged: (index) {
-                        packageSelected.value[index] = !packageSelected.value[index];
+                        packageSelected.value[index] =
+                            !packageSelected.value[index];
                         bookingNotifier.updateSelectedPackageIndex(index);
-                        _updateTotalPrice();
+                        updateTotalPrice();
                       },
                     ),
                   const SizedBox(height: 16),
@@ -124,7 +125,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                     isRoundTrip: bookingState.isRoundTrip,
                     onChanged: (value) {
                       bookingNotifier.updateRoundTrip(value ?? false);
-                      _updateTotalPrice();
+                      updateTotalPrice();
                     },
                   ),
                   const SizedBox(height: 16),
@@ -138,7 +139,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  NotesSection(noteController: noteController),
+                  const NotesSection(),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -150,7 +151,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
             right: 0,
             child: SummarySection(
               totalPrice: bookingState.totalPrice,
-              onPlaceOrder: _placeOrder,
+              onPlaceOrder: placeOrder,
             ),
           ),
         ],
