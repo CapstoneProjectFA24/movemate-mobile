@@ -24,7 +24,6 @@ import 'guard/onboarding_guard.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
-import 'package:movemate/features/booking/data/models/booking_models.dart';
 
 part 'app_router.gr.dart';
 
@@ -77,6 +76,7 @@ class AppRouter extends _$AppRouter {
 
         // flow booking
         AutoRoute(
+          // initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(

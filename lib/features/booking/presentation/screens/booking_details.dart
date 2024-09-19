@@ -2,7 +2,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
 class BookingDetails extends HookConsumerWidget {
   final String? houseType;

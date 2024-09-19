@@ -8,14 +8,12 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @RoutePage()
-
 @RoutePage()
 class BookingScreen extends ConsumerWidget {
-  const BookingScreen({Key? key}) : super(key: key);
+  const BookingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.watch(bookingProvider.notifier);
 
@@ -40,7 +38,6 @@ class BookingScreen extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 16),
-            
             BookingDetails(
               houseType: bookingState.houseType,
               numberOfRooms: bookingState.numberOfRooms ?? 0,
@@ -49,7 +46,7 @@ class BookingScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                context.router.push(AvailableVehiclesScreenRoute());
+                context.router.push(const AvailableVehiclesScreenRoute());
               },
               child: const Text('Tiếp tục'),
             ),
