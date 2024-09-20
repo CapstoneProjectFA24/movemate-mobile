@@ -145,108 +145,103 @@ class SignInScreen extends HookConsumerWidget with Validations {
                       ),
                       const SizedBox(height: 25.0),
 
-                      // Conditional input fields based on toggle
+                      //toggle
                       if (isEmailSelected.value) ...[
-                        // Email input field
+                        // Email input
                         TextFormField(
                           controller: email,
                           decoration: const InputDecoration(
-                            labelText:
-                                'Tài khoản', // Label that remains visible
-                            hintText: 'Nhập tài khoản', // Hint text
+                            labelText: 'Tài khoản',
+                            hintText: 'Nhập tài khoản',
                             hintStyle: TextStyle(
-                              color: Colors.grey, // Color of the hint text
+                              color: Colors.grey,
                             ),
                             labelStyle: TextStyle(
-                              color: Colors.black, // Color of the label text
+                              color: Colors.black,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Colors.grey, // Border color
-                                width: 2.0, // Border width
+                                color: Colors.grey,
+                                width: 2.0,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: AssetsConstants
-                                    .mainColor, // Border color when focused
-                                width: 2.0, // Border width when focused
+                                color: AssetsConstants.mainColor,
+                                width: 2.0,
                               ),
                             ),
                           ),
                           autofocus: true,
                           style: const TextStyle(
-                            color: Colors.black, // Color of the input text
+                            color: Colors.black,
                           ),
                           validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                         ),
                         const SizedBox(height: 25.0),
                       ] else ...[
-                        // Phone Number input field
+                        // Phone Number
                         TextFormField(
                           controller: phoneNumber,
                           decoration: const InputDecoration(
-                            labelText:
-                                'Số điện thoại', // Label that remains visible
-                            hintText: 'Nhập số điện thoại', // Hint text
+                            labelText: 'Số điện thoại',
+                            hintText: 'Nhập số điện thoại',
                             hintStyle: TextStyle(
-                              color: Colors.grey, // Color of the hint text
+                              color: Colors.grey,
                             ),
                             labelStyle: TextStyle(
-                              color: Colors.black, // Color of the label text
+                              color: Colors.black,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: Colors.grey, // Border color
-                                width: 2.0, // Border width
+                                color: Colors.grey,
+                                width: 2.0,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                color: AssetsConstants
-                                    .mainColor, // Border color when focused
-                                width: 2.0, // Border width when focused
+                                color: AssetsConstants.mainColor,
+                                width: 2.0,
                               ),
                             ),
                           ),
                           autofocus: true,
                           style: const TextStyle(
-                            color: Colors.black, // Color of the input text
+                            color: Colors.black,
                           ),
                           validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                         ),
                         const SizedBox(height: 25.0),
                       ],
 
-                      // Password input field
+                      // Password
                       TextFormField(
                         controller: password,
                         decoration: const InputDecoration(
-                          labelText: 'Mật khẩu', // Label that remains visible
-                          hintText: 'Nhập mật khẩu', // Hint text
+                          labelText: 'Mật khẩu',
+                          hintText: 'Nhập mật khẩu',
                           hintStyle: TextStyle(
-                            color: Colors.grey, // Color of the hint text
+                            color: Colors.grey,
                           ),
                           labelStyle: TextStyle(
-                            color: Colors.black, // Color of the label text
+                            color: Colors.black,
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Colors.grey, // Border color
-                              width: 2.0, // Border width
+                              color: Colors.grey,
+                              width: 2.0,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: AssetsConstants
-                                  .mainColor, // Border color when focused
-                              width: 2.0, // Border width when focused
+                              color: AssetsConstants.mainColor,
+                              width: 2.0,
                             ),
                           ),
                         ),
                         autofocus: true,
                         style: const TextStyle(
-                          color: Colors.black, // Color of the input text
+                          color: Colors.black,
                         ),
                         validator: (val) => val!.isEmpty ? 'Bắt buộc' : null,
                       ),
@@ -261,10 +256,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                               minimumSize: Size.zero,
                               padding: EdgeInsets.zero,
                             ),
-                            onPressed: () {
-                              // Create account navigation
-                              // context.router.push(CreateAccountScreenRoute());
-                            },
+                            onPressed: () {},
                             child: const LabelText(
                               content: 'Tạo tài khoản',
                               size: AssetsConstants.defaultFontSize - 8.0,
@@ -292,7 +284,6 @@ class SignInScreen extends HookConsumerWidget with Validations {
                       ),
                       const SizedBox(height: 25.0),
 
-                      // Login button with email & password validation
                       ValueListenableBuilder2(
                         first: isEmailSelected.value ? email : phoneNumber,
                         second: password,
@@ -362,28 +353,24 @@ class SignInScreen extends HookConsumerWidget with Validations {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: size.width * 0.8, // Adjust width as needed
+                            width: size.width * 0.8,
                             decoration: BoxDecoration(
-                              color: Colors
-                                  .white, // Background color of the button
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // Rounded corners
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black
-                                      .withOpacity(0.2), // Shadow color
-                                  spreadRadius: 2, // Spread radius
-                                  blurRadius: 5, // Blur radius
-                                  offset: const Offset(0, 3), // Shadow offset
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Logo(Logos.google), // Google icon
-                                const SizedBox(
-                                    width: 20), // Space between icon and text
+                                Logo(Logos.google),
+                                const SizedBox(width: 20),
                                 const Text(
                                   'Google',
                                   style: TextStyle(

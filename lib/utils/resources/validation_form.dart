@@ -15,7 +15,6 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
 
-  // Biến để chứa thông báo lỗi của từng trường dữ liệu
   String emailError = '';
   String passwordError = '';
   String phoneError = '';
@@ -25,28 +24,24 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
   void initState() {
     super.initState();
 
-    // Listener cho email
     _emailController.addListener(() {
       setState(() {
         emailError = emailRegexErrorText(_emailController.text);
       });
     });
 
-    // Listener cho password
     _passwordController.addListener(() {
       setState(() {
         passwordError = passwordComplexityErrorText(_passwordController.text);
       });
     });
 
-    // Listener cho số điện thoại
     _phoneController.addListener(() {
       setState(() {
         phoneError = phoneNumberErrorText(_phoneController.text);
       });
     });
 
-    // Listener cho tên đăng nhập
     _usernameController.addListener(() {
       setState(() {
         usernameError = usernameMaxLengthErrorText(_usernameController.text);
@@ -56,7 +51,6 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
 
   @override
   void dispose() {
-    // Giải phóng bộ nhớ khi widget bị huỷ
     _emailController.dispose();
     _passwordController.dispose();
     _phoneController.dispose();
@@ -72,7 +66,6 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Email input field
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -81,8 +74,6 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Password input field
             TextField(
               controller: _passwordController,
               obscureText: true,
@@ -92,8 +83,6 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Phone number input field
             TextField(
               controller: _phoneController,
               decoration: InputDecoration(
@@ -102,8 +91,6 @@ class _ValidationFormState extends State<ValidationForm> with Validations {
               ),
             ),
             const SizedBox(height: 16),
-
-            // Username input field
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(
