@@ -49,19 +49,10 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                       }
                     },
                   ),
-                  if (bookingState.isHandlingExpanded)
-                    PackageSelection(
-                      selectedPackageIndex: bookingState.selectedPackageIndex,
-                      selectedPeopleCount: bookingState.peopleCount,
-                      onPeopleCountChanged: (value) {
-                        bookingNotifier.updatePeopleCount(value as int);
-                        bookingNotifier.calculateAndUpdateTotalPrice();
-                      },
-                      onChanged: (index) {
-                        bookingNotifier.updateSelectedPackageIndex(index);
-                        bookingNotifier.calculateAndUpdateTotalPrice();
-                      },
-                    ),
+
+                  // bug nè => run trên máy thật
+                  if (bookingState.isHandlingExpanded) const PackageSelection(),
+                  
                   const SizedBox(height: 16),
                   BookingDropdownButton(
                     title: 'Dịch vụ tháo lắp máy lạnh',
