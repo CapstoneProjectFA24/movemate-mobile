@@ -41,7 +41,6 @@ class AppRouter extends _$AppRouter {
           page: SignInScreenRoute.page,
         ),
         AutoRoute(
-          initial: true,
           page: SignUpScreenRoute.page,
         ),
         // Màn hình Onboarding

@@ -1,5 +1,3 @@
-// package_selection.dart
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
@@ -8,22 +6,12 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'service_table.dart';
 
 class PackageSelection extends ConsumerWidget {
-  final int? selectedPackageIndex;
-  final int selectedPeopleCount;
-  final Function(int?) onPeopleCountChanged;
-  final Function(int) onChanged;
-
-  const PackageSelection({
-    super.key,
-    required this.selectedPackageIndex,
-    required this.selectedPeopleCount,
-    required this.onPeopleCountChanged,
-    required this.onChanged,
-  });
+  const PackageSelection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(bookingProvider);
+    final bookingNotifier = ref.read(bookingProvider.notifier);
     final packages = bookingState.packages;
 
     return Column(
@@ -41,10 +29,11 @@ class PackageSelection extends ConsumerWidget {
                 context: context,
                 package: packages[index],
                 index: index,
-                selectedPackageIndex: selectedPackageIndex,
-                onChanged: onChanged,
+                selectedPackageIndex: bookingState.selectedPackageIndex,
+                onChanged: (index) =>
+                    bookingNotifier.updateSelectedPackageIndex(index),
               ),
-              if (selectedPackageIndex == index)
+              if (bookingState.selectedPackageIndex == index)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: ServiceTable(
@@ -53,10 +42,12 @@ class PackageSelection extends ConsumerWidget {
                     prices:
                         packages[index].services.map((e) => e.price).toList(),
                     selectedService: null,
-                    selectedPeopleOrAirConditionersCount: selectedPeopleCount,
+                    selectedPeopleOrAirConditionersCount:
+                        bookingState.peopleCount,
                     isThaoLapService: false,
                     onPeopleCountChanged: (value) {
-                      onPeopleCountChanged(value);
+                      bookingNotifier.updatePeopleCount(value ?? 1);
+                      bookingNotifier.calculateAndUpdateTotalPrice();
                     },
                   ),
                 ),
@@ -111,9 +102,7 @@ class PackageSelection extends ConsumerWidget {
           trailing: Radio<int>(
             value: index,
             groupValue: selectedPackageIndex,
-            onChanged: (value) {
-              onChanged(index);
-            },
+            onChanged: (value) => onChanged(index),
             activeColor: AssetsConstants.primaryLight,
           ),
         ),
