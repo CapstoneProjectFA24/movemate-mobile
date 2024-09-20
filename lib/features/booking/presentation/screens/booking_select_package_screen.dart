@@ -1,9 +1,14 @@
+// booking_select_package_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 
-import '../widgets/booking_screen_2th/export_booking_screen_2th.dart';
+import '../widgets/booking_screen_2th/booking_dropdown_button.dart';
+import '../widgets/booking_screen_2th/package_selection.dart';
+import '../widgets/booking_screen_2th/service_table.dart';
+import '../widgets/booking_screen_2th/round_trip_checkbox.dart';
 
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
@@ -14,52 +19,11 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // State management using hooks
-    final isBocXepExpanded = useState(false);
-    final isThaoLapExpanded = useState(false);
-    final noteController = useTextEditingController();
-
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
-    final packageData = ref.watch(packageDataProvider);
-    final thaoLapServices = ref.watch(thaoLapServicesProvider);
-    final checklistOptions = ref.watch(checklistOptionsProvider);
-    final checklistValues = ref.watch(checklistDataProvider);
-
-    final packageSelected = useState<List<bool>>(
-      List<bool>.filled(packageData['packageTitles'].length, false),
-    );
-
-    void updateTotalPrice() {
-      double basePrice = 1794.000;
-      if (bookingState.isRoundTrip) {
-        basePrice *= 1.7;
-      }
-
-      for (int i = 0; i < packageSelected.value.length; i++) {
-        if (packageSelected.value[i]) {
-          switch (i) {
-            case 0:
-              basePrice += 730.000;
-              break;
-            case 1:
-              basePrice += 660.000;
-              break;
-            case 2:
-              basePrice += 120.000;
-              break;
-          }
-        }
-      }
-
-      bookingNotifier.updateTotalPrice(basePrice);
-    }
-
     void placeOrder() {
-      final notes = noteController.text;
-      bookingNotifier.updateNotes(notes);
-      // Add your API call here
+      // Implement your order placement logic here
     }
 
     return Scaffold(
@@ -77,47 +41,49 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                 children: [
                   BookingDropdownButton(
                     title: 'Dịch vụ bốc xếp',
-                    isExpanded: isBocXepExpanded.value,
+                    isExpanded: bookingState.isHandlingExpanded,
                     onPressed: () {
-                      isBocXepExpanded.value = !isBocXepExpanded.value;
-                      isThaoLapExpanded.value = false;
+                      bookingNotifier.toggleHandlingExpanded();
+                      if (bookingState.isHandlingExpanded) {
+                        bookingNotifier.setDisassemblyExpanded(false);
+                      }
                     },
                   ),
-                  if (isBocXepExpanded.value)
+                  if (bookingState.isHandlingExpanded)
                     PackageSelection(
                       selectedPackageIndex: bookingState.selectedPackageIndex,
-                      selectedPeopleCount: 1,
-                      onPeopleCountChanged: (value) {},
+                      selectedPeopleCount: bookingState.peopleCount,
+                      onPeopleCountChanged: (value) {
+                        bookingNotifier.updatePeopleCount(value as int);
+                        bookingNotifier.calculateAndUpdateTotalPrice();
+                      },
                       onChanged: (index) {
-                        packageSelected.value[index] =
-                            !packageSelected.value[index];
                         bookingNotifier.updateSelectedPackageIndex(index);
-                        updateTotalPrice();
+                        bookingNotifier.calculateAndUpdateTotalPrice();
                       },
                     ),
                   const SizedBox(height: 16),
                   BookingDropdownButton(
                     title: 'Dịch vụ tháo lắp máy lạnh',
-                    isExpanded: isThaoLapExpanded.value,
+                    isExpanded: bookingState.isDisassemblyExpanded,
                     onPressed: () {
-                      isThaoLapExpanded.value = !isThaoLapExpanded.value;
-                      isBocXepExpanded.value = false;
+                      bookingNotifier.toggleDisassemblyExpanded();
+                      if (bookingState.isDisassemblyExpanded) {
+                        bookingNotifier.setHandlingExpanded(false);
+                      }
                     },
                   ),
-                  if (isThaoLapExpanded.value)
+                  if (bookingState.isDisassemblyExpanded)
                     ServiceTable(
-                      options: thaoLapServices
-                          .map((e) => e['service'] as String)
-                          .toList(),
-                      prices: thaoLapServices
-                          .map((e) => e['price'] as String)
-                          .toList(),
+                      options: const ['Tháo lắp máy lạnh'],
+                      prices: const ['200.000đ'],
                       selectedService: null,
                       selectedPeopleOrAirConditionersCount:
                           bookingState.airConditionersCount,
                       isThaoLapService: true,
                       onAirConditionersCountChanged: (value) {
                         bookingNotifier.updateAirConditionersCount(value ?? 1);
+                        bookingNotifier.calculateAndUpdateTotalPrice();
                       },
                     ),
                   const SizedBox(height: 16),
@@ -125,19 +91,12 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                     isRoundTrip: bookingState.isRoundTrip,
                     onChanged: (value) {
                       bookingNotifier.updateRoundTrip(value ?? false);
-                      updateTotalPrice();
+                      bookingNotifier.calculateAndUpdateTotalPrice();
                     },
                   ),
                   const SizedBox(height: 16),
-                  ChecklistSection(
-                    checklistOptions: checklistOptions,
-                    checklistValues: checklistValues,
-                    onChanged: (index) {
-                      ref
-                          .read(checklistDataProvider.notifier)
-                          .toggleValue(index);
-                    },
-                  ),
+                  const SizedBox(height: 16),
+                  const ChecklistSection(),
                   const SizedBox(height: 16),
                   const NotesSection(),
                   const SizedBox(height: 16),
@@ -152,6 +111,9 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
             child: SummarySection(
               totalPrice: bookingState.totalPrice,
               onPlaceOrder: placeOrder,
+              buttonText: 'Đặt đơn', // Optional customization
+              priceLabel: 'Tổng giá', // Optional customization
+              // priceDetailModal: CustomModal(), // Optional custom modal
             ),
           ),
         ],

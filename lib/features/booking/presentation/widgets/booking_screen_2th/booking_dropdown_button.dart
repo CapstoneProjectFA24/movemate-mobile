@@ -1,8 +1,10 @@
-//booking_dropdown_button.dart
+// booking_dropdown_button.dart
+
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-class BookingDropdownButton extends StatelessWidget {
+class BookingDropdownButton extends HookConsumerWidget {
   final String title;
   final bool isExpanded;
   final VoidCallback onPressed;
@@ -15,7 +17,7 @@ class BookingDropdownButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(

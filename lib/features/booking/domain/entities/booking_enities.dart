@@ -1,6 +1,50 @@
-// code rác -> làm clear
+//booking_entities.dart
 
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
+
+class Service {
+  final String title;
+  final String price;
+
+  Service({
+    required this.title,
+    required this.price,
+  });
+
+  factory Service.fromJson(Map<String, dynamic> json) {
+    return Service(
+      title: json['title'],
+      price: json['price'],
+    );
+  }
+}
+
+class Package {
+  final String packageTitle;
+  final String packagePrice;
+  final String packageIcon;
+  final List<Service> services;
+
+  Package({
+    required this.packageTitle,
+    required this.packagePrice,
+    required this.packageIcon,
+    required this.services,
+  });
+
+  factory Package.fromJson(Map<String, dynamic> json) {
+    return Package(
+      packageTitle: json['packageTitles'],
+      packagePrice: json['packagePrices'],
+      packageIcon: json['packageIcons'],
+      services: (json['service'] as List)
+          .map((serviceJson) => Service.fromJson(serviceJson))
+          .toList(),
+    );
+  }
+
+  toJson() {}
+}
 
 class Booking {
   final String? houseType;
@@ -17,6 +61,11 @@ class Booking {
   final bool isRoundTrip;
   final List<bool> checklistValues;
   final String notes;
+
+  final bool isHandlingExpanded;
+  final bool isDisassemblyExpanded;
+
+  final List<Package> packages;
 
   // Add image lists for each room
   final List<String> livingRoomImages;
@@ -40,6 +89,12 @@ class Booking {
       airConditionersCount: json['airConditionersCount'] ?? 1,
       isRoundTrip: json['isRoundTrip'] ?? false,
       notes: json['notes'] ?? '',
+      packages: (json['packages'] as List<dynamic>?)
+              ?.map((e) => Package.fromJson(e))
+              .toList() ??
+          [],
+      isHandlingExpanded: json['isHandlingExpanded'] ?? false,
+      isDisassemblyExpanded: json['isDisassemblyExpanded'] ?? false,
       livingRoomImages: List<String>.from(json['livingRoomImages'] ?? []),
       bedroomImages: List<String>.from(json['bedroomImages'] ?? []),
       diningRoomImages: List<String>.from(json['diningRoomImages'] ?? []),
@@ -63,6 +118,9 @@ class Booking {
       'airConditionersCount': airConditionersCount,
       'isRoundTrip': isRoundTrip,
       'notes': notes,
+      'packages': packages.map((e) => e.toJson()).toList(),
+      'isHandlingExpanded': isHandlingExpanded,
+      'isDisassemblyExpanded': isDisassemblyExpanded,
       'livingRoomImages': livingRoomImages,
       'bedroomImages': bedroomImages,
       'diningRoomImages': diningRoomImages,
@@ -81,6 +139,7 @@ class Booking {
     this.selectedVehicleIndex,
     this.vehiclePrice = 0.0,
     this.availableVehicles = const [],
+    this.packages = const [],
     this.totalPrice = 0.0,
     this.selectedPackageIndex,
     this.packagePrice = 0.0,
@@ -88,6 +147,8 @@ class Booking {
     this.airConditionersCount = 1,
     this.isRoundTrip = false,
     List<bool>? checklistValues,
+    this.isHandlingExpanded = false,
+    this.isDisassemblyExpanded = false,
     this.notes = '',
     // Initialize image lists (empty by default)
     List<String>? livingRoomImages,
@@ -116,7 +177,10 @@ class Booking {
     int? airConditionersCount,
     bool? isRoundTrip,
     List<bool>? checklistValues,
+    bool? isHandlingExpanded,
+    bool? isDisassemblyExpanded,
     String? notes,
+    List<Package>? packages,
     List<String>? livingRoomImages,
     List<String>? bedroomImages,
     List<String>? diningRoomImages,
@@ -137,12 +201,16 @@ class Booking {
       airConditionersCount: airConditionersCount ?? this.airConditionersCount,
       isRoundTrip: isRoundTrip ?? this.isRoundTrip,
       checklistValues: checklistValues ?? this.checklistValues,
+      isHandlingExpanded: isHandlingExpanded ?? this.isHandlingExpanded,
+      isDisassemblyExpanded:
+          isDisassemblyExpanded ?? this.isDisassemblyExpanded,
       notes: notes ?? this.notes,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,
       bedroomImages: bedroomImages ?? this.bedroomImages,
       diningRoomImages: diningRoomImages ?? this.diningRoomImages,
       officeRoomImages: officeRoomImages ?? this.officeRoomImages,
       bathroomImages: bathroomImages ?? this.bathroomImages,
+      packages: packages ?? this.packages,
     );
   }
 }

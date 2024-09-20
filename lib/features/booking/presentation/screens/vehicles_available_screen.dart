@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/total_price_section.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
@@ -47,14 +48,16 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                     },
                   ),
                 ),
-                _buildTotalPriceSection(
-                  bookingState.totalPrice,
-                  bookingState.selectedVehicleIndex != null,
-                  context,
-                ),
               ],
             )
           : const Center(child: CircularProgressIndicator()),
+      bottomNavigationBar: TotalPriceSection(
+        totalPrice: bookingState.totalPrice,
+        isButtonEnabled: bookingState.selectedVehicleIndex != null,
+        onButtonPressed: () {
+          context.router.push(const BookingSelectPackageScreenRoute());
+        },
+      ),
     );
   }
 
