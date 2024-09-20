@@ -76,7 +76,7 @@ class AppRouter extends _$AppRouter {
 
         // flow booking
         AutoRoute(
-          // initial: true,
+          initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
