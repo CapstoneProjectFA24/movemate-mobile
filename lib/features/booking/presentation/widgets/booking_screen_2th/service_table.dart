@@ -1,16 +1,17 @@
-//service_table.dart
+// service_table.dart
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'people_dropdown.dart';
 import 'air_conditioners_dropdown.dart';
 
-class ServiceTable extends StatelessWidget {
+class ServiceTable extends ConsumerWidget {
   final List<String> options;
   final List<String> prices;
   final int? selectedService;
-  final int? selectedPeopleOrAirConditionersCount;
+  final int selectedPeopleOrAirConditionersCount;
   final bool isThaoLapService;
-  final ValueChanged<int?>? onServiceChanged;
   final ValueChanged<int?>? onPeopleCountChanged;
   final ValueChanged<int?>? onAirConditionersCountChanged;
 
@@ -18,16 +19,15 @@ class ServiceTable extends StatelessWidget {
     super.key,
     required this.options,
     required this.prices,
-    this.selectedService,
-    this.selectedPeopleOrAirConditionersCount,
+    required this.selectedService,
+    required this.selectedPeopleOrAirConditionersCount,
     required this.isThaoLapService,
-    this.onServiceChanged,
     this.onPeopleCountChanged,
     this.onAirConditionersCountChanged,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -50,48 +50,27 @@ class ServiceTable extends StatelessWidget {
                 ),
               ],
             ),
-          if (!isThaoLapService)
-            TableRow(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Số người'),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: PeopleDropdown(
-                    selectedValue: selectedPeopleOrAirConditionersCount ?? 1,
-                    onChanged: onPeopleCountChanged!,
-                  ),
-                ),
-              ],
-            ),
-          if (isThaoLapService)
-            TableRow(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Số máy lạnh'),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AirConditionersDropdown(
-                    selectedValue: selectedPeopleOrAirConditionersCount ?? 1,
-                    onChanged: onAirConditionersCountChanged!,
-                  ),
-                ),
-              ],
-            ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(isThaoLapService ? 'Số máy lạnh' : 'Số người',
+                    style: const TextStyle(fontSize: 14)),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: isThaoLapService
+                    ? AirConditionersDropdown(
+                        selectedValue: selectedPeopleOrAirConditionersCount,
+                        onChanged: onAirConditionersCountChanged!,
+                      )
+                    : PeopleDropdown(
+                        selectedValue: selectedPeopleOrAirConditionersCount,
+                        onChanged: onPeopleCountChanged!,
+                      ),
+              ),
+            ],
+          ),
         ],
       ),
     );

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
-class NotesSection extends StatelessWidget {
-  final TextEditingController noteController;
-
-  const NotesSection({
-    super.key,
-    required this.noteController,
-  });
+class NotesSection extends HookConsumerWidget {
+  const NotesSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingState = ref.watch(bookingProvider);
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Padding(
@@ -18,13 +18,14 @@ class NotesSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Ghi chú cho nhân viên',
+              'ghi chú cho nhân viên',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: noteController,
+              controller: TextEditingController(text: bookingState.notes),
               maxLines: 3,
+              onChanged: (value) => bookingNotifier.updateNotes(value),
               decoration: InputDecoration(
                 hintText: 'Nhập ghi chú...',
                 border: OutlineInputBorder(

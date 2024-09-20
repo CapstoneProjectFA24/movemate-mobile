@@ -1,39 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
-class BookingSelection extends StatefulWidget {
-  final Function(String)? onHouseTypeSelected;
-  final Function(int)? onRoomCountSelected;
-  final Function(int)? onFloorCountSelected;
-
-  const BookingSelection({
-    super.key,
-    this.onHouseTypeSelected,
-    this.onRoomCountSelected,
-    this.onFloorCountSelected,
-  });
+class BookingSelection extends HookConsumerWidget {
+  const BookingSelection({super.key});
 
   @override
-  _BookingSelectionState createState() => _BookingSelectionState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+    final bookingState = ref.watch(bookingProvider);
 
-class _BookingSelectionState extends State<BookingSelection> {
-  String? selectedHouseType;
-  int numberOfRooms = 1;
-  int numberOfFloors = 1;
-
-  final List<String> houseTypes = ['Nhà riêng', 'Nhà trọ', 'Căn hộ', 'Công ty'];
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // House Type Selection Button
         GestureDetector(
-          onTap: () => _showHouseTypeModal(context),
+          onTap: () => _showHouseTypeModal(context, bookingNotifier),
           child: _buildSelectionButton(
-            label: selectedHouseType ?? 'Chọn loại nhà ở',
+            label: bookingState.houseType ?? 'Chọn loại nhà ở',
             icon: Icons.arrow_drop_down,
           ),
         ),
@@ -46,8 +31,8 @@ class _BookingSelectionState extends State<BookingSelection> {
             Expanded(
               child: _buildRoomFloorCountButton(
                 label: 'Số phòng ngủ',
-                value: numberOfRooms,
-                onTap: () => _showRoomCountModal(context),
+                value: bookingState.numberOfRooms ?? 1,
+                onTap: () => _showRoomCountModal(context, bookingNotifier),
               ),
             ),
             const Padding(
@@ -59,8 +44,8 @@ class _BookingSelectionState extends State<BookingSelection> {
             Expanded(
               child: _buildRoomFloorCountButton(
                 label: 'Số tầng',
-                value: numberOfFloors,
-                onTap: () => _showFloorCountModal(context),
+                value: bookingState.numberOfFloors ?? 1,
+                onTap: () => _showFloorCountModal(context, bookingNotifier),
               ),
             ),
           ],
@@ -80,8 +65,9 @@ class _BookingSelectionState extends State<BookingSelection> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: AssetsConstants.greyColor.withOpacity(0.2), // Nền xám mờ
-          borderRadius: BorderRadius.circular(16), // Bo góc tròn
+          color: AssetsConstants.greyColor
+              .withOpacity(0.2), // Light grey background
+          borderRadius: BorderRadius.circular(16), // Rounded corners
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,7 +77,7 @@ class _BookingSelectionState extends State<BookingSelection> {
                 label,
                 style: const TextStyle(
                   fontSize: 12,
-                  color: AssetsConstants.greyColor, // Màu xám cho nhãn
+                  color: AssetsConstants.greyColor, // Grey label
                 ),
               ),
             ),
@@ -100,21 +86,22 @@ class _BookingSelectionState extends State<BookingSelection> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: const BoxDecoration(
-                    color: AssetsConstants.whiteColor, // Nền trắng cho số lượng
-                    shape: BoxShape.circle, // Hình tròn
+                    color: AssetsConstants
+                        .whiteColor, // White background for number
+                    shape: BoxShape.circle, // Circular shape
                   ),
                   child: Text(
                     value.toString(),
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: AssetsConstants.blackColor, // Màu đen cho số
+                      color: AssetsConstants.blackColor, // Black number
                     ),
                   ),
                 ),
-                const SizedBox(width: 4), // Khoảng cách giữa số và icon
+                const SizedBox(width: 4), // Spacing between number and icon
                 const Icon(Icons.arrow_drop_down,
-                    color: AssetsConstants.primaryDark), // Màu xanh cho icon
+                    color: AssetsConstants.primaryDark), // Icon color
               ],
             ),
           ],
@@ -124,8 +111,10 @@ class _BookingSelectionState extends State<BookingSelection> {
   }
 
   // Helper widget for selection buttons
-  Widget _buildSelectionButton(
-      {required String label, required IconData icon}) {
+  Widget _buildSelectionButton({
+    required String label,
+    required IconData icon,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       decoration: BoxDecoration(
@@ -149,7 +138,15 @@ class _BookingSelectionState extends State<BookingSelection> {
   }
 
   // House Type Modal
-  void _showHouseTypeModal(BuildContext context) {
+  void _showHouseTypeModal(
+      BuildContext context, BookingNotifier bookingNotifier) {
+    final List<String> houseTypes = [
+      'Nhà riêng',
+      'Nhà trọ',
+      'Căn hộ',
+      'Công ty'
+    ];
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -183,10 +180,7 @@ class _BookingSelectionState extends State<BookingSelection> {
                               color: AssetsConstants.blackColor),
                         ),
                         onTap: () {
-                          setState(() {
-                            selectedHouseType = houseTypes[index];
-                          });
-                          widget.onHouseTypeSelected?.call(houseTypes[index]);
+                          bookingNotifier.updateHouseType(houseTypes[index]);
                           Navigator.pop(context); // Close modal
                         },
                       );
@@ -202,7 +196,8 @@ class _BookingSelectionState extends State<BookingSelection> {
   }
 
   // Room Count Modal
-  void _showRoomCountModal(BuildContext context) {
+  void _showRoomCountModal(
+      BuildContext context, BookingNotifier bookingNotifier) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -237,10 +232,7 @@ class _BookingSelectionState extends State<BookingSelection> {
                           textAlign: TextAlign.center,
                         ),
                         onTap: () {
-                          setState(() {
-                            numberOfRooms = index + 1;
-                          });
-                          widget.onRoomCountSelected?.call(index + 1);
+                          bookingNotifier.updateNumberOfRooms(index + 1);
                           Navigator.pop(context); // Close modal
                         },
                       );
@@ -256,7 +248,8 @@ class _BookingSelectionState extends State<BookingSelection> {
   }
 
   // Floor Count Modal
-  void _showFloorCountModal(BuildContext context) {
+  void _showFloorCountModal(
+      BuildContext context, BookingNotifier bookingNotifier) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -291,10 +284,7 @@ class _BookingSelectionState extends State<BookingSelection> {
                           textAlign: TextAlign.center,
                         ),
                         onTap: () {
-                          setState(() {
-                            numberOfFloors = index + 1;
-                          });
-                          widget.onFloorCountSelected?.call(index + 1);
+                          bookingNotifier.updateNumberOfFloors(index + 1);
                           Navigator.pop(context); // Close modal
                         },
                       );

@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // screen
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
+import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
+import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
@@ -22,7 +24,6 @@ import 'guard/onboarding_guard.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
-import 'package:movemate/features/booking/data/models/booking_models.dart';
 
 part 'app_router.gr.dart';
 
@@ -40,7 +41,6 @@ class AppRouter extends _$AppRouter {
           page: SignInScreenRoute.page,
         ),
         AutoRoute(
-          // initial: true,
           page: SignUpScreenRoute.page,
         ),
         // Màn hình Onboarding
