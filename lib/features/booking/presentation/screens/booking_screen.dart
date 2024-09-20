@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 @RoutePage()
 class BookingScreen extends ConsumerWidget {
   const BookingScreen({super.key});
+  const BookingScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,6 +32,7 @@ class BookingScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
+                context.router.push(const AvailableVehiclesScreenRoute());
                 context.router.push(const AvailableVehiclesScreenRoute());
               },
               child: const Text('Tiếp tục'),
