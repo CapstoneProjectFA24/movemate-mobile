@@ -77,7 +77,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                     ServiceTable(
                       options: const ['Tháo lắp máy lạnh'],
                       prices: const ['200.000đ'],
-                      selectedService: null,
+                      // selectedService: null,
                       selectedPeopleOrAirConditionersCount:
                           bookingState.airConditionersCount,
                       isThaoLapService: true,
