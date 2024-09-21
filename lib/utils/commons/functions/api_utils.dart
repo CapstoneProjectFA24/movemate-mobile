@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'functions_common_export.dart';
-import '../../../features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import '../../../models/response/error_model.dart';
 import '../../constants/api_constant.dart';
 import '../../enums/enums_export.dart';

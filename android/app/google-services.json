@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "708811505333",
+    "project_id": "movemate-bb487",
+    "storage_bucket": "movemate-bb487.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708811505333:android:e8384ec3e06734d1f508fc",
+        "android_client_info": {
+          "package_name": "com.movemate.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaZy4VTx61msImwqQUiABaHliQhTkXc5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

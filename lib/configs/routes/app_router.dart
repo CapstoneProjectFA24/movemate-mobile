@@ -2,6 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
+// guard
+import 'guard/onboarding_guard.dart';
+
+
 // screen
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
@@ -20,7 +25,6 @@ import 'package:movemate/features/order/presentation/screens/order.screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
-import 'guard/onboarding_guard.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
@@ -51,7 +55,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [OnboardingGuard(ref: _ref)],
           // guards: [AuthGuard(ref: _ref)],
           children: [
@@ -75,7 +79,6 @@ class AppRouter extends _$AppRouter {
 
         // flow booking
         AutoRoute(
-          initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
