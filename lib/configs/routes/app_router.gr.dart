@@ -39,6 +39,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
+    OTPVerificationScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OTPVerificationScreen(),
+      );
+    },
     OnboardingScreenRoute.name: (routeData) {
       final args = routeData.argsAs<OnboardingScreenRouteArgs>(
           orElse: () => const OnboardingScreenRouteArgs());
@@ -186,6 +192,20 @@ class HomeScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [OTPVerificationScreen]
+class OTPVerificationScreenRoute extends PageRouteInfo<void> {
+  const OTPVerificationScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          OTPVerificationScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OTPVerificationScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
