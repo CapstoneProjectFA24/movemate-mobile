@@ -8,3 +8,8 @@
 
 git checkout refactor/ui-booking
 git push origin refactor/ui-booking
+
+3/ setup firebase
+
+1-dart pub global activate flutterfire_cli
+2-flutter fire configure

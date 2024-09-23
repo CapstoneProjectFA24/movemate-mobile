@@ -46,10 +46,15 @@ dependencies:
   fpdart:
     ^1.1.0
 
-    # Networking
+  # Networking
   retrofit: ^4.0.3
   dio: ^5.4.0
   awesome_dio_interceptor: ^1.0.0
+
+  # Firebase
+  firebase_core: ^2.24.0
+  firebase_messaging: ^14.7.6
+  firebase_auth: ^4.0.0
 
   #Icon
   icons_plus:
@@ -61,6 +66,7 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   flutter_spinkit: ^5.2.0
   shimmer: ^3.0.0
+  flutter_native_splash: ^2.3.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -69,6 +75,15 @@ dependencies:
   # Order
   photo_view: ^0.14.0
 
+  # remove
+# config native splash
+# flutter_native_splash:
+#   color: "#ffffff"
+#   image: assets/images/splash/screen_splash.png
+#   android_12:
+#     image: assets/images/splash/screen_splash.png
+#   background_image: assets/images/splash/splash.png
+  
 # config launcher icon
 flutter_launcher_icons:
   android: "launcher_icon"

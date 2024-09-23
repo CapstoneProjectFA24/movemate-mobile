@@ -2,13 +2,20 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// guard
+import 'guard/onboarding_guard.dart';
+
 // screen
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
+import 'package:movemate/features/auth/presentation/screens/otp_verification/otp_verification_screen.dart';
+
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
+
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
@@ -16,15 +23,16 @@ import 'package:movemate/features/promotion/presentation/screens/promotion_detai
 import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 import 'package:movemate/features/package/presentation/package_detail_screen/package_detail_screen.dart';
 import 'package:movemate/features/profile/presentation/profile_screen.dart';
-import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order.screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
-import 'guard/onboarding_guard.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
+
+// utils
+import 'package:movemate/utils/enums/enums_export.dart';
 
 part 'app_router.gr.dart';
 
@@ -38,16 +46,15 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         // auth
+        AutoRoute(page: SignInScreenRoute.page),
+        AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(
-          page: SignInScreenRoute.page,
+          initial: true,
+          page: OTPVerificationScreenRoute.page,
         ),
-        AutoRoute(
-          page: SignUpScreenRoute.page,
-        ),
+
         // Màn hình Onboarding
-        AutoRoute(
-          page: OnboardingScreenRoute.page,
-        ),
+        AutoRoute(page: OnboardingScreenRoute.page),
 
         // Màn hình chính
         AutoRoute(

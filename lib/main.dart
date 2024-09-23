@@ -3,22 +3,30 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/splash_screen.dart';
+import 'package:movemate/utils/commons/functions/test_firebase_connection.dart';
 import 'configs/routes/app_router.dart';
 import 'configs/theme/app_theme.dart';
 import 'utils/constants/asset_constant.dart';
 
-void main() {
+import 'package:movemate/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await initFirebaseMessaging();
+
+  // check firebase anonymous user connect
+  await testFirebaseConnection();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then(
-    (_) => runApp(
-      const ProviderScope(
+  ]).then((_) => runApp(const ProviderScope(
         child: MyApp(),
-      ),
-    ),
-  );
+      )));
 }
 
 class MyApp extends HookConsumerWidget {
