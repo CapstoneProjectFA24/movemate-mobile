@@ -1,5 +1,7 @@
 //booking_provider.dart
 
+import 'dart:ffi';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/data/data_sources/booking_fake_data.dart';
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
@@ -7,6 +9,7 @@ import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {
   // BookingNotifier() : super(Booking(totalPrice: 0.0));
@@ -266,6 +269,27 @@ class BookingNotifier extends StateNotifier<Booking> {
     final updatedChecklistValues = List<bool>.from(state.checklistValues);
     updatedChecklistValues[index] = value;
     state = state.copyWith(checklistValues: updatedChecklistValues);
+  }
+
+//location
+  void updatePickUpLocation(LocationModel location) {
+    state = state.copyWith(pickUpLocation: location);
+  }
+
+  void updateDropOffLocation(LocationModel location) {
+    state = state.copyWith(dropOffLocation: location);
+  }
+
+  void updateBookingDate(DateTime date) {
+    state = state.copyWith(bookingDate: date);
+  }
+
+  void updateIsSelectingPickUp(bool isRoundTrip) {
+    state = state.copyWith(isRoundTrip: isRoundTrip);
+  }
+
+  void toggleSelectingPickUp(bool isSelecting) {
+    state = state.copyWith(isSelectingPickUp: isSelecting);
   }
 
   double calculateVehiclePrice(int index) {

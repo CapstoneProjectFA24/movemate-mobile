@@ -1,6 +1,7 @@
 //booking_entities.dart
 
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
+import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class Service {
   final String title;
@@ -73,6 +74,12 @@ class Booking {
   final List<String> diningRoomImages;
   final List<String> officeRoomImages;
   final List<String> bathroomImages;
+  //location
+
+  final bool isSelectingPickUp;
+  final LocationModel? pickUpLocation;
+  final LocationModel? dropOffLocation;
+  final DateTime? bookingDate; // Add this field
 
   /// start test
   // Add fromJson and toJson methods
@@ -93,6 +100,13 @@ class Booking {
               ?.map((e) => Package.fromJson(e))
               .toList() ??
           [],
+      //location
+      pickUpLocation: json['pickUpLocation'] != null
+          ? LocationModel.fromJson(json['pickUpLocation'])
+          : null,
+      dropOffLocation: json['dropOffLocation'] != null
+          ? LocationModel.fromJson(json['dropOffLocation'])
+          : null,
       isHandlingExpanded: json['isHandlingExpanded'] ?? false,
       isDisassemblyExpanded: json['isDisassemblyExpanded'] ?? false,
       livingRoomImages: List<String>.from(json['livingRoomImages'] ?? []),
@@ -118,6 +132,10 @@ class Booking {
       'airConditionersCount': airConditionersCount,
       'isRoundTrip': isRoundTrip,
       'notes': notes,
+      //location
+      'pickUpLocation': pickUpLocation?.toJson(),
+      'dropOffLocation': dropOffLocation?.toJson(),
+      //
       'packages': packages.map((e) => e.toJson()).toList(),
       'isHandlingExpanded': isHandlingExpanded,
       'isDisassemblyExpanded': isDisassemblyExpanded,
@@ -150,6 +168,11 @@ class Booking {
     this.isHandlingExpanded = false,
     this.isDisassemblyExpanded = false,
     this.notes = '',
+    //location
+    this.isSelectingPickUp = false,
+    this.pickUpLocation,
+    this.dropOffLocation,
+    this.bookingDate, // Include in constructor
     // Initialize image lists (empty by default)
     List<String>? livingRoomImages,
     List<String>? bedroomImages,
@@ -180,6 +203,11 @@ class Booking {
     bool? isHandlingExpanded,
     bool? isDisassemblyExpanded,
     String? notes,
+    //location
+    bool? isSelectingPickUp,
+    LocationModel? pickUpLocation,
+    LocationModel? dropOffLocation,
+    DateTime? bookingDate,
     List<Package>? packages,
     List<String>? livingRoomImages,
     List<String>? bedroomImages,
@@ -205,6 +233,12 @@ class Booking {
       isDisassemblyExpanded:
           isDisassemblyExpanded ?? this.isDisassemblyExpanded,
       notes: notes ?? this.notes,
+      //location
+      isSelectingPickUp: isSelectingPickUp ?? this.isSelectingPickUp,
+      pickUpLocation: pickUpLocation ?? this.pickUpLocation,
+      dropOffLocation: dropOffLocation ?? this.dropOffLocation,
+      bookingDate: bookingDate ?? this.bookingDate,
+      //
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,
       bedroomImages: bedroomImages ?? this.bedroomImages,
       diningRoomImages: diningRoomImages ?? this.diningRoomImages,

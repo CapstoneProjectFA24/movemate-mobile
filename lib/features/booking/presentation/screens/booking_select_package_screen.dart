@@ -5,11 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 
-import '../widgets/booking_screen_2th/booking_dropdown_button.dart';
-import '../widgets/booking_screen_2th/package_selection.dart';
-import '../widgets/booking_screen_2th/service_table.dart';
-import '../widgets/booking_screen_2th/round_trip_checkbox.dart';
-
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
@@ -52,7 +47,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
 
                   // bug nè => run trên máy thật
                   if (bookingState.isHandlingExpanded) const PackageSelection(),
-                  
+
                   const SizedBox(height: 16),
                   BookingDropdownButton(
                     title: 'Dịch vụ tháo lắp máy lạnh',
@@ -68,7 +63,7 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
                     ServiceTable(
                       options: const ['Tháo lắp máy lạnh'],
                       prices: const ['200.000đ'],
-                      // selectedService: null,
+                      selectedService: null,
                       selectedPeopleOrAirConditionersCount:
                           bookingState.airConditionersCount,
                       isThaoLapService: true,

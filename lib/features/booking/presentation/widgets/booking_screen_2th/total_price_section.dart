@@ -40,7 +40,7 @@ class TotalPriceSection extends StatelessWidget {
               children: [
                 const Text('Tổng cộng', style: TextStyle(fontSize: 16)),
                 Text(
-                  '₫${totalPrice.toStringAsFixed(0)}',
+                  '₫${totalPrice.toStringAsFixed(0)} ',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

@@ -39,6 +39,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
+    LocationSelectionScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LocationSelectionScreen(),
+      );
+    },
     OnboardingScreenRoute.name: (routeData) {
       final args = routeData.argsAs<OnboardingScreenRouteArgs>(
           orElse: () => const OnboardingScreenRouteArgs());
@@ -186,6 +192,20 @@ class HomeScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LocationSelectionScreen]
+class LocationSelectionScreenRoute extends PageRouteInfo<void> {
+  const LocationSelectionScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          LocationSelectionScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LocationSelectionScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

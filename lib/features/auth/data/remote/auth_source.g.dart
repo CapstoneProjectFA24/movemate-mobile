@@ -30,7 +30,7 @@ class _AuthSource implements AuthSource {
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(request?.toMap() ?? <String, dynamic>{});
+    _data.addAll(request.toMap() ?? <String, dynamic>{});
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<SuccessModel>>(Options(
       method: 'POST',

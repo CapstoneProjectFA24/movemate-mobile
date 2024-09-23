@@ -9,6 +9,7 @@ import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy
 import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
+import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
@@ -51,7 +52,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [OnboardingGuard(ref: _ref)],
           // guards: [AuthGuard(ref: _ref)],
           children: [
@@ -75,7 +76,7 @@ class AppRouter extends _$AppRouter {
 
         // flow booking
         AutoRoute(
-          initial: true,
+          // initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
@@ -98,6 +99,9 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: PaymentScreenRoute.page,
+        ),
+        AutoRoute(
+          page: LocationSelectionScreenRoute.page,
         ),
         AutoRoute(
           page: SplashScreenRoute.page,

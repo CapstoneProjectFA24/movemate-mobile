@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'functions_common_export.dart';
-import '../../../features/auth/domain/repositories/auth_repository.dart';
 import '../../../models/response/error_model.dart';
 import '../../constants/api_constant.dart';
 import '../../enums/enums_export.dart';
@@ -32,13 +30,12 @@ Future<void> handleAPIError({
       case StatusCodeType.badrequest:
       case StatusCodeType.forbidden:
         showExceptionAlertDialog(
-          context: context,
-          title: 'Thông báo',
-          // exception: APIConstants.errorTrans[
-          //         errorModel.message.first.descriptionError.first] ??
-          //     'Có lỗi rồi.',
-          exception: 'Có lỗi rồi.'
-        );
+            context: context,
+            title: 'Thông báo',
+            // exception: APIConstants.errorTrans[
+            //         errorModel.message.first.descriptionError.first] ??
+            //     'Có lỗi rồi.',
+            exception: 'Có lỗi rồi.');
         break;
 
       case StatusCodeType.unauthentication:

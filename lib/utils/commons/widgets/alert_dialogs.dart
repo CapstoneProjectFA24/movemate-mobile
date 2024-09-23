@@ -126,10 +126,10 @@ Future<bool?> showAlertDialogCancelReason({
                 width: size.width * 0.3,
                 child: OutlinedButton(
                   style: ButtonStyle(
-                    side: MaterialStateProperty.all(
+                    side: WidgetStateProperty.all(
                       const BorderSide(),
                     ),
-                    shape: MaterialStateProperty.all(
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                           AssetsConstants.defaultBorder - 5.0,
@@ -150,8 +150,8 @@ Future<bool?> showAlertDialogCancelReason({
               child: OutlinedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all(AssetsConstants.primaryDark),
-                  shape: MaterialStateProperty.all(
+                      WidgetStateProperty.all(AssetsConstants.primaryDark),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                         AssetsConstants.defaultBorder - 5.0,
@@ -235,10 +235,10 @@ Future<bool?> showAlertDialog({
                 width: size.width * 0.3,
                 child: OutlinedButton(
                   style: ButtonStyle(
-                    side: MaterialStateProperty.all(
+                    side: WidgetStateProperty.all(
                       const BorderSide(),
                     ),
-                    shape: MaterialStateProperty.all(
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                           AssetsConstants.defaultBorder - 5.0,
@@ -259,8 +259,8 @@ Future<bool?> showAlertDialog({
               child: OutlinedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all(AssetsConstants.primaryDark),
-                  shape: MaterialStateProperty.all(
+                      WidgetStateProperty.all(AssetsConstants.primaryDark),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                         AssetsConstants.defaultBorder - 5.0,
