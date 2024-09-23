@@ -7,7 +7,7 @@ import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/models/token_model.dart';
 
 // data impl
-import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
+import 'package:movemate/features/auth/data/models/request/sign_up_request/sign_up_request.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';

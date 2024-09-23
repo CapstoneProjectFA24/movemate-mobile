@@ -16,7 +16,7 @@ class CustomRotation extends StatelessWidget {
         children: [
           Image.asset(
             // you can replace this with Image.asset
-            AssetsConstants.appLogo,
+            AssetsConstants.defaultAvatar,
             fit: BoxFit.cover,
             height: 50,
             width: 50,

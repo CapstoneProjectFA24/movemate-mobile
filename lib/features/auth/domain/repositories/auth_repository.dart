@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // data impl
 import 'package:movemate/features/auth/data/remote/auth_source.dart';
 import 'package:movemate/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
+import 'package:movemate/features/auth/data/models/request/sign_up_request/sign_up_request.dart';
 
 // model system
 import 'package:movemate/models/response/success_model.dart';

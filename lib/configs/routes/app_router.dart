@@ -46,11 +46,11 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         // auth
         AutoRoute(page: SignInScreenRoute.page),
-        AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(
+          page: SignUpScreenRoute.page,
           initial: true,
-          page: OTPVerificationScreenRoute.page,
         ),
+        AutoRoute(page: OTPVerificationScreenRoute.page),
 
         // Màn hình Onboarding
         AutoRoute(page: OnboardingScreenRoute.page),

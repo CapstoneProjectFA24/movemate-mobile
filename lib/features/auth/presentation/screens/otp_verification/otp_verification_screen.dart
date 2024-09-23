@@ -12,7 +12,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 // bloc-widget
 import '../../widgets/otp_verification/otp_field.dart';
-import '../../widgets/otp_verification/otp_field.dart';
 
 // import 'otp_verification_controller.dart';
 

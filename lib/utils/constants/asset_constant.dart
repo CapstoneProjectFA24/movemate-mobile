@@ -140,6 +140,11 @@ class AssetsConstants {
     size: defaultFontSize - 10.0,
   );
 
+  static const Icon iconError = Icon(
+    Icons.cancel_outlined,
+    size: defaultFontSize - 10.0,
+  );
+
   //font
   static const TextStyle appFont = TextStyle(
     fontFamily: 'Poppins',
