@@ -19,11 +19,17 @@ import '../../widgets/otp_verification/otp_field.dart';
 class OTPVerificationScreen extends HookConsumerWidget {
   const OTPVerificationScreen({
     super.key,
-    // required this.phoneNumber,
-    // required this.verifyType,
-  })  : phoneNumber = '123456789',
-        verifyType = VerificationOTPType.firsttimelog;
-        // fake trước mốt đổi required lại
+    required this.phoneNumber,
+    required this.verifyType,
+  });
+
+  // const OTPVerificationScreen({
+  //   super.key,
+  //   // required this.phoneNumber,
+  //   // required this.verifyType,
+  // })  : phoneNumber = '123456789',
+  //       verifyType = VerificationOTPType.firsttimelog;
+  // // fake trước mốt đổi required lại
 
   final String phoneNumber;
   final VerificationOTPType verifyType;
@@ -79,8 +85,8 @@ class OTPVerificationScreen extends HookConsumerWidget {
     //     );
 
     //fake
-      await Future.delayed(const Duration(seconds: 2));
-    if (otpCode == '123456') { 
+    await Future.delayed(const Duration(seconds: 2));
+    if (otpCode == '123456') {
       showSnackBar(
         context: context,
         content: 'Xác thực OTP thành công!',
@@ -88,7 +94,7 @@ class OTPVerificationScreen extends HookConsumerWidget {
         backgroundColor: AssetsConstants.mainColor,
         textColor: AssetsConstants.whiteColor,
       );
-     // next screen
+      // next screen
     } else {
       showSnackBar(
         context: context,

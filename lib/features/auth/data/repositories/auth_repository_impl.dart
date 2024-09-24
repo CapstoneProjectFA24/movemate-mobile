@@ -1,7 +1,7 @@
 // import local
 import '../../domain/repositories/auth_repository.dart';
 import '../remote/auth_source.dart';
-import '../models/request/sign_up_request/sign_up_request.dart';
+import '../models/request/sign_up_request.dart';
 
 // models system
 import 'package:movemate/models/response/success_model.dart';
