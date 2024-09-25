@@ -8,15 +8,14 @@ class APIConstants {
   // auth
   static const login = '/authenticationss/login';
   static const register = '/authenticationss/register';
-  
 
-    // error
+  // house-type
+  static const house_type = '/housetypes/get-all';
+
+  // error
   static const Map<String, String> errorTrans = {
-    'Email is already registered.':
-        'Email này đã được đăng kí',
-    'Phone number is already registered.':
-        'Số điện thoại này đã được đăng kí',   
-        
+    'Email is already registered.': 'Email này đã được đăng kí',
+    'Phone number is already registered.': 'Số điện thoại này đã được đăng kí',
     'Email does not exist in the system.':
         'Email không tồn tại trong hệ thống.',
     'Email or Password is invalid.': 'Email hoặc mật khẩu không hợp lệ.',

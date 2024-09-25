@@ -137,6 +137,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TermOfUseScreen(key: args.key),
       );
     },
+    TestScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TestScreen(),
+      );
+    },
   };
 }
 
@@ -491,4 +497,18 @@ class TermOfUseScreenRouteArgs {
   String toString() {
     return 'TermOfUseScreenRouteArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [TestScreen]
+class TestScreenRoute extends PageRouteInfo<void> {
+  const TestScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          TestScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TestScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -27,6 +27,7 @@ import 'package:movemate/features/order/presentation/screens/order.screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
+import 'package:movemate/features/test/presentation/test_screen.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
@@ -45,10 +46,12 @@ class AppRouter extends _$AppRouter {
 
   @override
   List<AutoRoute> get routes => [
+        //test data
+        AutoRoute(page: TestScreenRoute.page, initial: true),
+
         // auth
         AutoRoute(
           page: SignInScreenRoute.page,
-          initial: true,
         ),
         AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(page: OTPVerificationScreenRoute.page),
