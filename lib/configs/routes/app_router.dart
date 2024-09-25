@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
+import 'package:movemate/configs/routes/guard/auth_guard.dart';
 
 // screen
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
@@ -45,11 +46,11 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         // auth
-        AutoRoute(page: SignInScreenRoute.page),
         AutoRoute(
-          page: SignUpScreenRoute.page,
+          page: SignInScreenRoute.page,
           initial: true,
         ),
+        AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(page: OTPVerificationScreenRoute.page),
 
         // Màn hình Onboarding
@@ -59,7 +60,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: TabViewScreenRoute.page,
           // initial: true,
-          guards: [OnboardingGuard(ref: _ref)],
+          guards: [
+            OnboardingGuard(ref: _ref),
+            // AuthGuard(ref: _ref),
+          ],
           // guards: [AuthGuard(ref: _ref)],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
