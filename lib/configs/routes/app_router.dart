@@ -47,13 +47,8 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         // auth
         AutoRoute(
-<<<<<<< HEAD
-          // initial: true,
-          page: OTPVerificationScreenRoute.page,
-=======
           page: SignInScreenRoute.page,
-          initial: true,
->>>>>>> 04c7679b22ffef9407fbf7e75bae539cec7f12dc
+          // initial: true,
         ),
         AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(page: OTPVerificationScreenRoute.page),
@@ -64,16 +59,11 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-<<<<<<< HEAD
-          initial: true,
-          guards: [OnboardingGuard(ref: _ref)],
-=======
           // initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
             // AuthGuard(ref: _ref),
           ],
->>>>>>> 04c7679b22ffef9407fbf7e75bae539cec7f12dc
           // guards: [AuthGuard(ref: _ref)],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
@@ -110,6 +100,7 @@ class AppRouter extends _$AppRouter {
         ),
 
         AutoRoute(
+          initial: true,
           page: BookingSelectPackageScreenRoute.page,
         ),
 
