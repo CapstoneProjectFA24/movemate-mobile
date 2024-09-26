@@ -37,14 +37,16 @@ class SignUpScreen extends HookConsumerWidget with Validations {
   }) async {
     if (formKey.currentState!.validate()) {
       unfocus(context);
-      // await ref.read(signUpControllerProvider.notifier).signUp(
-      //       email: email,
-      //       name: name,
-      //       phone: phone,
-      //       password: password,
-      //       context: context,
-      //     );
+      await ref.read(signUpControllerProvider.notifier).signUp(
+            email: email,
+            name: name,
+            phone: phone,
+            password: password,
+            context: context,
+          );
       print("click : done");
+    } else {
+      print("Form is not valid.");
     }
   }
 
@@ -98,155 +100,36 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                         const SizedBox(
                           height: 40.0,
                         ),
-                        TextFormField(
-                          controller: name,
-                          decoration: const InputDecoration(
-                            labelText: 'Tên',
-                            hintText: 'Nhập tên của bạn',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 2.0,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AssetsConstants.mainColor,
-                                width: 2.0,
-                              ),
-                            ),
-                          ),
-                          autofocus: true,
-                          style: const TextStyle(
-                            color: Colors.black,
-                          ),
-                          validator: (val) => requiredFieldErrorText(val ?? ''),
+                        TextInput(
+                          textController: name,
+                          hintTextLable: "Tên",
+                          hintText: 'Nhập tên của bạn',
+                          onValidate: (val) => usernameMaxLengthErrorText(val),
+                          autoFocus: true,
                         ),
                         const SizedBox(height: 25.0),
-                        TextFormField(
-                          controller: email,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'Nhập email của bạn',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 2.0,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AssetsConstants.mainColor,
-                                width: 2.0,
-                              ),
-                            ),
-                          ),
-                          autofocus: true,
-                          style: const TextStyle(
-                            color: Colors.black,
-                          ),
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return requiredFieldErrorText(val);
-                            }
-                            return emailRegexErrorText(val);
-                          },
+                        TextInput(
+                          textController: email,
+                          hintTextLable: "Email",
+                          hintText: 'Nhập email của bạn',
+                          onValidate: (val) => emailRegexErrorText(val),
+                          autoFocus: true,
                         ),
                         const SizedBox(height: 25.0),
-                        TextFormField(
-                          controller: phone,
-                          decoration: const InputDecoration(
-                            labelText: 'Số điện thoại',
-                            hintText: 'Nhập số điện thoại',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 2.0,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AssetsConstants.mainColor,
-                                width: 2.0,
-                              ),
-                            ),
-                          ),
-                          autofocus: true,
-                          style: const TextStyle(
-                            color: Colors.black,
-                          ),
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return requiredFieldErrorText(val);
-                            }
-                            return phoneNumberErrorText(val);
-                          },
+                        TextInput(
+                          textController: phone,
+                          hintTextLable: "Số điện thoại",
+                          hintText: 'Nhập số điện thoại',
+                          onValidate: (val) => phoneNumberErrorText(val),
+                          autoFocus: true,
                         ),
                         const SizedBox(height: 25.0),
-                        TextFormField(
-                          controller: password,
-                          decoration: const InputDecoration(
-                            labelText: 'Mật khẩu',
-                            hintText: 'Nhập mật khẩu',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 2.0,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AssetsConstants.mainColor,
-                                width: 2.0,
-                              ),
-                            ),
-                          ),
-                          autofocus: true,
-                          style: const TextStyle(
-                            color: Colors.black,
-                          ),
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return requiredFieldErrorText(val);
-                            }
-                            final minLengthError = passwordMinErrorText(val);
-                            final maxLengthError = passwordMaxErrorText(val);
-                            final complexityError =
-                                passwordComplexityErrorText(val);
-
-                            if (minLengthError.isNotEmpty) {
-                              return minLengthError;
-                            } else if (maxLengthError.isNotEmpty) {
-                              return maxLengthError;
-                            } else if (complexityError.isNotEmpty) {
-                              return complexityError;
-                            }
-                            return null;
-                          },
+                        PasswordInput(
+                          textEditingController: password,
+                          hintTextLable: "Mật khẩu",
+                          hintText: 'Nhập mật khẩu',
+                          onValidate: (val) => passwordErrorText(val),
+                          autoFocus: false,
                         ),
                         const SizedBox(height: 25.0),
                         Row(

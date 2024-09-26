@@ -6,7 +6,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:movemate/models/response/success_model.dart';
 
 // data impl
-import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
+import 'package:movemate/features/auth/data/models/request/sign_up_request/sign_up_request.dart';
+import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
+import 'package:movemate/features/auth/data/models/request/response/account_response.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -21,6 +23,12 @@ abstract class AuthSource {
   @POST(APIConstants.register)
   Future<HttpResponse<SuccessModel>> signUp(
     @Body() SignUpRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+  );
+
+    @POST(APIConstants.login)
+  Future<HttpResponse<AccountReponse>> signIn(
+    @Body() SignInRequest request,
     @Header(APIConstants.contentHeader) String contentType,
   );
 }

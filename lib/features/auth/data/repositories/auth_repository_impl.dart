@@ -1,7 +1,10 @@
 // import local
+import 'package:movemate/features/auth/data/models/request/response/account_response.dart';
+import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
+import 'package:movemate/features/auth/data/models/request/sign_up_request/sign_up_request.dart';
+
 import '../../domain/repositories/auth_repository.dart';
 import '../remote/auth_source.dart';
-import '../models/request/sign_up_request.dart';
 
 // models system
 import 'package:movemate/models/response/success_model.dart';
@@ -18,10 +21,16 @@ class AuthRepositoryImpl extends RemoteBaseRepository
 
   @override
   Future<SuccessModel> signUp({required SignUpRequest request}) {
-    print("SignUpRequest as Map: ${request.toMap()}");
+    print("SignUpRequest as Map: ${request.toJson()}");
 
     return getDataOf(
       request: () => _authSource.signUp(request, APIConstants.contentType),
+    );
+  }
+
+    Future<AccountReponse> signIn({required SignInRequest request}) {
+    return getDataOf(
+      request: () => _authSource.signIn(request, APIConstants.contentType),
     );
   }
 }

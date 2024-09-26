@@ -30,12 +30,20 @@ Future<void> handleAPIError({
       case StatusCodeType.badrequest:
       case StatusCodeType.forbidden:
         showExceptionAlertDialog(
+<<<<<<< HEAD
             context: context,
             title: 'Thông báo',
             // exception: APIConstants.errorTrans[
             //         errorModel.message.first.descriptionError.first] ??
             //     'Có lỗi rồi.',
             exception: 'Có lỗi rồi.');
+=======
+          context: context,
+          title: 'Thông báo',
+          exception:
+              APIConstants.errorTrans[errorModel.message] ?? 'Có lỗi rồi.',
+        );
+>>>>>>> 04c7679b22ffef9407fbf7e75bae539cec7f12dc
         break;
 
       case StatusCodeType.unauthentication:
@@ -54,9 +62,7 @@ Future<void> handleAPIError({
         showExceptionAlertDialog(
           context: context,
           title: 'Thông báo',
-          exception: APIConstants
-                  .errorTrans[error.message.first.descriptionError.first] ??
-              'Có lỗi rồi.',
+          exception: APIConstants.errorTrans[error.message] ?? 'Có lỗi rồi.',
         );
     }
   } catch (e) {
