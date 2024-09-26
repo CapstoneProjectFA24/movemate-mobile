@@ -101,6 +101,7 @@ class ServiceSelector extends HookConsumerWidget {
             ),
             const SizedBox(height: 4),
             GestureDetector(
+              // Commented this out to avoid issues during debugging.
               onTap: () async {
                 final selectedDate =
                     await _selectDate(context, bookingState.bookingDate);
@@ -134,10 +135,10 @@ class ServiceSelector extends HookConsumerWidget {
                 buttonText: 'Xác nhận',
                 buttonColor: AssetsConstants.primaryMain,
                 isButtonEnabled: true,
-                onButtonPressed: () => {
-                  context.router.push(const BookingScreenRoute()),
-                  print("object1  ${bookingState.pickUpLocation?.address} "),
-                  print("object2  ${bookingState.dropOffLocation?.address} "),
+                onButtonPressed: () {
+                  context.router.push(const BookingScreenRoute());
+                  print("object1  ${bookingState.pickUpLocation?.address} ");
+                  print("object2  ${bookingState.dropOffLocation?.address} ");
                 },
               ),
           ],
@@ -185,7 +186,8 @@ class ServiceSelector extends HookConsumerWidget {
     );
   }
 
-  //hàm để hiển thị model ngày và chọn giờ
+  //hàm để hiển thị modal ngày và chọn giờ
+  // Uncomment and use this function when needed.
   Future<DateTime?> _selectDate(
       BuildContext context, DateTime? initialDate) async {
     final now = DateTime.now();

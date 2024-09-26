@@ -1,53 +1,79 @@
 //booking_provider.dart
 
-import 'dart:ffi';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/data/data_sources/booking_fake_data.dart';
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/domain/entities/service_entities.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {
   // BookingNotifier() : super(Booking(totalPrice: 0.0));
-
-  //start test
-
-  BookingNotifier() : super(Booking(totalPrice: 0.0)) {
-    // Load fake data when the notifier is initialized
+  BookingNotifier()
+      : super(Booking(
+            totalPrice: 0.0, additionalServiceQuantities: [], packages: [])) {
     loadBookingData();
+
     loadAvailableVehicles();
     loadPackages();
   }
 
   void loadPackages() {
-    final List<dynamic> jsonData = json.decode(fakeBookingJson2nd);
-    final packages =
-        jsonData.map((packageJson) => Package.fromJson(packageJson)).toList();
+    final List<dynamic> jsonData = json.decode(fakeBookingJson3nd);
+    final packages = jsonData.map((e) => Package.fromJson(e)).toList();
     state = state.copyWith(packages: packages);
   }
 
-// Method to fetch booking data from API (for future use)
-  Future<void> fetchBookingData() async {
-    try {
-      final response =
-          await http.get(Uri.parse('https://api.example.com/booking'));
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        final bookingData = Booking.fromJson(jsonData);
-        state = bookingData;
-      } else {
-        // Handle error
-        loadBookingData();
-      }
-    } catch (e) {
-      // Handle exception
-      loadBookingData();
-    }
+  void updateAdditionalServiceQuantity(int serviceIndex, int newQuantity) {
+    final updatedQuantities = [...state.additionalServiceQuantities];
+    updatedQuantities[serviceIndex] = newQuantity;
+    state = state.copyWith(additionalServiceQuantities: updatedQuantities);
+    calculateAndUpdateTotalPrice();
   }
+
+  void updateSelectedPackageIndex(int? index) {
+    state = state.copyWith(selectedPackageIndex: index);
+  }
+
+  void updateQuantity(int packageIndex, int serviceIndex, int quantity) {
+    final packages = [...state.packages];
+    final services = [...packages[packageIndex].services];
+
+    services[serviceIndex] =
+        services[serviceIndex].copyWith(quantity: quantity);
+
+    packages[packageIndex] =
+        packages[packageIndex].copyWith(services: services);
+
+    state = state.copyWith(packages: packages);
+
+    calculateAndUpdateTotalPrice();
+  }
+
+  void updatePeopleCount(int count) {
+    state = state.copyWith(peopleCount: count);
+  }
+
+  void updateAirConditionersCount(int count) {
+    state = state.copyWith(airConditionersCount: count);
+  }
+
+  void calculateAndUpdateTotalPrice() {
+    double total = 0.0;
+    if (state.selectedPackageIndex != null) {
+      final selectedPackage = state.packages[state.selectedPackageIndex!];
+
+      // Directly use packagePrice if it's already a double
+      total += selectedPackage.packagePrice;
+    }
+    total += state.airConditionersCount * 200000;
+    state = state.copyWith(totalPrice: total);
+  }
+
+//
 
   // Method to load booking data (fake data)
   void loadBookingData() {
@@ -56,26 +82,7 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = bookingData;
   }
 
-  // Method to load available vehicles from API
-  Future<void> fetchloadAvailableVehicles() async {
-    try {
-      final response =
-          await http.get(Uri.parse('https://api.example.com/vehicles'));
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonData = json.decode(response.body);
-        final vehicles = jsonData
-            .map((vehicleJson) => Vehicle.fromJson(vehicleJson))
-            .toList();
-        state = state.copyWith(availableVehicles: vehicles);
-      } else {
-        // Handle error
-        loadAvailableVehicles();
-      }
-    } catch (e) {
-      // Handle exception
-      loadAvailableVehicles();
-    }
-  }
+  //end test
 
   // Method to load available vehicles
   void loadAvailableVehicles() {
@@ -85,8 +92,6 @@ class BookingNotifier extends StateNotifier<Booking> {
 
     state = state.copyWith(availableVehicles: vehicles);
   }
-
-  //end test
 
   // Methods to toggle expanded state
   void toggleHandlingExpanded() {
@@ -105,40 +110,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(isDisassemblyExpanded: value);
   }
 
-  void updatePeopleCount(int count) {
-    state = state.copyWith(peopleCount: count);
-  }
-
-  void updateSelectedPackageIndex(int? index) {
-    state = state.copyWith(selectedPackageIndex: index);
-  }
-
-  // Update the total price calculation to include package price
-  void calculateAndUpdateTotalPrice() {
-    double total = 0.0;
-
-    // Vehicle price
-    total += state.vehiclePrice;
-
-    // Package price
-    if (state.selectedPackageIndex != null) {
-      final selectedPackage = state.packages[state.selectedPackageIndex!];
-      final packagePrice = double.parse(
-          selectedPackage.packagePrice.replaceAll('.', '').replaceAll('đ', ''));
-      total += packagePrice;
-    }
-
-    // Air conditioners price (assuming 200,000 per unit)
-    total += state.airConditionersCount * 200000;
-
-    // Round trip multiplier
-    if (state.isRoundTrip) {
-      total *= 1.7;
-    }
-
-    state = state.copyWith(totalPrice: total);
-  }
-
   void updateHouseType(String? houseType) {
     state = state.copyWith(houseType: houseType);
     calculateAndUpdateTotalPrice();
@@ -154,25 +125,9 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  // void updateSelectedVehicle(int index, double price) {
-  //   state = state.copyWith(
-  //     selectedVehicleIndex: index,
-  //     totalPrice: state.totalPrice + price,
-  //   );
-  // }
-
-  // void updateSelectedPackageIndex(int? index) {
-  //   state = state.copyWith(selectedPackageIndex: index);
-  //   calculateAndUpdateTotalPrice();
-  // }
-
   void updateTotalPrice(double totalPrice) {
     state = state.copyWith(totalPrice: totalPrice);
     calculateAndUpdateTotalPrice();
-  }
-
-  void updateAirConditionersCount(int count) {
-    state = state.copyWith(airConditionersCount: count);
   }
 
   void updateRoundTrip(bool isRoundTrip) {
@@ -284,14 +239,11 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(bookingDate: date);
   }
 
-  void updateIsSelectingPickUp(bool isRoundTrip) {
-    state = state.copyWith(isRoundTrip: isRoundTrip);
-  }
-
   void toggleSelectingPickUp(bool isSelecting) {
     state = state.copyWith(isSelectingPickUp: isSelecting);
   }
 
+////
   double calculateVehiclePrice(int index) {
     return 300000 + (index * 50000);
   }

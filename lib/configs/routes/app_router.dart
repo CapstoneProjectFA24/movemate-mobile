@@ -32,7 +32,6 @@ import 'package:movemate/onboarding_screen.dart';
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
 
 // utils
-import 'package:movemate/utils/enums/enums_export.dart';
 
 part 'app_router.gr.dart';
 
@@ -49,7 +48,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: SignInScreenRoute.page),
         AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(
-          initial: true,
+          // initial: true,
           page: OTPVerificationScreenRoute.page,
         ),
 

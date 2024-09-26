@@ -1,6 +1,4 @@
-import 'package:movemate/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 Future<void> testFirebaseConnection() async {
   try {
@@ -9,7 +7,7 @@ Future<void> testFirebaseConnection() async {
     print('Kết nối với Firebase thành công: ${userCredential.user?.uid}');
 
     User? user = userCredential.user;
-     // Lấy firebaseIdToken
+    // Lấy firebaseIdToken
     String? idToken = await user?.getIdToken();
 
     if (idToken != null) {

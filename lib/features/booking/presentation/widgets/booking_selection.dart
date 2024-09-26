@@ -116,7 +116,7 @@ class BookingSelection extends HookConsumerWidget {
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       decoration: BoxDecoration(
         color: AssetsConstants.whiteColor,
         borderRadius: BorderRadius.circular(12),

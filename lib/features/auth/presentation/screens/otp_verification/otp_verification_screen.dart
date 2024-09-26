@@ -12,7 +12,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 // bloc-widget
 import '../../widgets/otp_verification/otp_field.dart';
-import '../../widgets/otp_verification/otp_field.dart';
 
 // import 'otp_verification_controller.dart';
 
@@ -24,7 +23,7 @@ class OTPVerificationScreen extends HookConsumerWidget {
     // required this.verifyType,
   })  : phoneNumber = '123456789',
         verifyType = VerificationOTPType.firsttimelog;
-        // fake trước mốt đổi required lại
+  // fake trước mốt đổi required lại
 
   final String phoneNumber;
   final VerificationOTPType verifyType;
@@ -80,8 +79,8 @@ class OTPVerificationScreen extends HookConsumerWidget {
     //     );
 
     //fake
-      await Future.delayed(const Duration(seconds: 2));
-    if (otpCode == '123456') { 
+    await Future.delayed(const Duration(seconds: 2));
+    if (otpCode == '123456') {
       showSnackBar(
         context: context,
         content: 'Xác thực OTP thành công!',
@@ -89,7 +88,7 @@ class OTPVerificationScreen extends HookConsumerWidget {
         backgroundColor: AssetsConstants.mainColor,
         textColor: AssetsConstants.whiteColor,
       );
-     // next screen
+      // next screen
     } else {
       showSnackBar(
         context: context,

@@ -13,7 +13,6 @@ import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_scre
 import '../../widgets/custom_scaford.dart';
 
 // utils
-import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/commons/functions/functions_common_export.dart';
