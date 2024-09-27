@@ -8,10 +8,13 @@ import 'package:movemate/models/token_model.dart';
 
 // data impl
 import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
+import 'package:movemate/features/auth/data/models/request/otp_verify_request.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
+import 'package:movemate/features/auth/data/models/request/response/account_signup_response.dart';
+
 
 part 'auth_source.g.dart';
 
@@ -21,6 +24,24 @@ abstract class AuthSource {
 
   @POST(APIConstants.register)
   Future<HttpResponse<SuccessModel>> signUp(
+    @Body() SignUpRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+  );
+
+  @POST(APIConstants.checkExists)
+  Future<HttpResponse<SuccessModel>> checkValidUser(
+    @Body() SignUpRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+  );
+
+  @POST(APIConstants.verifyToken)
+  Future<HttpResponse<SuccessModel>> verifyToken(
+    @Body() OTPVerifyRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+  );
+
+  @POST(APIConstants.register)
+  Future<HttpResponse<AccountReponse>> signUpAndRes(
     @Body() SignUpRequest request,
     @Header(APIConstants.contentHeader) String contentType,
   );

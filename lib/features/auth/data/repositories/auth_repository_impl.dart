@@ -1,7 +1,11 @@
 // import local
+
+import 'package:movemate/features/auth/data/models/request/response/account_signup_response.dart';
+
 import '../../domain/repositories/auth_repository.dart';
 import '../remote/auth_source.dart';
 import '../models/request/sign_up_request.dart';
+import 'package:movemate/features/auth/data/models/request/otp_verify_request.dart';
 
 // models system
 import 'package:movemate/models/response/success_model.dart';
@@ -23,5 +27,37 @@ class AuthRepositoryImpl extends RemoteBaseRepository
     return getDataOf(
       request: () => _authSource.signUp(request, APIConstants.contentType),
     );
+  }
+
+  @override
+  Future<SuccessModel> checkValidUser({required SignUpRequest request}) {
+    return getDataOf(
+      request: () =>
+          _authSource.checkValidUser(request, APIConstants.contentType),
+    );
+  }
+
+  @override
+  Future<SuccessModel> verifyToken({required OTPVerifyRequest request}) {
+    return getDataOf(
+      request: () => _authSource.verifyToken(request, APIConstants.contentType),
+    );
+  }
+
+  @override
+  Future<AccountReponse> signUpAndRes({required SignUpRequest request}) async {
+    final httpResponse = getDataOf(
+      request: () =>
+          _authSource.signUpAndRes(request, APIConstants.contentType),
+    );
+
+    final responseData = httpResponse as Map<String, dynamic>;
+    if (responseData.containsKey('payload')) {
+      print("XỬ LÝ QUA RESPONSE THÀNH CÔNG");
+      final payloadData = responseData['payload'] as Map<String, dynamic>;
+      return AccountReponse.fromMap(payloadData);
+    } else {
+      throw Exception("Payload không tồn tại trong response");
+    }
   }
 }

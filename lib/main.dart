@@ -20,6 +20,7 @@ void main() async {
 
   // check firebase anonymous user connect
   // await testFirebaseConnection();
+    // await testFirebaseConnectionWithPhone('+84382703625'); 
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

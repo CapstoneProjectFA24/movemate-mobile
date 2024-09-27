@@ -1,3 +1,4 @@
+import 'package:movemate/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
@@ -35,6 +36,11 @@ class SharedPreferencesUtils {
     return null;
   }
 
+  static Future<void> removeSignInRequestInfo(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
+
   static Future<void> setVerificationId(
       String verificationId, String key) async {
     final prefs = await SharedPreferences.getInstance();
@@ -50,5 +56,46 @@ class SharedPreferencesUtils {
       return verificationId;
     }
     return null;
+  }
+
+  static Future<void> removeVerificationId(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
+// get token
+  static Future<UserModel?> getInstance(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final user = prefs.getString(key) ?? '';
+    if (user.isNotEmpty) {
+      return UserModel.fromJson(user);
+    }
+    return null;
+  }
+
+  // set token
+  static Future<void> setInstance(UserModel user, String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+    await prefs.setString(key, user.toJson());
+  }
+
+  // set token
+  static Future<void> clearInstance(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+  }
+
+  // get user permission
+  static Future<bool?> getUserPermission(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final permission = prefs.getBool(key);
+    return permission;
+  }
+
+  // set user permission
+  static Future<void> setUserPermission(bool value, String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(key);
+    await prefs.setBool(key, value);
   }
 }

@@ -34,10 +34,8 @@ Future<void> handleAPIError({
         showExceptionAlertDialog(
           context: context,
           title: 'Thông báo',
-          // exception: APIConstants.errorTrans[
-          //         errorModel.message.first.descriptionError.first] ??
-          //     'Có lỗi rồi.',
-          exception: 'Có lỗi rồi.'
+          exception:
+              APIConstants.errorTrans[errorModel.errors.first] ?? 'Có lỗi rồi.',
         );
         break;
 
@@ -57,9 +55,8 @@ Future<void> handleAPIError({
         showExceptionAlertDialog(
           context: context,
           title: 'Thông báo',
-          exception: APIConstants
-                  .errorTrans[error.message.first.descriptionError.first] ??
-              'Có lỗi rồi.',
+          exception:
+              APIConstants.errorTrans[errorModel.errors.first] ?? 'Có lỗi rồi.',
         );
     }
   } catch (e) {
