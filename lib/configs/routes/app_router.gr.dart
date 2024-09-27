@@ -40,9 +40,14 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OTPVerificationScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<OTPVerificationScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const OTPVerificationScreen(),
+        child: OTPVerificationScreen(
+          key: args.key,
+          phoneNumber: args.phoneNumber,
+          verifyType: args.verifyType,
+        ),
       );
     },
     OnboardingScreenRoute.name: (routeData) {
@@ -198,16 +203,46 @@ class HomeScreenRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OTPVerificationScreen]
-class OTPVerificationScreenRoute extends PageRouteInfo<void> {
-  const OTPVerificationScreenRoute({List<PageRouteInfo>? children})
-      : super(
+class OTPVerificationScreenRoute
+    extends PageRouteInfo<OTPVerificationScreenRouteArgs> {
+  OTPVerificationScreenRoute({
+    Key? key,
+    required String phoneNumber,
+    required VerificationOTPType verifyType,
+    List<PageRouteInfo>? children,
+  }) : super(
           OTPVerificationScreenRoute.name,
+          args: OTPVerificationScreenRouteArgs(
+            key: key,
+            phoneNumber: phoneNumber,
+            verifyType: verifyType,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'OTPVerificationScreenRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<OTPVerificationScreenRouteArgs> page =
+      PageInfo<OTPVerificationScreenRouteArgs>(name);
+}
+
+class OTPVerificationScreenRouteArgs {
+  const OTPVerificationScreenRouteArgs({
+    this.key,
+    required this.phoneNumber,
+    required this.verifyType,
+  });
+
+  final Key? key;
+
+  final String phoneNumber;
+
+  final VerificationOTPType verifyType;
+
+  @override
+  String toString() {
+    return 'OTPVerificationScreenRouteArgs{key: $key, phoneNumber: $phoneNumber, verifyType: $verifyType}';
+  }
 }
 
 /// generated route for
