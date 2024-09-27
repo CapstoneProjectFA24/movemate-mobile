@@ -103,9 +103,9 @@ class OtpController extends _$OtpController {
       print("Xử lý 6 tại otp : sau verify}");
 
       final userModel = UserModel(
-        id: user.id,
-        email: user.email,
-        tokens: user.tokens,
+        id: user.payload.id,
+        email: user.payload.email,
+        tokens: user.payload.tokens,
       );
 
       ref.read(authProvider.notifier).update(
