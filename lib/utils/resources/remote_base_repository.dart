@@ -12,6 +12,7 @@ abstract class RemoteBaseRepository {
       final httpResponse = await request();
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return httpResponse.data;
+
       } else {
         throw DioException(
           response: httpResponse.response,

@@ -12,18 +12,15 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 // bloc-widget
 import '../../widgets/otp_verification/otp_field.dart';
-
-// import 'otp_verification_controller.dart';
+import 'package:movemate/features/auth/presentation/screens/otp_verification/otp_controller.dart';
 
 @RoutePage()
 class OTPVerificationScreen extends HookConsumerWidget {
   const OTPVerificationScreen({
     super.key,
-    // required this.phoneNumber,
-    // required this.verifyType,
-  })  : phoneNumber = '123456789',
-        verifyType = VerificationOTPType.firsttimelog;
-        // fake trước mốt đổi required lại
+    required this.phoneNumber,
+    required this.verifyType,
+  });
 
   final String phoneNumber;
   final VerificationOTPType verifyType;
@@ -46,13 +43,15 @@ class OTPVerificationScreen extends HookConsumerWidget {
   }
 
   // get otp code
-  Future<void> verifyPhoneNumber({
+  Future<void> verifyOtpSms({
     required WidgetRef ref,
     required BuildContext context,
   }) async {
     // await ref
     //     .read(otpVerificationControllerProvider.notifier)
     //     .checkPhoneNumber(phoneNumber: phoneNumber, context: context);
+
+    // await ref.read(otpControllerProvider.notifier).verifyOTP(context: context, otpSms: otpSms)
 
     //fake
     await Future.delayed(const Duration(seconds: 2));
@@ -71,33 +70,9 @@ class OTPVerificationScreen extends HookConsumerWidget {
     required BuildContext context,
     required String otpCode,
   }) async {
-    // await ref.read(otpVerificationControllerProvider.notifier).verifyOTPCode(
-    //       phoneNumber: phoneNumber,
-    //       code: otpCode,
-    //       context: context,
-    //       verifyType: verifyType,
-    //     );
-
-    //fake
-      await Future.delayed(const Duration(seconds: 2));
-    if (otpCode == '123456') { 
-      showSnackBar(
-        context: context,
-        content: 'Xác thực OTP thành công!',
-        icon: AssetsConstants.iconSuccess,
-        backgroundColor: AssetsConstants.mainColor,
-        textColor: AssetsConstants.whiteColor,
-      );
-     // next screen
-    } else {
-      showSnackBar(
-        context: context,
-        content: 'Mã OTP không chính xác. Vui lòng thử lại.',
-        icon: AssetsConstants.iconSuccess,
-        backgroundColor: Colors.red,
-        textColor: AssetsConstants.whiteColor,
-      );
-    }
+    await ref
+        .read(otpControllerProvider.notifier)
+        .verifyOTP(context: context, otpSms: otpCode);
   }
 
   @override
@@ -107,7 +82,7 @@ class OTPVerificationScreen extends HookConsumerWidget {
     final timer = useState<Timer?>(null);
     final start = useState(30);
     final wait = useState(true);
-    // final state = ref.watch(otpVerificationControllerProvider);
+    final state = ref.watch(otpControllerProvider);
 
     // text controller
     final otp_1 = useTextEditingController(),
@@ -137,8 +112,8 @@ class OTPVerificationScreen extends HookConsumerWidget {
     }, const []);
 
     return LoadingOverlay(
-      // isLoading: state.isLoading,
-      isLoading: false,
+      isLoading: state.isLoading,
+      // isLoading: false,
       child: Scaffold(
         backgroundColor: AssetsConstants.whiteColor,
         appBar: const CustomAppBar(
@@ -228,7 +203,7 @@ class OTPVerificationScreen extends HookConsumerWidget {
                           ..onTap = wait.value
                               ? null
                               : () async {
-                                  await verifyPhoneNumber(
+                                  await verifyOtpSms(
                                       ref: ref, context: context);
                                   start.value = 30;
                                   startTimer(

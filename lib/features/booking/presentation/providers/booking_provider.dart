@@ -27,7 +27,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(packages: packages);
   }
 
-// Method to fetch booking data from API (for future use)
   Future<void> fetchBookingData() async {
     try {
       final response =

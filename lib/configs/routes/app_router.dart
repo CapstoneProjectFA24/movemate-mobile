@@ -48,9 +48,11 @@ class AppRouter extends _$AppRouter {
         // auth
         AutoRoute(
           page: SignInScreenRoute.page,
+        ),
+        AutoRoute(
+          page: SignUpScreenRoute.page,
           initial: true,
         ),
-        AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(page: OTPVerificationScreenRoute.page),
 
         // Màn hình Onboarding
@@ -64,7 +66,6 @@ class AppRouter extends _$AppRouter {
             OnboardingGuard(ref: _ref),
             // AuthGuard(ref: _ref),
           ],
-          // guards: [AuthGuard(ref: _ref)],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
             AutoRoute(page: OrderScreenRoute.page),
