@@ -69,6 +69,10 @@ class BookingNotifier extends StateNotifier<Booking> {
       // Directly use packagePrice if it's already a double
       total += selectedPackage.packagePrice;
     }
+    if (state.isRoundTrip) {
+      total *= 1.7;
+    }
+
     total += state.airConditionersCount * 200000;
     state = state.copyWith(totalPrice: total);
   }

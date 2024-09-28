@@ -16,7 +16,10 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
-    placeOder() {}
+    placeOder() {
+      return;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Thông tin đặt hàng'),
@@ -24,23 +27,31 @@ class BookingSelectPackageScreen extends HookConsumerWidget {
       ),
       body: Stack(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 8),
-                  PackageSelection(),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  const PackageSelection(),
+                  const SizedBox(height: 16),
                   // Add more widgets for extra services like 'Phí chờ', etc.
 
-                  SizedBox(height: 16),
-                  SizedBox(height: 16),
-                  ChecklistSection(),
-                  SizedBox(height: 16),
-                  NotesSection(),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
+                  RoundTripCheckbox(
+                    isRoundTrip: bookingState.isRoundTrip,
+                    onChanged: (value) {
+                      bookingNotifier.updateRoundTrip(value ?? false);
+                      bookingNotifier.calculateAndUpdateTotalPrice();
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+                  const ChecklistSection(),
+                  const SizedBox(height: 16),
+                  const NotesSection(),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

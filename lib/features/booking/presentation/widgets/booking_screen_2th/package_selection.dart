@@ -39,6 +39,7 @@ class PackageSelection extends ConsumerWidget {
           onQuantityChanged: (newQuantity) {
             bookingNotifier.updateAdditionalServiceQuantity(0, newQuantity);
           },
+          imagePath: "assets/images/booking/infor/homeiconsvg.png",
         ),
         AddButtonService(
           title: 'Hỗ trợ tài xế',
@@ -49,6 +50,7 @@ class PackageSelection extends ConsumerWidget {
           onQuantityChanged: (newQuantity) {
             bookingNotifier.updateAdditionalServiceQuantity(1, newQuantity);
           },
+          imagePath: "assets/images/booking/infor/homeiconsvg.png",
         ),
         AddButtonService(
           title: 'Chứng từ điện tử',
@@ -59,6 +61,7 @@ class PackageSelection extends ConsumerWidget {
           onQuantityChanged: (newQuantity) {
             bookingNotifier.updateAdditionalServiceQuantity(2, newQuantity);
           },
+          imagePath: "assets/images/booking/infor/homeiconsvg.png",
         ),
       ],
     );

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
+import 'package:movemate/features/testapi/presentation/screens/test_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -59,7 +61,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
             // AuthGuard(ref: _ref),
@@ -100,10 +102,15 @@ class AppRouter extends _$AppRouter {
         ),
 
         AutoRoute(
-          initial: true,
+          // initial: true,
           page: BookingSelectPackageScreenRoute.page,
         ),
 
+        //màn hình hiển thị danh sách thông tin xe
+        AutoRoute(
+          // initial: true,
+          page: VehiclePriceListScreenRoute.page,
+        ),
         //  order flow
         AutoRoute(
           page: OrderScreenRoute.page,
@@ -116,6 +123,12 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: SplashScreenRoute.page,
+        ),
+
+        //testapi
+        AutoRoute(
+          // initial: true,
+          page: TestScreenRoute.page,
         ),
       ];
 }
