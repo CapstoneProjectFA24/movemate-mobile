@@ -10,6 +10,7 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 import '../../widgets/custom_scaford.dart';
 
 // utils
@@ -37,13 +38,22 @@ class SignUpScreen extends HookConsumerWidget with Validations {
   }) async {
     if (formKey.currentState!.validate()) {
       unfocus(context);
-      await ref.read(signUpControllerProvider.notifier).signUp(
-            email: email,
+      // await ref.read(signUpControllerProvider.notifier).signUp(
+      //       email: email,
+      //       name: name,
+      //       phone: phone,
+      //       password: password,
+      //       context: context,
+      //     );
+
+      await ref.read(signUpControllerProvider.notifier).signUpwithOTP(
+           email: email,
             name: name,
             phone: phone,
             password: password,
+            type: VerificationOTPType.firsttimelog,
             context: context,
-          );
+      );
       print("click : done");
     } else {
       print("Form is not valid.");
@@ -65,7 +75,8 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     final agreeToTerms = useState(false);
 
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: false,
+      // isLoading: state.isLoading,
       child: CustomScaffold(
         child: Column(
           children: [

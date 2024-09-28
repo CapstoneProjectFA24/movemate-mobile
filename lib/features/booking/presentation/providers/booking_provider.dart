@@ -27,57 +27,23 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(packages: packages);
   }
 
-  void updateAdditionalServiceQuantity(int serviceIndex, int newQuantity) {
-    final updatedQuantities = [...state.additionalServiceQuantities];
-    updatedQuantities[serviceIndex] = newQuantity;
-    state = state.copyWith(additionalServiceQuantities: updatedQuantities);
-    calculateAndUpdateTotalPrice();
-  }
-
-  void updateSelectedPackageIndex(int? index) {
-    state = state.copyWith(selectedPackageIndex: index);
-  }
-
-  void updateQuantity(int packageIndex, int serviceIndex, int quantity) {
-    final packages = [...state.packages];
-    final services = [...packages[packageIndex].services];
-
-    services[serviceIndex] =
-        services[serviceIndex].copyWith(quantity: quantity);
-
-    packages[packageIndex] =
-        packages[packageIndex].copyWith(services: services);
-
-    state = state.copyWith(packages: packages);
-
-    calculateAndUpdateTotalPrice();
-  }
-
-  void updatePeopleCount(int count) {
-    state = state.copyWith(peopleCount: count);
-  }
-
-  void updateAirConditionersCount(int count) {
-    state = state.copyWith(airConditionersCount: count);
-  }
-
-  void calculateAndUpdateTotalPrice() {
-    double total = 0.0;
-    if (state.selectedPackageIndex != null) {
-      final selectedPackage = state.packages[state.selectedPackageIndex!];
-
-      // Directly use packagePrice if it's already a double
-      total += selectedPackage.packagePrice;
+  Future<void> fetchBookingData() async {
+    try {
+      final response =
+          await http.get(Uri.parse('https://api.example.com/booking'));
+      if (response.statusCode == 200) {
+        final jsonData = json.decode(response.body);
+        final bookingData = Booking.fromJson(jsonData);
+        state = bookingData;
+      } else {
+        // Handle error
+        loadBookingData();
+      }
+    } catch (e) {
+      // Handle exception
+      loadBookingData();
     }
-    if (state.isRoundTrip) {
-      total *= 1.7;
-    }
-
-    total += state.airConditionersCount * 200000;
-    state = state.copyWith(totalPrice: total);
   }
-
-//
 
   // Method to load booking data (fake data)
   void loadBookingData() {

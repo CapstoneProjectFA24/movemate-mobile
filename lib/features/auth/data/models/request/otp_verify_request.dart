@@ -1,27 +1,23 @@
 import 'dart:convert';
 
 class OTPVerifyRequest {
-  final String phone;
-  final String otpCode;
+  final String idToken;
 
   OTPVerifyRequest({
-    required this.phone,
-    required this.otpCode,
+    required this.idToken,
   });
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({'phone': phone});
-    result.addAll({'otpCode': otpCode});
+    result.addAll({'idToken': idToken});
 
     return result;
   }
 
   factory OTPVerifyRequest.fromMap(Map<String, dynamic> map) {
     return OTPVerifyRequest(
-      phone: map['phone'] ?? '',
-      otpCode: map['otpCode'] ?? '',
+      idToken: map['idToken'] ?? '',
     );
   }
 
