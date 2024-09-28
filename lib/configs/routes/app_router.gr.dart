@@ -45,6 +45,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LocationSelectionScreen(),
       );
     },
+    MapScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MapScreen(),
+      );
+    },
     OTPVerificationScreenRoute.name: (routeData) {
       final args = routeData.argsAs<OTPVerificationScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -229,6 +235,20 @@ class LocationSelectionScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LocationSelectionScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MapScreen]
+class MapScreenRoute extends PageRouteInfo<void> {
+  const MapScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          MapScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MapScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

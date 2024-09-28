@@ -47,5 +47,12 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs access to your location to show maps.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>This app needs access to your location to show maps.</string>
+		<key>io.flutter.embedded_views_preview</key>
+		<true/>
+
 	</dict>
 </plist>

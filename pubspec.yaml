@@ -56,9 +56,11 @@ dependencies:
   firebase_auth: ^4.0.0
 
   #Icon
-  icons_plus:
-    ^4.0.0
-
+  icons_plus: ^4.0.0
+  #maps:
+  google_maps_flutter: ^2.9.0
+  permission_handler:
+    ^11.3.1
     # Animation
   lottie: ^2.7.0
   flag: ^7.0.0
@@ -103,6 +105,8 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.7
   freezed: ^2.5.7
   json_serializable: ^6.8.0
+  #map
+  flutter_svg: ^2.0.10+1
 
 flutter:
   # The following line ensures that the Material Icons font is

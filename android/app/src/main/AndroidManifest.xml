@@ -3,6 +3,8 @@
     <!-- Add your permissions here -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     
 
@@ -10,6 +12,8 @@
         android:label="MoveMate"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB6nKXN1jjaJb6ms4iULI0bmONgZDOls_8"/>
 
         <activity
             android:name=".MainActivity"
