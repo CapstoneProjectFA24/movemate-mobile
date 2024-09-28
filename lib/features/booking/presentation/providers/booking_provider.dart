@@ -27,22 +27,26 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(packages: packages);
   }
 
-  Future<void> fetchBookingData() async {
-    try {
-      final response =
-          await http.get(Uri.parse('https://api.example.com/booking'));
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        final bookingData = Booking.fromJson(jsonData);
-        state = bookingData;
-      } else {
-        // Handle error
-        loadBookingData();
-      }
-    } catch (e) {
-      // Handle exception
-      loadBookingData();
-    }
+  void updateAdditionalServiceQuantity(int serviceIndex, int newQuantity) {
+    final updatedQuantities = [...state.additionalServiceQuantities];
+    updatedQuantities[serviceIndex] = newQuantity;
+    state = state.copyWith(additionalServiceQuantities: updatedQuantities);
+    calculateAndUpdateTotalPrice();
+  }
+
+  void updateQuantity(int packageIndex, int serviceIndex, int quantity) {
+    final packages = [...state.packages];
+    final services = [...packages[packageIndex].services];
+
+    services[serviceIndex] =
+        services[serviceIndex].copyWith(quantity: quantity);
+
+    packages[packageIndex] =
+        packages[packageIndex].copyWith(services: services);
+
+    state = state.copyWith(packages: packages);
+
+    calculateAndUpdateTotalPrice();
   }
 
   // Method to load booking data (fake data)
@@ -61,6 +65,17 @@ class BookingNotifier extends StateNotifier<Booking> {
         jsonData.map((vehicleJson) => Vehicle.fromJson(vehicleJson)).toList();
 
     state = state.copyWith(availableVehicles: vehicles);
+  }
+
+  void calculateAndUpdateTotalPrice() {
+    double total = 0.0;
+    if (state.selectedPackageIndex != null) {
+      final selectedPackage = state.packages[state.selectedPackageIndex!];
+      // Directly use packagePrice if it's already a double
+      total += selectedPackage.packagePrice;
+    }
+    total += state.airConditionersCount * 200000;
+    state = state.copyWith(totalPrice: total);
   }
 
   // Methods to toggle expanded state
