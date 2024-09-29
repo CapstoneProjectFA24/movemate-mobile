@@ -2,6 +2,7 @@
 
 import 'package:movemate/features/auth/data/models/response/account_response.dart';
 import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
+import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 
 import '../../domain/repositories/auth_repository.dart';
 import '../remote/auth_source.dart';
@@ -53,9 +54,15 @@ class AuthRepositoryImpl extends RemoteBaseRepository
     );
   }
 
+  @override
   Future<AccountReponse> signIn({required SignInRequest request}) {
     return getDataOf(
       request: () => _authSource.signIn(request, APIConstants.contentType),
     );
+  }
+
+  @override
+  Future<void> signOut() async {
+    await SharedPreferencesUtils.clearInstance('user_token');
   }
 }

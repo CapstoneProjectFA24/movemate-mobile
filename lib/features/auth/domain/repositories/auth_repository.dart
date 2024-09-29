@@ -23,6 +23,8 @@ abstract class AuthRepository {
   Future<SuccessModel> verifyToken({required OTPVerifyRequest request});
 
   Future<AccountReponse> signUpAndRes({required SignUpRequest request});
+
+   Future<void> signOut();
 }
 
 @Riverpod(keepAlive: false)

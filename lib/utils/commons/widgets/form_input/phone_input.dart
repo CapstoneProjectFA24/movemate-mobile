@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+
+import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import '../../../constants/asset_constant.dart';
 
-class TextInput extends HookConsumerWidget {
-  const TextInput({
-    super.key,
+class PhoneInput extends HookConsumerWidget {
+  const PhoneInput({
+    Key? key,
     required this.textController,
     required this.hintText,
     required this.hintTextLable,
     required this.onValidate,
     required this.autoFocus,
-  });
+  }) : super(key: key);
 
   final TextEditingController textController;
   final String Function(String val) onValidate;
@@ -37,7 +40,6 @@ class TextInput extends HookConsumerWidget {
       }
 
       textController.addListener(validateInput);
-
       return () => textController.removeListener(validateInput);
     }, [textController]);
 
@@ -97,7 +99,8 @@ class TextInput extends HookConsumerWidget {
               errorText: errorText.value,
               errorStyle: const TextStyle(
                 color: AssetsConstants.red4,
-                fontWeight: FontWeight.w500,
+                fontWeight:  FontWeight.w500,
+
               ),
               errorMaxLines: 2,
               contentPadding: const EdgeInsets.all(12),
@@ -114,6 +117,10 @@ class TextInput extends HookConsumerWidget {
                     )
                   : null,
             ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            keyboardType: TextInputType.number,
           ),
         );
       },
