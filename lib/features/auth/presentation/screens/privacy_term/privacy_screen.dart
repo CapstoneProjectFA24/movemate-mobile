@@ -17,7 +17,8 @@ class PrivacyPolicyScreen extends HookConsumerWidget with Validations {
           onPressed: () => context.router.pop(),
           color: Colors.white,
         ),
-        title: const Text('Chính Sách Bảo Mật'),
+        title: const Text('Chính Sách Bảo Mật',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: AssetsConstants.mainColor,
       ),
       body: const Padding(
