@@ -19,8 +19,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
-import 'package:movemate/utils/constants/api_constant.dart';
-import 'package:movemate/utils/enums/enums_export.dart';
 
 part 'otp_controller.g.dart';
 
@@ -57,7 +55,6 @@ class OtpController extends _$OtpController {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       final idToken = await userCredential.user?.getIdToken();
-
 
       if (idToken != null) {
         registerAndSignIn(context, idToken);

@@ -1,5 +1,4 @@
 // utils
-import 'package:movemate/features/testapi/data/models/house_model.dart';
 import 'package:movemate/features/testapi/data/models/house_response.dart';
 import 'package:movemate/features/testapi/data/remote/house_source.dart';
 import 'package:movemate/features/testapi/domain/repositories/house_type_repository.dart';

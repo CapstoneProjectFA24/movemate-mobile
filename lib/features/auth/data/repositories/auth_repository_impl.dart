@@ -1,10 +1,7 @@
 // import local
 
-
-
 import 'package:movemate/features/auth/data/models/response/account_response.dart';
 import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
-
 
 import '../../domain/repositories/auth_repository.dart';
 import '../remote/auth_source.dart';
@@ -65,7 +62,8 @@ class AuthRepositoryImpl extends RemoteBaseRepository
     }
   }
 
-    Future<AccountReponse> signIn({required SignInRequest request}) {
+  @override
+  Future<AccountReponse> signIn({required SignInRequest request}) {
     return getDataOf(
       request: () => _authSource.signIn(request, APIConstants.contentType),
     );

@@ -30,11 +30,16 @@ class MapScreen extends StatelessWidget {
           centerTitle: true,
         ),
         body: GoogleMap(
-          mapType: MapType.normal,
           initialCameraPosition: const CameraPosition(
-            target: LatLng(11.304291372889852, 106.61750636576055),
+            target: sourceLocation,
             zoom: 14.5,
           ),
+          markers: {
+            const Marker(
+              markerId: MarkerId("source"),
+              position: MapScreen.sourceLocation,
+            ),
+          },
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
             print("Map created");

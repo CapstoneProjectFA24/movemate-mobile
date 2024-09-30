@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import '../../../constants/asset_constant.dart';
 
 class TextInput extends StatelessWidget {

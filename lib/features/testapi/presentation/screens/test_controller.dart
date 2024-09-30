@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/testapi/data/models/house_model.dart';
-import 'package:movemate/features/testapi/data/models/house_response.dart';
 import 'package:movemate/features/testapi/domain/repositories/house_type_repository.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:dio/dio.dart';
 
 // config
 
 // domain - data
 
 // utils
-import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/utils/commons/functions/api_utils.dart';
-import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
-import 'package:movemate/utils/extensions/extensions_export.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 
 part 'test_controller.g.dart';

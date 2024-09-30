@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_modal_infor.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
-import 'package:movemate/utils/constants/asset_constant.dart';
 
 class AddButtonService extends StatelessWidget {
   final String title;
