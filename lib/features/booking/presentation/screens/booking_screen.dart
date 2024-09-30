@@ -9,6 +9,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/features/booking/presentation/widgets/booking_selection.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
@@ -24,6 +25,14 @@ class BookingScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Thông tin đặt hàng'),
         backgroundColor: AssetsConstants.mainColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.router.replaceAll([
+              const HomeScreenRoute(),
+            ]);
+          },
+        ),
       ),
       body: const SingleChildScrollView(
         padding:
