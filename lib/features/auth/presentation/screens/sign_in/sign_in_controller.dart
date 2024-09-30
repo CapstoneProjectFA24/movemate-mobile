@@ -75,4 +75,65 @@ class SignInController extends _$SignInController {
       );
     }
   }
+
+  Future<void> signOut(
+    BuildContext context,
+  ) async {
+    state = const AsyncLoading();
+    ref.read(modifyProfiver.notifier).update((state) => true);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(
+      () async {
+        final userDevice = user!.userTokens!.firstWhere(
+          (element) => element.fcmToken == user.fcmToken,
+        );
+
+        ref.read(authProvider.notifier).update((state) => null);
+        await authRepository.signOut();
+        // await authRepository.deleteToken(
+        //   id: userDevice.userDeviceId!,
+        // );
+
+        ref.read(modifyProfiver.notifier).update((state) => false);
+        context.router.replaceAll([SignInScreenRoute()]);
+      },
+    );
+
+    // access expired || other error
+    if (state.hasError) {
+      state = await AsyncValue.guard(
+        () async {
+          final statusCode = (state.error as DioException).onStatusDio();
+          // await handleAPIError(
+          //   statusCode: statusCode,
+          //   stateError: state.error!,
+          //   context: context,
+          //   onCallBackGenerateToken: () => reGenerateToken(
+          //     authRepository,
+          //     context,
+          //   ),
+          // );
+
+          // if refresh token expired
+          if (state.hasError) {
+            ref.read(modifyProfiver.notifier).update((state) => false);
+            showExceptionAlertDialog(
+              context: context,
+              title: 'Thông báo',
+              exception: 'Có lỗi rồi không thể đăng xuất.',
+            );
+            return;
+          }
+
+          if (statusCode != StatusCodeType.unauthentication.type) {
+            return;
+          }
+
+          await signOut(context);
+        },
+      );
+    }
+  }
 }
