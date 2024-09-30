@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-class HouseModel {
-
-    final int id;
+class HouseEntities {
+  final int id;
   final String name;
   final String description;
   final String? bookingId;
 
-  HouseModel({
+  HouseEntities({
     required this.id,
     required this.name,
     required this.description,
@@ -25,8 +24,8 @@ class HouseModel {
     return result;
   }
 
-  factory HouseModel.fromMap(Map<String, dynamic> map) {
-    return HouseModel(
+  factory HouseEntities.fromMap(Map<String, dynamic> map) {
+    return HouseEntities(
       id: map["id"]?.toInt() ?? 0,
       name: map["name"] ?? '',
       description: map["description"] ?? '',
@@ -36,6 +35,6 @@ class HouseModel {
 
   String toJson() => json.encode(toMap());
 
-  factory HouseModel.fromJson(String source) =>
-      HouseModel.fromMap(json.decode(source));
+  factory HouseEntities.fromJson(String source) =>
+      HouseEntities.fromMap(json.decode(source));
 }

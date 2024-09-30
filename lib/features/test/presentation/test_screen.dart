@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/test/data/models/house_model.dart';
+import 'package:movemate/features/test/domain/entities/house_entities.dart';
 import 'package:movemate/features/test/presentation/test_controller.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:auto_route/auto_route.dart';
@@ -15,7 +15,7 @@ class TestScreen extends HookConsumerWidget {
     required WidgetRef ref,
     required BuildContext context,
     required ValueNotifier<bool> isLoadMoreLoading,
-    required ValueNotifier<List<HouseModel>> orders,
+    required ValueNotifier<List<HouseEntities>> orders,
     required ValueNotifier<bool> isFetchingData,
     required String? filterSystemContent,
     required String? filterPartnerContent,
@@ -54,7 +54,7 @@ class TestScreen extends HookConsumerWidget {
     // ValueNotifiers for handling state
     final isLoadMoreLoading = useState(false);
     final isFetchingData = useState(false);
-    final orders = useState<List<HouseModel>>([]);
+    final orders = useState<List<HouseEntities>>([]);
 
     return Scaffold(
       appBar: AppBar(

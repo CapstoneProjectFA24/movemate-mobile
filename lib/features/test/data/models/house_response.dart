@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:movemate/features/test/data/models/house_model.dart';
+import 'package:movemate/features/test/domain/entities/house_entities.dart';
 
 class HouseResponse {
-    final List<HouseModel> payload;
+    final List<HouseEntities> payload;
 
 
   HouseResponse({
@@ -21,8 +21,8 @@ class HouseResponse {
 
   factory HouseResponse.fromMap(Map<String, dynamic> map) {
     return HouseResponse(
-       payload: List<HouseModel>.from(
-          map['houses']?.map((x) => HouseModel.fromMap(x))),
+       payload: List<HouseEntities>.from(
+          map['houses']?.map((x) => HouseEntities.fromMap(x))),
     );
   }
 

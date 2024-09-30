@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/features/test/data/models/house_model.dart';
 import 'package:movemate/features/test/data/models/house_response.dart';
+import 'package:movemate/features/test/domain/entities/house_entities.dart';
 import 'package:movemate/features/test/domain/repositories/house_type_repository.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -29,29 +29,40 @@ class TestController extends _$TestController {
   FutureOr<void> build() {}
 
   // list house
-  Future<List<HouseModel>> getHouses(
+  Future<List<HouseEntities>> getHouses(
     BuildContext context,
   ) async {
-    List<HouseModel> houses = [];
+    List<HouseEntities> houses = [];
     state = const AsyncLoading();
 
     final houseTypeRepository = ref.read(houseTypeRepositoryProvider);
-    final user = await SharedPreferencesUtils.getInstance('user_token');
 
     state = await AsyncValue.guard(
       () async {
         print("print lần 0 bắt đầu vô đây");
-        final response = await houseTypeRepository.getHouseTypeData(
-        );
+        final response = await houseTypeRepository.getHouseTypeData();
 
         print("print lần 1 test data đê : $response");
         houses = response.payload;
       },
     );
 
-    print("print lần 2: $houses");
-
-    // xử lý error
+    if (state.hasError) {
+      state = await AsyncValue.guard(
+        () async {
+          final statusCode = (state.error as DioException).onStatusDio();
+          await handleAPIError(
+            statusCode: statusCode,
+            stateError: state.error!,
+            context: context,
+            // onCallBackGenerateToken: () async => await reGenerateToken(
+            //   authRepository,
+            //   context,
+            // ),
+          );
+        },
+      );
+    }
 
     return houses;
   }

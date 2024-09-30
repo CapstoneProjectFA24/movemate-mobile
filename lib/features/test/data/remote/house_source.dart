@@ -5,7 +5,6 @@ import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // data impl
-import 'package:movemate/features/test/data/models/house_model.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
