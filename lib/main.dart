@@ -9,7 +9,6 @@ import 'configs/theme/app_theme.dart';
 import 'utils/constants/asset_constant.dart';
 
 import 'package:movemate/firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {

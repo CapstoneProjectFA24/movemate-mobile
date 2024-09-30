@@ -6,16 +6,20 @@ import 'price_detail_modal.dart'; // Import your modal component
 
 class SummarySection extends StatelessWidget {
   final double totalPrice;
-  final VoidCallback onPlaceOrder;
+  final VoidCallback onPlacePress;
   final String buttonText; // Customizable button text
+  final bool buttonIcon; // Customizable button text
   final String priceLabel; // Customizable price label
   final Widget? priceDetailModal; // Customizable modal widget
+  final bool isButtonEnabled;
 
   const SummarySection({
     super.key,
-    required this.totalPrice,
-    required this.onPlaceOrder,
-    this.buttonText = 'Đặt đơn',
+    this.totalPrice = 0,
+    required this.onPlacePress,
+    required this.buttonText,
+    required this.buttonIcon,
+    required this.isButtonEnabled,
     this.priceLabel = 'Tổng giá',
     this.priceDetailModal,
   });
@@ -40,34 +44,38 @@ class SummarySection extends StatelessWidget {
                           fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: () => _showInfoModal(context),
-                      child: Icon(
-                        Icons.info_outline,
-                        size: 16,
-                        color: AssetsConstants.greyColor.shade600,
+                    if (buttonIcon)
+                      GestureDetector(
+                        onTap: () => _showInfoModal(context),
+                        child: Icon(
+                          Icons.info_outline,
+                          size: 16,
+                          color: AssetsConstants.greyColor.shade600,
+                        ),
                       ),
-                    ),
                   ],
                 ),
-                Text(
-                  '${totalPrice.toStringAsFixed(0)}₫',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AssetsConstants.primaryDark,
+                if (priceLabel != '')
+                  Text(
+                    '${totalPrice.toStringAsFixed(0)}₫',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AssetsConstants.primaryDark,
+                    ),
                   ),
-                ),
               ],
             ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: onPlaceOrder,
+                onPressed: isButtonEnabled ? onPlacePress : null,
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: isButtonEnabled
+                      ? AssetsConstants.primaryDark
+                      : AssetsConstants.greyColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: AssetsConstants.primaryDark,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

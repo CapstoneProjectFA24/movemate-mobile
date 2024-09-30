@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/total_price_section.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
@@ -51,10 +51,13 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
               ],
             )
           : const Center(child: CircularProgressIndicator()),
-      bottomNavigationBar: TotalPriceSection(
+      bottomNavigationBar: SummarySection(
+        buttonText: "Bước tiếp theo",
+        priceLabel: 'Tổng giá',
+        buttonIcon: false,
         totalPrice: bookingState.totalPrice,
         isButtonEnabled: bookingState.selectedVehicleIndex != null,
-        onButtonPressed: () {
+        onPlacePress: () {
           context.router.push(const BookingSelectPackageScreenRoute());
         },
       ),
@@ -66,8 +69,8 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     bool isSelected,
   ) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: AssetsConstants.whiteColor,
         borderRadius: BorderRadius.circular(12),
@@ -142,78 +145,16 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                   ),
                   maxLines: 1,
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  'Giá: ₫${vehicle.price.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AssetsConstants.primaryDark,
-                  ),
-                ),
+                // const SizedBox(height: 6),
+                // Text(
+                //   'Giá: ₫${vehicle.price.toStringAsFixed(0)}',
+                //   style: const TextStyle(
+                //     fontSize: 14,
+                //     fontWeight: FontWeight.bold,
+                //     color: AssetsConstants.primaryDark,
+                //   ),
+                // ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTotalPriceSection(
-      double totalPrice, bool isButtonEnabled, BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        color: AssetsConstants.whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: AssetsConstants.greyColor.shade300,
-            offset: const Offset(0, -2),
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Tổng cộng', style: TextStyle(fontSize: 16)),
-              Text(
-                '₫${totalPrice.toStringAsFixed(0)}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: isButtonEnabled
-                  ? () {
-                      context.router
-                          .push(const BookingSelectPackageScreenRoute());
-                    }
-                  : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isButtonEnabled
-                    ? AssetsConstants.primaryDark
-                    : AssetsConstants.greyColor,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Bước tiếp theo',
-                style:
-                    TextStyle(fontSize: 16, color: AssetsConstants.whiteColor),
-              ),
             ),
           ),
         ],

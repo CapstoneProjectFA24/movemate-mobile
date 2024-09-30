@@ -39,17 +39,16 @@ dependencies:
   # intro_screen_onboarding_flutter: ^1.0.0
 
   # Router
-  auto_route:
-    ^7.8.4
+  auto_route: ^7.8.4
 
   # Handle exception
-  fpdart:
-    ^1.1.0
+  fpdart: ^1.1.0
 
   # Networking
   retrofit: ^4.0.3
   dio: ^5.4.0
   awesome_dio_interceptor: ^1.0.0
+  cached_network_image: ^3.4.1
 
   # Firebase
   firebase_core: ^2.24.0
@@ -71,7 +70,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  
+
   # Order
   photo_view: ^0.14.0
 
@@ -83,7 +82,7 @@ dependencies:
 #   android_12:
 #     image: assets/images/splash/screen_splash.png
 #   background_image: assets/images/splash/splash.png
-  
+
 # config launcher icon
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -143,15 +142,17 @@ flutter:
     - assets/images/logo_wallets/cash_sender.png
     - assets/images/logo_wallets/cash_depositor.png
     - assets/images/logo_wallets/wallet_acc.png
-      #image booking
 
+      #image booking
     - assets/images/booking/bedroom/bedroom1.png
     - assets/images/booking/bedroom/bedroom2.png
     - assets/images/booking/bedroom/bedroom3.png
     - assets/images/booking/vehicles/truck1.png
     - assets/images/booking/vehicles/truck2.png
     - assets/images/booking/vehicles/truck3.png
+    - assets/images/booking/vehicles/truck4.png
 
+    - assets/images/booking/infor/homeiconsvg.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

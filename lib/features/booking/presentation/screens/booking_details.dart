@@ -1,5 +1,3 @@
-// booking_details.dart
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -8,7 +6,6 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 import 'package:image_picker/image_picker.dart';
 
 class BookingDetails extends HookConsumerWidget {
-  // const BookingDetails({super.key});
   const BookingDetails({super.key});
 
   @override
@@ -75,19 +72,17 @@ class BookingDetails extends HookConsumerWidget {
           roomTitle,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SizedBox(
-            height: 70,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: images.length + 1, // +1 for "Thêm ảnh" button
-              itemBuilder: (context, index) {
-                return (index == images.length)
-                    ? _buildAddImageButton(context, roomType, bookingNotifier)
-                    : _buildRoomImage(images[index], roomType, bookingNotifier);
-              },
-            ),
+        SizedBox(
+          height: 70,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: images.length + 1,
+            itemBuilder: (context, index) {
+              return (index == images.length)
+                  ? _buildAddImageButton(
+                      context, roomType, bookingNotifier, images.isNotEmpty)
+                  : _buildRoomImage(images[index], roomType, bookingNotifier);
+            },
           ),
         ),
       ],
@@ -134,11 +129,14 @@ class BookingDetails extends HookConsumerWidget {
     );
   }
 
-  Widget _buildAddImageButton(BuildContext context, RoomType roomType,
-      BookingNotifier bookingNotifier) {
+  Widget _buildAddImageButton(
+    BuildContext context,
+    RoomType roomType,
+    BookingNotifier bookingNotifier,
+    bool hasImages,
+  ) {
     return GestureDetector(
       onTap: () async {
-        // Handle add image using Image Picker or any other method
         final ImagePicker picker = ImagePicker();
         final XFile? image =
             await picker.pickImage(source: ImageSource.gallery);
@@ -148,8 +146,8 @@ class BookingDetails extends HookConsumerWidget {
       },
       child: Center(
         child: Container(
-          width: 295,
-          height: 44,
+          width: hasImages ? 71 : 295,
+          height: hasImages ? 56 : 44,
           margin: const EdgeInsets.only(right: 8),
           child: DottedBorder(
             color: AssetsConstants.greyColor,
@@ -157,9 +155,11 @@ class BookingDetails extends HookConsumerWidget {
             borderType: BorderType.RRect,
             radius: const Radius.circular(12),
             dashPattern: const [8, 4],
-            child: const Center(
-              child: Text('Thêm ảnh',
-                  style: TextStyle(color: AssetsConstants.greyColor)),
+            child: Center(
+              child: hasImages
+                  ? const Icon(Icons.add, color: AssetsConstants.greyColor)
+                  : const Text('Thêm ảnh',
+                      style: TextStyle(color: AssetsConstants.greyColor)),
             ),
           ),
         ),
