@@ -12,53 +12,80 @@ class RegexStringValidator implements StringValidator {
   }
 }
 
+class ValidationRule {
+  final bool Function() isValid;
+  final String errorMessage;
+
+  ValidationRule(this.isValid, this.errorMessage);
+}
+
+class ErrorMsg {
+  static const String empty = "Mục này không được bỏ trống";
+  static const String invalidEmail = "Không đúng dạng địa chỉ email";
+  static const String emailTooLong = "Email không được quá 100 ký tự";
+  static const String passwordTooShort = "Mật khẩu phải có tối thiểu 8 kí tự";
+  static const String passwordTooLong = "Mật khẩu phải có tối đa 32 kí tự";
+  static const String passwordComplexity =
+      "Mật khẩu phải bao gồm ít nhất một chữ hoa, một chữ thường, một số, và một ký tự đặc biệt";
+  static const String phoneNumberFormat = "Không đúng định dạng số điện thoại";
+  static const String phoneNumberSpaces =
+      "Số điện thoại không được chứa dấu cách";
+  static const String usernameTooLong =
+      "Tên đăng nhập không được vượt quá 50 kí tự";
+}
+
+
+
 mixin Validations {
   final StringValidator emailRegexValidator = RegexStringValidator(
-      r'^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$');
+      r'^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:[a-zA-Z0-9-]*[a-zA-Z0-9])*(?:\.[a-zA-Z]{2,})+$');
 
   final StringValidator passwordValidator = RegexStringValidator(
       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*()\-_=+\[\]\{\}|;:,.<>?/~]).{8,32}$');
 
-  final StringValidator phoneNumberValidator =
-      RegexStringValidator(r'^[0-9]{10,15}$');
+  final StringValidator phoneNumberValidator = RegexStringValidator(r'^0[0-9]{9,14}$');
 
-  final StringValidator usernameMaxLengthValidator =
-      MaxLengthStringValidator(50);
+  final StringValidator usernameMaxLengthValidator = MaxLengthStringValidator(50);
 
-  String emailRegexErrorText(String email) {
-    final bool showErrorText = !emailRegexValidator.isValid(email);
-    const String errorText = 'Không đúng dạng địa chỉ email';
-    return showErrorText ? errorText : '';
-  }
-
-  String passwordErrorText(String password) {
-    if (!passwordValidator.isValid(password)) {
-      if (password.length < 8) {
-        return 'Mật khẩu phải có tối thiểu 8 kí tự';
-      } else if (password.length > 32) {
-        return 'Mật khẩu phải có tối đa 32 kí tự';
-      } else {
-        return 'Mật khẩu phải bao gồm ít nhất một chữ hoa, một chữ thường, một số, và một ký tự đặc biệt';
+  String validateField(String value, List<ValidationRule> rules) {
+    for (var rule in rules) {
+      if (!rule.isValid()) {
+        return rule.errorMessage;
       }
     }
     return '';
   }
 
-  String phoneNumberErrorText(String phoneNumber) {
-    final bool showErrorText = !phoneNumberValidator.isValid(phoneNumber);
-    const String errorText = 'Không đúng định dạng số điện thoại';
-    return showErrorText ? errorText : '';
+  String emailErrorText(String email) {
+    return validateField(email, [
+      ValidationRule(() => email.isNotEmpty, ErrorMsg.empty),
+      ValidationRule(() => emailRegexValidator.isValid(email), ErrorMsg.invalidEmail),
+      ValidationRule(() => email.length <= 100, ErrorMsg.emailTooLong),
+    ]);
   }
 
-  String requiredFieldErrorText(String input) {
-    final bool isEmpty = input.isEmpty;
-    const String errorText = '[Bắt buộc]';
-    return isEmpty ? errorText : '';
+  String passwordErrorText(String password) {
+    return validateField(password, [
+      ValidationRule(() => password.isNotEmpty, ErrorMsg.empty),
+      ValidationRule(() => password.length >= 8, ErrorMsg.passwordTooShort),
+      ValidationRule(() => password.length <= 32, ErrorMsg.passwordTooLong),
+      ValidationRule(() => passwordValidator.isValid(password), ErrorMsg.passwordComplexity),
+    ]);
+  }
+
+  String phoneNumberErrorText(String phoneNumber) {
+    return validateField(phoneNumber, [
+      ValidationRule(() => phoneNumber.isNotEmpty, ErrorMsg.empty),
+      ValidationRule(() => !phoneNumber.contains(' '), ErrorMsg.phoneNumberSpaces),
+      ValidationRule(() => phoneNumberValidator.isValid(phoneNumber), ErrorMsg.phoneNumberFormat),
+    ]);
   }
 
   String usernameMaxLengthErrorText(String username) {
-    final bool showErrorText = !usernameMaxLengthValidator.isValid(username);
-    const String errorText = 'Tên đăng nhập không được vượt quá 50 kí tự';
-    return showErrorText ? errorText : '';
+    return validateField(username, [
+      ValidationRule(() => username.isNotEmpty,  ErrorMsg.empty),
+      ValidationRule(() => usernameMaxLengthValidator.isValid(username), ErrorMsg.usernameTooLong),
+    ]);
   }
 }
+

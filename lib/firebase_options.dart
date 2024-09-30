@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBquGjA3fx_RlGcDupTtNFwUctoFXj-zAY',
-    appId: '1:708811505333:web:c59b0cfaab19c3a5f508fc',
+    appId: '1:708811505333:web:ac5c28e6b14ef594f508fc',
     messagingSenderId: '708811505333',
     projectId: 'movemate-bb487',
     authDomain: 'movemate-bb487.firebaseapp.com',
@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'movemate-bb487.firebaseapp.com',
     storageBucket: 'movemate-bb487.appspot.com',
   );
+
 }

@@ -4,13 +4,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
-import '../../widgets/custom_scaford.dart';
 import 'package:icons_plus/icons_plus.dart';
-import '../../../../../utils/constants/asset_constant.dart';
-import '../../../../../utils/commons/widgets/widgets_common_export.dart';
-import '../../../../../utils/commons/functions/functions_common_export.dart';
-import '../../../../../utils/resources/validations.dart';
+
+// config
+import 'package:movemate/configs/routes/app_router.dart';
+
+// utils
+import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/commons/functions/functions_common_export.dart';
+import 'package:movemate/utils/resources/validations.dart';
+
+// controller
+import 'package:movemate/features/auth/presentation/widgets/custom_scaford.dart';
+import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 
 @RoutePage()
 class SignInScreen extends HookConsumerWidget with Validations {
@@ -25,7 +32,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
     required String password,
     required String phoneNumber,
   }) async {
- if (formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       unfocus(context);
       await ref.read(signInControllerProvider.notifier).signIn(
             email: email,
@@ -50,20 +57,16 @@ class SignInScreen extends HookConsumerWidget with Validations {
 
     final state = ref.watch(signInControllerProvider);
 
-
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: CustomScaffold(
         child: Column(
           children: [
-            // Space at the top
             const Expanded(flex: 1, child: SizedBox(height: 10)),
-      
-            // Main form container
             Expanded(
               flex: 7,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
+                padding: const EdgeInsets.fromLTRB(25.0, 30.0, 25.0, 20.0),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -83,8 +86,8 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           size: AssetsConstants.defaultFontSize - 2.0,
                           fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 40.0),
-      
+                        const SizedBox(height: 20.0),
+
                         // Email / Phone toggle section
                         Container(
                           width: size.width * 0.8,
@@ -155,21 +158,18 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           ),
                         ),
                         const SizedBox(height: 25.0),
-      
-                        //toggle
+
                         if (isEmailSelected.value) ...[
-                          // Email input
                           TextInput(
                             textController: email,
                             hintTextLable: "Email",
                             hintText: 'Nhập email của bạn',
-                            onValidate: (val) => emailRegexErrorText(val),
+                            onValidate: (val) => emailErrorText(val),
                             autoFocus: true,
                           ),
                           const SizedBox(height: 25.0),
                         ] else ...[
-                          // Phone Number
-                          TextInput(
+                          PhoneInput(
                             textController: phoneNumber,
                             hintTextLable: "Số điện thoại",
                             hintText: 'Nhập số điện thoại',
@@ -178,7 +178,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           ),
                           const SizedBox(height: 25.0),
                         ],
-      
+
                         PasswordInput(
                           textEditingController: password,
                           hintTextLable: "Mật khẩu",
@@ -187,29 +187,23 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           autoFocus: false,
                         ),
                         const SizedBox(height: 25.0),
-      
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: Size.zero,
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: () {},
+                            GestureDetector(
+                              onTap: () {
+                                context.router.replace(SignUpScreenRoute());
+                              },
                               child: const LabelText(
-                                content: 'Tạo tài khoản',
-                                size: AssetsConstants.defaultFontSize - 8.0,
+                                content: 'Đã có tài khoản?',
+                                size: AssetsConstants.defaultFontSize - 10.0,
                                 fontWeight: FontWeight.w700,
                                 color: AssetsConstants.mainColor,
                               ),
                             ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: Size.zero,
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: () {
+                            GestureDetector(
+                              onTap: () {
                                 // Forgot password navigation
                                 // context.router.push(EnterEmailScreenRoute());
                               },
@@ -223,7 +217,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           ],
                         ),
                         const SizedBox(height: 25.0),
-      
+
                         ValueListenableBuilder2(
                           first: isEmailSelected.value ? email : phoneNumber,
                           second: password,
@@ -258,7 +252,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           ),
                         ),
                         const SizedBox(height: 25.0),
-      
+
                         // Or login with divider
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -287,7 +281,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           ],
                         ),
                         const SizedBox(height: 25.0),
-      
+
                         // Social login options
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

@@ -54,9 +54,9 @@ class SignUpController extends _$SignUpController {
       await SharedPreferencesUtils.setSignInRequestInfo(request, "sign-up");
 
       final formattedPhone = formatPhoneNumber(phone);
-
+      print(formattedPhone);
       // Mỗi ngày 10 request nên làm xog nhớ phong ấn :)
-      // await sendOTP(formattedPhone);
+      await sendOTP(formattedPhone);
 
       context.router.push(OTPVerificationScreenRoute(
           phoneNumber: formattedPhone, verifyType: type));

@@ -1,10 +1,8 @@
 // import local
 
-
-
 import 'package:movemate/features/auth/data/models/response/account_response.dart';
 import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
-
+import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 
 import '../../domain/repositories/auth_repository.dart';
 import '../remote/auth_source.dart';
@@ -50,24 +48,21 @@ class AuthRepositoryImpl extends RemoteBaseRepository
 
   @override
   Future<AccountReponse> signUpAndRes({required SignUpRequest request}) async {
-    final httpResponse = getDataOf(
+    return getDataOf(
       request: () =>
           _authSource.signUpAndRes(request, APIConstants.contentType),
     );
-
-    final responseData = httpResponse as Map<String, dynamic>;
-    if (responseData.containsKey('payload')) {
-      print("XỬ LÝ QUA RESPONSE THÀNH CÔNG");
-      final payloadData = responseData['payload'] as Map<String, dynamic>;
-      return AccountReponse.fromMap(payloadData);
-    } else {
-      throw Exception("Payload không tồn tại trong response");
-    }
   }
 
-    Future<AccountReponse> signIn({required SignInRequest request}) {
+  @override
+  Future<AccountReponse> signIn({required SignInRequest request}) {
     return getDataOf(
       request: () => _authSource.signIn(request, APIConstants.contentType),
     );
+  }
+
+  @override
+  Future<void> signOut() async {
+    await SharedPreferencesUtils.clearInstance('user_token');
   }
 }

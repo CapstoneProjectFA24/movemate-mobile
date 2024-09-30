@@ -37,6 +37,7 @@ export './form_input/label_text.dart';
 export './form_input/custom_button.dart';
 export './form_input/password_input.dart';
 export './form_input/text_input.dart';
+export './form_input/phone_input.dart';
 export './value_listenable_builder.dart';
 export './snack_bar.dart';
 export './alert_dialogs.dart';

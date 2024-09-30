@@ -6,6 +6,8 @@ import 'package:flutter/gestures.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import 'package:movemate/configs/routes/app_router.dart';
+
 // screen
 import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
@@ -38,22 +40,15 @@ class SignUpScreen extends HookConsumerWidget with Validations {
   }) async {
     if (formKey.currentState!.validate()) {
       unfocus(context);
-      // await ref.read(signUpControllerProvider.notifier).signUp(
-      //       email: email,
-      //       name: name,
-      //       phone: phone,
-      //       password: password,
-      //       context: context,
-      //     );
 
       await ref.read(signUpControllerProvider.notifier).signUpwithOTP(
-           email: email,
+            email: email,
             name: name,
             phone: phone,
             password: password,
             type: VerificationOTPType.firsttimelog,
             context: context,
-      );
+          );
       print("click : done");
     } else {
       print("Form is not valid.");
@@ -75,8 +70,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
     final agreeToTerms = useState(false);
 
     return LoadingOverlay(
-      isLoading: false,
-      // isLoading: state.isLoading,
+      isLoading: state.isLoading,
       child: CustomScaffold(
         child: Column(
           children: [
@@ -89,7 +83,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
             Expanded(
               flex: 7,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
+                padding: const EdgeInsets.fromLTRB(25.0, 30.0, 25.0, 20.0),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -109,7 +103,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                           fontWeight: FontWeight.bold,
                         ),
                         const SizedBox(
-                          height: 40.0,
+                          height: 20.0,
                         ),
                         TextInput(
                           textController: name,
@@ -123,11 +117,11 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                           textController: email,
                           hintTextLable: "Email",
                           hintText: 'Nhập email của bạn',
-                          onValidate: (val) => emailRegexErrorText(val),
+                          onValidate: (val) => emailErrorText(val),
                           autoFocus: true,
                         ),
                         const SizedBox(height: 25.0),
-                        TextInput(
+                        PhoneInput(
                           textController: phone,
                           hintTextLable: "Số điện thoại",
                           hintText: 'Nhập số điện thoại',
@@ -313,11 +307,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SignInScreen()),
-                                );
+                                context.router.replace(SignInScreenRoute());
                               },
                               child: const LabelText(
                                 content: 'Đã có tài khoản?',
