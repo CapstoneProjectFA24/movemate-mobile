@@ -47,19 +47,10 @@ class AuthRepositoryImpl extends RemoteBaseRepository
 
   @override
   Future<AccountReponse> signUpAndRes({required SignUpRequest request}) async {
-    final httpResponse = getDataOf(
+    return getDataOf(
       request: () =>
           _authSource.signUpAndRes(request, APIConstants.contentType),
     );
-
-    final responseData = httpResponse as Map<String, dynamic>;
-    if (responseData.containsKey('payload')) {
-      print("XỬ LÝ QUA RESPONSE THÀNH CÔNG");
-      final payloadData = responseData['payload'] as Map<String, dynamic>;
-      return AccountReponse.fromMap(payloadData);
-    } else {
-      throw Exception("Payload không tồn tại trong response");
-    }
   }
 
   @override

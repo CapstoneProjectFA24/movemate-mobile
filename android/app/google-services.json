@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:708811505333:android:77f0a00ce8f42172f508fc",
+        "android_client_info": {
+          "package_name": "com.example.MoveMate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaZy4VTx61msImwqQUiABaHliQhTkXc5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:708811505333:android:e8384ec3e06734d1f508fc",
         "android_client_info": {
           "package_name": "com.movemate.app"

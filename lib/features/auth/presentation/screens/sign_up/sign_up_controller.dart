@@ -55,7 +55,7 @@ class SignUpController extends _$SignUpController {
       final formattedPhone = formatPhoneNumber(phone);
 
       // Mỗi ngày 10 request nên làm xog nhớ phong ấn :)
-      // await sendOTP(formattedPhone);
+      await sendOTP(formattedPhone);
 
       context.router.push(OTPVerificationScreenRoute(
           phoneNumber: formattedPhone, verifyType: type));

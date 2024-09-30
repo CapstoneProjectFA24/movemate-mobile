@@ -84,7 +84,7 @@ class OtpController extends _$OtpController {
     final requestRegister = SignUpRequest(
       email: userInfo!.email,
       name: userInfo.name,
-      phone: userInfo.phone,
+      phone: formatPhoneNumber(userInfo.phone),
       password: userInfo.password,
     );
 
@@ -92,17 +92,12 @@ class OtpController extends _$OtpController {
       await authRepository.verifyToken(
           request: OTPVerifyRequest(idToken: idToken));
 
-      print("Xử lý 5 tại otp : sau verify}");
       final user = await authRepository.signUpAndRes(request: requestRegister);
 
-      print(user);
-
-      print("Xử lý 6 tại otp : sau verify}");
-
       final userModel = UserModel(
-        id: user.id,
-        email: user.email,
-        tokens: user.tokens,
+        id: user.payload.id,
+        email: user.payload.email,
+        tokens: user.payload.tokens,
       );
 
       ref.read(authProvider.notifier).update(
@@ -112,9 +107,8 @@ class OtpController extends _$OtpController {
         userModel,
         'user_token',
       );
-      print("Xử lý 7 tại otp : done}");
 
-      context.router.replaceAll([const HomeScreenRoute()]);
+      context.router.replaceAll([const TabViewScreenRoute()]);
     });
 
     if (state.hasError) {

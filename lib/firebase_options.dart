@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'movemate-bb487.firebaseapp.com',
     storageBucket: 'movemate-bb487.appspot.com',
   );
+
 }

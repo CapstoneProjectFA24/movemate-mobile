@@ -43,9 +43,9 @@ class SignInController extends _$SignInController {
         final user = await authRepository.signIn(request: request);
 
         final userModel = UserModel(
-          id: user.id,
-          email: user.email,
-          tokens: user.tokens,
+          id: user.payload.id,
+          email: user.payload.email,
+          tokens: user.payload.tokens,
         );
 
         ref.read(authProvider.notifier).update(
