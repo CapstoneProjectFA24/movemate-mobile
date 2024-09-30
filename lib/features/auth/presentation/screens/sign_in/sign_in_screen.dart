@@ -66,7 +66,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
             Expanded(
               flex: 7,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
+                padding: const EdgeInsets.fromLTRB(25.0, 30.0, 25.0, 20.0),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -86,7 +86,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           size: AssetsConstants.defaultFontSize - 2.0,
                           fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 40.0),
+                        const SizedBox(height: 20.0),
 
                         // Email / Phone toggle section
                         Container(

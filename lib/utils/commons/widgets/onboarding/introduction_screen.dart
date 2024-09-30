@@ -10,7 +10,6 @@ class IntroScreenOnboarding extends StatefulWidget {
   final Color? foregroundColor;
   final TextStyle? skipTextStyle;
 
-
   final Function()? onTapSkipButton;
   const IntroScreenOnboarding({
     super.key,
@@ -27,7 +26,7 @@ class IntroScreenOnboarding extends StatefulWidget {
 
 class _IntroScreenOnboardingState extends State<IntroScreenOnboarding> {
   final PageController _pageController = PageController(initialPage: 0);
-  int _currentPage = 0;
+  final int _currentPage = 0;
   double progressPercent = 0;
 
   @override
@@ -36,50 +35,49 @@ class _IntroScreenOnboardingState extends State<IntroScreenOnboarding> {
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Container(
-          color:
-              widget.backgroudColor ?? Theme.of(context).colorScheme.surface,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      alignment: Alignment.topRight,
-                      child: TextButton(
-                        onPressed: widget.onTapSkipButton,
-                        child: Text('Bỏ qua', style: widget.skipTextStyle),
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: 550.0,
-                    child: PageView(
-                      physics: const ClampingScrollPhysics(),
-                      controller: _pageController,
-                      onPageChanged: (int page) {
-                        setState(() {
-                          _currentPage = page;
-                        });
-                      },
-                      children: widget.introductionList!,
-                    ),
-                  ),
-                ),
-                //                Row(
-                //                  mainAxisAlignment: MainAxisAlignment.center,
-                //                  children: _buildPageIndicator(),
-                //                ),
-                _customProgress(),
-                //_buildNextButton(),
-              ],
-            ),
+          color: widget.backgroudColor ?? Theme.of(context).colorScheme.surface,
+          child: const Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.0),
+            //child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            // children: [
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     children: [
+            //       Container(
+            //         alignment: Alignment.topRight,
+            //         child: TextButton(
+            //           onPressed: widget.onTapSkipButton,
+            //           child: Text('Bỏ qua', style: widget.skipTextStyle),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            //   Expanded(
+            //     child: SizedBox(
+            //       height: 550.0,
+            //       child: PageView(
+            //         physics: const ClampingScrollPhysics(),
+            //         controller: _pageController,
+            //         onPageChanged: (int page) {
+            //           setState(() {
+            //             _currentPage = page;
+            //           });
+            //         },
+            //         children: widget.introductionList!,
+            //       ),
+            //     ),
+            //   ),
+            //   //                Row(
+            //   //                  mainAxisAlignment: MainAxisAlignment.center,
+            //   //                  children: _buildPageIndicator(),
+            //   //                ),
+            //   _customProgress(),
+            //   //_buildNextButton(),
+            // ],
           ),
         ),
+        //),
       ),
     );
   }

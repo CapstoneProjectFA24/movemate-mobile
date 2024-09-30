@@ -43,7 +43,7 @@ class OnboardingScreen extends ConsumerWidget {
 
     return IntroScreenOnboarding(
       backgroudColor: AssetsConstants.whiteColor,
-      foregroundColor: AssetsConstants.primaryLight,
+      foregroundColor: AssetsConstants.mainColor,
       introductionList: list,
       onTapSkipButton: () async {
         try {
@@ -55,7 +55,7 @@ class OnboardingScreen extends ConsumerWidget {
       },
       skipTextStyle: const TextStyle(
         color: Colors.blueGrey,
-        fontSize: 18,
+        fontSize: 10,
       ),
     );
   }

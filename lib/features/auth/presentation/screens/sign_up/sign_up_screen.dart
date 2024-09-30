@@ -83,7 +83,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
             Expanded(
               flex: 7,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
+                padding: const EdgeInsets.fromLTRB(25.0, 30.0, 25.0, 20.0),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -103,7 +103,7 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                           fontWeight: FontWeight.bold,
                         ),
                         const SizedBox(
-                          height: 40.0,
+                          height: 20.0,
                         ),
                         TextInput(
                           textController: name,
@@ -307,7 +307,6 @@ class SignUpScreen extends HookConsumerWidget with Validations {
                           children: [
                             GestureDetector(
                               onTap: () {
-                      
                                 context.router.replace(SignInScreenRoute());
                               },
                               child: const LabelText(
