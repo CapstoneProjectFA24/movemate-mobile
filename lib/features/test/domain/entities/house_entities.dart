@@ -29,11 +29,16 @@ class HouseEntities {
       id: map["id"]?.toInt() ?? 0,
       name: map["name"] ?? '',
       description: map["description"] ?? '',
-      bookingId: map["bookingId"].toInt() ?? 0,
+       bookingId: map["bookingId"] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
+
+  @override
+  String toString() {
+    return 'HouseEntities{id: $id, name: $name, description: $description, bookingId: $bookingId}';
+  }
 
   factory HouseEntities.fromJson(String source) =>
       HouseEntities.fromMap(json.decode(source));

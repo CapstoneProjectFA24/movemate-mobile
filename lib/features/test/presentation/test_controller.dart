@@ -26,44 +26,51 @@ part 'test_controller.g.dart';
 @riverpod
 class TestController extends _$TestController {
   @override
-  FutureOr<void> build() {}
+  FutureOr<List<HouseEntities>> build() {
+    return const [];
+  }
 
-  // list house
-  Future<List<HouseEntities>> getHouses(
-    BuildContext context,
-  ) async {
-    List<HouseEntities> houses = [];
+  Future<List<HouseEntities>> getHouses(BuildContext context) async {
+    List<HouseEntities> dataListNameHere = [];
+
     state = const AsyncLoading();
-
     final houseTypeRepository = ref.read(houseTypeRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
 
-    state = await AsyncValue.guard(
-      () async {
-        print("print lần 0 bắt đầu vô đây");
-        final response = await houseTypeRepository.getHouseTypeData();
-
-        print("print lần 1 test data đê : $response");
-        houses = response.payload;
-      },
-    );
+    state = await AsyncValue.guard(() async {
+      final response = await houseTypeRepository.getHouseTypeData(
+          // accessToken: APIConstants.prefixToken + user!.token.accessToken,
+          );
+      dataListNameHere = response.payload;
+    });
 
     if (state.hasError) {
-      state = await AsyncValue.guard(
-        () async {
-          final statusCode = (state.error as DioException).onStatusDio();
-          await handleAPIError(
-            statusCode: statusCode,
-            stateError: state.error!,
-            context: context,
-            // onCallBackGenerateToken: () async => await reGenerateToken(
-            //   authRepository,
-            //   context,
-            // ),
-          );
-        },
-      );
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          // onCallBackGenerateToken: () async => await reGenerateToken(
+          //   authRepository,
+          //   context,
+          // ),
+        );
+
+        // if (state.hasError) {
+        //   await ref.read(signInControllerProvider.notifier).signOut(context);
+        //   return [];
+        // }
+
+        // if (statusCode != StatusCodeType.unauthentication.type) {
+        //   return [];
+        // }
+
+        // return await getHouses(context);
+      });
     }
 
-    return houses;
+    return dataListNameHere;
   }
 }

@@ -12,7 +12,10 @@ import 'package:movemate/utils/providers/common_provider.dart';
 
 part 'house_source.g.dart';
 
-@RestApi(baseUrl: APIConstants.baseUrl, parser: Parser.MapSerializable)
+@RestApi(baseUrl:
+//  APIConstants.baseUrl
+ "https://dummyjson.com/c/daa3-02b0-479a-be2d"
+ , parser: Parser.MapSerializable)
 abstract class HouseSource {
   factory HouseSource(Dio dio, {String baseUrl}) = _HouseSource;
 

@@ -22,7 +22,7 @@ class HouseResponse {
   factory HouseResponse.fromMap(Map<String, dynamic> map) {
     return HouseResponse(
        payload: List<HouseEntities>.from(
-          map['houses']?.map((x) => HouseEntities.fromMap(x))),
+          map['payload']?.map((x) => HouseEntities.fromMap(x))),
     );
   }
 

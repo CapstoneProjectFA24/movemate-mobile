@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/test/domain/entities/house_entities.dart';
 import 'package:movemate/features/test/presentation/test_controller.dart';
-import 'package:movemate/hooks/use_list_pagination.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
 class TestScreen extends HookConsumerWidget {
@@ -12,77 +12,90 @@ class TestScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.sizeOf(context);
+    // Init
+    final testState = ref.watch(testControllerProvider);
+    final houses = useState<List<HouseEntities>>([]);
+    final isFetchingData = useState(true);
+    final pageNumber = useState(0);
+    final isLastPage = useState(false);
+    final isLoadMoreLoading = useState(false);
 
-    Future<List<HouseEntities>> fetchHouses(int page) async {
-      return await ref.read(testControllerProvider.notifier).getHouses(
-            context,
-          );
+    // Fetch data function
+    Future<void> fetchData({
+      required GetDataType getDataType,
+    }) async {
+      if (getDataType == GetDataType.loadmore && isFetchingData.value) {
+        return;
+      }
+
+      if (getDataType == GetDataType.fetchdata) {
+        pageNumber.value = 0;
+        isLastPage.value = false;
+        isLoadMoreLoading.value = false;
+      }
+
+      if (isLastPage.value) {
+        return;
+      }
+
+      isFetchingData.value = true;
+      pageNumber.value = pageNumber.value + 1;
+
+      final newHouses =
+          await ref.read(testControllerProvider.notifier).getHouses(context);
+
+      isLastPage.value = newHouses.length < 10;
+      if (getDataType == GetDataType.fetchdata) {
+        isLoadMoreLoading.value = true;
+        houses.value = newHouses;
+        isFetchingData.value = false;
+        return;
+      }
+
+      isFetchingData.value = false;
+      houses.value = [...houses.value, ...newHouses];
     }
 
-    final paginationState = usePagination<HouseEntities>(
-      fetchFunction: fetchHouses,
-      onRefresh: () {
-        // Nếu bạn cần refresh một provider nào đó
-        // ref.refresh(someProvider);
-      },
-    );
-
+    // UI
     return Scaffold(
       appBar: AppBar(
         title: const Text('Test Screen'),
       ),
-      body: Column(
-        children: [
-          if (paginationState.isLoading && paginationState.items.isEmpty)
-            const Center(child: CircularProgressIndicator())
-          else if (paginationState.items.isEmpty)
-            const Center(child: Text('No houses found'))
-          else
-            Expanded(
-              child: ListView.builder(
-                controller: paginationState.scrollController,
-                itemCount: paginationState.items.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == paginationState.items.length) {
-                    if (paginationState.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return paginationState.isLastPage
-                        ? const Center(child: Text('No more houses'))
-                        : const SizedBox();
-                  }
-
-                  final house = paginationState.items[index];
-                  return ListTile(
-                    title: Text('House ${index + 1}'),
-                    subtitle:
-                        Text(house.toString()), // Hiển thị thông tin house
-                  );
-                },
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            testState.when(
+              data: (data) => Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () =>
+                        fetchData(getDataType: GetDataType.fetchdata),
+                    child: const Text("Fetch Data"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () =>
+                        fetchData(getDataType: GetDataType.loadmore),
+                    child: const Text("Load More Data"),
+                  ),
+                  if (houses.value.isNotEmpty)
+                    Text("Number of houses fetched: ${houses.value.length}"),
+                  ...houses.value.map((house) => ListTile(
+                        title: Text(house.name),
+                        subtitle: Text(house.description),
+                      )),
+                  if (isLoadMoreLoading.value)
+                    const CircularProgressIndicator(), // Hiển thị khi đang load thêm
+                  if (isLastPage.value)
+                    const Text(
+                        'No more content'), // Thông báo không còn dữ liệu
+                ],
               ),
+              loading: () => const CircularProgressIndicator(),
+              error: (error, stack) => Text('Error: ${error.toString()}'),
             ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () => {},
-                  child: const Text("Refresh Data"),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Number of houses fetched: ${paginationState.items.length}",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                if (paginationState.isLoading)
-                  const Text("Loading more houses...")
-                else if (paginationState.isLastPage)
-                  const Text("No more houses to load"),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

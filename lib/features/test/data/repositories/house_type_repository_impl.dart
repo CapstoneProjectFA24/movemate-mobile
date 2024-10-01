@@ -16,12 +16,9 @@ class HouseTypeRepositoryImpl extends RemoteBaseRepository
   HouseTypeRepositoryImpl(this._houseSource, {this.addDelay = true});
 
   @override
-
-   @override
   Future<HouseResponse> getHouseTypeData() async {
     return getDataOf(
-      request: () =>
-          _houseSource.getHouseType( APIConstants.contentType),
+      request: () => _houseSource.getHouseType(APIConstants.contentType),
     );
   }
 }

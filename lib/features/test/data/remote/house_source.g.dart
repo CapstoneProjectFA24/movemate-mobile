@@ -13,7 +13,7 @@ class _HouseSource implements HouseSource {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://api.movemate.info/api/v1';
+    baseUrl ??= 'https://dummyjson.com/c/daa3-02b0-479a-be2d';
   }
 
   final Dio _dio;
