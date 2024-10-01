@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:movemate/features/auth/domain/entities/account_entities.dart';
-import 'package:movemate/models/token_model.dart';
 
 class AccountReponse {
   final AccountEntities payload;

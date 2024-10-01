@@ -7,7 +7,6 @@ import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'dart:convert';
 import 'package:movemate/features/booking/domain/entities/package_entities.dart';
-import 'package:movemate/features/booking/domain/entities/service_entities.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {

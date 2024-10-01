@@ -11,8 +11,6 @@ import 'package:movemate/features/auth/domain/repositories/auth_repository.dart'
 import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
 
 import 'package:movemate/utils/enums/enums_export.dart';
-import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';

@@ -6,7 +6,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_details.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 
-import 'package:movemate/features/booking/presentation/widgets/booking_selection.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/booking_selection.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';

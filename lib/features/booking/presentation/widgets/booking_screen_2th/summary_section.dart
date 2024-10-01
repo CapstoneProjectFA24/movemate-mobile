@@ -46,7 +46,7 @@ class SummarySection extends StatelessWidget {
                     const SizedBox(width: 4),
                     if (buttonIcon)
                       GestureDetector(
-                        onTap: () => _showInfoModal(context),
+                        onTap: () => showInfoModal(context),
                         child: Icon(
                           Icons.info_outline,
                           size: 16,
@@ -96,7 +96,7 @@ class SummarySection extends StatelessWidget {
   }
 
   // Method to show the modal
-  void _showInfoModal(BuildContext context) {
+  void showInfoModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(

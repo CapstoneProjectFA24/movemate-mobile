@@ -30,19 +30,19 @@ class PriceDetailModal extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 2),
-              _buildPriceDetailRow('Phí giao hàng', 282900),
-              _buildPriceDetailRow(
+              buildPriceDetailRow('Phí giao hàng', 282900),
+              buildPriceDetailRow(
                   'Dịch Vụ Bốc Xếp - Bốc Xếp Tận Nơi (Bởi tài xế)', 140000),
-              _buildPriceDetailRow(
+              buildPriceDetailRow(
                   'Dịch Vụ Bốc Xếp - Bốc Xếp Tận Nơi (Có người hỗ trợ)',
                   400000),
-              _buildPriceDetailRow(
+              buildPriceDetailRow(
                   'Dịch Vụ Bốc Xếp - Bốc Xếp Dưới Xe (Có người hỗ trợ)',
                   350000),
-              _buildPriceDetailRow('Giao Hàng 2 Chiều', 172200),
-              _buildPriceDetailRow('Giao Hàng Siêu Tốc', 49200),
-              _buildPriceDetailRow('Hỗ Trợ Phí Cầu Đường', 100000),
-              _buildPriceDetailRow('Thuế GTGT', 119544),
+              buildPriceDetailRow('Giao Hàng 2 Chiều', 172200),
+              buildPriceDetailRow('Giao Hàng Siêu Tốc', 49200),
+              buildPriceDetailRow('Hỗ Trợ Phí Cầu Đường', 100000),
+              buildPriceDetailRow('Thuế GTGT', 119544),
               const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,7 +117,7 @@ class PriceDetailModal extends StatelessWidget {
   }
 
   // Helper để hiển thị từng dòng chi tiết giá
-  Widget _buildPriceDetailRow(String title, double price) {
+  Widget buildPriceDetailRow(String title, double price) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(

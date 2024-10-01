@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 Future<void> testFirebaseConnectionWithPhone(String phoneNumber) async {
   try {
@@ -12,11 +11,7 @@ Future<void> testFirebaseConnectionWithPhone(String phoneNumber) async {
 
         String? idToken = await userCredential.user?.getIdToken();
 
-        if (idToken != null) {
-          print('Firebase ID Token: $idToken');
-        } else {
-          print('Không thể lấy ID Token');
-        }
+        print('Firebase ID Token: $idToken');
       },
       verificationFailed: (FirebaseAuthException e) {
         print('Xác thực số điện thoại thất bại: ${e.message}');
@@ -42,11 +37,7 @@ Future<void> testFirebaseConnection() async {
     User? user = userCredential.user;
     String? idToken = await user?.getIdToken();
 
-    if (idToken != null) {
-      print('Firebase ID Token: $idToken');
-    } else {
-      print('Không thể lấy ID Token');
-    }
+    print('Firebase ID Token: $idToken');
   } catch (e) {
     print('Kết nối với Firebase thất bại: $e');
   }

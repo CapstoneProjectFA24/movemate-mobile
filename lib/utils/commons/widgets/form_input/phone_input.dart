@@ -8,13 +8,13 @@ import '../../../constants/asset_constant.dart';
 
 class PhoneInput extends HookConsumerWidget {
   const PhoneInput({
-    Key? key,
+    super.key,
     required this.textController,
     required this.hintText,
     required this.hintTextLable,
     required this.onValidate,
     required this.autoFocus,
-  }) : super(key: key);
+  });
 
   final TextEditingController textController;
   final String Function(String val) onValidate;
@@ -99,8 +99,7 @@ class PhoneInput extends HookConsumerWidget {
               errorText: errorText.value,
               errorStyle: const TextStyle(
                 color: AssetsConstants.red4,
-                fontWeight:  FontWeight.w500,
-
+                fontWeight: FontWeight.w500,
               ),
               errorMaxLines: 2,
               contentPadding: const EdgeInsets.all(12),
