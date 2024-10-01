@@ -11,7 +11,6 @@ import 'package:movemate/configs/routes/app_router.dart';
 // screen
 import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
-import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import '../../widgets/custom_scaford.dart';
 

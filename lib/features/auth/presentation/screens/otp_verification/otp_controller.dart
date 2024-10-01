@@ -19,8 +19,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
-import 'package:movemate/utils/constants/api_constant.dart';
-import 'package:movemate/utils/enums/enums_export.dart';
 
 part 'otp_controller.g.dart';
 

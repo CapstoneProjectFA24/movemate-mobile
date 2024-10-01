@@ -5,7 +5,7 @@ const String fakeBookingJson = '''
   "houseType": "Nhà riêng",
   "numberOfRooms": 3,
   "numberOfFloors": 2,
-  "livingRoomImages": ["assets/images/booking/bedroom/bedroom1.png", "assets/images/booking/bedroom/bedroom2.png"],
+  "livingRoomImages": ["assets/images/booking/bedroom/bedroom1.png", "assets/images/booking/bedroom/bedroom2.png","assets/images/booking/bedroom/bedroom3.png"],
   "bedroomImages": ["assets/images/booking/bedroom/bedroom3.png"],
   "diningRoomImages": [],
   "officeRoomImages": [],
@@ -97,4 +97,66 @@ const String fakeBookingJson2nd = '''[
          }
       ]
    }
+]''';
+const String fakeBookingJson3nd = '''[
+  {
+    "serviceTitle": "dịch vụ bốc xếp",
+    "subServices": [
+      { 
+        "subServicerName": "bốc xếp bởi tài xế",
+        "subServicerPrice": "200.000",
+        "quantity": 0
+      },
+      { 
+        "subServicerName": "bốc xếp bởi nhân viên",
+        "subServicerPrice": "200.000",
+        "quantity": 0
+      },
+      { 
+        "subServicerName": "bốc xếp ngoài giờ",
+        "subServicerPrice": "200.000",
+        "quantity": 0
+      }
+    ]
+  },
+  {
+    "serviceTitle": "Dịch vụ tháo lắp",
+    "subServices": [
+      { 
+        "subServicerName": "tháo lắp máy lạnh trọn gói",
+        "subServicerPrice": "300.000",
+        "quantity": 0
+      },
+      { 
+        "subServicerName": "tháo lắp các đồ đạc khác",
+        "subServicerPrice": "200.000",
+        "quantity": 0
+      },
+      { 
+        "subServicerName": "tháo lắp các thiết bị cơ điện",
+        "subServicerPrice": "150.000",
+        "quantity": 0
+      }
+    ]
+  },
+  {
+    "serviceTitle": "Phí chờ",
+    "priceService": "10.000",
+    "icon": "https://png.pngtree.com/png-clipart/20190516/original/pngtree-dollar-icon-png-image_3729439.jpg",
+    "quantity": 0
+  },
+  {
+    "serviceTitle": "Hỗ trợ tài xế",
+    "priceService": "10.000",
+        "icon": "https://png.pngtree.com/png-clipart/20190516/original/pngtree-dollar-icon-png-image_3729439.jpg",
+
+    "quantity": 0
+  },
+  {
+    "serviceTitle": "Chứng từ",
+    "priceService": "5.000",
+        "icon": "https://png.pngtree.com/png-clipart/20190516/original/pngtree-dollar-icon-png-image_3729439.jpg",
+
+    "quantity": 0
+  }
 ]''';

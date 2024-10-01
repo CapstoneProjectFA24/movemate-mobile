@@ -1,78 +1,95 @@
-// service_table.dart
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
+import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'people_dropdown.dart';
-import 'air_conditioners_dropdown.dart';
 
-class ServiceTable extends ConsumerWidget {
-  final List<String> options;
-  final List<String> prices;
-  final int? selectedService;
-  final int selectedPeopleOrAirConditionersCount;
-  final bool isThaoLapService;
-  final ValueChanged<int?>? onPeopleCountChanged;
-  final ValueChanged<int?>? onAirConditionersCountChanged;
+class ServiceTable extends HookConsumerWidget {
+  final int packageIndex;
+  final Package package;
+  final bool isExpanded;
+  final ValueChanged<bool> onToggleExpanded;
 
   const ServiceTable({
     super.key,
-    required this.options,
-    required this.prices,
-    required this.selectedService,
-    required this.selectedPeopleOrAirConditionersCount,
-    required this.isThaoLapService,
-    this.onPeopleCountChanged,
-    this.onAirConditionersCountChanged,
+    required this.packageIndex,
+    required this.package,
+    required this.isExpanded,
+    required this.onToggleExpanded,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: AssetsConstants.greyColor),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Table(
-        border: TableBorder.all(color: AssetsConstants.blackColor, width: 0.5),
-        children: [
-          for (int i = 0; i < options.length; i++)
-            TableRow(
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () => onToggleExpanded(!isExpanded),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(options[i], style: const TextStyle(fontSize: 14)),
+                LabelText(
+                  content: package.title,
+                  size: 16,
+                  fontWeight: FontWeight.w500,
+                  color: AssetsConstants.blackColor,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(prices[i], style: const TextStyle(fontSize: 14)),
-                ),
+                Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
               ],
             ),
-          TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(isThaoLapService ? 'Số máy lạnh' : 'Số người',
-                    style: const TextStyle(fontSize: 14)),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: isThaoLapService
-                    ? AirConditionersDropdown(
-                        selectedValue: selectedPeopleOrAirConditionersCount,
-                        onChanged: onAirConditionersCountChanged!,
-                      )
-                    : PeopleDropdown(
-                        selectedValue: selectedPeopleOrAirConditionersCount,
-                        onChanged: onPeopleCountChanged!,
-                      ),
-              ),
-            ],
           ),
-        ],
-      ),
+        ),
+        if (isExpanded)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: package.services.asMap().entries.map((entry) {
+                final serviceIndex = entry.key;
+                final service = entry.value;
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(service.name,
+                                style: const TextStyle(fontSize: 14)),
+                            Text('${service.price}đ',
+                                style: const TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ),
+                      ServiceTrailingWidget(
+                        quantity: service.quantity,
+                        addService: false,
+                        onQuantityChanged: (newQuantity) {
+                          bookingNotifier.updateQuantity(
+                            packageIndex,
+                            serviceIndex,
+                            newQuantity,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+      ],
     );
   }
 }

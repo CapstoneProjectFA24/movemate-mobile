@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_details.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/total_price_section.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_selection.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/booking_selection.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -40,10 +40,12 @@ class BookingScreen extends ConsumerWidget {
           ),
         ),
       ),
-      bottomNavigationBar: TotalPriceSection(
-        totalPrice: bookingState.totalPrice,
-        isButtonEnabled: true, // Assuming the button is always enabled here
-        onButtonPressed: () {
+      bottomNavigationBar: SummarySection(
+        buttonIcon: false,
+        buttonText: "Bước tiếp theo",
+        priceLabel: "",
+        isButtonEnabled: true,
+        onPlacePress: () {
           context.router.push(const AvailableVehiclesScreenRoute());
         },
       ),
