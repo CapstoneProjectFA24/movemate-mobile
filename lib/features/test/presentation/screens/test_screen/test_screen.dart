@@ -8,11 +8,21 @@ import 'package:movemate/features/test/presentation/screens/test_screen/test_con
 import 'package:movemate/features/test/presentation/widgets/test_item.dart';
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/functions/datetime_utils.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/extensions/scroll_controller.dart';
+
+final testDateFrom = StateProvider.autoDispose<String>(
+  (ref) => getDateTimeNow(),
+);
+
+final testDateTo = StateProvider.autoDispose<String>(
+  (ref) => getDateTimeNow(),
+);
+
 
 @RoutePage()
 class TestScreen extends HookConsumerWidget {
