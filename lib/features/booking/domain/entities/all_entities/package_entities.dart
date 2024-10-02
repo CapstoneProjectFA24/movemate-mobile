@@ -1,4 +1,4 @@
-import 'package:movemate/features/booking/domain/entities/service_entities.dart';
+import 'package:movemate/features/booking/domain/entities/all_entities/service_entities.dart';
 
 class Package {
   final String title;

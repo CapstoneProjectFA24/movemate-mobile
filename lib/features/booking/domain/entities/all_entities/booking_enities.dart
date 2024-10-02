@@ -1,7 +1,7 @@
 //booking_entities.dart
 
-import 'package:movemate/features/booking/data/models/vehicle_model.dart';
-import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/data/models/all_models/vehicle_model.dart';
+import 'package:movemate/features/booking/domain/entities/all_entities/package_entities.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class Booking {

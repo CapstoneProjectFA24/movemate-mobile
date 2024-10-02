@@ -2,6 +2,7 @@
 
 class Booking {
   final String? houseType;
+
   final int? numberOfRooms;
   final int? numberOfFloors;
   final int? selectedVehicleIndex;

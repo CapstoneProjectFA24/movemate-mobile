@@ -27,6 +27,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreen(),
       );
     },
+    BookingScreenV2Route.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BookingScreenV2(),
+      );
+    },
     BookingSelectPackageScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -148,6 +154,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TermOfUseScreen(key: args.key),
       );
     },
+    TestMapRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TestMap(),
+      );
+    },
     TestScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -187,6 +199,20 @@ class BookingScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BookingScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BookingScreenV2]
+class BookingScreenV2Route extends PageRouteInfo<void> {
+  const BookingScreenV2Route({List<PageRouteInfo>? children})
+      : super(
+          BookingScreenV2Route.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BookingScreenV2Route';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -558,6 +584,20 @@ class TermOfUseScreenRouteArgs {
   String toString() {
     return 'TermOfUseScreenRouteArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [TestMap]
+class TestMapRoute extends PageRouteInfo<void> {
+  const TestMapRoute({List<PageRouteInfo>? children})
+      : super(
+          TestMapRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TestMapRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

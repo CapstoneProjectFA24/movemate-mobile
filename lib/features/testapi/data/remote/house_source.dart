@@ -6,7 +6,6 @@ import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 //data iml
-import 'package:movemate/features/testapi/data/models/house_model.dart';
 
 //ultils
 import 'package:movemate/utils/constants/api_constant.dart';

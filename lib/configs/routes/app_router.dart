@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/presentation/controller/booking_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 import 'package:movemate/features/testapi/presentation/screens/test_screen.dart';
+import 'package:movemate/features/testmap/presentation/test_map.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 // guard
@@ -63,7 +65,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          initial: true,
+          // initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
             // AuthGuard(ref: _ref),
@@ -130,6 +132,16 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           // initial: true,
           page: TestScreenRoute.page,
+        ),
+        //testapi
+        AutoRoute(
+          // initial: true,
+          page: BookingScreenV2Route.page,
+        ),
+        //testmap
+        AutoRoute(
+          initial: true,
+          page: TestMapRoute.page,
         ),
       ];
 }
