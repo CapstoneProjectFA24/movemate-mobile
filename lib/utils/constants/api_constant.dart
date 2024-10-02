@@ -10,6 +10,7 @@ class APIConstants {
   static const register = '/authenticationss/register/v2';
   static const checkExists = '/authenticationss/check-exists';
   static const verifyToken = '/authenticationss/verify-token/v2';
+  static const reGenerateToken = '/authentications/regeneration-tokens';
 
   // error
   static const Map<String, String> errorTrans = {

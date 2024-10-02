@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 import '../../../models/response/error_model.dart';
 import '../../constants/api_constant.dart';
 import '../../enums/enums_export.dart';
@@ -66,32 +68,32 @@ Future<void> handleAPIError({
   }
 }
 
-// Future<void> reGenerateToken(
-//   AuthRepository authRepository,
-//   BuildContext context,
-// ) async {
-//   if (kDebugMode) {
-//     print('re-authen');
-//   }
+Future<void> reGenerateToken(
+  AuthRepository authRepository,
+  BuildContext context,
+) async {
+  if (kDebugMode) {
+    print('re-authen');
+  }
 
-//   try {
-//     final user = await SharedPreferencesUtils.getInstance('user_token');
-//     if (user != null) {
-//       final tokenResponse = await authRepository.generateToken(
-//         request: user.token,
-//       );
+  try {
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    if (user != null) {
+      final tokenResponse = await authRepository.generateToken(
+        request: user.tokens,
+      );
 
-//       final userNew = user.copyWith(
-//         token: tokenResponse,
-//       );
+      final userNew = user.copyWith(
+        tokens: tokenResponse,
+      );
 
-//       await SharedPreferencesUtils.clearInstance('user_token');
-//       await SharedPreferencesUtils.setInstance(userNew, 'user_token');
-//     }
-//   } catch (e) {
-//     if (kDebugMode) {
-//       print(e.toString());
-//     }
-//     rethrow;
-//   }
-// }
+      await SharedPreferencesUtils.clearInstance('user_token');
+      await SharedPreferencesUtils.setInstance(userNew, 'user_token');
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print(e.toString());
+    }
+    rethrow;
+  }
+}

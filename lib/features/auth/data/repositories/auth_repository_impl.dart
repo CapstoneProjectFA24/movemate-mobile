@@ -11,6 +11,7 @@ import 'package:movemate/features/auth/data/models/request/otp_verify_request.da
 
 // models system
 import 'package:movemate/models/response/success_model.dart';
+import 'package:movemate/models/token_model.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -58,6 +59,14 @@ class AuthRepositoryImpl extends RemoteBaseRepository
   Future<AccountReponse> signIn({required SignInRequest request}) {
     return getDataOf(
       request: () => _authSource.signIn(request, APIConstants.contentType),
+    );
+  }
+
+  @override
+  Future<TokenModel> generateToken({required TokenModel request}) {
+    return getDataOf(
+      request: () =>
+          _authSource.generateToken(request, APIConstants.contentType),
     );
   }
 
