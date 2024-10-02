@@ -27,7 +27,7 @@ import 'package:movemate/features/order/presentation/screens/order.screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
-import 'package:movemate/features/test/presentation/test_screen.dart';
+import 'package:movemate/features/test/presentation/screens/test_screen/test_screen.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';

@@ -33,6 +33,7 @@ class TestController extends _$TestController {
   Future<List<HouseEntities>> getHouses(BuildContext context) async {
     List<HouseEntities> dataListNameHere = [];
 
+
     state = const AsyncLoading();
     final houseTypeRepository = ref.read(houseTypeRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
@@ -43,6 +44,8 @@ class TestController extends _$TestController {
           // accessToken: APIConstants.prefixToken + user!.token.accessToken,
           );
       dataListNameHere = response.payload;
+
+      return dataListNameHere;
     });
 
     if (state.hasError) {
@@ -68,6 +71,7 @@ class TestController extends _$TestController {
         // }
 
         // return await getHouses(context);
+        return [];
       });
     }
 
