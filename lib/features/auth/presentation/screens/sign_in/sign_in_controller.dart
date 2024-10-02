@@ -104,15 +104,15 @@ class SignInController extends _$SignInController {
       state = await AsyncValue.guard(
         () async {
           final statusCode = (state.error as DioException).onStatusDio();
-          // await handleAPIError(
-          //   statusCode: statusCode,
-          //   stateError: state.error!,
-          //   context: context,
-          //   onCallBackGenerateToken: () => reGenerateToken(
-          //     authRepository,
-          //     context,
-          //   ),
-          // );
+          await handleAPIError(
+            statusCode: statusCode,
+            stateError: state.error!,
+            context: context,
+            onCallBackGenerateToken: () => reGenerateToken(
+              authRepository,
+              context,
+            ),
+          );
 
           // if refresh token expired
           if (state.hasError) {

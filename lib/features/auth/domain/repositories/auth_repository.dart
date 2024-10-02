@@ -10,6 +10,7 @@ import 'package:movemate/features/auth/data/models/request/otp_verify_request.da
 
 // model system
 import 'package:movemate/models/response/success_model.dart';
+import 'package:movemate/models/token_model.dart';
 
 part 'auth_repository.g.dart';
 
@@ -18,13 +19,15 @@ abstract class AuthRepository {
 
   Future<AccountReponse> signIn({required SignInRequest request});
 
+  Future<TokenModel> generateToken({required TokenModel request});
+
   Future<SuccessModel> checkValidUser({required SignUpRequest request});
 
   Future<SuccessModel> verifyToken({required OTPVerifyRequest request});
 
   Future<AccountReponse> signUpAndRes({required SignUpRequest request});
 
-   Future<void> signOut();
+  Future<void> signOut();
 }
 
 @Riverpod(keepAlive: false)

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // model system
 import 'package:movemate/models/response/success_model.dart';
+import 'package:movemate/models/token_model.dart';
 
 // data impl
 import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
@@ -48,6 +49,12 @@ abstract class AuthSource {
   @POST(APIConstants.register)
   Future<HttpResponse<AccountReponse>> signUpAndRes(
     @Body() SignUpRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+  );
+
+  @POST(APIConstants.reGenerateToken)
+  Future<HttpResponse<TokenModel>> generateToken(
+    @Body() TokenModel request,
     @Header(APIConstants.contentHeader) String contentType,
   );
 }

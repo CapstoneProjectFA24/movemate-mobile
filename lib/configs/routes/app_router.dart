@@ -10,22 +10,27 @@ import 'package:movemate/utils/enums/enums_export.dart';
 // guard
 import 'guard/onboarding_guard.dart';
 
-// screen
+// screen-auth
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
 import 'package:movemate/features/auth/presentation/screens/otp_verification/otp_verification_screen.dart';
 
+// screen-home
+import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
+import 'package:movemate/features/home/presentation/screens/home_screen.dart';
+
+// screen-booking
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
-import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 import 'package:movemate/features/package/presentation/package_detail_screen/package_detail_screen.dart';
 import 'package:movemate/features/profile/presentation/profile_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order.screen.dart';
