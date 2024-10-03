@@ -7,11 +7,10 @@ class APIConstants {
 
   // auth
   static const login = '/authenticationss/login';
-  static const register = '/authenticationss/register/v2';
+  static const register = '/authenticationss/register';
   static const checkExists = '/authenticationss/check-exists';
-  static const verifyToken = '/authenticationss/verify-token/v2';
-  //house-type test
-  static const houseType = '/housetypes/get-all';
+  static const verifyToken = '/authenticationss/verify-token';
+  static const reGenerateToken = '/authentications/re';
 
   // error
   static const Map<String, String> errorTrans = {
