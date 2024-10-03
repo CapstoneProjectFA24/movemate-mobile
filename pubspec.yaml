@@ -67,7 +67,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_native_splash: ^2.3.6
   #vietmap
-  vietmap_flutter_gl: ^3.0.0
+  # vietmap_flutter_gl: ^3.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

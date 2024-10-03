@@ -135,12 +135,12 @@ class AppRouter extends _$AppRouter {
         ),
         //testapi
         AutoRoute(
-          // initial: true,
+          initial: true,
           page: BookingScreenV2Route.page,
         ),
         //testmap
         AutoRoute(
-          initial: true,
+          // initial: true,
           page: TestMapRoute.page,
         ),
       ];

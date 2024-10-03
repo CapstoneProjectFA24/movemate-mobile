@@ -47,11 +47,6 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>Your request location description</string>
-		<key>NSLocationAlwaysUsageDescription</key>
-		<string>Your request location description</string>
-		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>Your request location description</string>
+		
 	</dict>
 </plist>
