@@ -40,9 +40,11 @@ class CustomBottomBar extends HookWidget {
                   ? AssetsConstants.primaryLight
                   : AssetsConstants.whiteColor,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.home,
-              color: AssetsConstants.primaryDark,
+              color: tabsRouter.activeIndex == 0
+                  ? Colors.white // Change icon to white when selected
+                  : AssetsConstants.primaryDark,
               size: AssetsConstants.defaultFontSize - 6.0,
             ),
           ),
@@ -66,7 +68,7 @@ class CustomBottomBar extends HookWidget {
             child: Image.asset(
               "assets/icons/truck2.png",
               color: tabsRouter.activeIndex == 1
-                  ? AssetsConstants.primaryDark
+                  ? Colors.white
                   : AssetsConstants
                       .primaryDark, // Optional: different color when inactive
               width: size.width * 0.6, // Adjust the icon size as needed
@@ -94,8 +96,8 @@ class CustomBottomBar extends HookWidget {
             child: Center(
               child: Image.asset(
                 "assets/icons/discount.png",
-                color: tabsRouter.activeIndex == 1
-                    ? AssetsConstants.primaryDark
+                color: tabsRouter.activeIndex == 2
+                    ? Colors.white
                     : AssetsConstants
                         .primaryDark, // Optional: different color when inactive
                 width: size.width * 0.6, // Adjust the icon size as needed
@@ -121,9 +123,11 @@ class CustomBottomBar extends HookWidget {
                   ? AssetsConstants.primaryLight
                   : AssetsConstants.whiteColor,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.account_box,
-              color: AssetsConstants.primaryDark,
+              color: tabsRouter.activeIndex == 3
+                  ? Colors.white // Change icon to white when selected
+                  : AssetsConstants.primaryDark,
               size: AssetsConstants.defaultFontSize - 6.0,
             ),
           ),
