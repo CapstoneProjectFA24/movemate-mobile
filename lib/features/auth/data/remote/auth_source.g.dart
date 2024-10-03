@@ -74,7 +74,7 @@ class _AuthSource implements AuthSource {
     )
             .compose(
               _dio.options,
-              '/authenticationss/register/v2',
+              '/authenticationss/register',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -142,7 +142,7 @@ class _AuthSource implements AuthSource {
     )
             .compose(
               _dio.options,
-              '/authenticationss/verify-token/v2',
+              '/authenticationss/verify-token',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -176,7 +176,7 @@ class _AuthSource implements AuthSource {
     )
             .compose(
               _dio.options,
-              '/authenticationss/register/v2',
+              '/authenticationss/register',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -210,7 +210,7 @@ class _AuthSource implements AuthSource {
     )
             .compose(
               _dio.options,
-              '/authentications/regeneration-tokens',
+              '/authentications/re',
               queryParameters: queryParameters,
               data: _data,
             )
