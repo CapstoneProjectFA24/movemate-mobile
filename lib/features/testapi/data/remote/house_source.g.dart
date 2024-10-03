@@ -42,7 +42,7 @@ class _HouseSource implements HouseSource {
     )
             .compose(
               _dio.options,
-              '/housetypes/get-all',
+              'APIConstants.houseType',
               queryParameters: queryParameters,
               data: _data,
             )
