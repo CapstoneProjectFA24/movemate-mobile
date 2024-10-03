@@ -6,12 +6,12 @@ part of 'test_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$testControllerHash() => r'1dfc8870dcac3d41c9a9f1b5478a1a050dd0e759';
+String _$testControllerHash() => r'a9f9d82a0d421651b358e1f93d165b55dba39c74';
 
 /// See also [TestController].
 @ProviderFor(TestController)
-final testControllerProvider = AutoDisposeAsyncNotifierProvider<TestController,
-    List<HouseEntities>>.internal(
+final testControllerProvider =
+    AutoDisposeAsyncNotifierProvider<TestController, void>.internal(
   TestController.new,
   name: r'testControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +21,6 @@ final testControllerProvider = AutoDisposeAsyncNotifierProvider<TestController,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestController = AutoDisposeAsyncNotifier<List<HouseEntities>>;
+typedef _$TestController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

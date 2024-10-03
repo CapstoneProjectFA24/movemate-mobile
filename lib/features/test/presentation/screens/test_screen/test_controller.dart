@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/features/test/data/models/house_response.dart';
+import 'package:movemate/features/test/data/models/response/house_response.dart';
 import 'package:movemate/features/test/domain/entities/house_entities.dart';
 import 'package:movemate/features/test/domain/repositories/house_type_repository.dart';
+import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
@@ -26,13 +27,15 @@ part 'test_controller.g.dart';
 @riverpod
 class TestController extends _$TestController {
   @override
-  FutureOr<List<HouseEntities>> build() {
-    return const [];
+  FutureOr<void> build() {
+
   }
 
-  Future<List<HouseEntities>> getHouses(BuildContext context) async {
+  Future<List<HouseEntities>> getHouses(
+    PagingModel request,
+    BuildContext context,
+  ) async {
     List<HouseEntities> dataListNameHere = [];
-
 
     state = const AsyncLoading();
     final houseTypeRepository = ref.read(houseTypeRepositoryProvider);
@@ -41,11 +44,12 @@ class TestController extends _$TestController {
 
     state = await AsyncValue.guard(() async {
       final response = await houseTypeRepository.getHouseTypeData(
-          // accessToken: APIConstants.prefixToken + user!.token.accessToken,
-          );
+        // accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
       dataListNameHere = response.payload;
 
-      return dataListNameHere;
+      // return dataListNameHere;
     });
 
     if (state.hasError) {
@@ -71,7 +75,7 @@ class TestController extends _$TestController {
         // }
 
         // return await getHouses(context);
-        return [];
+        // return [];
       });
     }
 

@@ -13,7 +13,7 @@ class _HouseSource implements HouseSource {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://dummyjson.com/c/daa3-02b0-479a-be2d';
+    baseUrl ??= 'https://api.movemate.info/api/v1';
   }
 
   final Dio _dio;
@@ -21,9 +21,13 @@ class _HouseSource implements HouseSource {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<HouseResponse>> getHouseType(String contentType) async {
+  Future<HttpResponse<HouseResponse>> getHouseType(
+    String contentType,
+    HouseRequest request,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(request.toMap());
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
@@ -36,7 +40,7 @@ class _HouseSource implements HouseSource {
     )
             .compose(
               _dio.options,
-              '/housetypes/get-all',
+              '/servicedetails/truck-category/get-all',
               queryParameters: queryParameters,
               data: _data,
             )

@@ -36,15 +36,17 @@ class TestScreen extends HookConsumerWidget {
     final state = ref.watch(testControllerProvider);
 
   
+
+  
     // list
 
     final fetchReslut = useFetch<HouseEntities>(
       function: (model, context) =>
-          ref.read(testControllerProvider.notifier).getHouses(context),
+          ref.read(testControllerProvider.notifier).getHouses(model,context),
       initialPagingModel: PagingModel(
         pageNumber: 1,
-        // filterSystemContent: systemStatus.type,
-        // filterContent: partnerStatus.type,
+        // filterSystemContent:  ref.read(filterSystemStatus).type,
+        // filterContent: ref.read(filterPartnerStatus).type,
         // searchDateFrom: dateFrom,
         // searchDateTo: dateTo,
       ),

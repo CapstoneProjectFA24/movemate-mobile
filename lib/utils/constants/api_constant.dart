@@ -12,6 +12,9 @@ class APIConstants {
   // house-type
   static const house_type = '/housetypes/get-all';
 
+  // service
+  static const trucks = '/servicedetails/truck-category/get-all';
+
   // error
   static const Map<String, String> errorTrans = {
     'Email is already registered.': 'Email này đã được đăng kí',
