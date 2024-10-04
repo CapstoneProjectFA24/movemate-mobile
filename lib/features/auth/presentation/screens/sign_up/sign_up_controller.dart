@@ -47,9 +47,12 @@ class SignUpController extends _$SignUpController {
       phone: phone,
       password: password,
     );
+    print(request.toString());
 
     state = await AsyncValue.guard(() async {
       await authRepository.checkValidUser(request: request);
+
+      await SharedPreferencesUtils.removeSignInRequestInfo('sign-up');
       await SharedPreferencesUtils.setSignInRequestInfo(request, "sign-up");
 
       final formattedPhone = formatPhoneNumber(phone);

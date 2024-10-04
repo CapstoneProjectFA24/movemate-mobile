@@ -116,6 +116,7 @@ flutter:
     - assets/images/onboarding/onboarding1.png
     - assets/images/onboarding/onboarding2.png
     - assets/images/onboarding/onboarding3.png
+    - assets/images/mbkc_logo.jpg
 
     - assets/images/background/bg_1.jpg
     # - assets/images/splash/screen_splash.png
