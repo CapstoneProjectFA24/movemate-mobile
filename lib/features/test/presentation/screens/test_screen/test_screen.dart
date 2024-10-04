@@ -5,6 +5,7 @@ import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_cont
 import 'package:movemate/features/test/domain/entities/house_entities.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/features/test/presentation/screens/test_screen/test_controller.dart';
+import 'package:movemate/features/test/presentation/widgets/show_bottom_ui_filter_example/custom_bottom_sheet.dart';
 import 'package:movemate/features/test/presentation/widgets/test_item.dart';
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -44,8 +45,10 @@ class TestScreen extends HookConsumerWidget {
       function: (model, context) =>
           ref.read(testControllerProvider.notifier).getHouses(model,context),
       initialPagingModel: PagingModel(
-        pageNumber: 1,
-        // filterSystemContent:  ref.read(filterSystemStatus).type,
+        
+        // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
+
+        filterSystemContent:  ref.read(filterSystemStatus).type,
         // filterContent: ref.read(filterPartnerStatus).type,
         // searchDateFrom: dateFrom,
         // searchDateTo: dateTo,

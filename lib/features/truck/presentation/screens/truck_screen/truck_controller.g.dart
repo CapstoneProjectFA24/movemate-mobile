@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'test_controller.dart';
+part of 'truck_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$testControllerHash() => r'a067eab8003d7842e17eb173b11da778ce8470c8';
+String _$truckControllerHash() => r'86f6a88b4b3af8a56422b8b567417265dd128b96';
 
-/// See also [TestController].
-@ProviderFor(TestController)
-final testControllerProvider =
-    AutoDisposeAsyncNotifierProvider<TestController, void>.internal(
-  TestController.new,
-  name: r'testControllerProvider',
+/// See also [TruckController].
+@ProviderFor(TruckController)
+final truckControllerProvider =
+    AutoDisposeAsyncNotifierProvider<TruckController, void>.internal(
+  TruckController.new,
+  name: r'truckControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$testControllerHash,
+      : _$truckControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$TestController = AutoDisposeAsyncNotifier<void>;
+typedef _$TruckController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

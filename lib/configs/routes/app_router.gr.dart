@@ -143,6 +143,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TestScreen(),
       );
     },
+    TruckScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<TruckScreenRouteArgs>(
+          orElse: () => const TruckScreenRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TruckScreen(key: args.key),
+      );
+    },
   };
 }
 
@@ -511,4 +519,33 @@ class TestScreenRoute extends PageRouteInfo<void> {
   static const String name = 'TestScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TruckScreen]
+class TruckScreenRoute extends PageRouteInfo<TruckScreenRouteArgs> {
+  TruckScreenRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TruckScreenRoute.name,
+          args: TruckScreenRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'TruckScreenRoute';
+
+  static const PageInfo<TruckScreenRouteArgs> page =
+      PageInfo<TruckScreenRouteArgs>(name);
+}
+
+class TruckScreenRouteArgs {
+  const TruckScreenRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'TruckScreenRouteArgs{key: $key}';
+  }
 }

@@ -10,7 +10,7 @@ class APIConstants {
   static const register = '/authenticationss/register';
 
   // house-type
-  static const house_type = '/housetypes/get-all';
+  static const houseType = '/housetypes/get-all';
 
   // service
   static const trucks = '/servicedetails/truck-category/get-all';

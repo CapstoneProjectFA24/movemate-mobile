@@ -20,10 +20,11 @@ class HouseTypeRepositoryImpl extends RemoteBaseRepository
   @override
   Future<HouseResponse> getHouseTypeData(
     {
-    required PagingModel request,
     // required String accessToken,
+    required PagingModel request,
   }
   ) async {
+    // mới
     final houseRequest = HouseRequest(
       search: request.searchContent,
       page: request.pageNumber,

@@ -22,18 +22,6 @@ class HouseRequest {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    // if (systemStatus != null) {
-    //   result.addAll({'systemStatus': systemStatus});
-    // }
-    // if (partnerOrderStatus != null) {
-    //   result.addAll({'partnerOrderStatus': partnerOrderStatus});
-    // }
-    // if (searchDateFrom != null) {
-    //   result.addAll({'searchDateFrom': searchDateFrom});
-    // }
-    // if (searchDateTo != null) {
-    //   result.addAll({'searchDateTo': searchDateTo});
-    // }
     if (search != null) {
       result.addAll({'Search': search});
     }
