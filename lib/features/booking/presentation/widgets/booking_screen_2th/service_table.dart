@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/booking/domain/entities/all_entities/package_entities.dart';
+
+import 'package:movemate/features/booking/domain/entities/package_entities.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';

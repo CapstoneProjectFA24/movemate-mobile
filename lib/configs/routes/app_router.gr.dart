@@ -154,16 +154,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TermOfUseScreen(key: args.key),
       );
     },
-    TestMapRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const TestMap(),
-      );
-    },
     TestScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TestScreen(),
+      );
+    },
+    TruckScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TruckScreen(),
       );
     },
     VehiclePriceListScreenRoute.name: (routeData) {
@@ -587,20 +587,6 @@ class TermOfUseScreenRouteArgs {
 }
 
 /// generated route for
-/// [TestMap]
-class TestMapRoute extends PageRouteInfo<void> {
-  const TestMapRoute({List<PageRouteInfo>? children})
-      : super(
-          TestMapRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'TestMapRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [TestScreen]
 class TestScreenRoute extends PageRouteInfo<void> {
   const TestScreenRoute({List<PageRouteInfo>? children})
@@ -610,6 +596,20 @@ class TestScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TestScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TruckScreen]
+class TruckScreenRoute extends PageRouteInfo<void> {
+  const TruckScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          TruckScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TruckScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

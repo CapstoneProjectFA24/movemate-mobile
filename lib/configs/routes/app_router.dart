@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movemate/features/booking/presentation/controller/booking_screen.dart';
+
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
+import 'package:movemate/features/test_booking/presentation/screens/booking_screen.dart';
+import 'package:movemate/features/test_cate_trucks/presentation/screen/truck_screen/truck_screen.dart';
 import 'package:movemate/features/testapi/presentation/screens/test_screen.dart';
-import 'package:movemate/features/testmap/presentation/test_map.dart';
+
 import 'package:movemate/utils/enums/enums_export.dart';
 
 // guard
@@ -25,9 +27,7 @@ import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
-import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
-import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
@@ -70,7 +70,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
             // AuthGuard(ref: _ref),
@@ -138,15 +138,15 @@ class AppRouter extends _$AppRouter {
           // initial: true,
           page: TestScreenRoute.page,
         ),
-        //testapi
-        AutoRoute(
-          initial: true,
-          page: BookingScreenV2Route.page,
-        ),
-        //testmap
+        //testapi booking
         AutoRoute(
           // initial: true,
-          page: TestMapRoute.page,
+          page: BookingScreenV2Route.page,
+        ),
+        //testapi truck category
+        AutoRoute(
+          // initial: true,
+          page: TruckScreenRoute.page,
         ),
       ];
 }

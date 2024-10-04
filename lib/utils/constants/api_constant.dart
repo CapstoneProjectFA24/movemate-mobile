@@ -12,6 +12,11 @@ class APIConstants {
   static const verifyToken = '/authenticationss/verify-token';
   static const reGenerateToken = '/authentications/re';
 
+  //getAllBooking
+  static const get_all_bookings = '/bookings/get-all';
+  static const getHouseTypes = '/housetypes/get-all';
+  static const get_truck_category = '//truckcategorys';
+
   // error
   static const Map<String, String> errorTrans = {
     'Email is already registered.': 'Email này đã được đăng kí',
