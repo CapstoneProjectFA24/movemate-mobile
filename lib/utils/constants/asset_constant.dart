@@ -120,7 +120,7 @@ class AssetsConstants {
   // Images
   static const String spashImage = 'assets/images/splash/splash.png';
   static const String spashLogo = 'assets/images/splash/Vectortruck.png';
-  static const String appLogo = 'assets/images/mbkc_logo.jpg';
+  static const String appLogo = 'assets/images/movemate_logo.png';
   static const String welcomeImage = 'assets/images/image_welcome.png';
   static const String defaultAvatar = 'assets/images/avatar_default.png';
   static const String errorLogo = 'assets/images/error.png';

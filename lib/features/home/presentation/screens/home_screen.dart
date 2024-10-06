@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         ServiceSelector(),
                         SizedBox(height: 16),
-                        ServiceSection(),
+                        // ServiceSection(),
                       ],
                     ),
                   ),

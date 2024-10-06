@@ -1,9 +1,9 @@
-import 'package:movemate/features/booking/domain/entities/service_entities.dart';
+import 'package:movemate/features/booking/domain/entities/service_entities_tuan.dart';
 
 class Package {
   final String title;
   final double packagePrice;
-  final List<Service> services;
+  final List<ServiceTest> services;
 
   Package({
     required this.title,
@@ -12,14 +12,14 @@ class Package {
   });
 
   factory Package.fromJson(Map<String, dynamic> json) {
-    List<Service> services = [];
+    List<ServiceTest> services = [];
 
     if (json.containsKey('subServices')) {
       services = (json['subServices'] as List<dynamic>)
-          .map((e) => Service.fromJson(e))
+          .map((e) => ServiceTest.fromJson(e))
           .toList();
     } else {
-      services.add(Service.fromJson(json));
+      services.add(ServiceTest.fromJson(json));
     }
 
     return Package(
@@ -33,7 +33,7 @@ class Package {
   Package copyWith({
     String? title,
     double? packagePrice,
-    List<Service>? services,
+    List<ServiceTest>? services,
   }) {
     return Package(
       title: title ?? this.title,

@@ -9,7 +9,8 @@ class Introduction extends StatefulWidget {
   final TextStyle titleTextStyle;
   final TextStyle subTitleTextStyle;
 
-  const Introduction({super.key, 
+  const Introduction({
+    super.key,
     required this.imageUrl,
     required this.title,
     required this.subTitle,
@@ -48,13 +49,14 @@ class IntroductionState extends State<Introduction> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Flexible(child:   Text(
-                  widget.title,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.clip,
-                  style: widget.titleTextStyle,
-                ),)
-              
+                Flexible(
+                  child: Text(
+                    widget.title,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
+                    style: widget.titleTextStyle,
+                  ),
+                )
               ],
             ),
             const SizedBox(

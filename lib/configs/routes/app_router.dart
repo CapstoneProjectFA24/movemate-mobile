@@ -60,7 +60,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: SignUpScreenRoute.page,
-          // initial: true,
+          initial: true,
         ),
         AutoRoute(page: OTPVerificationScreenRoute.page),
 

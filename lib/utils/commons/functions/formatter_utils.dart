@@ -17,7 +17,7 @@ String formatPhoneNumber(String phone) {
   }
 
   digitsOnly =
-      digitsOnly.length > 11 ? digitsOnly.substring(0, 11) : digitsOnly;
+      digitsOnly.length > 15 ? digitsOnly.substring(0, 15) : digitsOnly;
 
   return '+$digitsOnly';
 }

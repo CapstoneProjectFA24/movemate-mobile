@@ -18,10 +18,6 @@ class FetchData<T> {
     required ValueNotifier<List<T>> items,
     required ValueNotifier<bool> isFetchingData,
     required PagingModel pagingModel,
-    // required String? filterSystemContent,
-    // required String? filterPartnerContent,
-    // required String? dateFrom,
-    // required String? dateTo,
   }) async {
     if (getDataType == GetDataType.loadmore && isFetchingData.value) {
       return;
@@ -42,12 +38,12 @@ class FetchData<T> {
 
     final fetchedItems = await function(
       PagingModel(
-        pageNumber: pageNumber.value,
-        // filterSystemContent: filterSystemContent,
-        // filterContent: filterPartnerContent,
-        // searchDateFrom: orderDateFrom,
-        // searchDateTo: orderDateTo,
-      ),
+          pageNumber: pageNumber.value,
+          searchContent: pagingModel.searchContent,
+          filterSystemContent: pagingModel.filterSystemContent,
+          filterContent: pagingModel.filterContent,
+          searchDateFrom: pagingModel.searchDateFrom,
+          searchDateTo: pagingModel.searchDateTo),
       context,
     );
     isLastPage.value = fetchedItems.length < pagingModel.pageSize;
@@ -91,7 +87,7 @@ FetchResult<T> useFetch<T>({
   final isLoadMoreLoading = useState(false);
 
   final fetch = useMemoized(() => FetchData<T>(function: function), [function]);
-
+ 
   useEffect(() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       fetch.fetchData(
@@ -103,10 +99,6 @@ FetchResult<T> useFetch<T>({
         items: items,
         isFetchingData: isFetchingData,
         pagingModel: initialPagingModel,
-        // filterSystemContent: filterSystemContent,
-        // filterPartnerContent: filterPartnerContent,
-        // dateFrom: dateFrom,
-        // dateTo: dateTo,
       );
     });
     return null;
