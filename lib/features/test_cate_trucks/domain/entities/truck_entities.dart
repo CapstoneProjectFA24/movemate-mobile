@@ -2,9 +2,9 @@ import 'dart:convert';
 
 class TruckEntities {
   final String categoryName;
-
   final int maxLoad;
   final String description;
+  final String imgUrl;
   final String estimatedLength;
   final String estimatedWidth;
   final String estimatedHeight;
@@ -14,6 +14,7 @@ class TruckEntities {
     required this.categoryName,
     required this.maxLoad,
     required this.description,
+    required this.imgUrl,
     required this.estimatedLength,
     required this.estimatedWidth,
     required this.estimatedHeight,
@@ -43,6 +44,9 @@ class TruckEntities {
     result.addAll({
       'summarize': summarize,
     });
+    result.addAll({
+      'imgUrl': imgUrl,
+    });
     return result;
   }
 
@@ -51,6 +55,7 @@ class TruckEntities {
       categoryName: map['categoryName'] ?? '',
       maxLoad: map['maxLoad']?.toInt() ?? 0,
       description: map['description'] ?? '',
+      imgUrl: map['imgUrl'] ?? '',
       estimatedLength: map['estimatedLength'] ?? '',
       estimatedWidth: map['estimatedWidth'] ?? '',
       estimatedHeight: map['estimatedHeight'] ?? '',

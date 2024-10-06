@@ -6,7 +6,7 @@ part of 'truck_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$truckControllerHash() => r'b13133a401cfe73a36b6c6582c40704e783ed944';
+String _$truckControllerHash() => r'2bded965af2030b963f85141e72a80c7e09f05ec';
 
 /// See also [TruckController].
 @ProviderFor(TruckController)

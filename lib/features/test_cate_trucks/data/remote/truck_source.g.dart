@@ -21,7 +21,7 @@ class _TruckSource implements TruckSource {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<TruckResponse>> getTruckCate(
+  Future<HttpResponse<TruckResponse>> getTrucks(
     String contentType,
     TruckRequest request,
   ) async {
@@ -40,7 +40,7 @@ class _TruckSource implements TruckSource {
     )
             .compose(
               _dio.options,
-              '//truckcategorys',
+              '/truckcategorys',
               queryParameters: queryParameters,
               data: _data,
             )

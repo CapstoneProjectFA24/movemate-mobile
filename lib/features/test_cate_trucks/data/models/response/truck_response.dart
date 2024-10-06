@@ -14,8 +14,10 @@ class TruckResponse {
 
     result.addAll({'payload': payload.map((x) => x.toMap()).toList()});
 
+    print("call in response $result");
     return result;
   }
+
 
   factory TruckResponse.fromMap(Map<String, dynamic> map) {
     return TruckResponse(
@@ -29,3 +31,6 @@ class TruckResponse {
   factory TruckResponse.fromJson(String source) =>
       TruckResponse.fromMap(json.decode(source));
 }
+
+
+

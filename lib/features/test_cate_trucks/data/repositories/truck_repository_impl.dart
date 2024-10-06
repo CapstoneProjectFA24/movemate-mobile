@@ -9,7 +9,6 @@ import 'package:movemate/models/request/paging_model.dart';
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/resources/remote_base_repository.dart';
-import 'package:retrofit/dio.dart';
 
 class TruckRepositoryImpl extends RemoteBaseRepository
     implements TruckRepository {
@@ -19,20 +18,20 @@ class TruckRepositoryImpl extends RemoteBaseRepository
   TruckRepositoryImpl(this._truckSource, {this.addDelay = true});
 
   @override
-  Future<TruckResponse> getTruckCateData({
+  Future<TruckResponse> getTrucks({
     // required String accessToken,
     required PagingModel request,
   }) async {
     // mới
     final truckRequest = TruckRequest(
-      search: request.searchContent,
+      // search: request.searchContent,
       page: request.pageNumber,
       perPage: request.pageSize,
     );
 
     print('log filter ở đây ${truckRequest.toString()}');
     return getDataOf(
-      request: () => _truckSource.getTruckCate(
+      request: () => _truckSource.getTrucks(
         APIConstants.contentType,
         // accessToken,
         truckRequest,

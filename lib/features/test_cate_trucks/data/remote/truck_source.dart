@@ -18,7 +18,7 @@ abstract class TruckSource {
   factory TruckSource(Dio dio, {String baseUrl}) = _TruckSource;
 
   @GET(APIConstants.get_truck_category)
-  Future<HttpResponse<TruckResponse>> getTruckCate(
+  Future<HttpResponse<TruckResponse>> getTrucks(
     @Header(APIConstants.contentHeader) String contentType,
     // @Header(APIConstants.authHeader) String accessToken,
     @Queries() TruckRequest request,

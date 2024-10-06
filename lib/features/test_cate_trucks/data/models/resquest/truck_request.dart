@@ -5,7 +5,7 @@ class TruckRequest {
   // final String? partnerOrderStatus;
   // final String? searchDateFrom;
   // final String? searchDateTo;
-  final String? search;
+  // final String? search;
   final int page;
   final int perPage;
 
@@ -14,7 +14,7 @@ class TruckRequest {
     // this.partnerOrderStatus,
     // this.searchDateFrom,
     // this.searchDateTo,
-    this.search,
+    // this.search,
     required this.page,
     this.perPage = 10,
   });
@@ -34,9 +34,9 @@ class TruckRequest {
     // if (searchDateTo != null) {
     //   result.addAll({'searchDateTo': searchDateTo});
     // }
-    if (search != null) {
-      result.addAll({'Search': search});
-    }
+    // if (search != null) {
+    //   result.addAll({'Search': search});
+    // }
     result.addAll({'page': page});
     result.addAll({'per_page': perPage});
 
@@ -49,7 +49,7 @@ class TruckRequest {
       // partnerOrderStatus: map['partnerOrderStatus'],
       // searchDateFrom: map['searchDateFrom'],
       // searchDateTo: map['searchDateTo'],
-      search: map['Search'],
+      // search: map['Search'],
       page: map['page']?.toInt() ?? 1,
       perPage: map['per_page']?.toInt() ?? 10,
     );
@@ -59,7 +59,7 @@ class TruckRequest {
 
   @override
   String toString() {
-    return 'SignUpRequest(search: $search, page: $page, perPage: $perPage)';
+    return 'truck( page: $page, perPage: $perPage)';
   }
 
   factory TruckRequest.fromJson(String source) =>

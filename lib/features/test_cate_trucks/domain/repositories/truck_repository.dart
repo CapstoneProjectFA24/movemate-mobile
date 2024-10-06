@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:movemate/features/test_cate_trucks/data/remote/truck_source.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,7 +8,7 @@ import 'package:movemate/models/request/paging_model.dart';
 part 'truck_repository.g.dart';
 
 abstract class TruckRepository {
-  Future<TruckResponse> getTruckCateData({
+  Future<TruckResponse> getTrucks({
     // required String accessToken,
     required PagingModel request,
   });

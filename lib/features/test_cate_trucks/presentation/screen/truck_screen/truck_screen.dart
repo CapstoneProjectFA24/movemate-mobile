@@ -30,12 +30,15 @@ class TruckScreen extends HookConsumerWidget {
     final fetchResult = useFetch<TruckEntities>(
       function: (model, context) =>
           ref.read(truckControllerProvider.notifier).getTrucks(model, context),
-      initialPagingModel: PagingModel(),
+      initialPagingModel: PagingModel(
+        searchContent: "1",
+      ),
       context: context,
     );
 
     useEffect(() {
       scrollController.onScrollEndsListener(fetchResult.loadMore);
+      print(" check items ${fetchResult.items}");
       return scrollController.dispose;
     }, const []);
 

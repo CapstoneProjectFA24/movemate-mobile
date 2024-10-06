@@ -2,12 +2,18 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/data/models/vehicle_model.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
+import 'package:movemate/features/test_cate_trucks/domain/entities/truck_entities.dart';
+import 'package:movemate/features/test_cate_trucks/presentation/screen/truck_screen/truck_controller.dart';
+import 'package:movemate/hooks/use_fetch.dart';
+import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 @RoutePage()
 class AvailableVehiclesScreen extends HookConsumerWidget {
@@ -15,48 +21,80 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookingState = ref.watch(bookingProvider);
-    final bookingNotifier = ref.read(bookingProvider.notifier);
+    // Initialize
+    final size = MediaQuery.sizeOf(context);
+    final scrollController = useScrollController();
+    final state = ref.watch(truckControllerProvider);
 
-    final availableVehicles = bookingState.availableVehicles;
+    // Fetch trucks
+    final fetchResult = useFetch<TruckEntities>(
+      function: (model, context) =>
+          ref.read(truckControllerProvider.notifier).getTrucks(model, context),
+      initialPagingModel: PagingModel(
+        searchContent: "1",
+      ),
+      context: context,
+    );
+
+    useEffect(() {
+      scrollController.onScrollEndsListener(fetchResult.loadMore);
+      return scrollController.dispose;
+    }, const []);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Phương tiện có sẵn'),
-        backgroundColor: AssetsConstants.primaryDark,
+      appBar: CustomAppBar(
+        title: 'Available Vehicles',
+        iconFirst: Icons.refresh_rounded,
+        onCallBackFirst: fetchResult.refresh,
       ),
-      body: availableVehicles.isNotEmpty
-          ? Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: availableVehicles.length,
-                    itemBuilder: (context, index) {
-                      final vehicle = availableVehicles[index];
-                      final isSelected =
-                          bookingState.selectedVehicleIndex == index;
-
-                      return GestureDetector(
-                        onTap: () {
-                          bookingNotifier.updateSelectedVehicle(index);
+      body: Column(
+        children: [
+          SizedBox(height: size.height * 0.02),
+          (state.isLoading && fetchResult.items.isEmpty)
+              ? const Center(
+                  child: HomeShimmer(amount: 4),
+                )
+              : fetchResult.items.isEmpty
+                  ? const Align(
+                      alignment: Alignment.topCenter,
+                      child: EmptyBox(title: 'No data available'),
+                    )
+                  : Expanded(
+                      child: ListView.builder(
+                        itemCount: fetchResult.items.length + 1,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: scrollController,
+                        itemBuilder: (context, index) {
+                          if (index == fetchResult.items.length) {
+                            if (fetchResult.isFetchingData) {
+                              return const CustomCircular();
+                            }
+                            return fetchResult.isLastPage
+                                ? const NoMoreContent()
+                                : Container();
+                          }
+                          final vehicle = fetchResult.items[index];
+                          return GestureDetector(
+                            onTap: () {
+                              // Handle vehicle selection
+                              // You can manage selected vehicle using another provider if needed
+                            },
+                            child: buildVehicleCard(
+                              vehicle,
+                              false, // Pass true if the vehicle is selected
+                            ),
+                          );
                         },
-                        child: _buildVehicleCard(
-                          vehicle,
-                          isSelected,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            )
-          : const Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
+        ],
+      ),
       bottomNavigationBar: SummarySection(
-        buttonText: "Bước tiếp theo",
-        priceLabel: 'Tổng giá',
+        buttonText: "Next Step",
+        priceLabel: 'Total Price',
         buttonIcon: false,
-        totalPrice: bookingState.totalPrice,
-        isButtonEnabled: bookingState.selectedVehicleIndex != null,
+        totalPrice: 0.0, // Update with actual total price if needed
+        isButtonEnabled: true, // Update based on selection
         onPlacePress: () {
           context.router.push(const BookingSelectPackageScreenRoute());
         },
@@ -64,8 +102,8 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildVehicleCard(
-    Vehicle vehicle,
+  Widget buildVehicleCard(
+    TruckEntities vehicle,
     bool isSelected,
   ) {
     return Container(
@@ -137,23 +175,25 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  'Kích thước: ${vehicle.estimatedLength} x ${vehicle.estimatedWidth} x ${vehicle.estimatedHeight}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AssetsConstants.blackColor,
-                  ),
-                  maxLines: 1,
+                Row(
+                  children: [
+                    const Icon(
+                      Icons
+                          .straighten, 
+                      size: 16,
+                      color: AssetsConstants.blackColor, // Màu icon
+                    ),
+                    const SizedBox(width: 4), // Khoảng cách giữa icon và text
+                    Text(
+                      ' ${vehicle.estimatedLength} x ${vehicle.estimatedWidth} x ${vehicle.estimatedHeight} x ${vehicle.maxLoad}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AssetsConstants.blackColor,
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
                 ),
-                // const SizedBox(height: 6),
-                // Text(
-                //   'Giá: ₫${vehicle.price.toStringAsFixed(0)}',
-                //   style: const TextStyle(
-                //     fontSize: 14,
-                //     fontWeight: FontWeight.bold,
-                //     color: AssetsConstants.primaryDark,
-                //   ),
-                // ),
               ],
             ),
           ),
