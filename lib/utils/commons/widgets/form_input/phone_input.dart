@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import '../../../constants/asset_constant.dart';
 
 class PhoneInput extends HookConsumerWidget {

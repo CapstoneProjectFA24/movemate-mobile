@@ -2,6 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
+import 'package:movemate/features/test_booking/presentation/screens/booking_screen.dart';
+import 'package:movemate/features/test_cate_trucks/presentation/screen/truck_screen/truck_screen.dart';
+import 'package:movemate/features/testapi/presentation/screens/test_screen.dart';
+
+import 'package:movemate/utils/enums/enums_export.dart';
+
 // guard
 import 'guard/onboarding_guard.dart';
 
@@ -20,7 +27,6 @@ import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
-import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
@@ -36,7 +42,6 @@ import 'package:movemate/onboarding_screen.dart';
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
 
 // utils
-import 'package:movemate/utils/enums/enums_export.dart';
 
 part 'app_router.gr.dart';
 
@@ -91,6 +96,7 @@ class AppRouter extends _$AppRouter {
 
         // flow booking
         AutoRoute(
+          initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
@@ -104,9 +110,15 @@ class AppRouter extends _$AppRouter {
         ),
 
         AutoRoute(
+          // initial: true,
           page: BookingSelectPackageScreenRoute.page,
         ),
 
+        //màn hình hiển thị danh sách thông tin xe
+        AutoRoute(
+          // initial: true,
+          page: VehiclePriceListScreenRoute.page,
+        ),
         //  order flow
         AutoRoute(
           page: OrderScreenRoute.page,
@@ -115,7 +127,26 @@ class AppRouter extends _$AppRouter {
           page: PaymentScreenRoute.page,
         ),
         AutoRoute(
+          page: LocationSelectionScreenRoute.page,
+        ),
+        AutoRoute(
           page: SplashScreenRoute.page,
+        ),
+
+        //testapi
+        AutoRoute(
+          // initial: true,
+          page: TestScreenRoute.page,
+        ),
+        //testapi booking
+        AutoRoute(
+          // initial: true,
+          page: BookingScreenV2Route.page,
+        ),
+        //testapi truck category
+        AutoRoute(
+          // initial: true,
+          page: TruckScreenRoute.page,
         ),
       ];
 }

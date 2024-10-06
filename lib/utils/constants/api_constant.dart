@@ -12,13 +12,18 @@ class APIConstants {
   static const verifyToken = '/authenticationss/verify-token';
   static const reGenerateToken = '/authentications/re';
 
+  //getAllBooking
+  static const get_all_bookings = '/bookings/get-all';
+  static const getHouseTypes = '/housetypes/get-all';
+  static const get_truck_category = '/truckcategorys';
+  // static const get_truck_category = '/truckcategorys';
+
   // error
   static const Map<String, String> errorTrans = {
     'Email is already registered.': 'Email này đã được đăng kí',
     'Phone number is already registered.': 'Số điện thoại này đã được đăng kí',
     'Email already exists.': 'Email này đã được đăng kí',
     'Phone already exists.': 'Số điện thoại này đã được đăng kí',
-
     'Email does not exist in the system.':
         'Email không tồn tại trong hệ thống.',
     'Email or Password is invalid.': 'Email hoặc mật khẩu không hợp lệ.',

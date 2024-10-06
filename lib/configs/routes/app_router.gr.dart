@@ -27,6 +27,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreen(),
       );
     },
+    BookingScreenV2Route.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BookingScreenV2(),
+      );
+    },
     BookingSelectPackageScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -148,6 +154,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TermOfUseScreen(key: args.key),
       );
     },
+    TestScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TestScreen(),
+      );
+    },
+    TruckScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TruckScreen(),
+      );
+    },
     VehiclePriceListScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -181,6 +199,20 @@ class BookingScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BookingScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BookingScreenV2]
+class BookingScreenV2Route extends PageRouteInfo<void> {
+  const BookingScreenV2Route({List<PageRouteInfo>? children})
+      : super(
+          BookingScreenV2Route.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BookingScreenV2Route';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -552,6 +584,34 @@ class TermOfUseScreenRouteArgs {
   String toString() {
     return 'TermOfUseScreenRouteArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [TestScreen]
+class TestScreenRoute extends PageRouteInfo<void> {
+  const TestScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          TestScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TestScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TruckScreen]
+class TruckScreenRoute extends PageRouteInfo<void> {
+  const TruckScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          TruckScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TruckScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

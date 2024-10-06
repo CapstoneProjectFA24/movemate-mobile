@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
@@ -6,7 +7,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // config
-import 'package:movemate/configs/routes/app_router.dart';
 
 // domain - data
 import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
