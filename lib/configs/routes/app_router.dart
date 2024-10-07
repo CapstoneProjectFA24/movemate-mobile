@@ -18,7 +18,7 @@ import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 
 // screen-booking
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
-import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/vehicles_screen/vehicles_available_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
@@ -55,7 +55,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: SignUpScreenRoute.page,
-          initial: true,
+          // initial: true,
         ),
         AutoRoute(page: OTPVerificationScreenRoute.page),
 
@@ -65,7 +65,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
             // AuthGuard(ref: _ref),
