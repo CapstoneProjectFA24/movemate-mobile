@@ -1,13 +1,20 @@
+// booking_selection.dart
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
-// Import cắc widget
+// Import các widget
 import 'selection_button.dart';
 import 'room_floor_count_button.dart';
-import 'selection_modal.dart';
 import 'number_selection_modal.dart';
+
+// Import HouseTypeController
+
+
+// Import HouseTypeSelectionModal
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/house_type_selection_modal.dart';
 
 class BookingSelection extends HookConsumerWidget {
   const BookingSelection({super.key});
@@ -24,7 +31,7 @@ class BookingSelection extends HookConsumerWidget {
         SelectionButton(
           label: bookingState.houseType ?? 'Chọn loại nhà ở',
           icon: Icons.arrow_drop_down,
-          onTap: () => _showHouseTypeModal(context, bookingNotifier),
+          onTap: () => showHouseTypeModal(context, bookingNotifier),
         ),
         const SizedBox(height: 16),
         // Nút chọn số phòng ngủ và số tầng
@@ -35,7 +42,7 @@ class BookingSelection extends HookConsumerWidget {
               child: RoomFloorCountButton(
                 label: 'Số phòng ngủ',
                 value: bookingState.numberOfRooms ?? 1,
-                onTap: () => _showNumberSelectionModal(
+                onTap: () => showNumberSelectionModal(
                   context,
                   title: 'Số lượng phòng ngủ',
                   maxNumber: 10,
@@ -55,7 +62,7 @@ class BookingSelection extends HookConsumerWidget {
               child: RoomFloorCountButton(
                 label: 'Số tầng',
                 value: bookingState.numberOfFloors ?? 1,
-                onTap: () => _showNumberSelectionModal(
+                onTap: () => showNumberSelectionModal(
                   context,
                   title: 'Số lượng tầng',
                   maxNumber: 10,
@@ -72,32 +79,20 @@ class BookingSelection extends HookConsumerWidget {
   }
 
   // Phương thức hiển thị modal chọn loại nhà
-  void _showHouseTypeModal(
+  void showHouseTypeModal(
       BuildContext context, BookingNotifier bookingNotifier) {
-    final List<String> houseTypes = [
-      'Nhà riêng',
-      'Nhà trọ',
-      'Căn hộ',
-      'Công ty',
-    ];
-
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return SelectionModal(
-          title: 'Chọn loại nhà ở',
-          items: houseTypes,
-          onItemSelected: (selectedItem) {
-            bookingNotifier.updateHouseType(selectedItem);
-            Navigator.pop(context);
-          },
+        return HouseTypeSelectionModal(
+          bookingNotifier: bookingNotifier,
         );
       },
     );
   }
 
   // Phương thức hiển thị modal chọn số lượng
-  void _showNumberSelectionModal(
+  void showNumberSelectionModal(
     BuildContext context, {
     required String title,
     required int maxNumber,

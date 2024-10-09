@@ -18,12 +18,6 @@ class ServicesResponse {
     return result;
   }
 
-  // factory ServicesResponse.fromMap(Map<String, dynamic> map) {
-  //   return ServicesResponse(
-  //     payload: List<ServiceEntity>.from(
-  //         map['orders']?.map((x) => ServiceEntity.fromMap(x))),
-  //   );
-  // }
 
   factory ServicesResponse.fromMap(Map<String, dynamic> map) {
   return ServicesResponse(

@@ -15,27 +15,41 @@ class SelectionModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  
+    final double maxHeight = MediaQuery.of(context).size.height * 0.8;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
       child: Container(
-        height: 300,
+        constraints: BoxConstraints(
+        
+          maxHeight: maxHeight,
+        ),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: AssetsConstants.whiteColor,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const Divider(),
-            Expanded(
-              child: ListView.builder(
+        child: SingleChildScrollView(
+          
+          child: Column(
+            mainAxisSize:
+                MainAxisSize.min, 
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const Divider(),
+              ListView.builder(
+                shrinkWrap:
+                    true, 
+                physics:
+                    const NeverScrollableScrollPhysics(),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   return ListTile(
@@ -49,8 +63,8 @@ class SelectionModal extends StatelessWidget {
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

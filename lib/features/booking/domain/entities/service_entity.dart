@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
-import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
+
 
 class ServiceEntity {
   final int id;

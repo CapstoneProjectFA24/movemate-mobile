@@ -15,6 +15,7 @@ class APIConstants {
   // booking
   static const get_truck_category = '/truckcategorys';
   static const get_service = '/services/truck-category';
+  static const get_house_types = '/housetypes';
 
   // error
   static const Map<String, String> errorTrans = {

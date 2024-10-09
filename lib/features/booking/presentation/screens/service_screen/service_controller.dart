@@ -13,31 +13,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'service_controller.g.dart';
 
-// @riverpod
-// class ServiceController extends _$ServiceController {
-//   @override
-//   FutureOr<void> build() {}
-
-//   Future<List<ServiceEntity>> getServices(
-//     PagingModel request,
-//     BuildContext context,
-//   ) async {
-//     List<ServiceEntity> serviceCateData = [];
-//     state = const AsyncLoading();
-//     final serviceRepository = ref.read(serviceRepositoryProvider);
-
-//     state = await AsyncValue.guard(() async {
-//       final response = await serviceRepository.getServices(
-//         request: request,
-//       );
-//       serviceCateData = response.payload;
-//       // state = AsyncData(serviceCateData);
-//     });
-
-//     return serviceCateData;
-//   }
-// }
-
 @riverpod
 class ServiceController extends _$ServiceController {
   @override
