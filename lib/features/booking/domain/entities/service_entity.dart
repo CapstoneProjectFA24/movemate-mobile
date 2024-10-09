@@ -38,7 +38,9 @@ class ServiceEntity {
       type: map['type'] ?? '',
       discountRate: (map['discountRate'] ?? 0).toDouble(),
       amount: (map['amount'] ?? 0).toDouble(),
-      truckCategory: map['truckCategory'],
+      truckCategory: map['truckCategory'] != null
+          ? TruckCategoryEntity.fromMap(map['truckCategory'])
+          : null,
     );
   }
 
@@ -53,7 +55,7 @@ class ServiceEntity {
       'type': type,
       'discountRate': discountRate,
       'amount': amount,
-      'truckCategory': truckCategory,
+      'truckCategory': truckCategory!.toMap()
     };
   }
 

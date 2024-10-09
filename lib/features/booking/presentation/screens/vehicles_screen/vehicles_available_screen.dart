@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 
 //hook
 import 'package:movemate/hooks/use_fetch.dart';
@@ -17,7 +19,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 //data - entity
-import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 import '../service_screen/truck_controller.dart';
 
@@ -33,9 +34,10 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     final state = ref.watch(truckControllerProvider);
 
     // Fetch trucks
-    final fetchResult = useFetch<TruckCategoryEntity>(
-      function: (model, context) =>
-          ref.read(truckControllerProvider.notifier).getTrucks(model, context),
+    final fetchResult = useFetch<ServiceEntity>(
+      function: (model, context) => ref
+          .read(serviceControllerProvider.notifier)
+          .getServices(model, context),
       initialPagingModel: PagingModel(
         searchContent: "1",
       ),
@@ -79,14 +81,14 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                                 ? const NoMoreContent()
                                 : Container();
                           }
-                          final vehicle = fetchResult.items[index];
+                          final service = fetchResult.items[index];
                           return GestureDetector(
                             onTap: () {
                               // Handle vehicle selection
                               // You can manage selected vehicle using another provider if needed
                             },
                             child: buildVehicleCard(
-                              vehicle,
+                              service,
                               false, // Pass true if the vehicle is selected
                             ),
                           );
@@ -109,9 +111,10 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
   }
 
   Widget buildVehicleCard(
-    TruckCategoryEntity vehicle,
+    ServiceEntity service,
     bool isSelected,
   ) {
+    final truckCategory = service.truckCategory;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       padding: const EdgeInsets.all(8),
@@ -146,7 +149,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
               color: AssetsConstants.greyColor.shade100,
             ),
             child: Image.network(
-              vehicle.imgUrl,
+              service.imageUrl,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Icon(Icons.image, size: 50);
@@ -161,7 +164,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  vehicle.categoryName,
+                  service.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -172,7 +175,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  vehicle.description,
+                  service.description,
                   style: TextStyle(
                     fontSize: 12,
                     color: AssetsConstants.greyColor.shade700,
@@ -181,24 +184,52 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.straighten,
-                      size: 16,
-                      color: AssetsConstants.blackColor, // Màu icon
-                    ),
-                    const SizedBox(width: 4), // Khoảng cách giữa icon và text
-                    Text(
-                      ' ${vehicle.estimatedLength} x ${vehicle.estimatedWidth} x ${vehicle.estimatedHeight} x ${vehicle.maxLoad}',
-                      style: const TextStyle(
-                        fontSize: 12,
+                if (truckCategory != null) ...[
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.local_shipping,
+                        size: 16,
                         color: AssetsConstants.blackColor,
                       ),
-                      maxLines: 1,
+                      const SizedBox(width: 4),
+                      Text(
+                        truckCategory.categoryName,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AssetsConstants.blackColor,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.straighten,
+                        size: 16,
+                        color: AssetsConstants.blackColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${truckCategory.estimatedLength} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AssetsConstants.blackColor,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ] else
+                  Text(
+                    'No Truck Category',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AssetsConstants.greyColor.shade700,
                     ),
-                  ],
-                ),
+                  ),
               ],
             ),
           ),

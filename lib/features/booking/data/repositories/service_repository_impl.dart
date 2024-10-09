@@ -1,10 +1,7 @@
 // import local
 
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
-import 'package:movemate/features/booking/data/models/resquest/truck_request.dart';
 import 'package:movemate/features/booking/data/remote/service_source.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
-import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_repository.dart';
 
 import 'package:movemate/models/request/paging_model.dart';
@@ -29,14 +26,7 @@ class ServiceRepositoryImpl extends RemoteBaseRepository
       request: () => _serviceSource.getServices(
         APIConstants.contentType,
         // accessToken,
-        // truckRequest,
       ),
     );
-  }
-
-  @override
-  Future<TruckCategoryEntity> getTrucks({required PagingModel request}) {
-    // TODO: implement getTrucks
-    throw UnimplementedError();
   }
 }

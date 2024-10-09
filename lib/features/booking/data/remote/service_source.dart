@@ -1,7 +1,5 @@
 // rest API
 import 'package:dio/dio.dart';
-import 'package:movemate/features/booking/data/models/resquest/truck_request.dart';
-import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

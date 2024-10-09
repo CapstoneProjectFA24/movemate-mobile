@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -91,6 +92,7 @@ class AppRouter extends _$AppRouter {
 
         // flow booking
         AutoRoute(
+          // initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
@@ -110,6 +112,11 @@ class AppRouter extends _$AppRouter {
         //  order flow
         AutoRoute(
           page: OrderScreenRoute.page,
+        ),
+        //  order flow
+        AutoRoute(
+          // initial: true,
+          page: ServiceScreenRoute.page,
         ),
         AutoRoute(
           page: PaymentScreenRoute.page,
