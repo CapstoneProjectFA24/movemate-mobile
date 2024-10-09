@@ -36,7 +36,7 @@ class _ServiceSource implements ServiceSource {
     )
             .compose(
               _dio.options,
-              '/servicedetails/truck-category/get-all',
+              '/services/truck-category',
               queryParameters: queryParameters,
               data: _data,
             )
