@@ -12,6 +12,8 @@ class APIConstants {
   static const verifyToken = '/authenticationss/verify-token';
   static const reGenerateToken = '/authentications/re';
 
+  // user
+
   // error
   static const Map<String, String> errorTrans = {
     'Email is already registered.': 'Email này đã được đăng kí',
