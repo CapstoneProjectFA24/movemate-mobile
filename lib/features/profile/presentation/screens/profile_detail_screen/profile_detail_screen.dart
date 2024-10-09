@@ -17,7 +17,7 @@ class ProfileDetailScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        iconFirst: Icons.chevron_left,
+        // iconFirst: Icons.chevron_left,
         onCallBackFirst: () {
           // Hành động khi nhấn vào icon
           Navigator.pop(context); // Quay lại trang trước
@@ -25,8 +25,13 @@ class ProfileDetailScreen extends HookConsumerWidget {
         title: "Trang cá nhân của tôi",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
-          // Hành động khi nhấn vào icon
-          Navigator.pushNamed(context, '/home'); // Điều hướng đến trang Home
+          final tabsRouter = context.router.root
+              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+          if (tabsRouter != null) {
+            tabsRouter.setActiveIndex(0);
+            // Pop back to the TabViewScreen
+            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+          }
         },
       ),
       body: SingleChildScrollView(

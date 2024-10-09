@@ -5,14 +5,18 @@ import 'package:movemate/configs/routes/app_router.dart';
 class ProfileHeader extends StatelessWidget {
   final Map<String, Object> profile;
 
-  const ProfileHeader({required this.profile});
+  const ProfileHeader({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          context.router.push(const ProfileDetailScreenRoute());
+        },
+        borderRadius: BorderRadius.circular(8.0),
+        child: Container(
           padding: const EdgeInsets.all(8.0),
           width: MediaQuery.of(context).size.width - 32,
           decoration: BoxDecoration(
@@ -49,16 +53,11 @@ class ProfileHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  context.router.push(const ProfileDetailScreenRoute());
-                },
-                child: const Icon(Icons.chevron_right, color: Colors.black),
-              ),
+              const Icon(Icons.chevron_right, color: Colors.black),
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
