@@ -93,10 +93,19 @@ class LocationSelectionModal extends HookConsumerWidget {
                 buttonText: 'Xác nhận',
                 buttonColor: AssetsConstants.primaryDark,
                 isButtonEnabled: true,
-                onButtonPressed: () => {
-                  context.router.push(const HomeScreenRoute()),
-                  print("object1  ${bookingState.pickUpLocation?.address} "),
-                  print("object2  ${bookingState.dropOffLocation?.address} "),
+                onButtonPressed: () {
+                  // context.router.push(const HomeScreenRoute()),
+                  print("object1  ${bookingState.pickUpLocation?.address} ");
+                  print("object2  ${bookingState.dropOffLocation?.address} ");
+
+                  final tabsRouter = context.router.root
+                      .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+                  if (tabsRouter != null) {
+                    tabsRouter.setActiveIndex(0);
+                    // Pop back to the TabViewScreen
+                    context.router
+                        .popUntilRouteWithName(TabViewScreenRoute.name);
+                  }
                 },
               ),
             ),
