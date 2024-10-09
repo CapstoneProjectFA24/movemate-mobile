@@ -9,10 +9,6 @@ class TestCloudinaryScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // publicId :  movemate/g12muevg0sqpkboh232d
-    // imageUrl : https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg
-
-    // {imageUrl: "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg", publicId: "movemate/g12muevg0sqpkboh232d"}
 
     // Danh sách hình ảnh giả lập từ backend
     final images = useState<List<String>>([
@@ -59,7 +55,8 @@ class TestCloudinaryScreen extends HookWidget {
               onImageUploaded: (url, publicId) {
                 print('Uploaded successfully: $url');
                 print('Uploaded successfully: $publicId');
-                // Cập nhật danh sách images bằng URL trả về
+                // Cập nhật danh sách images bằng URL trả về  
+                      //=> RỒI LƯU VÔ state images nè rồi khi PUT cập nhật thì gửi cái images mới lên flow api ấy hen chú TUẤN
                 images.value = [...images.value, url];
 
                 // Cập nhật danh sách publicIds
