@@ -20,7 +20,7 @@ import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 //data - entity
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
-import '../service_screen/truck_controller.dart';
+
 
 @RoutePage()
 class AvailableVehiclesScreen extends HookConsumerWidget {
@@ -31,7 +31,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     // Initialize
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
-    final state = ref.watch(truckControllerProvider);
+    final state = ref.watch(serviceControllerProvider);
 
     // Fetch trucks
     final fetchResult = useFetch<ServiceEntity>(
