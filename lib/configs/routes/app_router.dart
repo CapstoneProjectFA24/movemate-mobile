@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 
@@ -20,7 +21,7 @@ import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 
 // screen-booking
 import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
-import 'package:movemate/features/booking/presentation/screens/vehicles_available_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/vehicles_screen/vehicles_available_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
@@ -83,6 +84,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ProfileScreenRoute.page,
             ),
+       
           ],
         ),
         AutoRoute(
@@ -109,6 +111,7 @@ class AppRouter extends _$AppRouter {
         ),
         // flow booking
         AutoRoute(
+          // initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
@@ -128,6 +131,11 @@ class AppRouter extends _$AppRouter {
         //  order flow
         AutoRoute(
           page: OrderScreenRoute.page,
+        ),
+        //  order flow
+        AutoRoute(
+          // initial: true,
+          page: ServiceScreenRoute.page,
         ),
         AutoRoute(
           page: PaymentScreenRoute.page,

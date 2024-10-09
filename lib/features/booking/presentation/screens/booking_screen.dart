@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_details.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
+import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/booking_selection.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
@@ -21,9 +22,19 @@ class BookingScreen extends ConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thông tin đặt hàng'),
-        backgroundColor: AssetsConstants.mainColor,
+      appBar: CustomAppBar(
+        backgroundColor: AssetsConstants.primaryMain,
+        title: "Thông tin đặt hàng",
+        
+        onCallBackFirst: () {
+          final tabsRouter = context.router.root
+              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+          if (tabsRouter != null) {
+            tabsRouter.setActiveIndex(0);
+            // Pop back to the TabViewScreen
+            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+          }
+        },
       ),
       body: const SingleChildScrollView(
         padding:

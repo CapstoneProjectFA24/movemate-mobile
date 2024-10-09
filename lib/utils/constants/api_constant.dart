@@ -12,7 +12,9 @@ class APIConstants {
   static const verifyToken = '/authenticationss/verify-token';
   static const reGenerateToken = '/authentications/re';
 
-  // user
+  // booking
+  static const get_truck_category = '/truckcategorys';
+  static const get_service = '/services/truck-category';
 
   // error
   static const Map<String, String> errorTrans = {
@@ -20,7 +22,6 @@ class APIConstants {
     'Phone number is already registered.': 'Số điện thoại này đã được đăng kí',
     'Email already exists.': 'Email này đã được đăng kí',
     'Phone already exists.': 'Số điện thoại này đã được đăng kí',
-
     'Email does not exist in the system.':
         'Email không tồn tại trong hệ thống.',
     'Email or Password is invalid.': 'Email hoặc mật khẩu không hợp lệ.',

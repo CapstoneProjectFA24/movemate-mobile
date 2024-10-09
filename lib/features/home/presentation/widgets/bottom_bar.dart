@@ -65,16 +65,13 @@ class CustomBottomBar extends HookWidget {
                   ? AssetsConstants.primaryLight
                   : AssetsConstants.whiteColor,
             ),
-            child: Image.asset(
-              "assets/icons/truck2.png",
-              color: tabsRouter.activeIndex == 1
-                  ? Colors.white
-                  : AssetsConstants
-                      .primaryDark, // Optional: different color when inactive
-              width: size.width * 0.6, // Adjust the icon size as needed
-              height: size.width * 0.6, // Adjust the icon size as needed
-              fit: BoxFit.scaleDown,
-            ),
+            child:  Icon(
+                Icons.airport_shuttle_rounded,
+                color: tabsRouter.activeIndex == 1
+                    ? Colors.white // Change icon to white when selected
+                    : AssetsConstants.primaryDark,
+                size: AssetsConstants.defaultFontSize - 6.0,
+              ),
           ),
           label: 'Đặt xe của tôi', // Text label
         ),
@@ -94,15 +91,12 @@ class CustomBottomBar extends HookWidget {
                   : AssetsConstants.whiteColor,
             ),
             child: Center(
-              child: Image.asset(
-                "assets/icons/discount.png",
+              child: Icon(
+                Icons.discount,
                 color: tabsRouter.activeIndex == 2
-                    ? Colors.white
-                    : AssetsConstants
-                        .primaryDark, // Optional: different color when inactive
-                width: size.width * 0.6, // Adjust the icon size as needed
-                height: size.width * 0.6, // Adjust the icon size as needed
-                fit: BoxFit.scaleDown,
+                    ? Colors.white // Change icon to white when selected
+                    : AssetsConstants.primaryDark,
+                size: AssetsConstants.defaultFontSize - 6.0,
               ),
             ),
           ),

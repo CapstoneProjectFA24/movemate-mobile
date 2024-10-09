@@ -129,18 +129,29 @@ class ServiceSelector extends HookConsumerWidget {
             ),
 
             // Kiểm tra điều kiện trước khi điều hướng
-            if (bookingState.pickUpLocation != null &&
-                bookingState.dropOffLocation != null)
-              ButtonCustom(
-                buttonText: 'Xác nhận',
-                buttonColor: AssetsConstants.primaryMain,
-                isButtonEnabled: true,
-                onButtonPressed: () {
+            ButtonCustom(
+              buttonText: 'Xác nhận',
+              buttonColor: AssetsConstants.primaryMain,
+              isButtonEnabled: true, // Cho phép luôn hiển thị nút
+              onButtonPressed: () {
+                // Điều kiện kiểm tra xem cả 2 giá trị pickUpLocation và dropOffLocation có tồn tại không
+                if (bookingState.pickUpLocation != null &&
+                    bookingState.dropOffLocation != null) {
                   context.router.push(const BookingScreenRoute());
-                  print("object1  ${bookingState.pickUpLocation?.address} ");
-                  print("object2  ${bookingState.dropOffLocation?.address} ");
-                },
-              ),
+                  print(
+                      "Pick-up location: ${bookingState.pickUpLocation?.address} ");
+                  print(
+                      "Drop-off location: ${bookingState.dropOffLocation?.address} ");
+                } else {
+                  // Hiển thị cảnh báo hoặc thông báo người dùng chọn cả hai địa điểm
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Vui lòng chọn đầy đủ địa điểm Từ và Đến"),
+                    ),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),

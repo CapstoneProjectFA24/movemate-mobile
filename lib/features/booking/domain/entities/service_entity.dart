@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
+import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 
 class ServiceEntity {
   final int id;
@@ -12,7 +13,7 @@ class ServiceEntity {
   final String type;
   final double discountRate;
   final double amount;
-  final TruckCategoryEntity? truckCategory; 
+  final TruckCategoryEntity? truckCategory;
 
   ServiceEntity({
     required this.id,
@@ -24,7 +25,7 @@ class ServiceEntity {
     required this.type,
     required this.discountRate,
     required this.amount,
-    this.truckCategory, 
+    this.truckCategory,
   });
 
   factory ServiceEntity.fromMap(Map<String, dynamic> map) {
@@ -38,7 +39,9 @@ class ServiceEntity {
       type: map['type'] ?? '',
       discountRate: (map['discountRate'] ?? 0).toDouble(),
       amount: (map['amount'] ?? 0).toDouble(),
-      truckCategory: map['truckCategory'], 
+      truckCategory: map['truckCategory'] != null
+          ? TruckCategoryEntity.fromMap(map['truckCategory'])
+          : null,
     );
   }
 
@@ -53,7 +56,7 @@ class ServiceEntity {
       'type': type,
       'discountRate': discountRate,
       'amount': amount,
-      'truckCategory': truckCategory,
+      'truckCategory': truckCategory!.toMap()
     };
   }
 
