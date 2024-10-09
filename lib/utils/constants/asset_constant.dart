@@ -124,6 +124,7 @@ class AssetsConstants {
   static const String welcomeImage = 'assets/images/image_welcome.png';
   static const String defaultAvatar = 'assets/images/avatar_default.png';
   static const String errorLogo = 'assets/images/error.png';
+  static const String hot = 'assets/images/onboarding/onboarding1.png';
 
   // Sizes
   static const double defaultPadding = 20.0;

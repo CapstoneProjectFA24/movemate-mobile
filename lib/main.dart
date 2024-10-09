@@ -7,6 +7,11 @@ import 'configs/routes/app_router.dart';
 import 'configs/theme/app_theme.dart';
 import 'utils/constants/asset_constant.dart';
 
+// cloudinary
+import 'package:cloudinary_flutter/cloudinary_context.dart';
+import 'package:cloudinary_url_gen/cloudinary.dart';
+// import 'cloudinary_upload_widget.dart';
+
 import 'package:movemate/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -19,6 +24,7 @@ void main() async {
   // check firebase anonymous user connect
   //await testFirebaseConnection();
   // await testFirebaseConnectionWithPhone('+84382703625');
+  Cloudinary.fromCloudName(cloudName: "dkpnkjnxs");
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
