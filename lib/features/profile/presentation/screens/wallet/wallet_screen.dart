@@ -45,7 +45,13 @@ class WalletScreen extends HookConsumerWidget {
           context.router.back();
         },
         onCallBackSecond: () {
-          context.router.push(const TabViewScreenRoute());
+          final tabsRouter = context.router.root
+              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+          if (tabsRouter != null) {
+            tabsRouter.setActiveIndex(0);
+            // Pop back to the TabViewScreen
+            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+          }
         },
       ),
       body: Column(

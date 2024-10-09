@@ -82,6 +82,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ProfileScreenRoute.page,
             ),
+       
           ],
         ),
         AutoRoute(

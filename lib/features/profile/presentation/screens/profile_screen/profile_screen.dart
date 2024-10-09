@@ -67,11 +67,17 @@ class ProfileScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        iconFirst: Icons.chevron_left,
-        onCallBackFirst: () => Navigator.pop(context),
         title: "Hồ sơ",
         iconSecond: Icons.home_outlined,
-        onCallBackSecond: () => context.router.push(const HomeScreenRoute()),
+        onCallBackSecond: () {
+          final tabsRouter = context.router.root
+              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+          if (tabsRouter != null) {
+            tabsRouter.setActiveIndex(0);
+            // Pop back to the TabViewScreen
+            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+          }
+        },
       ),
       body: Container(
         color: Colors.grey[200],
