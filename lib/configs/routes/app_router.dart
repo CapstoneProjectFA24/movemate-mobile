@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
+import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -133,6 +134,11 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: SplashScreenRoute.page,
+        ),
+
+        // test route
+        AutoRoute(
+          page: TestCloudinaryScreenRoute.page,
         ),
       ];
 }
