@@ -38,6 +38,11 @@ dependencies:
   firebase_messaging: ^14.7.6
   firebase_auth: ^4.0.0
 
+  # Cloudinary
+  cloudinary_flutter: ^1.0.0
+  cloudinary_url_gen: ^1.0.0
+  cloudinary_public: ^0.21.0
+
   #Icon
   icons_plus:
     ^4.0.0
