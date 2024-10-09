@@ -33,10 +33,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingSelectPackageScreen(),
       );
     },
+    ContactScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ContactScreen(),
+      );
+    },
     HomeScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const HomeScreen(),
+      );
+    },
+    InfoScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const InfoScreen(),
       );
     },
     LocationSelectionScreenRoute.name: (routeData) {
@@ -88,6 +100,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PrivacyPolicyScreen(key: args.key),
+      );
+    },
+    ProfileDetailScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileDetailScreen(),
       );
     },
     ProfileScreenRoute.name: (routeData) {
@@ -154,6 +172,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const VehiclePriceListScreen(),
       );
     },
+    WalletScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const WalletScreen(),
+      );
+    },
   };
 }
 
@@ -200,6 +224,20 @@ class BookingSelectPackageScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ContactScreen]
+class ContactScreenRoute extends PageRouteInfo<void> {
+  const ContactScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          ContactScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ContactScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeScreenRoute extends PageRouteInfo<void> {
   const HomeScreenRoute({List<PageRouteInfo>? children})
@@ -209,6 +247,20 @@ class HomeScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [InfoScreen]
+class InfoScreenRoute extends PageRouteInfo<void> {
+  const InfoScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          InfoScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'InfoScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -370,6 +422,20 @@ class PrivacyPolicyScreenRouteArgs {
   String toString() {
     return 'PrivacyPolicyScreenRouteArgs{key: $key}';
   }
+}
+
+/// generated route for
+/// [ProfileDetailScreen]
+class ProfileDetailScreenRoute extends PageRouteInfo<void> {
+  const ProfileDetailScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileDetailScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileDetailScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -564,6 +630,20 @@ class VehiclePriceListScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'VehiclePriceListScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [WalletScreen]
+class WalletScreenRoute extends PageRouteInfo<void> {
+  const WalletScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          WalletScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'WalletScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

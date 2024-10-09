@@ -16,7 +16,7 @@ class LabelText extends StatelessWidget {
     required this.size,
     this.fontWeight = FontWeight.w200,
     this.color = AssetsConstants.blackColor,
-    this.fontFamily = 'Open Sans',
+    this.fontFamily = 'Poppins',
     this.textDecoration,
     this.textAlign = TextAlign.start,
     this.maxLine = AssetsConstants.defaultMaxline,

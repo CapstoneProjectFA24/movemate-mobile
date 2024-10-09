@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -23,10 +24,13 @@ import 'package:movemate/features/booking/presentation/screens/booking_screen.da
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
+import 'package:movemate/features/profile/presentation/screens/wallet/wallet_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
+import 'package:movemate/features/profile/presentation/screens/profile_detail_screen/profile_detail_screen.dart';
+import 'package:movemate/features/profile/presentation/screens/info_screen/info_screen.dart';
 import 'package:movemate/features/package/presentation/package_detail_screen/package_detail_screen.dart';
-import 'package:movemate/features/profile/presentation/profile_screen.dart';
+import 'package:movemate/features/profile/presentation/screens/profile_screen/profile_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order.screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
@@ -55,7 +59,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: SignUpScreenRoute.page,
-          initial: true,
+          // initial: true,
         ),
         AutoRoute(page: OTPVerificationScreenRoute.page),
 
@@ -65,16 +69,19 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
+
             // AuthGuard(ref: _ref),
           ],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
             AutoRoute(page: OrderScreenRoute.page),
             AutoRoute(page: PromotionScreenRoute.page),
-            AutoRoute(page: ProfileScreenRoute.page),
+            AutoRoute(
+              page: ProfileScreenRoute.page,
+            ),
           ],
         ),
         AutoRoute(
@@ -85,10 +92,20 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: PromotionScreenRoute.page,
         ),
-        AutoRoute(
-          page: PromotionDetailScreenRoute.page,
-        ),
 
+        AutoRoute(page: ProfileScreenRoute.page),
+        AutoRoute(
+          page: ProfileDetailScreenRoute.page,
+        ),
+        AutoRoute(
+          page: InfoScreenRoute.page,
+        ),
+        AutoRoute(
+          page: WalletScreenRoute.page,
+        ),
+        AutoRoute(
+          page: ContactScreenRoute.page,
+        ),
         // flow booking
         AutoRoute(
           page: BookingScreenRoute.page,
