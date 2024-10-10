@@ -147,6 +147,7 @@ class AppRouter extends _$AppRouter {
         // test route
         AutoRoute(
           page: TestCloudinaryScreenRoute.page,
+          // initial: true,
         ),
       ];
 }

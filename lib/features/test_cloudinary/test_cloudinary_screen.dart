@@ -9,19 +9,29 @@ class TestCloudinaryScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final imagePublicIds = useState<List<String>>([]);
 
-    // https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg
-    final imagePublicIds = useState<List<String>>([
-      "movemate/g12muevg0sqpkboh232d",
-      "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg", // TH này ảnh sẽ lỗi vì chỉ nhận ID THÔI Chứ ko nhận URL
+    // Danh sách hình ảnh giả lập từ backend
+    final images = useState<List<String>>([
+      "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg",  // 1
+      "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg"
     ]);
+    print('Images: ${images.value}');
 
-
-    // publicId :  movemate/g12muevg0sqpkboh232d
-    // imageUrl : https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg
-
-    // {imageUrl: "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg", publicId: "movemate/g12muevg0sqpkboh232d"}
+// Tách publicId từ danh sách hình ảnh   => cái này t fotmat từ images => 
+// id riêng ví dụ :
+        // https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg 
+        // thành => movemate/kv3nomfji9rtofok0wmo
+    final imagePublicIds = useState<List<String>>(
+      images.value.map((url) {
+        final uri = Uri.parse(url);
+        final pathSegments = uri.pathSegments;
+        return pathSegments.length > 1
+            ? pathSegments[pathSegments.length - 2] +
+                '/' +
+                pathSegments.last.split('.').first
+            : '';
+      }).toList(),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +55,13 @@ class TestCloudinaryScreen extends HookWidget {
               onImageUploaded: (url, publicId) {
                 print('Uploaded successfully: $url');
                 print('Uploaded successfully: $publicId');
+                // Cập nhật danh sách images bằng URL trả về  
+                      //=> RỒI LƯU VÔ state images nè rồi khi PUT cập nhật thì gửi cái images mới lên flow api ấy hen chú TUẤN
+                images.value = [...images.value, url];
+
+                // Cập nhật danh sách publicIds
                 imagePublicIds.value = [...imagePublicIds.value, publicId];
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Image uploaded successfully: $url'),
