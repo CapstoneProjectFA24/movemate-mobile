@@ -25,6 +25,10 @@ import 'package:movemate/features/booking/presentation/screens/vehicles_screen/v
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
 
+// order
+import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/order_details_screen.dart';
+import 'package:movemate/features/order/presentation/screens/order_screen/order_screen.dart';
+
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/profile/presentation/screens/wallet/wallet_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
@@ -33,14 +37,13 @@ import 'package:movemate/features/profile/presentation/screens/profile_detail_sc
 import 'package:movemate/features/profile/presentation/screens/info_screen/info_screen.dart';
 import 'package:movemate/features/package/presentation/package_detail_screen/package_detail_screen.dart';
 import 'package:movemate/features/profile/presentation/screens/profile_screen/profile_screen.dart';
-import 'package:movemate/features/order/presentation/screens/order.screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
 
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
-
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 // utils
 import 'package:movemate/utils/enums/enums_export.dart';
 
@@ -71,7 +74,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          initial: true,
+           initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
 
@@ -129,8 +132,11 @@ class AppRouter extends _$AppRouter {
         ),
 
         //  order flow
-        AutoRoute(
+         AutoRoute(
           page: OrderScreenRoute.page,
+        ),
+        AutoRoute(
+          page: OrderDetailsScreenRoute.page,
         ),
         //  order flow
         AutoRoute(
