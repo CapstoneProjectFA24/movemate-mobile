@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class ServiceInfoModal extends StatelessWidget {
   final String title;
-  final String imagePath; // Image path
+  final String ? imagePath; // Image path
 
   const ServiceInfoModal({
     super.key,
     required this.title,
-    required this.imagePath, // Added property for image
+     this.imagePath, // Added property for image
   });
 
   @override
@@ -44,7 +44,7 @@ class ServiceInfoModal extends StatelessWidget {
                   color: Colors.orange.shade100, // Background color for image
                 ),
                 child: Image.asset(
-                  imagePath, // Replace with image path
+                  imagePath!, // Replace with image path
                   fit: BoxFit.contain,
                 ),
               ),

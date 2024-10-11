@@ -2,6 +2,7 @@
 
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class Booking {
@@ -27,7 +28,7 @@ class Booking {
   final int? selectedPackageIndex;
   final List<int>
       additionalServiceQuantities; // Track quantities of additional services
-
+  final List<ServicesFeeSystemEntity> servicesFeeList;
   //
 
   // Add image lists for each room
@@ -126,6 +127,7 @@ class Booking {
     this.isRoundTrip = false,
     List<bool>? checklistValues,
     this.notes = '',
+    this.servicesFeeList = const [],
     //booking select packages
     this.packages = const [],
     this.isHandlingExpanded = false,
@@ -165,6 +167,7 @@ class Booking {
     bool? isRoundTrip,
     List<bool>? checklistValues,
     String? notes,
+    List<ServicesFeeSystemEntity>? servicesFeeList,
     //booking select package
     List<Package>? packages,
     bool? isHandlingExpanded,
@@ -201,6 +204,7 @@ class Booking {
       checklistValues: checklistValues ?? this.checklistValues,
 
       notes: notes ?? this.notes,
+      servicesFeeList: servicesFeeList ?? this.servicesFeeList,
       //booking select package
       packages: packages ?? this.packages,
       isHandlingExpanded: isHandlingExpanded ?? this.isHandlingExpanded,

@@ -7,6 +7,7 @@ import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'dart:convert';
 import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {
@@ -66,6 +67,12 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(availableVehicles: vehicles);
   }
 
+  /// Updates the services fee list in the booking state
+  void updateServicesFeeList(List<ServicesFeeSystemEntity> servicesFeeList) {
+    state = state.copyWith(servicesFeeList: servicesFeeList);
+    calculateAndUpdateTotalPrice();
+  }
+
   void calculateAndUpdateTotalPrice() {
     double total = 0.0;
     if (state.selectedPackageIndex != null) {
@@ -74,6 +81,12 @@ class BookingNotifier extends StateNotifier<Booking> {
       total += selectedPackage.packagePrice;
     }
     total += state.airConditionersCount * 200000;
+
+    // Add services fees
+    for (var fee in state.servicesFeeList) {
+      total +=
+          fee.amount; // Assuming `amount` is a field in ServicesFeeSystemEntity
+    }
     state = state.copyWith(totalPrice: total);
   }
 

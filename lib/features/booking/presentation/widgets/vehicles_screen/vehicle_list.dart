@@ -44,7 +44,10 @@ class VehicleList extends StatelessWidget {
         }
         final service = fetchResult.items[index];
         return GestureDetector(
-          onTap: () => selectedService.value = service,
+          onTap: () => {
+            print("xe dduwojc chon la ${selectedService.value!.name}"),
+            selectedService.value = service
+          },
           child: VehicleCard(
             service: service,
             isSelected: selectedService.value == service,
