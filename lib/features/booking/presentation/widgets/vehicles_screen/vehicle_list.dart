@@ -5,7 +5,7 @@ import 'package:movemate/utils/commons/widgets/custom_circular.dart';
 import 'package:movemate/utils/commons/widgets/empty_box.dart';
 import 'package:movemate/utils/commons/widgets/home_shimmer.dart';
 import 'package:movemate/utils/commons/widgets/no_more_content.dart';
-
+// vehicle_list.dart
 class VehicleList extends StatelessWidget {
   final dynamic state;
   final dynamic fetchResult;
@@ -44,13 +44,13 @@ class VehicleList extends StatelessWidget {
         }
         final service = fetchResult.items[index];
         return GestureDetector(
-          onTap: () => {
-            print("xe dduwojc chon la ${selectedService.value!.name}"),
-            selectedService.value = service
+          onTap: () {
+            print("Xe được chọn là: ${service.name}");
+            selectedService.value = service;
           },
           child: VehicleCard(
             service: service,
-            isSelected: selectedService.value == service,
+            isSelected: selectedService.value?.id == service.id,
           ),
         );
       },

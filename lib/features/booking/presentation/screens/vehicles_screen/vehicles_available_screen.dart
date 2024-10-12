@@ -20,7 +20,6 @@ import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 // Data - Entity
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
-
 @RoutePage()
 class AvailableVehiclesScreen extends HookConsumerWidget {
   const AvailableVehiclesScreen({super.key});
@@ -71,17 +70,15 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         buttonText: "Bước tiếp theo",
         priceLabel: 'Giá',
         buttonIcon: false,
-        totalPrice: selectedService.value?.amount ??
-            0.0, // Show price from selected service
+        totalPrice: selectedService.value?.amount ?? 0.0,
         isButtonEnabled: selectedService.value != null,
         onPlacePress: () {
           if (selectedService.value != null) {
             context.router.push(const BookingSelectPackageScreenRoute());
           } else {
-            // Show a message to select a vehicle
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Text('vui lòng chọn phương tiện phù hợp')),
+                  content: Text('Vui lòng chọn phương tiện phù hợp')),
             );
           }
         },
