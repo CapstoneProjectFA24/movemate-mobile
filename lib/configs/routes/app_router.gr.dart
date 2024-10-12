@@ -76,6 +76,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: OnboardingScreen(key: args.key),
       );
     },
+    OrderDetailsScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderDetailsScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderDetailsScreen(
+          key: args.key,
+          order: args.order,
+        ),
+      );
+    },
     OrderScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -361,6 +371,45 @@ class OnboardingScreenRouteArgs {
   @override
   String toString() {
     return 'OnboardingScreenRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [OrderDetailsScreen]
+class OrderDetailsScreenRoute
+    extends PageRouteInfo<OrderDetailsScreenRouteArgs> {
+  OrderDetailsScreenRoute({
+    Key? key,
+    required OrderEntity order,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderDetailsScreenRoute.name,
+          args: OrderDetailsScreenRouteArgs(
+            key: key,
+            order: order,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderDetailsScreenRoute';
+
+  static const PageInfo<OrderDetailsScreenRouteArgs> page =
+      PageInfo<OrderDetailsScreenRouteArgs>(name);
+}
+
+class OrderDetailsScreenRouteArgs {
+  const OrderDetailsScreenRouteArgs({
+    this.key,
+    required this.order,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  @override
+  String toString() {
+    return 'OrderDetailsScreenRouteArgs{key: $key, order: $order}';
   }
 }
 
