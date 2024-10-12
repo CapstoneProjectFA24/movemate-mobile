@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -20,6 +21,17 @@ class OrderItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
+
+    int displayTotal;
+    if (order.status == 'DEPOSITING') {
+      displayTotal = order.deposit;
+    } else if (order.status == 'Pending') {
+      displayTotal = order.total;
+    } else {
+      displayTotal = 0;
+    }
+
+    String formattedTotal = NumberFormat('#,###').format(displayTotal);
 
     return GestureDetector(
       onTap: () {
@@ -65,14 +77,13 @@ class OrderItem extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     LabelText(
-                      content: 'Mã đơn hàng : #' + order.id.toString(),
+                      content: 'Mã đơn hàng : #${order.id}',
                       size: AssetsConstants.defaultFontSize - 12.0,
                       fontWeight: FontWeight.w600,
                     ),
                     const SizedBox(height: 5),
                     const Row(
                       children: [
-            
                         LabelText(
                           content: 'Loại nhà: ',
                           size: AssetsConstants.defaultFontSize - 12.0,
@@ -91,30 +102,36 @@ class OrderItem extends HookConsumerWidget {
                         Container(
                           height: 10,
                           width: 10,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF28A745),
+                          decoration:  BoxDecoration(
+                             color: order.status == 'DEPOSITING'
+            ? Colors.red
+            : order.status == 'Pending'
+                ? Colors.orange
+                : const Color(0xFF28A745), // Màu mặc định
                             shape: BoxShape.circle,
                           ),
                         ),
                         const SizedBox(width: 5),
-                        const Text('đã xem'),
+                        Text(order.status),
                       ],
                     ),
                     const SizedBox(height: 5),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          '2.000.000 ₫',
-                          style: TextStyle(
+                          // ' ${(NumberFormat('#,###').format(order.total) ?? 0)} ₫',
+                          '$formattedTotal ₫',
+                          style: const TextStyle(
                               color: Color(0xFF007BFF),
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
-                          '• 4 phòng - 2 tầng',
-                          style: TextStyle(fontSize: 14, color: Color(0xFF555555)),
+                          '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+                          style: const TextStyle(
+                              fontSize: 14, color: Color(0xFF555555)),
                         ),
                       ],
                     ),

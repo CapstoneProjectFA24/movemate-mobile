@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
 import 'package:movemate/features/order/presentation/widgets/details/booking_code.dart';
@@ -29,10 +30,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
   final OrderEntity order;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isExpanded =
-        useState(false); 
-    final isExpanded1 =
-        useState(false); 
+    final isExpanded = useState(false);
+    final isExpanded1 = useState(false);
 
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value; // Toggle the dropdown state
@@ -45,14 +44,22 @@ class OrderDetailsScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        iconFirst: Icons.chevron_left,
+        // iconFirst: Icons.chevron_left,
         onCallBackFirst: () {
           Navigator.pop(context); // Quay lại trang trước
         },
         title: "Thông tin đơn hàng",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
-          Navigator.pushNamed(context, '/home'); // Điều hướng đến trang Home
+          // Navigator.pushNamed(context, '/home'); // Điều hướng đến trang Home
+
+          final tabsRouter = context.router.root
+              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+          if (tabsRouter != null) {
+            tabsRouter.setActiveIndex(0);
+            // Pop back to the TabViewScreen
+            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+          }
         },
       ),
       body: SingleChildScrollView(
@@ -92,6 +99,9 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           isFirst: false, isLast: false, isPast: false),
                       MyTimelineTitle(
                           isFirst: false, isLast: true, isPast: false),
+                      //isFirst: xét là đầu tiên
+                      //isLast: xét là cuối cùng
+                      //isPast: xét là enable
                     ],
                   ),
                 ),
@@ -149,30 +159,31 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Loại nhà : Công ty',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              Text(
+                                'Loại nhà : ${order.boxType ?? "công ty"}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 10),
                               buildAddressRow(
                                 Icons.location_on_outlined,
-                                '172 Phạm Ngũ Lão, Hùng Vương, Bình Tân, Hồ Chí Minh',
+                                'Từ:  ${order.pickupAddress} ',
                               ),
                               const Divider(
                                   height: 12, color: Colors.grey, thickness: 1),
                               buildAddressRow(
                                 Icons.location_searching,
-                                '194 Cao Lãnh, Hùng Vương, Tân phú Hồ Chí Minh',
+                                'Đến : ${order.pickupAddress}',
                               ),
                               const SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  buildDetailColumn(
-                                      FontAwesomeIcons.building, '2 tầng'),
-                                  buildDetailColumn(
-                                      FontAwesomeIcons.building, '2 phòng'),
+                                  buildDetailColumn(FontAwesomeIcons.building,
+                                      "Tầng :${order.floorsNumber}"),
+                                  buildDetailColumn(FontAwesomeIcons.building,
+                                      order.roomNumber),
                                 ],
                               ),
                               const SizedBox(height: 20),
@@ -249,15 +260,15 @@ class OrderDetailsScreen extends HookConsumerWidget {
               ),
               const Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 20),
-                child: Text("Label",
+                child: Text("Thông tin liên hệ",
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Text("NGUYEN VAN A",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Text("id :${order.userId}",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
               Container(
@@ -364,10 +375,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     buildSummary('Giảm giá', '-00.000 đ'),
                     buildSummary('Thuế GTGT', '-00.000 đ'),
                     const Divider(color: Colors.grey, thickness: 1),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: Text(
                             'Giảm giá',
@@ -378,10 +389,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            '8.000.000 đ',
-                            style: TextStyle(
+                            '${order.totalReal} đ',
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,

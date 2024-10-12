@@ -44,8 +44,7 @@ dependencies:
   cloudinary_public: ^0.21.0
 
   #Icon
-  icons_plus:
-    ^4.0.0
+  icons_plus: ^4.0.0
 
   # Animation
   lottie: ^2.7.0
@@ -62,7 +61,7 @@ dependencies:
 
   # Order
   photo_view: ^0.14.0
-
+  intl: ^0.19.0
 # config launcher icon
 flutter_launcher_icons:
   android: "launcher_icon"
