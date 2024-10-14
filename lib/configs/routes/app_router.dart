@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
+import 'package:movemate/features/booking/presentation/widgets/models/tracking_at_home.dart';
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 
@@ -20,7 +23,7 @@ import 'package:movemate/features/home/presentation/screens/location_selection_s
 import 'package:movemate/features/home/presentation/screens/home_screen.dart';
 
 // screen-booking
-import 'package:movemate/features/booking/presentation/screens/booking_select_package_screen.dart';
+
 import 'package:movemate/features/booking/presentation/screens/vehicles_screen/vehicles_available_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen.dart';
 import 'package:movemate/features/booking/presentation/screens/vehicles_list_price/vehicle_price_list_screen.dart';
@@ -74,7 +77,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          //  initial: true,
+          initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
 
@@ -111,23 +114,30 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ContactScreenRoute.page,
         ),
+
         // flow booking
         AutoRoute(
-          initial: true,
+          // initial: true,
           page: BookingScreenRoute.page,
         ),
         AutoRoute(
           // initial: true,
           page: AvailableVehiclesScreenRoute.page,
         ),
+        //  booking service flow
+        AutoRoute(
+          // initial: true,
+          page: BookingScreenServiceRoute.page,
+        ),
+        // test booking service fee screen
+        AutoRoute(
+          // initial: true,
+          page: SystemFeeScreenRoute.page,
+        ),
 
         //TODO
         AutoRoute(
           page: PackageDetailScreenRoute.page,
-        ),
-
-        AutoRoute(
-          page: BookingSelectPackageScreenRoute.page,
         ),
 
         //  order flow
@@ -137,10 +147,22 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: OrderDetailsScreenRoute.page,
         ),
-        //  order flow
+        //  test service screen
         AutoRoute(
           // initial: true,
           page: ServiceScreenRoute.page,
+        ),
+
+        //xem bảng giá niêm yết xe
+        AutoRoute(
+          // initial: true,
+          page: VehiclePriceListScreenRoute.page,
+        ),
+
+        //  order informationreview flow
+        AutoRoute(
+          // initial: true,
+          page: OrderInformationRoute.page,
         ),
         AutoRoute(
           page: PaymentScreenRoute.page,

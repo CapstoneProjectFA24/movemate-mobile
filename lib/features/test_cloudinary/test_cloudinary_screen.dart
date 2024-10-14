@@ -26,9 +26,7 @@ class TestCloudinaryScreen extends HookWidget {
         final uri = Uri.parse(url);
         final pathSegments = uri.pathSegments;
         return pathSegments.length > 1
-            ? pathSegments[pathSegments.length - 2] +
-                '/' +
-                pathSegments.last.split('.').first
+            ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last.split('.').first}'
             : '';
       }).toList(),
     );

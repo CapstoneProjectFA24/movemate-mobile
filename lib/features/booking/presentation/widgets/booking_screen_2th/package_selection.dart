@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/add_button_service.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_table.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/service_package_tile.dart';
 
 class PackageSelection extends ConsumerWidget {
   const PackageSelection({super.key});
@@ -15,20 +16,7 @@ class PackageSelection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ServiceTable(
-          packageIndex: 0,
-          package: bookingState.packages[0],
-          isExpanded: bookingState.isHandlingExpanded,
-          onToggleExpanded: (value) => bookingNotifier.toggleHandlingExpanded(),
-        ),
-        const SizedBox(height: 12),
-        ServiceTable(
-          packageIndex: 1,
-          package: bookingState.packages[1],
-          isExpanded: bookingState.isDisassemblyExpanded,
-          onToggleExpanded: (value) =>
-              bookingNotifier.toggleDisassemblyExpanded(),
-        ),
+        // const BookingScreenService(),
         const SizedBox(height: 12),
         AddButtonService(
           title: 'Phí chờ',

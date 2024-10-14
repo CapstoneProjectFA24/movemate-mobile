@@ -1,18 +1,24 @@
-//booking_entities.dart
+// booking_entities.dart
 
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
-import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
+import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 
 class Booking {
   final String? houseType;
+  final String? houseTypeId;
+  final String? reviewType;
   final int? numberOfRooms;
   final int? numberOfFloors;
   final int? selectedVehicleIndex;
   final double vehiclePrice;
   final List<Vehicle> availableVehicles;
   final double totalPrice;
+  final ServiceEntity? selectedVehicle;
 
   final double packagePrice;
   final int peopleCount;
@@ -21,34 +27,36 @@ class Booking {
   final List<bool> checklistValues;
   final String notes;
 
-  //booking select package
-  final List<Package> packages;
+  // Booking select package
+
   final bool isHandlingExpanded;
   final bool isDisassemblyExpanded;
   final int? selectedPackageIndex;
-  final List<int>
-      additionalServiceQuantities; // Track quantities of additional services
+  final List<int> additionalServiceQuantities;
   final List<ServicesFeeSystemEntity> servicesFeeList;
-  //
 
-  // Add image lists for each room
+  // Added from booking_provider_these.dart
+  final List<ServicesPackageEntity> selectedPackages;
+  final List<SubServiceEntity> selectedSubServices;
+
+  // Image lists for each room
   final List<String> livingRoomImages;
   final List<String> bedroomImages;
   final List<String> diningRoomImages;
   final List<String> officeRoomImages;
   final List<String> bathroomImages;
-  //location
 
+  // Location
   final bool isSelectingPickUp;
   final LocationModel? pickUpLocation;
   final LocationModel? dropOffLocation;
-  final DateTime? bookingDate; // Add this field
+  final DateTime? bookingDate;
 
-  /// start test
-  // Add fromJson and toJson methods
+  // FromJson and ToJson methods
   factory Booking.fromJson(Map<String, dynamic> json) {
     return Booking(
       houseType: json['houseType'],
+      houseTypeId: json['houseTypeId'],
       numberOfRooms: json['numberOfRooms'],
       numberOfFloors: json['numberOfFloors'],
       selectedVehicleIndex: json['selectedVehicleIndex'],
@@ -59,11 +67,8 @@ class Booking {
       airConditionersCount: json['airConditionersCount'] ?? 1,
       isRoundTrip: json['isRoundTrip'] ?? false,
       notes: json['notes'] ?? '',
-      packages: (json['packages'] as List<dynamic>?)
-              ?.map((e) => Package.fromJson(e))
-              .toList() ??
-          [],
-      //location
+
+      // Location
       pickUpLocation: json['pickUpLocation'] != null
           ? LocationModel.fromJson(json['pickUpLocation'])
           : null,
@@ -79,12 +84,22 @@ class Booking {
       bathroomImages: List<String>.from(json['bathroomImages'] ?? []),
       checklistValues:
           List<bool>.from(json['checklistValues'] ?? List.filled(10, false)),
+      // Added fields
+      selectedPackages: (json['selectedPackages'] as List<dynamic>?)
+              ?.map((e) => ServicesPackageEntity.fromJson(e))
+              .toList() ??
+          [],
+      selectedSubServices: (json['selectedSubServices'] as List<dynamic>?)
+              ?.map((e) => SubServiceEntity.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'houseType': houseType,
+      'houseTypeId': houseTypeId,
       'numberOfRooms': numberOfRooms,
       'numberOfFloors': numberOfFloors,
       'selectedVehicleIndex': selectedVehicleIndex,
@@ -95,11 +110,10 @@ class Booking {
       'airConditionersCount': airConditionersCount,
       'isRoundTrip': isRoundTrip,
       'notes': notes,
-      //location
+      // Location
       'pickUpLocation': pickUpLocation?.toJson(),
       'dropOffLocation': dropOffLocation?.toJson(),
-      //
-      'packages': packages,
+
       'isHandlingExpanded': isHandlingExpanded,
       'isDisassemblyExpanded': isDisassemblyExpanded,
       'livingRoomImages': livingRoomImages,
@@ -108,13 +122,17 @@ class Booking {
       'officeRoomImages': officeRoomImages,
       'bathroomImages': bathroomImages,
       'checklistValues': checklistValues,
+      // Added fields
+      'selectedPackages': selectedPackages.map((e) => e.toJson()).toList(),
+      'selectedSubServices':
+          selectedSubServices.map((e) => e.toJson()).toList(),
     };
   }
 
-  /// end test
-
   Booking({
     this.houseType,
+    this.houseTypeId,
+    this.reviewType,
     this.numberOfRooms,
     this.numberOfFloors,
     this.selectedVehicleIndex,
@@ -128,18 +146,20 @@ class Booking {
     List<bool>? checklistValues,
     this.notes = '',
     this.servicesFeeList = const [],
-    //booking select packages
-    this.packages = const [],
+    // Booking select packages
+    this.selectedVehicle,
     this.isHandlingExpanded = false,
     this.isDisassemblyExpanded = false,
     this.selectedPackageIndex,
     this.additionalServiceQuantities = const [0, 0, 0],
-
-    //location
+    // Added fields
+    this.selectedPackages = const [],
+    this.selectedSubServices = const [],
+    // Location
     this.isSelectingPickUp = false,
     this.pickUpLocation,
     this.dropOffLocation,
-    this.bookingDate, // Include in constructor
+    this.bookingDate,
     // Initialize image lists (empty by default)
     List<String>? livingRoomImages,
     List<String>? bedroomImages,
@@ -155,6 +175,8 @@ class Booking {
 
   Booking copyWith({
     String? houseType,
+    String? houseTypeId,
+    String? reviewType,
     int? numberOfRooms,
     int? numberOfFloors,
     int? selectedVehicleIndex,
@@ -168,16 +190,16 @@ class Booking {
     List<bool>? checklistValues,
     String? notes,
     List<ServicesFeeSystemEntity>? servicesFeeList,
-    //booking select package
-    List<Package>? packages,
+    // Booking select package
+    ServiceEntity? selectedVehicle,
     bool? isHandlingExpanded,
     bool? isDisassemblyExpanded,
     int? selectedPackageIndex,
     List<int>? additionalServiceQuantities,
-
-    //
-
-    //location
+    // Added fields
+    List<ServicesPackageEntity>? selectedPackages,
+    List<SubServiceEntity>? selectedSubServices,
+    // Location
     bool? isSelectingPickUp,
     LocationModel? pickUpLocation,
     LocationModel? dropOffLocation,
@@ -190,37 +212,37 @@ class Booking {
   }) {
     return Booking(
       houseType: houseType ?? this.houseType,
+      houseTypeId: houseTypeId ?? this.houseTypeId,
+      reviewType: reviewType ?? this.reviewType,
       numberOfRooms: numberOfRooms ?? this.numberOfRooms,
       numberOfFloors: numberOfFloors ?? this.numberOfFloors,
       selectedVehicleIndex: selectedVehicleIndex ?? this.selectedVehicleIndex,
       vehiclePrice: vehiclePrice ?? this.vehiclePrice,
       availableVehicles: availableVehicles ?? this.availableVehicles,
       totalPrice: totalPrice ?? this.totalPrice,
-
       packagePrice: packagePrice ?? this.packagePrice,
       peopleCount: peopleCount ?? this.peopleCount,
       airConditionersCount: airConditionersCount ?? this.airConditionersCount,
       isRoundTrip: isRoundTrip ?? this.isRoundTrip,
       checklistValues: checklistValues ?? this.checklistValues,
-
       notes: notes ?? this.notes,
       servicesFeeList: servicesFeeList ?? this.servicesFeeList,
-      //booking select package
-      packages: packages ?? this.packages,
+      // Booking select package
+      selectedVehicle: selectedVehicle ?? this.selectedVehicle,
       isHandlingExpanded: isHandlingExpanded ?? this.isHandlingExpanded,
       isDisassemblyExpanded:
           isDisassemblyExpanded ?? this.isDisassemblyExpanded,
       selectedPackageIndex: selectedPackageIndex ?? this.selectedPackageIndex,
       additionalServiceQuantities:
           additionalServiceQuantities ?? this.additionalServiceQuantities,
-
-      //
-      //location
+      // Added fields
+      selectedPackages: selectedPackages ?? this.selectedPackages,
+      selectedSubServices: selectedSubServices ?? this.selectedSubServices,
+      // Location
       isSelectingPickUp: isSelectingPickUp ?? this.isSelectingPickUp,
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       bookingDate: bookingDate ?? this.bookingDate,
-      //
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,
       bedroomImages: bedroomImages ?? this.bedroomImages,
       diningRoomImages: diningRoomImages ?? this.diningRoomImages,

@@ -17,7 +17,7 @@ class APIConstants {
   static const get_service = '/services/truck-category';
   static const get_fees_system = '/fees/system';
   static const get_house_types = '/housetypes';
-  static const get_package_services = '/';
+  static const get_package_services = '/services';
 
   // order
   static const bookings = '/bookings';

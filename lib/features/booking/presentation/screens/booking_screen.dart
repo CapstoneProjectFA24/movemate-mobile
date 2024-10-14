@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/presentation/screens/booking_details.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_detail/booking_details.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
 import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 

@@ -1,7 +1,6 @@
 // service_source.dart
 
 import 'package:dio/dio.dart';
-import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,11 +25,7 @@ abstract class ServicesPackageSource {
     @Header(APIConstants.contentHeader) String contentType,
   );
 
-  @GET('${APIConstants.get_package_services}/{id}')
-  Future<HttpResponse<ServicesPackageEntity>> getPackageServiceById(
-    @Header(APIConstants.contentHeader) String contentType,
-    @Path('id') int id,
-  );
+
 }
 
 @riverpod

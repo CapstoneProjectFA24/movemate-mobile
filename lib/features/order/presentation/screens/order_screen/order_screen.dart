@@ -9,7 +9,6 @@ import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/utils/commons/widgets/app_bar.dart';
 
 
 @RoutePage()

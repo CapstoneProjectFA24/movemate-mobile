@@ -1,84 +1,107 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/services_fee_system_controller.dart';
+import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+
+import 'ServiceFeeWidget.dart';
+
 @RoutePage()
-class SystemFeeScreen extends ConsumerStatefulWidget {
+class SystemFeeScreen extends HookConsumerWidget {
   const SystemFeeScreen({super.key});
 
   @override
-  ConsumerState<SystemFeeScreen> createState() => _SystemFeeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final size = MediaQuery.sizeOf(context);
 
-class _SystemFeeScreenState extends ConsumerState<SystemFeeScreen> {
-  late Future<List<ServicesFeeSystemEntity>> _feeSystemsFuture;
+    final bookingState = ref.watch(bookingProvider);
+    final bookingNotifier = ref.read(bookingProvider.notifier);
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize the future in initState
-    _feeSystemsFuture = _fetchFeeSystems();
-  }
+    final state = ref.watch(servicesFeeSystemControllerProvider);
 
-  Future<List<ServicesFeeSystemEntity>> _fetchFeeSystems() async {
-    // Initialize PagingModel with default values or as required
-    final pagingModel = PagingModel(
- 
-      pageSize: 20,
-      // Add other fields if necessary
+    final fetchResult = useFetch<ServicesFeeSystemEntity>(
+      function: (model, context) => ref
+          .read(servicesFeeSystemControllerProvider.notifier)
+          .getFeeSystems(model, context),
+      initialPagingModel: PagingModel(
+        pageSize: 20,
+      ),
+      context: context,
     );
 
-    // Access the controller's notifier
-    final controller = ref.read(servicesFeeSystemControllerProvider.notifier);
-
-    // Call getFeeSystems and pass the BuildContext
-    return controller.getFeeSystems(pagingModel, context);
+    return Container(
+      color: Colors.white, // Màu nền bạn muốn
+      child: Column(
+        children: [
+          SizedBox(height: size.height * 0.02),
+          // Loại bỏ Expanded ở đây
+          buildFeeList(
+            context: context,
+            state: state,
+            fetchResult: fetchResult,
+            bookingNotifier: bookingNotifier,
+            bookingState: bookingState,
+          ),
+        ],
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Services Fee System'),
-      ),
-      body: FutureBuilder<List<ServicesFeeSystemEntity>>(
-        future: _feeSystemsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Error: ${snapshot.error}',
-                style: const TextStyle(color: Colors.red),
-              ),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No services fee available.'),
-            );
-          } else {
-            final feeSystems = snapshot.data!;
-            return ListView.separated(
-              itemCount: feeSystems.length,
-              separatorBuilder: (context, index) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final fee = feeSystems[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(fee.id.toString()),
-                  ),
-                  title: Text(fee.name),
-                  subtitle: fee.description != null ? Text(fee.description!) : null,
-                  trailing: Text('\$${fee.amount}'),
-                );
-              },
-            );
+  Widget buildFeeList({
+    required BuildContext context,
+    required dynamic state,
+    required dynamic fetchResult,
+    required BookingNotifier bookingNotifier,
+    required Booking bookingState,
+  }) {
+    if (state.isLoading && fetchResult.items.isEmpty) {
+      return const Center(child: HomeShimmer(amount: 4));
+    }
+    if (fetchResult.items.isEmpty) {
+      return const Align(
+        alignment: Alignment.topCenter,
+        child: EmptyBox(title: 'Không có dịch vụ nào'),
+      );
+    }
+    // Trong phương thức buildFeeList
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: fetchResult.items.length + 1,
+      itemBuilder: (context, index) {
+        if (index == fetchResult.items.length) {
+          if (fetchResult.isFetchingData) {
+            return const CustomCircular();
           }
-        },
-      ),
+          return fetchResult.isLastPage ? const SizedBox.shrink() : Container();
+        }
+        final fee = fetchResult.items[index] as ServicesFeeSystemEntity;
+
+        // Lấy số lượng hiện tại từ bookingState
+        final currentQuantity = bookingState.servicesFeeList
+                .firstWhere(
+                  (item) => item.id == fee.id,
+                  orElse: () => fee.copyWith(quantity: 0),
+                )
+                .quantity ??
+            0;
+
+        return ServiceFeeWidget(
+          serviceFee: fee,
+          quantity: currentQuantity,
+          onQuantityChanged: (newQuantity) {
+            // Cập nhật số lượng trong bookingNotifier
+            bookingNotifier.updateServicesFeeQuantity(fee, newQuantity);
+          },
+        );
+      },
     );
   }
 }

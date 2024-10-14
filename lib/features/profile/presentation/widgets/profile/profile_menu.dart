@@ -10,7 +10,7 @@ class ProfileMenu extends StatelessWidget {
   final VoidCallback onTap;
   final Color color;
 
-  const ProfileMenu({
+  const ProfileMenu({super.key, 
     required this.icon,
     required this.title,
     required this.onTap,

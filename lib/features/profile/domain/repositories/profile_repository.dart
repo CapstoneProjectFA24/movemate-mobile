@@ -2,7 +2,6 @@
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 
 // system
-import 'package:flutter/widgets.dart';
 import 'package:movemate/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

@@ -56,6 +56,10 @@ class TruckCategoryEntity {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return 'TruckCategoryEntity(id: $id, categoryName: $categoryName, maxLoad: $maxLoad, description: $description, imgUrl: $imgUrl, estimatedLength: $estimatedLength, estimatedWidth: $estimatedWidth, estimatedHeight: $estimatedHeight, price: $price, totalTrips: $totalTrips)';
+  }
 
   factory TruckCategoryEntity.fromJson(String source) =>
       TruckCategoryEntity.fromMap(json.decode(source));

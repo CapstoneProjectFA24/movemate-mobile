@@ -1,31 +1,22 @@
-//booking_provider.dart
+// booking_provider.dart
 
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/data/data_sources/booking_fake_data.dart';
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
-
-import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
-import 'dart:convert';
-import 'package:movemate/features/booking/domain/entities/package_entities.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
+import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
+import '/features/booking/domain/entities/booking_enities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {
-  // BookingNotifier() : super(Booking(totalPrice: 0.0));
   BookingNotifier()
       : super(Booking(
-            totalPrice: 0.0, additionalServiceQuantities: [], packages: [])) {
-    loadBookingData();
-
-    loadAvailableVehicles();
-    loadPackages();
-  }
-
-  void loadPackages() {
-    final List<dynamic> jsonData = json.decode(fakeBookingJson3nd);
-    final packages = jsonData.map((e) => Package.fromJson(e)).toList();
-    state = state.copyWith(packages: packages);
-  }
+          totalPrice: 0.0,
+          additionalServiceQuantities: [],
+        ));
 
   void updateAdditionalServiceQuantity(int serviceIndex, int newQuantity) {
     final updatedQuantities = [...state.additionalServiceQuantities];
@@ -34,37 +25,29 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  void updateQuantity(int packageIndex, int serviceIndex, int quantity) {
-    final packages = [...state.packages];
-    final services = [...packages[packageIndex].services];
+  void updateSubServiceQuantity(SubServiceEntity subService, int newQuantity) {
+    List<SubServiceEntity> updatedSubServices =
+        List.from(state.selectedSubServices);
 
-    services[serviceIndex] =
-        services[serviceIndex].copyWith(quantity: quantity);
+    final index = updatedSubServices.indexWhere((s) => s.id == subService.id);
 
-    packages[packageIndex] =
-        packages[packageIndex].copyWith(services: services);
+    if (index != -1) {
+      if (newQuantity > 0) {
+        // Update existing subService's quantity
+        updatedSubServices[index] =
+            updatedSubServices[index].copyWith(quantity: newQuantity);
+      } else {
+        // Remove subService if quantity is zero
+        updatedSubServices.removeAt(index);
+      }
+    } else {
+      if (newQuantity > 0) {
+        // Add new subService with the specified quantity
+        updatedSubServices.add(subService.copyWith(quantity: newQuantity));
+      }
+    }
 
-    state = state.copyWith(packages: packages);
-
-    calculateAndUpdateTotalPrice();
-  }
-
-  // Method to load booking data (fake data)
-  void loadBookingData() {
-    final jsonData = json.decode(fakeBookingJson);
-    final bookingData = Booking.fromJson(jsonData);
-    state = bookingData;
-  }
-
-  //end test
-
-  // Method to load available vehicles
-  void loadAvailableVehicles() {
-    final List<dynamic> jsonData = json.decode(fakeVehicleJson);
-    final vehicles =
-        jsonData.map((vehicleJson) => Vehicle.fromJson(vehicleJson)).toList();
-
-    state = state.copyWith(availableVehicles: vehicles);
+    state = state.copyWith(selectedSubServices: updatedSubServices);
   }
 
   /// Updates the services fee list in the booking state
@@ -73,24 +56,114 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
+  // Thêm phương thức này
+  void updateServicesFeeQuantity(ServicesFeeSystemEntity fee, int newQuantity) {
+    List<ServicesFeeSystemEntity> updatedServicesFeeList =
+        List.from(state.servicesFeeList ?? []);
+
+    final index = updatedServicesFeeList.indexWhere((f) => f.id == fee.id);
+
+    if (index != -1) {
+      if (newQuantity > 0) {
+        // Cập nhật số lượng cho dịch vụ phí hệ thống đã tồn tại
+        updatedServicesFeeList[index] =
+            updatedServicesFeeList[index].copyWith(quantity: newQuantity);
+      } else {
+        // Xóa dịch vụ nếu số lượng bằng 0
+        updatedServicesFeeList.removeAt(index);
+      }
+    } else {
+      if (newQuantity > 0) {
+        // Thêm dịch vụ mới với số lượng được chỉ định
+        updatedServicesFeeList.add(fee.copyWith(quantity: newQuantity));
+      }
+    }
+
+    state = state.copyWith(servicesFeeList: updatedServicesFeeList);
+
+    // Gọi phương thức tính toán lại tổng giá
+    calculateAndUpdateTotalPrice();
+  }
+
+// Method to update selected vehicle
+  void updateSelectedVehicle(ServiceEntity vehicle) {
+    state = state.copyWith(selectedVehicle: vehicle);
+    calculateAndUpdateTotalPrice();
+  }
+
+  // Replaced calculateAndUpdateTotalPrice method
   void calculateAndUpdateTotalPrice() {
     double total = 0.0;
-    if (state.selectedPackageIndex != null) {
-      final selectedPackage = state.packages[state.selectedPackageIndex!];
-      // Directly use packagePrice if it's already a double
-      total += selectedPackage.packagePrice;
-    }
-    total += state.airConditionersCount * 200000;
 
-    // Add services fees
-    for (var fee in state.servicesFeeList) {
-      total +=
-          fee.amount; // Assuming `amount` is a field in ServicesFeeSystemEntity
+    // Tổng giá của các gói dịch vụ đã chọn
+    for (var package in state.selectedPackages) {
+      total += package.amount;
     }
+
+    // Tổng giá của các dịch vụ phụ đã chọn với số lượng
+    for (var subService in state.selectedSubServices) {
+      total += subService.amount * (subService.quantity ?? 1);
+    }
+
+    // Tổng giá của các dịch vụ phí hệ thống với số lượng
+    for (var fee in state.servicesFeeList ?? []) {
+      total += fee.amount * (fee.quantity ?? 1);
+    }
+
+    // Thêm giá của phương tiện đã chọn
+    if (state.selectedVehicle != null) {
+      total += state.selectedVehicle!.amount;
+    }
+
+    // Các tính toán khác (ví dụ: chuyến đi khứ hồi)
+    if (state.isRoundTrip == true) {
+      total *= 2;
+    }
+
+    // Cập nhật tổng giá
     state = state.copyWith(totalPrice: total);
   }
 
-  // Methods to toggle expanded state
+  // Replaced updateRoundTrip method
+  void updateRoundTrip(bool value) {
+    state = state.copyWith(isRoundTrip: value);
+    calculateAndUpdateTotalPrice();
+  }
+
+  // Added methods from booking_provider_these.dart
+  void togglePackageSelection(ServicesPackageEntity package, bool isSelected) {
+    List<ServicesPackageEntity> updatedPackages =
+        List.from(state.selectedPackages);
+    if (isSelected) {
+      updatedPackages.add(package);
+    } else {
+      updatedPackages.removeWhere((p) => p.id == package.id);
+    }
+    state = state.copyWith(selectedPackages: updatedPackages);
+    calculateAndUpdateTotalPrice();
+  }
+
+  void toggleSubServiceSelection(SubServiceEntity subService, bool isSelected) {
+    List<SubServiceEntity> updatedSubServices =
+        List.from(state.selectedSubServices);
+    if (isSelected) {
+      updatedSubServices.add(subService);
+    } else {
+      updatedSubServices.removeWhere((s) => s.id == subService.id);
+    }
+    state = state.copyWith(selectedSubServices: updatedSubServices);
+    calculateAndUpdateTotalPrice();
+  }
+
+  bool isPackageSelected(ServicesPackageEntity package) {
+    return state.selectedPackages.any((p) => p.id == package.id);
+  }
+
+  bool isSubServiceSelected(SubServiceEntity subService) {
+    return state.selectedSubServices.any((s) => s.id == subService.id);
+  }
+
+  // Existing methods
   void toggleHandlingExpanded() {
     state = state.copyWith(isHandlingExpanded: !state.isHandlingExpanded);
   }
@@ -109,26 +182,22 @@ class BookingNotifier extends StateNotifier<Booking> {
 
   void updateHouseType(String? houseType) {
     state = state.copyWith(houseType: houseType);
-    calculateAndUpdateTotalPrice();
+  }
+
+  void updateReviewType(String? reviewType) {
+    state = state.copyWith(reviewType: reviewType);
   }
 
   void updateNumberOfRooms(int rooms) {
     state = state.copyWith(numberOfRooms: rooms);
-    calculateAndUpdateTotalPrice();
   }
 
   void updateNumberOfFloors(int floors) {
     state = state.copyWith(numberOfFloors: floors);
-    calculateAndUpdateTotalPrice();
   }
 
   void updateTotalPrice(double totalPrice) {
     state = state.copyWith(totalPrice: totalPrice);
-    calculateAndUpdateTotalPrice();
-  }
-
-  void updateRoundTrip(bool isRoundTrip) {
-    state = state.copyWith(isRoundTrip: isRoundTrip);
     calculateAndUpdateTotalPrice();
   }
 
@@ -165,7 +234,6 @@ class BookingNotifier extends StateNotifier<Booking> {
         );
         break;
     }
-    calculateAndUpdateTotalPrice();
   }
 
   // Method to remove image from a room
@@ -202,20 +270,19 @@ class BookingNotifier extends StateNotifier<Booking> {
         );
         break;
     }
-    calculateAndUpdateTotalPrice();
   }
 
-  // Method to update selected vehicle
-  void updateSelectedVehicle(int index) {
-    final selectedVehicle = state.availableVehicles[index];
-    double price = selectedVehicle.price;
+  // // Method to update selected vehicle
+  // void updateSelectedVehicle(int index) {
+  //   final selectedVehicle = state.availableVehicles[index];
+  //   double price = selectedVehicle.price;
 
-    state = state.copyWith(
-      selectedVehicleIndex: index,
-      vehiclePrice: price,
-      totalPrice: calculateTotalPrice(vehiclePrice: price),
-    );
-  }
+  //   state = state.copyWith(
+  //     selectedVehicleIndex: index,
+  //     vehiclePrice: price,
+  //     totalPrice: calculateTotalPrice(vehiclePrice: price),
+  //   );
+  // }
 
   void updateChecklistValue(int index, bool value) {
     final updatedChecklistValues = List<bool>.from(state.checklistValues);
@@ -223,7 +290,7 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(checklistValues: updatedChecklistValues);
   }
 
-//location
+  // Location methods
   void updatePickUpLocation(LocationModel location) {
     state = state.copyWith(pickUpLocation: location);
   }
@@ -240,7 +307,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(isSelectingPickUp: isSelecting);
   }
 
-////
   double calculateVehiclePrice(int index) {
     return 300000 + (index * 50000);
   }

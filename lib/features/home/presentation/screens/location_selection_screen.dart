@@ -14,20 +14,7 @@ class LocationSelectionScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const LabelText(
-      //     content: 'Chọn địa chỉ',
-      //     size: 20,
-      //     color: AssetsConstants.blackColor,
-      //     fontWeight: FontWeight.w400,
-      //   ),
-      //   automaticallyImplyLeading: false,
-      //   centerTitle: true,
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.close),
-      //     onPressed: () => context.router.pop(),
-      //   ),
-      // ),
+
       body: Column(
         children: [
           const SizedBox(

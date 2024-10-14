@@ -4,6 +4,8 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class PromoSection extends StatelessWidget {
+  const PromoSection({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -8,7 +8,6 @@ import 'configs/theme/app_theme.dart';
 import 'utils/constants/asset_constant.dart';
 
 // cloudinary
-import 'package:cloudinary_flutter/cloudinary_context.dart';
 import 'package:cloudinary_url_gen/cloudinary.dart';
 // import 'cloudinary_upload_widget.dart';
 

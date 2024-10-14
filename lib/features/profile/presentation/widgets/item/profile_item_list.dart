@@ -34,8 +34,11 @@ class ProfileItemList extends StatelessWidget {
     ProfileItem(icon: Icons.present_to_all, title: "Quà tặng"),
     ProfileItem(icon: Icons.receipt_long, title: "Hóa đơn"),
     ProfileItem(icon: Icons.location_on, title: "Trung tâm bảo mật"),
-    ProfileItem(icon: Icons.logout_outlined, title: "Đăng xuất", color: Colors.red),
+    ProfileItem(
+        icon: Icons.logout_outlined, title: "Đăng xuất", color: Colors.red),
   ];
+
+  ProfileItemList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,8 @@ class ProfileItemList extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: profileItems.map((item) => buildProfileRow(item)).toList(),
+            children:
+                profileItems.map((item) => buildProfileRow(item)).toList(),
           ),
         ),
       ],

@@ -27,10 +27,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreen(),
       );
     },
-    BookingSelectPackageScreenRoute.name: (routeData) {
+    BookingScreenServiceRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const BookingSelectPackageScreen(),
+        child: const BookingScreenService(),
       );
     },
     ContactScreenRoute.name: (routeData) {
@@ -83,6 +83,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: OrderDetailsScreen(
           key: args.key,
           order: args.order,
+        ),
+      );
+    },
+    OrderInformationRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderInformationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: OrderInformation(
+          key: args.key,
+          onOptionSelected: args.onOptionSelected,
         ),
       );
     },
@@ -168,6 +178,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashScreen(),
       );
     },
+    SystemFeeScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const SystemFeeScreen(),
+      );
+    },
     TabViewScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -232,15 +248,15 @@ class BookingScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [BookingSelectPackageScreen]
-class BookingSelectPackageScreenRoute extends PageRouteInfo<void> {
-  const BookingSelectPackageScreenRoute({List<PageRouteInfo>? children})
+/// [BookingScreenService]
+class BookingScreenServiceRoute extends PageRouteInfo<void> {
+  const BookingScreenServiceRoute({List<PageRouteInfo>? children})
       : super(
-          BookingSelectPackageScreenRoute.name,
+          BookingScreenServiceRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'BookingSelectPackageScreenRoute';
+  static const String name = 'BookingScreenServiceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -410,6 +426,44 @@ class OrderDetailsScreenRouteArgs {
   @override
   String toString() {
     return 'OrderDetailsScreenRouteArgs{key: $key, order: $order}';
+  }
+}
+
+/// generated route for
+/// [OrderInformation]
+class OrderInformationRoute extends PageRouteInfo<OrderInformationRouteArgs> {
+  OrderInformationRoute({
+    Key? key,
+    required dynamic Function(String) onOptionSelected,
+    List<PageRouteInfo>? children,
+  }) : super(
+          OrderInformationRoute.name,
+          args: OrderInformationRouteArgs(
+            key: key,
+            onOptionSelected: onOptionSelected,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'OrderInformationRoute';
+
+  static const PageInfo<OrderInformationRouteArgs> page =
+      PageInfo<OrderInformationRouteArgs>(name);
+}
+
+class OrderInformationRouteArgs {
+  const OrderInformationRouteArgs({
+    this.key,
+    required this.onOptionSelected,
+  });
+
+  final Key? key;
+
+  final dynamic Function(String) onOptionSelected;
+
+  @override
+  String toString() {
+    return 'OrderInformationRouteArgs{key: $key, onOptionSelected: $onOptionSelected}';
   }
 }
 
@@ -648,6 +702,20 @@ class SplashScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SplashScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SystemFeeScreen]
+class SystemFeeScreenRoute extends PageRouteInfo<void> {
+  const SystemFeeScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          SystemFeeScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'SystemFeeScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

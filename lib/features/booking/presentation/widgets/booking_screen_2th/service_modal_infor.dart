@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class ServiceInfoModal extends StatelessWidget {
   final String title;
-  final String ? imagePath; // Image path
+  final String? infoText;
+  final String? imagePath; // Image path
 
   const ServiceInfoModal({
     super.key,
     required this.title,
-     this.imagePath, // Added property for image
+    this.infoText,
+    this.imagePath, // Added property for image
   });
 
   @override
@@ -61,15 +63,22 @@ class ServiceInfoModal extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               // Detailed information text
-              const Expanded(
+              Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // Package details
-
                       Text(
+                        infoText!, // Use null-aware operator to provide a default value
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const Text(
                         "Chi tiết gói chuyển nhà:",
                         style: TextStyle(
                           fontSize: 16,
@@ -77,8 +86,8 @@ class ServiceInfoModal extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         "- 1 nhân viên hỗ trợ bốc xếp: 300.000 đ\n"
                         "- Dịch vụ bốc xếp 2 chiều (1 trệt + 1 lầu): 240.000 đ\n"
                         "- Phí chờ (1 giờ): 60.000 đ",
@@ -87,9 +96,9 @@ class ServiceInfoModal extends StatelessWidget {
                           height: 1.4,
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       // Note section
-                      Text(
+                      const Text(
                         "Lưu ý:",
                         style: TextStyle(
                           fontSize: 16,
@@ -97,8 +106,8 @@ class ServiceInfoModal extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         "- Phạm vi bốc xếp: Không quá 50m và tối đa 1 lầu (1 trệt + 1 lầu) & cả điểm lấy hàng và điểm giao hàng.\n"
                         "- Vui lòng đóng gói tất cả hàng hóa hoặc tháo dỡ các thiết bị điện lạnh, nội thất trước khi đặt dịch vụ.\n"
                         "- Trường hợp có phát sinh thêm nhu cầu bốc xếp ngoài dịch vụ, vui lòng liên hệ tổng đài 1900545411 để được tư vấn.",

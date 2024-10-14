@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/vehicles_screen/vehicle_list.dart';
 
@@ -20,6 +21,7 @@ import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 // Data - Entity
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
+
 @RoutePage()
 class AvailableVehiclesScreen extends HookConsumerWidget {
   const AvailableVehiclesScreen({super.key});
@@ -29,6 +31,9 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
     final state = ref.watch(serviceControllerProvider);
+    
+    final bookingState = ref.watch(bookingProvider); // Watch the booking state
+    final bookingNotifier = ref.read(bookingProvider.notifier); // Read the booking notifier
 
     final fetchResult = useFetch<ServiceEntity>(
       function: (model, context) => ref
@@ -45,7 +50,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       return scrollController.dispose;
     }, const []);
 
-    final selectedService = useState<ServiceEntity?>(null);
+    // final selectedService = useState<ServiceEntity?>(null);
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -61,7 +66,8 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
               state: state,
               fetchResult: fetchResult,
               scrollController: scrollController,
-              selectedService: selectedService,
+               bookingNotifier: bookingNotifier,
+              bookingState: bookingState,
             ),
           ),
         ],
@@ -70,11 +76,11 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         buttonText: "Bước tiếp theo",
         priceLabel: 'Giá',
         buttonIcon: false,
-        totalPrice: selectedService.value?.amount ?? 0.0,
-        isButtonEnabled: selectedService.value != null,
+        totalPrice:  bookingState.totalPrice ?? 0.0,
+        isButtonEnabled:  bookingState.selectedVehicle != null,
         onPlacePress: () {
-          if (selectedService.value != null) {
-            context.router.push(const BookingSelectPackageScreenRoute());
+          if ( bookingState.selectedVehicle != null) {
+            context.router.push(const BookingScreenServiceRoute());
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

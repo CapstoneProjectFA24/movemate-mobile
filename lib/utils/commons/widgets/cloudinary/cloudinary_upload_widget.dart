@@ -12,12 +12,12 @@ class ImageUploadWidget extends HookWidget {
   final List<String> imagePublicIds;
 
   const ImageUploadWidget({
-    Key? key,
+    super.key,
     this.disabled = false,
     required this.onImageUploaded,
     required this.onImageRemoved,
     required this.imagePublicIds,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

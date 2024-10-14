@@ -5,12 +5,14 @@ class ServicesFeeSystemEntity {
   final String name;
   final String? description;
   final int amount;
+  final int? quantity;
 
   ServicesFeeSystemEntity({
     required this.id,
     required this.name,
     this.description,
     required this.amount,
+    this.quantity,
   });
 
   // Factory method to create a ServicesFeeSystemEntity from a map
@@ -31,6 +33,22 @@ class ServicesFeeSystemEntity {
       'description': description,
       'amount': amount,
     };
+  }
+
+  ServicesFeeSystemEntity copyWith({
+    int? id,
+    String? name,
+    String? description,
+    int? amount,
+    int? quantity,
+  }) {
+    return ServicesFeeSystemEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      amount: amount ?? this.amount,
+      quantity: quantity ?? this.quantity,
+    );
   }
 
   // Serialize to JSON

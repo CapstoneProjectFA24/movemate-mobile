@@ -6,7 +6,6 @@ import 'package:movemate/features/order/domain/repositories/order_repository.dar
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/resources/remote_base_repository.dart';
-import 'package:retrofit/dio.dart';
 
 class OrderRepositoryImpl extends RemoteBaseRepository
     implements OrderRepository {
