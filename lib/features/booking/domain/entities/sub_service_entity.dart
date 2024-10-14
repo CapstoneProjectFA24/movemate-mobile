@@ -14,7 +14,9 @@ class SubServiceEntity {
   final double discountRate;
   final double amount;
   final TruckCategoryEntity? truckCategory;
-  final int? quantity; // Add this field
+  final int? quantity;
+  final bool isQuantity; // Thêm trường này
+  final int? quantityMax; // Thêm trường này
 
   SubServiceEntity({
     required this.id,
@@ -28,6 +30,8 @@ class SubServiceEntity {
     required this.amount,
     this.truckCategory,
     this.quantity,
+    required this.isQuantity, // Khởi tạo trường này
+    this.quantityMax,
   });
 
   factory SubServiceEntity.fromMap(Map<String, dynamic> map) {
@@ -44,6 +48,8 @@ class SubServiceEntity {
       truckCategory: map['truckCategory'] != null
           ? TruckCategoryEntity.fromMap(map['truckCategory'])
           : null,
+      isQuantity: map['isQuantity'] ?? false, // Thêm dòng này
+      quantityMax: map['quantityMax'], // Thêm dòng này
     );
   }
 
@@ -59,36 +65,44 @@ class SubServiceEntity {
       'discountRate': discountRate,
       'amount': amount,
       'truckCategory': truckCategory?.toMap(),
+      'isQuantity': isQuantity, // Thêm dòng này
+      'quantityMax': quantityMax, // Thêm dòng này
     };
   }
 
-  copyWith({
+  SubServiceEntity copyWith({
     int? id,
     String? name,
     String? description,
+    bool? isActived,
+    int? tier,
+    String? imageUrl,
     String? type,
+    double? discountRate,
     double? amount,
+    TruckCategoryEntity? truckCategory,
     int? quantity,
+    bool? isQuantity,
+    int? quantityMax,
   }) {
     return SubServiceEntity(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
+      isActived: isActived ?? this.isActived,
+      tier: tier ?? this.tier,
+      imageUrl: imageUrl ?? this.imageUrl,
       type: type ?? this.type,
+      discountRate: discountRate ?? this.discountRate,
       amount: amount ?? this.amount,
+      truckCategory: truckCategory ?? this.truckCategory,
       quantity: quantity ?? this.quantity,
-      isActived: isActived ?? isActived,
-      tier: tier ?? tier,
-      imageUrl: '',
-      discountRate: discountRate ?? discountRate,
+      isQuantity: isQuantity ?? this.isQuantity,
+      quantityMax: quantityMax ?? this.quantityMax,
     );
   }
 
   String toJson() => json.encode(toMap());
-  // @override
-  // String toString() {
-  //   return 'SubServiceEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, type: $type, discountRate: $discountRate, amount: $amount, truckCategory: $truckCategory)';
-  // }
 
   factory SubServiceEntity.fromJson(String source) =>
       SubServiceEntity.fromMap(json.decode(source));

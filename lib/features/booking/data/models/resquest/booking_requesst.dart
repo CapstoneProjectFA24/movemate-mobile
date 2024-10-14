@@ -134,10 +134,11 @@ class BookingRequest {
     List<ServiceDetail> serviceDetails = [];
 
     // Thêm selectedSubServices vào serviceDetails
+
     serviceDetails.addAll(booking.selectedSubServices.map((subService) {
       return ServiceDetail(
         id: subService.id,
-        isQuantity: subService.quantity != null && subService.quantity! > 0,
+        isQuantity: subService.isQuantity, // Sử dụng subService.isQuantity
         quantity: subService.quantity ?? 1,
       );
     }).toList());
@@ -169,11 +170,11 @@ class BookingRequest {
     addImagesToResourceList(booking.bathroomImages, 'bathroom');
 
     // Tính toán khoảng cách ước tính (ví dụ)
-    String estimatedDistance = '3'; // Bạn có thể tính toán dựa trên tọa độ
+    String estimatedDistance = '3'; // Có thể tính toán dựa trên tọa độ
 
     // Tính toán thời gian giao hàng ước tính (ví dụ)
     String estimatedDeliveryTime =
-        '3'; // Bạn có thể tính toán hoặc đặt giá trị phù hợp
+        '3'; // Có thể tính toán hoặc đặt giá trị phù hợp
 
     // Chuyển đổi thời gian đặt chỗ sang định dạng ISO8601
     String bookingAt = booking.bookingDate?.toIso8601String() ??

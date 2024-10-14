@@ -15,7 +15,7 @@ class SubServiceTile extends ConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final bookingState = ref.watch(bookingProvider);
 
-    // Find the current subService in the selectedSubServices list
+    
     final currentSubService = bookingState.selectedSubServices.firstWhere(
       (s) => s.id == subService.id,
       orElse: () => subService.copyWith(quantity: 0),
@@ -26,15 +26,9 @@ class SubServiceTile extends ConsumerWidget {
     return Card(
       color: Colors.white,
       elevation: 2,
-      // margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         contentPadding: const EdgeInsets.all(12),
-        // leading: Icon(
-        //   _getIconForServiceType(subService.type),
-        //   size: 40,
-        //   color: Colors.blueAccent,
-        // ),
         title: LabelText(
           content: subService.name,
           size: 16,
@@ -54,7 +48,8 @@ class SubServiceTile extends ConsumerWidget {
         ),
         trailing: ServiceTrailingWidget(
           quantity: quantity,
-          addService: true,
+          addService: !subService.isQuantity,
+          quantityMax: subService.quantityMax, 
           onQuantityChanged: (newQuantity) {
             bookingNotifier.updateSubServiceQuantity(subService, newQuantity);
             bookingNotifier.calculateAndUpdateTotalPrice();
@@ -62,18 +57,5 @@ class SubServiceTile extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  IconData _getIconForServiceType(String? type) {
-    switch (type) {
-      case 'TRUCK':
-        return Icons.local_shipping;
-      case 'DISASSEMBLE':
-        return Icons.build;
-      case 'PORTER':
-        return Icons.people;
-      default:
-        return Icons.miscellaneous_services;
-    }
   }
 }

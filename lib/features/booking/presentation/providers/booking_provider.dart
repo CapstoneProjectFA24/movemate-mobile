@@ -27,24 +27,30 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   void updateSubServiceQuantity(SubServiceEntity subService, int newQuantity) {
+    // Đảm bảo newQuantity không vượt quá quantityMax
+    int finalQuantity = newQuantity;
+    if (subService.quantityMax != null &&
+        newQuantity > subService.quantityMax!) {
+      finalQuantity = subService.quantityMax!;
+    }
     List<SubServiceEntity> updatedSubServices =
         List.from(state.selectedSubServices);
 
     final index = updatedSubServices.indexWhere((s) => s.id == subService.id);
 
     if (index != -1) {
-      if (newQuantity > 0) {
+      if (finalQuantity > 0) {
         // Update existing subService's quantity
         updatedSubServices[index] =
-            updatedSubServices[index].copyWith(quantity: newQuantity);
+            updatedSubServices[index].copyWith(quantity: finalQuantity);
       } else {
         // Remove subService if quantity is zero
         updatedSubServices.removeAt(index);
       }
     } else {
-      if (newQuantity > 0) {
+      if (finalQuantity > 0) {
         // Add new subService with the specified quantity
-        updatedSubServices.add(subService.copyWith(quantity: newQuantity));
+        updatedSubServices.add(subService.copyWith(quantity: finalQuantity));
       }
     }
 

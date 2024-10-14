@@ -4,7 +4,6 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/utils/constants/asset_constant.dart'; // Import for AssetsConstants
 
 class ServicePackageTile extends StatefulWidget {
-
   final ServicesPackageEntity servicePackage;
   const ServicePackageTile({super.key, required this.servicePackage});
 
@@ -22,17 +21,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
       margin: const EdgeInsets.symmetric(
         vertical: 8,
       ),
-      // decoration: BoxDecoration(
-      //   color: Colors.white,
-      //   borderRadius: BorderRadius.circular(12),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.black.withOpacity(0.1),
-      //       offset: const Offset(0, 2),
-      //       blurRadius: 4,
-      //     ),
-      //   ],
-      // ),
+
       child: ExpansionTile(
         initiallyExpanded: _isExpanded,
         onExpansionChanged: (bool expanded) {
@@ -60,7 +49,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
           children: [
             if (widget.servicePackage.discountRate > 0)
               Container(
-                // padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              
                 decoration: BoxDecoration(
                   color: Colors.redAccent,
                   borderRadius: BorderRadius.circular(8),
