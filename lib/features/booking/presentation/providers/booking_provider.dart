@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/data/data_sources/booking_fake_data.dart';
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
@@ -180,7 +181,7 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(isDisassemblyExpanded: value);
   }
 
-  void updateHouseType(String? houseType) {
+  void updateHouseType(HouseTypeEntity? houseType) {
     state = state.copyWith(houseType: houseType);
   }
 

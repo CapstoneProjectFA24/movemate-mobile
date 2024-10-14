@@ -8,31 +8,40 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/house_type_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/selection_modal.dart';
+// Hooks
+import 'package:movemate/hooks/use_fetch.dart';
 
 // Import your entities and widgets
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
 class HouseTypeSelectionModal extends HookConsumerWidget {
-  final BookingNotifier bookingNotifier;
-
-  const HouseTypeSelectionModal({super.key, required this.bookingNotifier});
+  const HouseTypeSelectionModal({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final houseTypeFuture = useMemoized(() => ref
-        .read(houseTypeControllerProvider.notifier)
-        .getHouseTypes(PagingModel(), context));
-    final snapshot = useFuture(houseTypeFuture);
+    final bookingState = ref.watch(bookingProvider); // Watch the booking state
+    final bookingNotifier = ref.read(bookingProvider.notifier);
 
-    if (snapshot.connectionState == ConnectionState.waiting) {
+    final state = ref.watch(houseTypeControllerProvider);
+
+    final fetchResult = useFetch<HouseTypeEntity>(
+      function: (model, context) => ref
+          .read(houseTypeControllerProvider.notifier)
+          .getHouseTypes(model, context),
+      initialPagingModel: PagingModel(),
+      context: context,
+    );
+
+    if (state.isLoading && fetchResult.items.isEmpty) {
       return const AlertDialog(
         content: SizedBox(
           height: 100,
           child: Center(child: CircularProgressIndicator()),
         ),
       );
-    } else if (snapshot.hasError) {
+    } else if (state.hasError) {
       return AlertDialog(
         title: const Text('Lỗi'),
         content: const Text('Không thể tải loại nhà ở'),
@@ -44,14 +53,19 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
         ],
       );
     } else {
-      final houseTypeEntities = snapshot.data ?? [];
+      final houseTypeEntities = fetchResult.items;
       final houseTypes = houseTypeEntities.map((e) => e.name).toList();
 
       return SelectionModal(
         title: 'Chọn loại nhà ở',
         items: houseTypes,
         onItemSelected: (selectedItem) {
-          bookingNotifier.updateHouseType(selectedItem);
+          // Tìm đối tượng HouseTypeEntity được chọn
+          final selectedHouseType = houseTypeEntities.firstWhere(
+            (e) => e.name == selectedItem,
+          );
+          // Cập nhật trạng thái
+          bookingNotifier.updateHouseType(selectedHouseType);
           Navigator.pop(context);
         },
       );

@@ -31,9 +31,10 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
     final state = ref.watch(serviceControllerProvider);
-    
+
     final bookingState = ref.watch(bookingProvider); // Watch the booking state
-    final bookingNotifier = ref.read(bookingProvider.notifier); // Read the booking notifier
+    final bookingNotifier =
+        ref.read(bookingProvider.notifier); // Read the booking notifier
 
     final fetchResult = useFetch<ServiceEntity>(
       function: (model, context) => ref
@@ -66,7 +67,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
               state: state,
               fetchResult: fetchResult,
               scrollController: scrollController,
-               bookingNotifier: bookingNotifier,
+              bookingNotifier: bookingNotifier,
               bookingState: bookingState,
             ),
           ),
@@ -76,10 +77,13 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         buttonText: "Bước tiếp theo",
         priceLabel: 'Giá',
         buttonIcon: false,
-        totalPrice:  bookingState.totalPrice ?? 0.0,
-        isButtonEnabled:  bookingState.selectedVehicle != null,
+        totalPrice: bookingState.totalPrice ?? 0.0,
+        isButtonEnabled: bookingState.selectedVehicle != null,
         onPlacePress: () {
-          if ( bookingState.selectedVehicle != null) {
+          // print("${bookingState.houseType?.id} chọn nhà ");
+          // print("${bookingState.houseType?.name} loại nhà ");
+          if (bookingState.selectedVehicle != null &&
+              bookingState.houseType?.id != null) {
             context.router.push(const BookingScreenServiceRoute());
           } else {
             ScaffoldMessenger.of(context).showSnackBar(

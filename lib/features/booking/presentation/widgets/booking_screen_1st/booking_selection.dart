@@ -12,7 +12,6 @@ import 'number_selection_modal.dart';
 
 // Import HouseTypeController
 
-
 // Import HouseTypeSelectionModal
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/house_type_selection_modal.dart';
 
@@ -29,7 +28,7 @@ class BookingSelection extends HookConsumerWidget {
       children: [
         // Nút chọn loại nhà ở
         SelectionButton(
-          label: bookingState.houseType ?? 'Chọn loại nhà ở',
+          label: bookingState.houseType?.name ?? 'Chọn loại nhà ở',
           icon: Icons.arrow_drop_down,
           onTap: () => showHouseTypeModal(context, bookingNotifier),
         ),
@@ -83,11 +82,7 @@ class BookingSelection extends HookConsumerWidget {
       BuildContext context, BookingNotifier bookingNotifier) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return HouseTypeSelectionModal(
-          bookingNotifier: bookingNotifier,
-        );
-      },
+      builder: (BuildContext context) => const HouseTypeSelectionModal(),
     );
   }
 

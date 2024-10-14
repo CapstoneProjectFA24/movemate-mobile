@@ -189,7 +189,7 @@ class BookingRequest {
           ? '${booking.dropOffLocation!.latitude},${booking.dropOffLocation!.longitude}'
           : '',
       estimatedDistance: estimatedDistance,
-      houseTypeId: int.tryParse(booking.houseTypeId ?? '1') ?? 1,
+      houseTypeId: booking.houseType!.id ?? 1,
       note: booking.notes,
       estimatedDeliveryTime: estimatedDeliveryTime,
       isRoundTrip: booking.isRoundTrip,

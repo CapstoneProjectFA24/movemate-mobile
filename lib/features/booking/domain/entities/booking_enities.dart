@@ -1,6 +1,7 @@
 // booking_entities.dart
 
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
@@ -9,8 +10,8 @@ import 'package:movemate/features/booking/domain/entities/services_package_entit
 import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 
 class Booking {
-  final String? houseType;
-  final String? houseTypeId;
+  final HouseTypeEntity? houseType;
+
   final String? reviewType;
   final int? numberOfRooms;
   final int? numberOfFloors;
@@ -56,7 +57,7 @@ class Booking {
   factory Booking.fromJson(Map<String, dynamic> json) {
     return Booking(
       houseType: json['houseType'],
-      houseTypeId: json['houseTypeId'],
+
       numberOfRooms: json['numberOfRooms'],
       numberOfFloors: json['numberOfFloors'],
       selectedVehicleIndex: json['selectedVehicleIndex'],
@@ -99,7 +100,7 @@ class Booking {
   Map<String, dynamic> toJson() {
     return {
       'houseType': houseType,
-      'houseTypeId': houseTypeId,
+
       'numberOfRooms': numberOfRooms,
       'numberOfFloors': numberOfFloors,
       'selectedVehicleIndex': selectedVehicleIndex,
@@ -131,7 +132,6 @@ class Booking {
 
   Booking({
     this.houseType,
-    this.houseTypeId,
     this.reviewType,
     this.numberOfRooms,
     this.numberOfFloors,
@@ -174,8 +174,7 @@ class Booking {
         bathroomImages = bathroomImages ?? [];
 
   Booking copyWith({
-    String? houseType,
-    String? houseTypeId,
+    HouseTypeEntity? houseType,
     String? reviewType,
     int? numberOfRooms,
     int? numberOfFloors,
@@ -212,7 +211,7 @@ class Booking {
   }) {
     return Booking(
       houseType: houseType ?? this.houseType,
-      houseTypeId: houseTypeId ?? this.houseTypeId,
+
       reviewType: reviewType ?? this.reviewType,
       numberOfRooms: numberOfRooms ?? this.numberOfRooms,
       numberOfFloors: numberOfFloors ?? this.numberOfFloors,

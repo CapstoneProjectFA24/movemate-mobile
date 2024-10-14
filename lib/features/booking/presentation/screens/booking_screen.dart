@@ -25,7 +25,6 @@ class BookingScreen extends ConsumerWidget {
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
         title: "Thông tin đặt hàng",
-        
         onCallBackFirst: () {
           final tabsRouter = context.router.root
               .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
@@ -57,7 +56,16 @@ class BookingScreen extends ConsumerWidget {
         priceLabel: "",
         isButtonEnabled: true,
         onPlacePress: () {
-          context.router.push(const AvailableVehiclesScreenRoute());
+          // context.router.push(const AvailableVehiclesScreenRoute());
+
+          // print("${bookingState.houseType}");
+          if (bookingState.houseType!.id != null) {
+            context.router.push(const AvailableVehiclesScreenRoute());
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Vui lòng chọn loại nhà phù hợp')),
+            );
+          }
         },
       ),
     );
