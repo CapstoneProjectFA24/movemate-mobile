@@ -37,11 +37,11 @@ class SystemFeeScreen extends HookConsumerWidget {
     );
 
     return Container(
-      color: Colors.white, // Màu nền bạn muốn
+      color: Colors.white,
       child: Column(
         children: [
           SizedBox(height: size.height * 0.02),
-          // Loại bỏ Expanded ở đây
+         
           buildFeeList(
             context: context,
             state: state,

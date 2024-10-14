@@ -140,20 +140,20 @@ class ServiceFeeWidget extends StatelessWidget {
                 icon: const Icon(Icons.info_outline, color: Colors.blue),
                 onPressed: () {
                   // Hiển thị thông tin chi tiết khi nhấn vào icon
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return FractionallySizedBox(
-                        heightFactor: 0.7,
-                        child: ServiceInfoModal(
-                          title: serviceFee.name,
-                          infoText: serviceFee.description ??
-                              'Không có thông tin thêm.',
-                        ),
-                      );
-                    },
-                  );
+                  // showModalBottomSheet(
+                  //   context: context,
+                  //   isScrollControlled: true,
+                  //   builder: (BuildContext context) {
+                  //     return FractionallySizedBox(
+                  //       heightFactor: 0.7,
+                  //       child: ServiceInfoModal(
+                  //         title: serviceFee.name,
+                  //         infoText: serviceFee.description ??
+                  //             'Không có thông tin thêm.',
+                  //       ),
+                  //     );
+                  //   },
+                  // );
                 },
               ),
             ],
