@@ -104,8 +104,7 @@ class SummarySection extends StatelessWidget {
       ),
       builder: (BuildContext context) {
         return priceDetailModal ??
-            PriceDetailModal(
-                totalPrice: totalPrice); // Use provided modal or default
+            const PriceDetailModal(); // Use provided modal or default
       },
     );
   }

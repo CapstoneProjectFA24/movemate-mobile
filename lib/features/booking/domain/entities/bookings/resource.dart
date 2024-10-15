@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 
 class Resource {
   final String type;

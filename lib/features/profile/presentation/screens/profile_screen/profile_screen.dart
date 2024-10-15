@@ -85,7 +85,7 @@ class ProfileScreen extends HookConsumerWidget {
           children: [
             ProfileHeader(profile: profile),
             const SizedBox(height: 24.0),
-            PromoSection(),
+            const PromoSection(),
             const SizedBox(height: 24.0),
             Expanded(
               child: ListView.builder(

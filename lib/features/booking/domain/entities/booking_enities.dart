@@ -22,16 +22,12 @@ class Booking {
   final ServiceEntity? selectedVehicle;
 
   final double packagePrice;
-  final int peopleCount;
-  final int airConditionersCount;
   final bool isRoundTrip;
   final List<bool> checklistValues;
   final String notes;
 
   // Booking select package
 
-  final bool isHandlingExpanded;
-  final bool isDisassemblyExpanded;
   final int? selectedPackageIndex;
   final List<int> additionalServiceQuantities;
   final List<ServicesFeeSystemEntity> servicesFeeList;
@@ -64,8 +60,6 @@ class Booking {
       totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
       selectedPackageIndex: json['selectedPackageIndex'],
       packagePrice: (json['packagePrice'] as num?)?.toDouble() ?? 0.0,
-      peopleCount: json['peopleCount'] ?? 1,
-      airConditionersCount: json['airConditionersCount'] ?? 1,
       isRoundTrip: json['isRoundTrip'] ?? false,
       notes: json['notes'] ?? '',
 
@@ -76,8 +70,6 @@ class Booking {
       dropOffLocation: json['dropOffLocation'] != null
           ? LocationModel.fromJson(json['dropOffLocation'])
           : null,
-      isHandlingExpanded: json['isHandlingExpanded'] ?? false,
-      isDisassemblyExpanded: json['isDisassemblyExpanded'] ?? false,
       livingRoomImages: List<String>.from(json['livingRoomImages'] ?? []),
       bedroomImages: List<String>.from(json['bedroomImages'] ?? []),
       diningRoomImages: List<String>.from(json['diningRoomImages'] ?? []),
@@ -107,16 +99,12 @@ class Booking {
       'totalPrice': totalPrice,
       'selectedPackageIndex': selectedPackageIndex,
       'packagePrice': packagePrice,
-      'peopleCount': peopleCount,
-      'airConditionersCount': airConditionersCount,
       'isRoundTrip': isRoundTrip,
       'notes': notes,
       // Location
       'pickUpLocation': pickUpLocation?.toJson(),
       'dropOffLocation': dropOffLocation?.toJson(),
 
-      'isHandlingExpanded': isHandlingExpanded,
-      'isDisassemblyExpanded': isDisassemblyExpanded,
       'livingRoomImages': livingRoomImages,
       'bedroomImages': bedroomImages,
       'diningRoomImages': diningRoomImages,
@@ -140,16 +128,12 @@ class Booking {
     this.availableVehicles = const [],
     this.totalPrice = 0.0,
     this.packagePrice = 0.0,
-    this.peopleCount = 1,
-    this.airConditionersCount = 1,
     this.isRoundTrip = false,
     List<bool>? checklistValues,
     this.notes = '',
     this.servicesFeeList = const [],
     // Booking select packages
     this.selectedVehicle,
-    this.isHandlingExpanded = false,
-    this.isDisassemblyExpanded = false,
     this.selectedPackageIndex,
     this.additionalServiceQuantities = const [0, 0, 0],
     // Added fields
@@ -183,16 +167,12 @@ class Booking {
     List<Vehicle>? availableVehicles,
     double? totalPrice,
     double? packagePrice,
-    int? peopleCount,
-    int? airConditionersCount,
     bool? isRoundTrip,
     List<bool>? checklistValues,
     String? notes,
     List<ServicesFeeSystemEntity>? servicesFeeList,
     // Booking select package
     ServiceEntity? selectedVehicle,
-    bool? isHandlingExpanded,
-    bool? isDisassemblyExpanded,
     int? selectedPackageIndex,
     List<int>? additionalServiceQuantities,
     // Added fields
@@ -220,17 +200,13 @@ class Booking {
       availableVehicles: availableVehicles ?? this.availableVehicles,
       totalPrice: totalPrice ?? this.totalPrice,
       packagePrice: packagePrice ?? this.packagePrice,
-      peopleCount: peopleCount ?? this.peopleCount,
-      airConditionersCount: airConditionersCount ?? this.airConditionersCount,
       isRoundTrip: isRoundTrip ?? this.isRoundTrip,
       checklistValues: checklistValues ?? this.checklistValues,
       notes: notes ?? this.notes,
       servicesFeeList: servicesFeeList ?? this.servicesFeeList,
       // Booking select package
       selectedVehicle: selectedVehicle ?? this.selectedVehicle,
-      isHandlingExpanded: isHandlingExpanded ?? this.isHandlingExpanded,
-      isDisassemblyExpanded:
-          isDisassemblyExpanded ?? this.isDisassemblyExpanded,
+
       selectedPackageIndex: selectedPackageIndex ?? this.selectedPackageIndex,
       additionalServiceQuantities:
           additionalServiceQuantities ?? this.additionalServiceQuantities,

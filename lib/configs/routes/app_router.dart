@@ -2,9 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_online.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
-import 'package:movemate/features/booking/presentation/widgets/models/tracking_at_home.dart';
+
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 
@@ -129,10 +131,20 @@ class AppRouter extends _$AppRouter {
           // initial: true,
           page: BookingScreenServiceRoute.page,
         ),
-        // test booking service fee screen
+        //  booking service fee widget
         AutoRoute(
           // initial: true,
           page: SystemFeeScreenRoute.page,
+        ),
+        // review at home
+        AutoRoute(
+          // initial: true,
+          page: ReviewAtHomeRoute.page,
+        ),
+        // review online
+        AutoRoute(
+          // initial: true,
+          page: ReviewOnlineRoute.page,
         ),
 
         //TODO
@@ -159,11 +171,6 @@ class AppRouter extends _$AppRouter {
           page: VehiclePriceListScreenRoute.page,
         ),
 
-        //  order informationreview flow
-        AutoRoute(
-          // initial: true,
-          page: OrderInformationRoute.page,
-        ),
         AutoRoute(
           page: PaymentScreenRoute.page,
         ),

@@ -1,18 +1,25 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 
-class ServiceSuggestionScreen extends StatelessWidget {
-  const ServiceSuggestionScreen({super.key});
+@RoutePage()
+class ReviewAtHome extends StatelessWidget {
+  const ReviewAtHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: Center(
+      appBar: const CustomAppBar(
+        title: 'Gợi ý dịch vụ',
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        // Cho phép cuộn nếu nội dung vượt quá chiều cao màn hình
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Container(
-            width: 375,
-            height: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -25,44 +32,29 @@ class ServiceSuggestionScreen extends StatelessWidget {
               ],
             ),
             child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize:
+                  MainAxisSize.min, // Đảm bảo Column chiếm không gian tối thiểu
               children: [
-                Header(),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 AppointmentTime(),
                 SizedBox(height: 10),
                 Description(),
                 SizedBox(height: 20),
                 ContactSection(),
                 SizedBox(height: 20),
-                Buttons(),
+                // Đã loại bỏ Buttons() khỏi đây
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class Header extends StatelessWidget {
-  const Header({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(FontAwesomeIcons.chevronLeft, size: 20),
-        Text(
-          'Gợi ý dịch vụ',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+      bottomNavigationBar: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: SafeArea(
+          child: Buttons(),
         ),
-        SizedBox(width: 20), // Placeholder for space on the right
-      ],
+      ),
     );
   }
 }
@@ -73,6 +65,7 @@ class AppointmentTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           'Lịch hẹn với người đánh giá',
@@ -139,16 +132,17 @@ class ContactInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 20,
           backgroundImage: NetworkImage(
-              'https://storage.googleapis.com/a1aa/image/p5OKRdzupwITHJRADxe2zVw1ETxmkRfWfQZKa5mhRMjVmAMnA.jpg'),
+            'https://storage.googleapis.com/a1aa/image/p5OKRdzupwITHJRADxe2zVw1ETxmkRfWfQZKa5mhRMjVmAMnA.jpg',
+          ),
         ),
-        SizedBox(width: 10),
-        Column(
+        const SizedBox(width: 10),
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -170,10 +164,22 @@ class ContactInfo extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(width: 10),
-        Icon(FontAwesomeIcons.phone, size: 18, color: Color(0xFF666666)),
-        SizedBox(width: 10),
-        Icon(FontAwesomeIcons.comment, size: 18, color: Color(0xFF666666)),
+        const SizedBox(width: 10),
+        IconButton(
+          icon: const Icon(FontAwesomeIcons.phone,
+              size: 18, color: Color(0xFF666666)),
+          onPressed: () {
+            // Xử lý sự kiện khi nhấn vào biểu tượng điện thoại
+          },
+        ),
+        const SizedBox(width: 10),
+        IconButton(
+          icon: const Icon(FontAwesomeIcons.comment,
+              size: 18, color: Color(0xFF666666)),
+          onPressed: () {
+            // Xử lý sự kiện khi nhấn vào biểu tượng tin nhắn
+          },
+        ),
       ],
     );
   }
@@ -184,24 +190,37 @@ class Buttons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
+      mainAxisSize: MainAxisSize.min, // Đảm bảo chiếm không gian tối thiểu
       children: [
         ActionButton(
           text: 'Thay đổi lịch hẹn',
           color: Colors.white,
-          borderColor: Color(0xFFFF6600),
-          textColor: Color(0xFFFF6600),
+          borderColor: const Color(0xFFFF6600),
+          textColor: const Color(0xFFFF6600),
+          onPressed: () {
+            // Xử lý sự kiện khi nhấn nút "Thay đổi lịch hẹn"
+          },
         ),
+        const SizedBox(height: 8),
         ActionButton(
           text: 'Xác nhận',
-          color: Color(0xFFFF6600),
+          color: const Color(0xFFFF6600),
           textColor: Colors.white,
+          onPressed: () {
+            // Xử lý sự kiện khi nhấn nút "Xác nhận"
+          },
         ),
+        const SizedBox(height: 8),
         ActionButton(
           text: 'Hủy',
           color: Colors.white,
-          borderColor: Color(0xFF666666),
-          textColor: Color(0xFF666666),
+          borderColor: const Color(0xFF666666),
+          textColor: const Color(0xFF666666),
+          onPressed: () {
+            // Xử lý sự kiện khi nhấn nút "Hủy"
+            context.router.pop();
+          },
         ),
       ],
     );
@@ -213,38 +232,38 @@ class ActionButton extends StatelessWidget {
   final Color color;
   final Color textColor;
   final Color? borderColor;
+  final VoidCallback onPressed;
 
   const ActionButton({
     super.key,
     required this.text,
     required this.color,
     required this.textColor,
+    required this.onPressed,
     this.borderColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      width: MediaQuery.of(context).size.width * 0.8,
+    return SizedBox(
+      width: double.infinity, // Nút chiếm toàn bộ chiều rộng
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          iconColor: textColor,
+          foregroundColor: textColor,
           side: borderColor != null ? BorderSide(color: borderColor!) : null,
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
-        onPressed: () {
-          // Handle button press here
-        },
+        onPressed: onPressed,
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
+            color: textColor, // Đảm bảo màu chữ chính xác
           ),
         ),
       ),

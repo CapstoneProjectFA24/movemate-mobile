@@ -5,15 +5,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
-import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
-import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 //entity
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/service_package_tile.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/check_list_section.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/ServiceFeeWidget.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/notes_section.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/round_trip_checkbox.dart';
@@ -23,6 +20,8 @@ import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+
+import '../widgets/models/review_options.dart';
 
 @RoutePage()
 class BookingScreenService extends HookConsumerWidget {
@@ -105,6 +104,7 @@ class BookingScreenService extends HookConsumerWidget {
                   const ChecklistSection(),
                   const SizedBox(height: 16),
                   const NotesSection(),
+                  // const DailyUIChallengeCard(),
                 ],
               ),
             ),
@@ -120,13 +120,26 @@ class BookingScreenService extends HookConsumerWidget {
           final bookingState = ref.read(bookingProvider);
 
           // Bước 2: Tạo BookingRequest từ Booking
-          final bookingRequest = BookingRequest.fromBooking(bookingState);
+          // final bookingRequest = BookingRequest.fromBooking(bookingState);
 
           // Bước 3: Chuyển đổi BookingRequest thành chuỗi JSON
-          final jsonRequest = bookingRequest.toJson();
+          // final jsonRequest = bookingRequest.toJson();
+          final jsonRequest =
+              bookingState.selectedSubServices.map((e) => e.toJson()).toList();
 
           // Bước 4: In chuỗi JSON
           print(jsonRequest);
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const DailyUIChallengeCard(),
+              );
+            },
+          );
         },
         buttonText: 'Đặt đơn',
         priceLabel: 'Tổng giá',

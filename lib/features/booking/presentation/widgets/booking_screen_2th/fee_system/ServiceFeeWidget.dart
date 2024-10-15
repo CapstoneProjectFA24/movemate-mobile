@@ -79,7 +79,7 @@ class ServiceFeeWidget extends StatelessWidget {
             style: const TextStyle(fontSize: 14, color: Colors.grey),
           ),
           trailing: ServiceTrailingWidget(
-            addService: false,
+            addService: true,
             quantity: quantity,
             onQuantityChanged: onQuantityChanged,
           ),

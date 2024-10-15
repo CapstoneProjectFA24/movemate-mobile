@@ -1,123 +1,172 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart'; // Import Riverpod
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart'; // Import booking_provider
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-class PriceDetailModal extends StatelessWidget {
+class ServiceItem {
+  final String title;
+  final double unitPrice;
+  final int quantity;
   final double totalPrice;
 
-  const PriceDetailModal({super.key, required this.totalPrice});
+  ServiceItem({
+    required this.title,
+    required this.unitPrice,
+    required this.quantity,
+    required this.totalPrice,
+  });
+}
+
+class PriceDetailModal extends ConsumerWidget {
+  const PriceDetailModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingState = ref.watch(bookingProvider);
+    final priceFormat = NumberFormat('#,###', 'vi_VN');
+
+    // Lấy danh sách các dịch vụ đã chọn
+    final selectedSubServices = bookingState.selectedSubServices;
+    final servicesFeeList = bookingState.servicesFeeList;
+
+    // Kết hợp chúng vào một danh sách duy nhất
+    final List<ServiceItem> allSelectedServices = [
+      ...selectedSubServices.map((subService) => ServiceItem(
+            title: subService.name,
+            unitPrice: subService.amount,
+            quantity: subService.quantity ?? 1,
+            totalPrice: subService.amount * (subService.quantity ?? 1),
+          )),
+      ...servicesFeeList.map((fee) => ServiceItem(
+            title: fee.name,
+            unitPrice: fee.amount.toDouble(),
+            quantity: fee.quantity ?? 1,
+            totalPrice: (fee.amount * (fee.quantity ?? 1)).toDouble(),
+          )),
+    ];
+
+    // Thêm giá của phương tiện nếu có
+    if (bookingState.selectedVehicle != null) {
+      final vehicle = bookingState.selectedVehicle!;
+      allSelectedServices.add(ServiceItem(
+        title: vehicle.name,
+        unitPrice: vehicle.amount,
+        quantity: 1,
+        totalPrice: vehicle.amount,
+      ));
+    }
+
+    // Tính tổng giá trước thuế (subtotal)
+    double subtotal = allSelectedServices.fold(
+        0.0, (sum, service) => sum + service.totalPrice);
+
+    // Xử lý nếu là chuyến đi khứ hồi
+    if (bookingState.isRoundTrip == true) {
+      subtotal *= 2;
+      // Cập nhật lại totalPrice của các dịch vụ cho phù hợp
+      for (var i = 0; i < allSelectedServices.length; i++) {
+        allSelectedServices[i] = ServiceItem(
+          title: allSelectedServices[i].title,
+          unitPrice: allSelectedServices[i].unitPrice,
+          quantity: allSelectedServices[i].quantity,
+          totalPrice: allSelectedServices[i].totalPrice * 2,
+        );
+      }
+    }
+
+    // Tính thuế GTGT (8% của subtotal)
+    double vat = subtotal * 0.08;
+
+    // Thêm dịch vụ "Thuế GTGT" vào danh sách dịch vụ
+    allSelectedServices.add(ServiceItem(
+      title: 'Thuế GTGT',
+      unitPrice: vat,
+      quantity: 1,
+      totalPrice: vat,
+    ));
+
+    // Tính tổng giá sau thuế
+    double totalPrice = subtotal + vat;
 
     return Container(
-      color: AssetsConstants.whiteColor, // Đặt màu nền trắng cho modal
+      color: AssetsConstants.whiteColor,
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: screenHeight * 0.5, // Giới hạn chiều cao modal
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Chi tiết giá',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AssetsConstants.blackColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Chi tiết giá',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AssetsConstants.blackColor,
+              ),
+            ),
+            const SizedBox(height: 2),
+            // Hiển thị danh sách dịch vụ
+            ...allSelectedServices.map((service) => buildPriceDetailRow(
+                  service.title,
+                  service.totalPrice,
+                  service.quantity,
+                )),
+            const SizedBox(height: 4),
+            // Hiển thị tổng giá
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Tổng cộng',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              buildPriceDetailRow('Phí giao hàng', 282900),
-              buildPriceDetailRow(
-                  'Dịch Vụ Bốc Xếp - Bốc Xếp Tận Nơi (Bởi tài xế)', 140000),
-              buildPriceDetailRow(
-                  'Dịch Vụ Bốc Xếp - Bốc Xếp Tận Nơi (Có người hỗ trợ)',
-                  400000),
-              buildPriceDetailRow(
-                  'Dịch Vụ Bốc Xếp - Bốc Xếp Dưới Xe (Có người hỗ trợ)',
-                  350000),
-              buildPriceDetailRow('Giao Hàng 2 Chiều', 172200),
-              buildPriceDetailRow('Giao Hàng Siêu Tốc', 49200),
-              buildPriceDetailRow('Hỗ Trợ Phí Cầu Đường', 100000),
-              buildPriceDetailRow('Thuế GTGT', 119544),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Tổng cộng',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  // '₫${totalPrice.toStringAsFixed(0)}',
+                  '${priceFormat.format(bookingState.totalPrice)} đ',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AssetsConstants.blackColor,
                   ),
-                  Text(
-                    '₫${totalPrice.toStringAsFixed(3)}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AssetsConstants.blackColor,
-                    ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // chuyển đến màn hình tiếp theo
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AssetsConstants.primaryDark,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              const Row(
-                children: [
-                  Icon(Icons.info_outline,
-                      color: AssetsConstants.green1, size: 16),
-                  SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      'Phí giao hàng rẻ hơn ₫36.900. Đừng bỏ lỡ!',
-                      style: TextStyle(
-                          color: AssetsConstants.green1, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Chưa bao gồm phí cầu đường và phí phụ ngoài. Vui lòng thoả thuận với tài xế hoặc kiểm tra kỹ càng.',
-                style: TextStyle(
-                    fontSize: 12, color: AssetsConstants.greyColor.shade600),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity, // Để nút rộng bằng màn hình
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Đóng modal
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AssetsConstants.primaryDark, // Màu nền cam
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8), // Bo góc nút
-                    ),
-                  ),
-                  child: const Text(
-                    'Bước tiếp theo',
-                    style: TextStyle(
-                      fontSize: 16, // Kích thước chữ
-                      fontWeight: FontWeight.bold, // Chữ in đậm
-                      color: AssetsConstants.whiteColor, // Màu chữ trắng
-                    ),
+                ),
+                child: const Text(
+                  'Xác nhận',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AssetsConstants.whiteColor,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   // Helper để hiển thị từng dòng chi tiết giá
-  Widget buildPriceDetailRow(String title, double price) {
+  Widget buildPriceDetailRow(String title, double price, int quantity) {
+    final priceFormat = NumberFormat('#,###', 'vi_VN');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
@@ -125,17 +174,15 @@ class PriceDetailModal extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              title,
+              quantity > 1 ? '$title x$quantity' : title,
               style: const TextStyle(fontSize: 12),
-              overflow: TextOverflow.ellipsis, // Thêm để tránh text bị tràn
+              overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
           ),
-          const SizedBox(
-            width: 28,
-          ),
+          const SizedBox(width: 28),
           Text(
-            '₫${price.toStringAsFixed(0)}',
+            '${priceFormat.format(price)} đ',
             style: const TextStyle(fontSize: 14),
           ),
         ],

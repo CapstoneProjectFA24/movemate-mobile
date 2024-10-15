@@ -86,16 +86,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    OrderInformationRoute.name: (routeData) {
-      final args = routeData.argsAs<OrderInformationRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: OrderInformation(
-          key: args.key,
-          onOptionSelected: args.onOptionSelected,
-        ),
-      );
-    },
     OrderScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -148,6 +138,18 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const PromotionScreen(),
+      );
+    },
+    ReviewAtHomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ReviewAtHome(),
+      );
+    },
+    ReviewOnlineRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ReviewOnline(),
       );
     },
     ServiceScreenRoute.name: (routeData) {
@@ -430,44 +432,6 @@ class OrderDetailsScreenRouteArgs {
 }
 
 /// generated route for
-/// [OrderInformation]
-class OrderInformationRoute extends PageRouteInfo<OrderInformationRouteArgs> {
-  OrderInformationRoute({
-    Key? key,
-    required dynamic Function(String) onOptionSelected,
-    List<PageRouteInfo>? children,
-  }) : super(
-          OrderInformationRoute.name,
-          args: OrderInformationRouteArgs(
-            key: key,
-            onOptionSelected: onOptionSelected,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'OrderInformationRoute';
-
-  static const PageInfo<OrderInformationRouteArgs> page =
-      PageInfo<OrderInformationRouteArgs>(name);
-}
-
-class OrderInformationRouteArgs {
-  const OrderInformationRouteArgs({
-    this.key,
-    required this.onOptionSelected,
-  });
-
-  final Key? key;
-
-  final dynamic Function(String) onOptionSelected;
-
-  @override
-  String toString() {
-    return 'OrderInformationRouteArgs{key: $key, onOptionSelected: $onOptionSelected}';
-  }
-}
-
-/// generated route for
 /// [OrderScreen]
 class OrderScreenRoute extends PageRouteInfo<void> {
   const OrderScreenRoute({List<PageRouteInfo>? children})
@@ -616,6 +580,34 @@ class PromotionScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'PromotionScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ReviewAtHome]
+class ReviewAtHomeRoute extends PageRouteInfo<void> {
+  const ReviewAtHomeRoute({List<PageRouteInfo>? children})
+      : super(
+          ReviewAtHomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ReviewAtHomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ReviewOnline]
+class ReviewOnlineRoute extends PageRouteInfo<void> {
+  const ReviewOnlineRoute({List<PageRouteInfo>? children})
+      : super(
+          ReviewOnlineRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ReviewOnlineRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
