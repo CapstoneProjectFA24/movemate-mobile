@@ -7,7 +7,7 @@ class UserModel {
   final String email;
   final TokenModel tokens;
   final String? fcmToken;
-  final List<UserDevice>? userTokens;
+  final List<UserDevice>? userTokens; 
 
   UserModel({
     required this.id,

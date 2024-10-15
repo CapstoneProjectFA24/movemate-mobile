@@ -1,5 +1,5 @@
 // domain - data
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/service_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_repository.dart';
 
 //system

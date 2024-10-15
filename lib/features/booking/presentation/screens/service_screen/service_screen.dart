@@ -16,7 +16,7 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 // Data Entities
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/service_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 
 @RoutePage()

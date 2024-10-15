@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/house_type_entity.dart';
 
 
 

@@ -13,18 +13,7 @@ class BookingNotifier extends StateNotifier<Booking> {
   // BookingNotifier() : super(Booking(totalPrice: 0.0));
   BookingNotifier()
       : super(Booking(
-            totalPrice: 0.0, additionalServiceQuantities: [], packages: [])) {
-    loadBookingData();
-
-    loadAvailableVehicles();
-    loadPackages();
-  }
-
-  void loadPackages() {
-    final List<dynamic> jsonData = json.decode(fakeBookingJson3nd);
-    final packages = jsonData.map((e) => Package.fromJson(e)).toList();
-    state = state.copyWith(packages: packages);
-  }
+            totalPrice: 0.0, additionalServiceQuantities: [], packages: [])) {}
 
   void updateAdditionalServiceQuantity(int serviceIndex, int newQuantity) {
     final updatedQuantities = [...state.additionalServiceQuantities];
@@ -46,24 +35,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(packages: packages);
 
     calculateAndUpdateTotalPrice();
-  }
-
-  // Method to load booking data (fake data)
-  void loadBookingData() {
-    final jsonData = json.decode(fakeBookingJson);
-    final bookingData = Booking.fromJson(jsonData);
-    state = bookingData;
-  }
-
-  //end test
-
-  // Method to load available vehicles
-  void loadAvailableVehicles() {
-    final List<dynamic> jsonData = json.decode(fakeVehicleJson);
-    final vehicles =
-        jsonData.map((vehicleJson) => Vehicle.fromJson(vehicleJson)).toList();
-
-    state = state.copyWith(availableVehicles: vehicles);
   }
 
   void calculateAndUpdateTotalPrice() {

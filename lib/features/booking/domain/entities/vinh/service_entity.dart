@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
-
+import 'package:movemate/features/booking/domain/entities/vinh/inverse_parent_service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/truck_category_entity.dart';
 
 class ServiceEntity {
   final int id;
@@ -13,7 +13,9 @@ class ServiceEntity {
   final String type;
   final double discountRate;
   final double amount;
-  final TruckCategoryEntity? truckCategory;
+  final int parentServiceId;
+  final List<InverseParentServiceEntity> inverseParentService;
+  final TruckCategoryEntity? truckCategory; // remove
 
   ServiceEntity({
     required this.id,
@@ -25,6 +27,8 @@ class ServiceEntity {
     required this.type,
     required this.discountRate,
     required this.amount,
+    required this.parentServiceId,
+    required this.inverseParentService,
     this.truckCategory,
   });
 
@@ -39,6 +43,10 @@ class ServiceEntity {
       type: map['type'] ?? '',
       discountRate: (map['discountRate'] ?? 0).toDouble(),
       amount: (map['amount'] ?? 0).toDouble(),
+      parentServiceId: map['parentServiceId'],
+      inverseParentService: List<InverseParentServiceEntity>.from(
+          map['inverseParentService']
+              .map((x) => InverseParentServiceEntity.fromMap(x))),
       truckCategory: map['truckCategory'] != null
           ? TruckCategoryEntity.fromMap(map['truckCategory'])
           : null,
@@ -56,6 +64,9 @@ class ServiceEntity {
       'type': type,
       'discountRate': discountRate,
       'amount': amount,
+      'parentServiceId': parentServiceId,
+      'inverseParentService':
+          List<dynamic>.from(inverseParentService.map((x) => x.toMap())),
       'truckCategory': truckCategory!.toMap()
     };
   }

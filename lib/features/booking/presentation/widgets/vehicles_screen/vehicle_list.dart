@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/service_entity.dart';
 import 'package:movemate/features/booking/presentation/widgets/vehicles_screen/vehicle_card.dart';
 import 'package:movemate/utils/commons/widgets/custom_circular.dart';
 import 'package:movemate/utils/commons/widgets/empty_box.dart';

@@ -1,5 +1,5 @@
 // domain - data
-import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/house_type_repository.dart';
 
 //system

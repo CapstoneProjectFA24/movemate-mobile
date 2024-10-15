@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/vinh/service_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/vehicles_screen/vehicle_list.dart';
 
