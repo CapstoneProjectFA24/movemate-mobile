@@ -108,6 +108,7 @@ flutter:
     - assets/images/profile/
     - assets/images/promotion/
     - assets/images/splash/
+    - assets/images/payment_status/
 
   # fonts:
   #   - family: Open Sans
