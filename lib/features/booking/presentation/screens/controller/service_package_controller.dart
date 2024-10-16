@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
-import 'package:movemate/features/booking/domain/repositories/services_package_repository.dart';
+import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +19,7 @@ class ServicePackageController extends _$ServicePackageController {
     BuildContext context,
   ) async {
     final servicesPackageRepository =
-        ref.read(servicesPackageRepositoryProvider);
+        ref.read(serviceBookingRepositoryProvider);
 
     try {
       // Fetch the package services from the repository

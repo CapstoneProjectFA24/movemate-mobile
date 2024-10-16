@@ -1,15 +1,10 @@
-// domain - data
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
-import 'package:movemate/features/booking/domain/repositories/service_repository.dart';
+// service_controller.dart
 
-//system
 import 'package:flutter/material.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-// config
-
-// utils
 
 part 'service_controller.g.dart';
 
@@ -25,10 +20,10 @@ class ServiceController extends _$ServiceController {
     BuildContext context,
   ) async {
     List<ServiceEntity> serviceCateData = [];
-    final serviceRepository = ref.read(serviceRepositoryProvider);
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
 
     state = await AsyncValue.guard(() async {
-      final response = await serviceRepository.getServices(
+      final response = await serviceBookingRepository.getServices(
         request: request,
       );
 
