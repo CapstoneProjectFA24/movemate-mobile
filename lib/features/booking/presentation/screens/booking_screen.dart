@@ -5,11 +5,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_detail/booking_details.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
-import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/booking_selection.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
@@ -22,18 +22,12 @@ class BookingScreen extends ConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     return Scaffold(
-      appBar: CustomAppBar(
-        backgroundColor: AssetsConstants.primaryMain,
-        title: "Thông tin đặt hàng",
-        onCallBackFirst: () {
-          final tabsRouter = context.router.root
-              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
-          if (tabsRouter != null) {
-            tabsRouter.setActiveIndex(0);
-            // Pop back to the TabViewScreen
-            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
-          }
-        },
+      appBar: const CustomAppBar(
+        title: 'Phương tiện có sẵn',
+        iconFirst: Icons.refresh_rounded,
+        centerTitle: true,
+        backButtonColor: AssetsConstants.whiteColor,
+        // onCallBackFirst: fetchResult.refresh,
       ),
       body: const SingleChildScrollView(
         padding:

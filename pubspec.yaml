@@ -38,6 +38,12 @@ dependencies:
   firebase_messaging: ^14.7.6
   firebase_auth: ^4.0.0
 
+  # Vietmap
+  vietmap_flutter_gl: ^3.0.0
+  vietmap_flutter_navigation: ^3.1.1
+  vietmap_flutter_plugin: ^0.3.0
+  vietmap_gl_platform_interface: ^0.2.0
+
   # Cloudinary
   cloudinary_flutter: ^1.0.0
   cloudinary_url_gen: ^1.0.0
