@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
+// Import ImageData class
+import 'package:movemate/features/booking/domain/entities/image_data.dart';
+
 class RoomImage extends StatelessWidget {
-  final String imagePath;
+  final ImageData imageData;
   final RoomType roomType;
   final BookingNotifier bookingNotifier;
 
   const RoomImage({
     super.key,
-    required this.imagePath,
+    required this.imageData,
     required this.roomType,
     required this.bookingNotifier,
   });
@@ -24,7 +27,7 @@ class RoomImage extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           image: DecorationImage(
-            image: AssetImage(imagePath),
+            image: NetworkImage(imageData.url),
             fit: BoxFit.cover,
           ),
         ),
@@ -35,7 +38,7 @@ class RoomImage extends StatelessWidget {
               right: 4,
               child: GestureDetector(
                 onTap: () {
-                  bookingNotifier.removeImageFromRoom(roomType, imagePath);
+                  bookingNotifier.removeImageFromRoom(roomType, imageData);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(4),

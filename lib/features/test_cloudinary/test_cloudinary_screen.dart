@@ -12,8 +12,8 @@ class TestCloudinaryScreen extends HookWidget {
 
     // Danh sách hình ảnh giả lập từ backend
     final images = useState<List<String>>([
-      "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg",  // 1
-      "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg"
+      // "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg",  // 1
+      // "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728485337/movemate/g12muevg0sqpkboh232d.jpg"
     ]);
     print('Images: ${images.value}');
 

@@ -37,6 +37,7 @@ import 'dart:convert';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'package:movemate/features/booking/domain/entities/bookings/resource.dart';
 import 'package:movemate/features/booking/domain/entities/bookings/service_detail.dart';
+import 'package:movemate/features/booking/domain/entities/image_data.dart';
 
 class BookingRequest {
   final String pickupAddress;
@@ -155,10 +156,10 @@ class BookingRequest {
     // Chuyển đổi hình ảnh thành Resource
     List<Resource> resourceList = [];
 
-    void addImagesToResourceList(List<String> images, String resourceCode) {
-      resourceList.addAll(images.map((url) => Resource(
+    void addImagesToResourceList(List<ImageData> images, String resourceCode) {
+      resourceList.addAll(images.map((imageData) => Resource(
             type: 'IMG',
-            resourceUrl: url,
+            resourceUrl: imageData.url,
             resourceCode: resourceCode,
           )));
     }
@@ -190,7 +191,7 @@ class BookingRequest {
           ? '${booking.dropOffLocation!.latitude},${booking.dropOffLocation!.longitude}'
           : '',
       estimatedDistance: estimatedDistance,
-      houseTypeId: booking.houseType!.id ?? 1,
+      houseTypeId: booking.houseType?.id ?? 1,
       note: booking.notes,
       estimatedDeliveryTime: estimatedDeliveryTime,
       isRoundTrip: booking.isRoundTrip,

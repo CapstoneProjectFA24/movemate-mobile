@@ -124,11 +124,19 @@ class BookingScreenService extends HookConsumerWidget {
 
           // Bước 3: Chuyển đổi BookingRequest thành chuỗi JSON
           // final jsonRequest = bookingRequest.toJson();
-          final jsonRequest =
+          // final jsonRequestSubservicerequest =
+          //     bookingRequest.resourceList.map((e) => e.toJson()).toList();
+
+          final jsonRequestSubservice =
               bookingState.selectedSubServices.map((e) => e.toJson()).toList();
 
+          // final jsonRequestHousetype =
+          //     bookingState.livingRoomImages.map((e) => e.toJson()).toList();
+
           // Bước 4: In chuỗi JSON
-          print(jsonRequest);
+          print(jsonRequestSubservice);
+          // print("hình truyền lên là : $jsonRequestSubservicerequest");
+
           showDialog(
             context: context,
             builder: (BuildContext context) {

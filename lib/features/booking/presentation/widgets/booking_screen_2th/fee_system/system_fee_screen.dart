@@ -40,7 +40,6 @@ class SystemFeeScreen extends HookConsumerWidget {
       child: Column(
         children: [
           SizedBox(height: size.height * 0.02),
-         
           buildFeeList(
             context: context,
             state: state,

@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:cloudinary_public/cloudinary_public.dart';
+
+// Import ImageData class
+import 'package:movemate/features/booking/domain/entities/image_data.dart';
 
 class AddImageButton extends StatelessWidget {
   final RoomType roomType;
@@ -21,10 +25,33 @@ class AddImageButton extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         final ImagePicker picker = ImagePicker();
-        final XFile? image =
+        final XFile? pickedFile =
             await picker.pickImage(source: ImageSource.gallery);
-        if (image != null) {
-          bookingNotifier.addImageToRoom(roomType, image.path);
+        if (pickedFile != null) {
+          // Upload image to Cloudinary
+          final cloudinary =
+              CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false);
+          try {
+            final CloudinaryResponse response = await cloudinary.uploadFile(
+              CloudinaryFile.fromFile(
+                pickedFile.path,
+                folder: 'movemate',
+                resourceType: CloudinaryResourceType.Image,
+              ),
+            );
+            // Create ImageData
+            final imageData = ImageData(
+              url: response.secureUrl,
+              publicId: response.publicId,
+            );
+            // Add image to booking state
+            bookingNotifier.addImageToRoom(roomType, imageData);
+          } catch (e) {
+            // Handle errors
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to upload image')),
+            );
+          }
         }
       },
       child: Center(
