@@ -7,6 +7,9 @@ import 'configs/routes/app_router.dart';
 import 'configs/theme/app_theme.dart';
 import 'utils/constants/asset_constant.dart';
 
+// deep link payment uri
+import 'package:movemate/utils/commons/functions/handle_deep_link.dart';
+
 // cloudinary
 import 'package:cloudinary_url_gen/cloudinary.dart';
 // import 'cloudinary_upload_widget.dart';
@@ -44,6 +47,7 @@ class MyApp extends HookConsumerWidget {
       Future.delayed(const Duration(seconds: 3)).then((_) {
         showSplashScreen.value = false;
       });
+       initUniLinks(context, ref);
       return null;
     }, []);
 
@@ -64,3 +68,4 @@ class MyApp extends HookConsumerWidget {
     );
   }
 }
+
