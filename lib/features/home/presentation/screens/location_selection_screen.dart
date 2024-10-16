@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/location_bottom_sheet.dart';
 import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
 
 import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
-import 'package:movemate/features/home/presentation/widgets/map_widget/location_selection_modal.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 final vietmapControllerProvider =
@@ -51,27 +51,23 @@ class LocationSelectionScreen extends HookConsumerWidget {
               child: ButtonCustom(
                 buttonText: "Chọn địa chỉ",
                 isButtonEnabled: true,
-                onButtonPressed: () =>
-                    _showLocationSelectionModal(context, ref),
+                onButtonPressed: () => showModalBottomSheet(
+                  backgroundColor: AssetsConstants.whiteColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) => FractionallySizedBox(
+                    heightFactor: 0.7,
+                    child: LocationBottomSheet(),
+                  ),
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showLocationSelectionModal(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
-      backgroundColor: AssetsConstants.whiteColor,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      isScrollControlled: true,
-      builder: (context) => FractionallySizedBox(
-        heightFactor: 0.7,
-        child: LocationSelectionModal(ref: ref),
       ),
     );
   }
