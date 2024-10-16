@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
-import 'package:movemate/features/home/presentation/widgets/button_custom.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 

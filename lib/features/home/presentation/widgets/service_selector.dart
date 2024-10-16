@@ -7,7 +7,7 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
-import 'package:movemate/features/home/presentation/widgets/button_custom.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
