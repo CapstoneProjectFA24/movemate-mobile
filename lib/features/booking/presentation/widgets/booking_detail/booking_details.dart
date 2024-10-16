@@ -3,7 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_detail/room_image_section.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
-// Import các component
+// Import the ImageData class
+
 
 class BookingDetails extends HookConsumerWidget {
   const BookingDetails({super.key});

@@ -2,6 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
@@ -111,7 +112,7 @@ class BookingNotifier extends StateNotifier<Booking> {
 
     // Tổng giá của các dịch vụ phí hệ thống với số lượng
     for (var fee in state.servicesFeeList ?? []) {
-      total += fee.amount * (fee.quantity ?? 1);
+      total += fee.amount * (fee.quantity ?? 0);
     }
 
     // Thêm giá của phương tiện đã chọn
@@ -199,72 +200,76 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   // Method to add image to a room
-  void addImageToRoom(RoomType roomType, String imagePath) {
+  void addImageToRoom(RoomType roomType, ImageData imageData) {
     switch (roomType) {
       case RoomType.livingRoom:
         state = state.copyWith(
-          livingRoomImages: [...state.livingRoomImages, imagePath],
+          livingRoomImages: [...state.livingRoomImages, imageData],
         );
         break;
       case RoomType.bedroom:
         state = state.copyWith(
-          bedroomImages: [...state.bedroomImages, imagePath],
+          bedroomImages: [...state.bedroomImages, imageData],
         );
         break;
       case RoomType.diningRoom:
         state = state.copyWith(
-          diningRoomImages: [...state.diningRoomImages, imagePath],
+          diningRoomImages: [...state.diningRoomImages, imageData],
         );
         break;
       case RoomType.officeRoom:
         state = state.copyWith(
-          officeRoomImages: [...state.officeRoomImages, imagePath],
+          officeRoomImages: [...state.officeRoomImages, imageData],
         );
         break;
       case RoomType.bathroom:
         state = state.copyWith(
-          bathroomImages: [...state.bathroomImages, imagePath],
+          bathroomImages: [...state.bathroomImages, imageData],
         );
         break;
     }
   }
 
-  // Method to remove image from a room
-  void removeImageFromRoom(RoomType roomType, String imagePath) {
+// Method to remove image to a room
+  void removeImageFromRoom(RoomType roomType, ImageData imageData) {
     switch (roomType) {
       case RoomType.livingRoom:
         state = state.copyWith(
-          livingRoomImages:
-              state.livingRoomImages.where((img) => img != imagePath).toList(),
+          livingRoomImages: state.livingRoomImages
+              .where((img) => img.publicId != imageData.publicId)
+              .toList(),
         );
         break;
       case RoomType.bedroom:
         state = state.copyWith(
-          bedroomImages:
-              state.bedroomImages.where((img) => img != imagePath).toList(),
+          bedroomImages: state.bedroomImages
+              .where((img) => img.publicId != imageData.publicId)
+              .toList(),
         );
         break;
       case RoomType.diningRoom:
         state = state.copyWith(
-          diningRoomImages:
-              state.diningRoomImages.where((img) => img != imagePath).toList(),
+          diningRoomImages: state.diningRoomImages
+              .where((img) => img.publicId != imageData.publicId)
+              .toList(),
         );
         break;
       case RoomType.officeRoom:
         state = state.copyWith(
-          officeRoomImages:
-              state.officeRoomImages.where((img) => img != imagePath).toList(),
+          officeRoomImages: state.officeRoomImages
+              .where((img) => img.publicId != imageData.publicId)
+              .toList(),
         );
         break;
       case RoomType.bathroom:
         state = state.copyWith(
-          bathroomImages:
-              state.bathroomImages.where((img) => img != imagePath).toList(),
+          bathroomImages: state.bathroomImages
+              .where((img) => img.publicId != imageData.publicId)
+              .toList(),
         );
         break;
     }
   }
-
   // // Method to update selected vehicle
   // void updateSelectedVehicle(int index) {
   //   final selectedVehicle = state.availableVehicles[index];

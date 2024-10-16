@@ -19,6 +19,7 @@ class ServiceFeeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("quantity of service fee widget: $quantity");
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       padding: const EdgeInsets.all(8),

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
-// Import các component
+// Import ImageData class
+import 'package:movemate/features/booking/domain/entities/image_data.dart';
+
 import 'room_image.dart';
 import 'add_image_button.dart';
 
 class RoomImageSection extends StatelessWidget {
   final String roomTitle;
-  final List<String> images;
+  final List<ImageData> images;
   final RoomType roomType;
   final BookingNotifier bookingNotifier;
 
@@ -44,7 +46,7 @@ class RoomImageSection extends StatelessWidget {
                 );
               } else {
                 return RoomImage(
-                  imagePath: images[index],
+                  imageData: images[index],
                   roomType: roomType,
                   bookingNotifier: bookingNotifier,
                 );

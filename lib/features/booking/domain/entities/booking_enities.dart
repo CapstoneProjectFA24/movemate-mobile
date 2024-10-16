@@ -2,6 +2,7 @@
 
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
@@ -37,11 +38,11 @@ class Booking {
   final List<SubServiceEntity> selectedSubServices;
 
   // Image lists for each room
-  final List<String> livingRoomImages;
-  final List<String> bedroomImages;
-  final List<String> diningRoomImages;
-  final List<String> officeRoomImages;
-  final List<String> bathroomImages;
+  final List<ImageData> livingRoomImages;
+  final List<ImageData> bedroomImages;
+  final List<ImageData> diningRoomImages;
+  final List<ImageData> officeRoomImages;
+  final List<ImageData> bathroomImages;
 
   // Location
   final bool isSelectingPickUp;
@@ -70,13 +71,33 @@ class Booking {
       dropOffLocation: json['dropOffLocation'] != null
           ? LocationModel.fromJson(json['dropOffLocation'])
           : null,
-      livingRoomImages: List<String>.from(json['livingRoomImages'] ?? []),
-      bedroomImages: List<String>.from(json['bedroomImages'] ?? []),
-      diningRoomImages: List<String>.from(json['diningRoomImages'] ?? []),
-      officeRoomImages: List<String>.from(json['officeRoomImages'] ?? []),
-      bathroomImages: List<String>.from(json['bathroomImages'] ?? []),
+
+      //add image to json
+      livingRoomImages: (json['livingRoomImages'] as List<dynamic>?)
+              ?.map((e) => ImageData.fromJson(e))
+              .toList() ??
+          [],
+      bedroomImages: (json['bedroomImages'] as List<dynamic>?)
+              ?.map((e) => ImageData.fromJson(e))
+              .toList() ??
+          [],
+      diningRoomImages: (json['diningRoomImages'] as List<dynamic>?)
+              ?.map((e) => ImageData.fromJson(e))
+              .toList() ??
+          [],
+      officeRoomImages: (json['officeRoomImages'] as List<dynamic>?)
+              ?.map((e) => ImageData.fromJson(e))
+              .toList() ??
+          [],
+      bathroomImages: (json['bathroomImages'] as List<dynamic>?)
+              ?.map((e) => ImageData.fromJson(e))
+              .toList() ??
+          [],
+
+      //checklist
       checklistValues:
           List<bool>.from(json['checklistValues'] ?? List.filled(10, false)),
+
       // Added fields
       selectedPackages: (json['selectedPackages'] as List<dynamic>?)
               ?.map((e) => ServicesPackageEntity.fromJson(e))
@@ -104,12 +125,13 @@ class Booking {
       // Location
       'pickUpLocation': pickUpLocation?.toJson(),
       'dropOffLocation': dropOffLocation?.toJson(),
-
-      'livingRoomImages': livingRoomImages,
-      'bedroomImages': bedroomImages,
-      'diningRoomImages': diningRoomImages,
-      'officeRoomImages': officeRoomImages,
-      'bathroomImages': bathroomImages,
+//add image
+      'livingRoomImages': livingRoomImages.map((e) => e.toJson()).toList(),
+      'bedroomImages': bedroomImages.map((e) => e.toJson()).toList(),
+      'diningRoomImages': diningRoomImages.map((e) => e.toJson()).toList(),
+      'officeRoomImages': officeRoomImages.map((e) => e.toJson()).toList(),
+      'bathroomImages': bathroomImages.map((e) => e.toJson()).toList(),
+      //checklist
       'checklistValues': checklistValues,
       // Added fields
       'selectedPackages': selectedPackages.map((e) => e.toJson()).toList(),
@@ -145,11 +167,11 @@ class Booking {
     this.dropOffLocation,
     this.bookingDate,
     // Initialize image lists (empty by default)
-    List<String>? livingRoomImages,
-    List<String>? bedroomImages,
-    List<String>? diningRoomImages,
-    List<String>? officeRoomImages,
-    List<String>? bathroomImages,
+    List<ImageData>? livingRoomImages,
+    List<ImageData>? bedroomImages,
+    List<ImageData>? diningRoomImages,
+    List<ImageData>? officeRoomImages,
+    List<ImageData>? bathroomImages,
   })  : checklistValues = checklistValues ?? List.filled(10, false),
         livingRoomImages = livingRoomImages ?? [],
         bedroomImages = bedroomImages ?? [],
@@ -183,15 +205,14 @@ class Booking {
     LocationModel? pickUpLocation,
     LocationModel? dropOffLocation,
     DateTime? bookingDate,
-    List<String>? livingRoomImages,
-    List<String>? bedroomImages,
-    List<String>? diningRoomImages,
-    List<String>? officeRoomImages,
-    List<String>? bathroomImages,
+    List<ImageData>? livingRoomImages,
+    List<ImageData>? bedroomImages,
+    List<ImageData>? diningRoomImages,
+    List<ImageData>? officeRoomImages,
+    List<ImageData>? bathroomImages,
   }) {
     return Booking(
       houseType: houseType ?? this.houseType,
-
       reviewType: reviewType ?? this.reviewType,
       numberOfRooms: numberOfRooms ?? this.numberOfRooms,
       numberOfFloors: numberOfFloors ?? this.numberOfFloors,
@@ -218,6 +239,7 @@ class Booking {
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       bookingDate: bookingDate ?? this.bookingDate,
+      //add image
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,
       bedroomImages: bedroomImages ?? this.bedroomImages,
       diningRoomImages: diningRoomImages ?? this.diningRoomImages,
