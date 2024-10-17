@@ -15,6 +15,13 @@ import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
+// Hooks
+
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+//extension
+import 'package:movemate/utils/extensions/scroll_controller.dart';
+
 class HouseTypeSelectionModal extends HookConsumerWidget {
   const HouseTypeSelectionModal({super.key});
 
@@ -22,7 +29,7 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(bookingProvider); // Watch the booking state
     final bookingNotifier = ref.read(bookingProvider.notifier);
-
+    final scrollController = useScrollController();
     final state = ref.watch(houseTypeControllerProvider);
 
     final fetchResult = useFetch<HouseTypeEntity>(
@@ -32,6 +39,14 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
       initialPagingModel: PagingModel(),
       context: context,
     );
+    // useEffect(() {
+    //   scrollController.onScrollEndsListener(fetchResult.loadMore);
+    //   return scrollController.dispose;
+    // }, const []);
+    useEffect(() {
+      scrollController.onScrollEndsListener(fetchResult.loadMore);
+      return null; 
+    }, const []);
 
     if (state.isLoading && fetchResult.items.isEmpty) {
       return const AlertDialog(

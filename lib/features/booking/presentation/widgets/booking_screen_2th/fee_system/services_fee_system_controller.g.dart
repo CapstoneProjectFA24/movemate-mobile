@@ -7,7 +7,7 @@ part of 'services_fee_system_controller.dart';
 // **************************************************************************
 
 String _$servicesFeeSystemControllerHash() =>
-    r'2895b1c0033a887760485240f154c3556d321624';
+    r'319dbef8a1e3a120b7c5118f7580fe37846a9866';
 
 /// See also [ServicesFeeSystemController].
 @ProviderFor(ServicesFeeSystemController)

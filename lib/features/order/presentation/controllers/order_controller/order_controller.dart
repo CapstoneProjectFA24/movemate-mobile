@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

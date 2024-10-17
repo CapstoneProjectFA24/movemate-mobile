@@ -19,6 +19,9 @@ class APIConstants {
   static const get_house_types = '/housetypes';
   static const get_package_services = '/services';
 
+//post booking
+
+  static const post_booking_service = '/bookings/register-booking';
   // order
   static const bookings = '/bookings';
 

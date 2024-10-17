@@ -70,23 +70,23 @@ class BookingNotifier extends StateNotifier<Booking> {
 
     if (index != -1) {
       if (newQuantity > 0) {
-        // Cập nhật số lượng cho dịch vụ phí hệ thống đã tồn tại
+        // Update existing fee's quantity
         updatedServicesFeeList[index] =
             updatedServicesFeeList[index].copyWith(quantity: newQuantity);
       } else {
-        // Xóa dịch vụ nếu số lượng bằng 0
+        // Remove fee if quantity is zero
         updatedServicesFeeList.removeAt(index);
       }
     } else {
       if (newQuantity > 0) {
-        // Thêm dịch vụ mới với số lượng được chỉ định
+        // Add new fee with specified quantity
         updatedServicesFeeList.add(fee.copyWith(quantity: newQuantity));
       }
     }
 
     state = state.copyWith(servicesFeeList: updatedServicesFeeList);
 
-    // Gọi phương thức tính toán lại tổng giá
+    // Recalculate total price
     calculateAndUpdateTotalPrice();
   }
 
@@ -270,17 +270,6 @@ class BookingNotifier extends StateNotifier<Booking> {
         break;
     }
   }
-  // // Method to update selected vehicle
-  // void updateSelectedVehicle(int index) {
-  //   final selectedVehicle = state.availableVehicles[index];
-  //   double price = selectedVehicle.price;
-
-  //   state = state.copyWith(
-  //     selectedVehicleIndex: index,
-  //     vehiclePrice: price,
-  //     totalPrice: calculateTotalPrice(vehiclePrice: price),
-  //   );
-  // }
 
   void updateChecklistValue(int index, bool value) {
     final updatedChecklistValues = List<bool>.from(state.checklistValues);
@@ -315,6 +304,13 @@ class BookingNotifier extends StateNotifier<Booking> {
     total += packagePrice ?? state.packagePrice;
     // Add other price components as needed
     return total;
+  }
+
+  void reset() {
+    state = Booking(
+      totalPrice: 0.0,
+      additionalServiceQuantities: [],
+    );
   }
 }
 

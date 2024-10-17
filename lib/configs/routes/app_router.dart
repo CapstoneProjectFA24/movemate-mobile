@@ -2,13 +2,14 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
-import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home.dart';
-import 'package:movemate/features/booking/presentation/screens/review_screen/review_online.dart';
-import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_online/review_online.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen_test.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
+import 'package:movemate/models/loading_screen.dart/loading_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -176,6 +177,12 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: SplashScreenRoute.page,
+        ),
+
+        //loading screen
+        AutoRoute(
+          // initial: true,
+          page: LoadingScreenRoute.page,
         ),
 
         // test route

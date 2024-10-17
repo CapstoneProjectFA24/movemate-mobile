@@ -42,6 +42,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
+        
         backgroundColor: AssetsConstants.primaryMain,
         // iconFirst: Icons.chevron_left,
         onCallBackFirst: () {

@@ -144,14 +144,20 @@ class BookingRequest {
       );
     }).toList());
 
-    // Thêm servicesFeeList vào serviceDetails
-    serviceDetails.addAll(booking.servicesFeeList.map((serviceFee) {
+    // Filter servicesFeeList to include only fees with quantity > 0
+    List<ServiceDetail> feeServiceDetails = booking.servicesFeeList
+        .where((serviceFee) =>
+            serviceFee.quantity != null && serviceFee.quantity! > 0)
+        .map((serviceFee) {
       return ServiceDetail(
         id: serviceFee.id,
-        isQuantity: serviceFee.quantity != null && serviceFee.quantity! > 0,
-        quantity: serviceFee.quantity ?? 1,
+        isQuantity: true,
+        quantity: serviceFee.quantity!,
       );
-    }).toList());
+    }).toList();
+
+    // Add filtered fees to serviceDetails
+    serviceDetails.addAll(feeServiceDetails);
 
     // Chuyển đổi hình ảnh thành Resource
     List<Resource> resourceList = [];
@@ -186,7 +192,7 @@ class BookingRequest {
       pickupPoint: booking.pickUpLocation != null
           ? '${booking.pickUpLocation!.latitude},${booking.pickUpLocation!.longitude}'
           : '',
-      deliveryAddress: booking.dropOffLocation?.address ?? '',
+      deliveryAddress: booking.dropOffLocation?.address ?? 'string',
       deliveryPoint: booking.dropOffLocation != null
           ? '${booking.dropOffLocation!.latitude},${booking.dropOffLocation!.longitude}'
           : '',

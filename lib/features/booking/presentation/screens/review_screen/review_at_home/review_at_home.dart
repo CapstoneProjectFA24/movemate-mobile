@@ -1,60 +1,115 @@
+//route
 import 'package:auto_route/auto_route.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+//widgets
 import 'package:flutter/material.dart';
+//widgets
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 
 @RoutePage()
-class ReviewAtHome extends StatelessWidget {
+class ReviewAtHome extends ConsumerWidget {
   const ReviewAtHome({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: const CustomAppBar(
-        title: 'Gợi ý dịch vụ',
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        // Cho phép cuộn nếu nội dung vượt quá chiều cao màn hình
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize:
-                  MainAxisSize.min, // Đảm bảo Column chiếm không gian tối thiểu
-              children: [
-                SizedBox(height: 10),
-                AppointmentTime(),
-                SizedBox(height: 10),
-                Description(),
-                SizedBox(height: 20),
-                ContactSection(),
-                SizedBox(height: 20),
-                // Đã loại bỏ Buttons() khỏi đây
-              ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingControllerState = ref.watch(bookingControllerProvider);
+
+    return LoadingOverlay(
+      isLoading: bookingControllerState.isLoading,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        appBar: const CustomAppBar(
+          title: 'Gợi ý dịch vụ',
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize
+                    .min, // Đảm bảo Column chiếm không gian tối thiểu
+                children: [
+                  SizedBox(height: 10),
+                  AppointmentTime(),
+                  SizedBox(height: 10),
+                  Description(),
+                  SizedBox(height: 20),
+                  ContactSection(),
+                  SizedBox(height: 20),
+                  // Đã loại bỏ Buttons() khỏi đây
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: SafeArea(
-          child: Buttons(),
+        bottomNavigationBar: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: SafeArea(
+            child: Buttons(),
+          ),
         ),
       ),
+    );
+  }
+}
+
+class Buttons extends ConsumerWidget {
+  const Buttons({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ActionButton(
+          text: 'Thay đổi lịch hẹn',
+          color: Colors.white,
+          borderColor: const Color(0xFFFF6600),
+          textColor: const Color(0xFFFF6600),
+          onPressed: () {
+            // Handle event when 'Thay đổi lịch hẹn' button is pressed
+          },
+        ),
+        const SizedBox(height: 8),
+        ActionButton(
+          text: 'Xác nhận',
+          color: const Color(0xFFFF6600),
+          textColor: Colors.white,
+          onPressed: () async {
+            await ref.read(bookingControllerProvider.notifier).submitBooking(
+                  context: context,
+                );
+          },
+        ),
+        const SizedBox(height: 8),
+        ActionButton(
+          text: 'Hủy',
+          color: Colors.white,
+          borderColor: const Color(0xFF666666),
+          textColor: const Color(0xFF666666),
+          onPressed: () {
+            // Handle event when 'Hủy' button is pressed
+            context.router.pop();
+          },
+        ),
+      ],
     );
   }
 }
@@ -178,48 +233,6 @@ class ContactInfo extends StatelessWidget {
               size: 18, color: Color(0xFF666666)),
           onPressed: () {
             // Xử lý sự kiện khi nhấn vào biểu tượng tin nhắn
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class Buttons extends StatelessWidget {
-  const Buttons({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min, // Đảm bảo chiếm không gian tối thiểu
-      children: [
-        ActionButton(
-          text: 'Thay đổi lịch hẹn',
-          color: Colors.white,
-          borderColor: const Color(0xFFFF6600),
-          textColor: const Color(0xFFFF6600),
-          onPressed: () {
-            // Xử lý sự kiện khi nhấn nút "Thay đổi lịch hẹn"
-          },
-        ),
-        const SizedBox(height: 8),
-        ActionButton(
-          text: 'Xác nhận',
-          color: const Color(0xFFFF6600),
-          textColor: Colors.white,
-          onPressed: () {
-            // Xử lý sự kiện khi nhấn nút "Xác nhận"
-          },
-        ),
-        const SizedBox(height: 8),
-        ActionButton(
-          text: 'Hủy',
-          color: Colors.white,
-          borderColor: const Color(0xFF666666),
-          textColor: const Color(0xFF666666),
-          onPressed: () {
-            // Xử lý sự kiện khi nhấn nút "Hủy"
-            context.router.pop();
           },
         ),
       ],

@@ -51,6 +51,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const InfoScreen(),
       );
     },
+    LoadingScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LoadingScreen(),
+      );
+    },
     LocationSelectionScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -301,6 +307,20 @@ class InfoScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'InfoScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LoadingScreen]
+class LoadingScreenRoute extends PageRouteInfo<void> {
+  const LoadingScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          LoadingScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LoadingScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

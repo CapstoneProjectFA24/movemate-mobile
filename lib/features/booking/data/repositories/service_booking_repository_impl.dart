@@ -4,9 +4,11 @@ import 'package:movemate/features/booking/data/models/response/house_type_respon
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/resources/remote_base_repository.dart';
 
@@ -57,6 +59,15 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   Future<ServicesPackageResponse> getPackageServices() async {
     return getDataOf(
       request: () => _serviceBookingSource.getPackageServices(
+        APIConstants.contentType,
+      ),
+    );
+  }
+
+  @override
+  Future<SuccessModel> postBookingservice({required BookingRequest request}) {
+    return getDataOf(
+      request: () => _serviceBookingSource.postBookingservice(request,
         APIConstants.contentType,
       ),
     );

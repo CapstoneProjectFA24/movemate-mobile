@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,8 +30,9 @@ class ServicesFeeSystemController extends _$ServicesFeeSystemController {
       );
 
       feesSystemData = response.payload;
-      // Update servicesFeeList in BookingNotifier
-      ref.read(bookingProvider.notifier).updateServicesFeeList(feesSystemData);
+
+      // Remove this line to prevent populating bookingState.servicesFeeList
+      // ref.read(bookingProvider.notifier).updateServicesFeeList(feesSystemData);  
 
       state = AsyncData(feesSystemData);
     });

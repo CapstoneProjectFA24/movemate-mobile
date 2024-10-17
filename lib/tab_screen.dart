@@ -27,6 +27,7 @@ class TabViewScreen extends ConsumerWidget {
           PromotionScreenRoute(),
           ProfileScreenRoute(),
         ],
+        //  activeIndex: initialIndex,
         bottomNavigationBuilder: (_, tabsRouter) =>
             CustomBottomBar(tabsRouter: tabsRouter),
       ),

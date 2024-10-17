@@ -11,7 +11,7 @@ import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class LocationBottomSheet extends HookConsumerWidget {
-  LocationBottomSheet({super.key});
+  const LocationBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,7 +19,7 @@ class LocationBottomSheet extends HookConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     // Sample list of locations
-    final List<LocationModel> _locations = [
+    final List<LocationModel> locations = [
       LocationModel(
         label: 'Current location',
         address: 'Your current position',
@@ -103,7 +103,7 @@ class LocationBottomSheet extends HookConsumerWidget {
           ),
           Expanded(
             child: LocationList(
-              locations: _locations,
+              locations: locations,
               onLocationSelected: (location) {
                 if (bookingState.isSelectingPickUp) {
                   bookingNotifier.updatePickUpLocation(location);

@@ -12,9 +12,8 @@ class ServicesFeeSystemEntity {
     required this.name,
     this.description,
     required this.amount,
-    this.quantity= 0,
+    this.quantity,
   });
-
 
   // Factory method to create a ServicesFeeSystemEntity from a map
   factory ServicesFeeSystemEntity.fromMap(Map<String, dynamic> map) {

@@ -28,7 +28,7 @@ class HouseTypeController extends _$HouseTypeController {
       final response = await serviceBookingRepository.getHouseTypes(
         request: request,
       );
-
+      print("HouseTypeEntity: $response");
       houseTypeData = response.payload;
       state = AsyncData(houseTypeData);
     });
@@ -43,7 +43,7 @@ class HouseTypeController extends _$HouseTypeController {
         );
       });
     }
-
+    print("HouseTypeEntity: $houseTypeData");
     return houseTypeData;
   }
 }

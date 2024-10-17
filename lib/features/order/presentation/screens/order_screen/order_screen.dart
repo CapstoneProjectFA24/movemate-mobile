@@ -10,7 +10,6 @@ import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-
 @RoutePage()
 class OrderScreen extends HookConsumerWidget {
   const OrderScreen({super.key});
@@ -26,30 +25,32 @@ class OrderScreen extends HookConsumerWidget {
           .read(orderControllerProvider.notifier)
           .getBookings(model, context),
       initialPagingModel: PagingModel(
+        pageSize: 20,
+        pageNumber: 2,
+        // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
 
-          // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
-
-          // filterSystemContent:  ref.read(filterSystemStatus).type,
-          // filterContent: ref.read(filterPartnerStatus).type,
-          // searchDateFrom: dateFrom,
-          // searchDateTo: dateTo,
-          ),
+        // filterSystemContent:  ref.read(filterSystemStatus).type,
+        // filterContent: ref.read(filterPartnerStatus).type,
+        // searchDateFrom: dateFrom,
+        // searchDateTo: dateTo,
+      ),
       context: context,
     );
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Danh sách đặt dịch vụ',
         iconFirst: Icons.refresh_rounded,
+
         backgroundColor: AssetsConstants.primaryMain,
         iconSecond: Icons.filter_list_alt,
-        // onCallBackFirst: fetchReslut.refresh,
+        onCallBackFirst: fetchReslut.refresh,
         // onCallBackSecond: () => {
         //   //show filter bottom or tom
         // },
       ),
       body: Column(
-         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(height: size.height * 0.02),
           (state.isLoading && fetchReslut.items.isEmpty)
@@ -62,29 +63,29 @@ class OrderScreen extends HookConsumerWidget {
                       child: EmptyBox(title: 'list ko có dữ liệu'),
                     )
                   : Expanded(
-                        child: ListView.builder(
-                          itemCount: fetchReslut.items.length + 1,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          controller: scrollController,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AssetsConstants.defaultPadding - 10.0,
-                          ),
-                          itemBuilder: (_, index) {
-                            if (index == fetchReslut.items.length) {
-                              if (fetchReslut.isFetchingData) {
-                                return const CustomCircular();
-                              }
-                              return fetchReslut.isLastPage
-                                  ? const NoMoreContent()
-                                  : Container();
-                            }
-                            return OrderItem(
-                              order: fetchReslut.items[index],
-                              onCallback: fetchReslut.refresh,
-                            );
-                          },
+                      child: ListView.builder(
+                        itemCount: fetchReslut.items.length + 1,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: scrollController,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AssetsConstants.defaultPadding - 10.0,
                         ),
+                        itemBuilder: (_, index) {
+                          if (index == fetchReslut.items.length) {
+                            if (fetchReslut.isFetchingData) {
+                              return const CustomCircular();
+                            }
+                            return fetchReslut.isLastPage
+                                ? const NoMoreContent()
+                                : Container();
+                          }
+                          return OrderItem(
+                            order: fetchReslut.items[index],
+                            onCallback: fetchReslut.refresh,
+                          );
+                        },
                       ),
+                    ),
         ],
       ),
     );

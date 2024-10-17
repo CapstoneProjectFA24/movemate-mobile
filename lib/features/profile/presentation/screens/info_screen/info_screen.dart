@@ -64,7 +64,7 @@ class InfoScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        iconFirst: Icons.chevron_left,
+        // iconFirst: Icons.chevron_left,
         onCallBackFirst: () {
           Navigator.pop(context); // Quay lại trang trước
         },

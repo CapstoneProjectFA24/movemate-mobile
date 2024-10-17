@@ -20,6 +20,7 @@ class ServiceController extends _$ServiceController {
     BuildContext context,
   ) async {
     List<ServiceEntity> serviceCateData = [];
+    state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
 
     state = await AsyncValue.guard(() async {
