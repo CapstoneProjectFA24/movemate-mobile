@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:http/http.dart' as http;
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 
-final paymentMethodProvider = StateProvider<String>((ref) => 'Momo');
+final paymentMethodProvider =
+    StateProvider<PaymentMethodType>((ref) => PaymentMethodType.momo);
+
+// List of available payment methods
+final paymentList = [
+  PaymentMethodType.momo,
+  PaymentMethodType.vnpay,
+  PaymentMethodType.payos,
+];
 
 @RoutePage()
 class TestPaymentScreen extends HookConsumerWidget {
@@ -17,10 +23,13 @@ class TestPaymentScreen extends HookConsumerWidget {
     final paymentController = ref.watch(paymentControllerProvider.notifier);
     final state = ref.watch(paymentControllerProvider);
 
+    print('list Payment Methods: ${paymentList.map((method) => method.type).toList()}');
+    print('Selected Payment Method: ${selectedMethod.type}');
+
     Future<void> handlePayment() async {
       await paymentController.createPaymentBooking(
         context: context,
-        selectedMethod: selectedMethod,
+        selectedMethod: selectedMethod.type,
         bookingId: "1", // replace with actual bookingId
       );
     }
@@ -38,24 +47,17 @@ class TestPaymentScreen extends HookConsumerWidget {
                 'Select payment method:',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              ListTile(
-                title: const Text('Momo'),
-                leading: Radio<String>(
-                  value: 'Momo',
-                  groupValue: selectedMethod,
-                  onChanged: (value) =>
-                      ref.read(paymentMethodProvider.notifier).state = value!,
-                ),
-              ),
-              ListTile(
-                title: const Text('VnPay'),
-                leading: Radio<String>(
-                  value: 'VnPay',
-                  groupValue: selectedMethod,
-                  onChanged: (value) =>
-                      ref.read(paymentMethodProvider.notifier).state = value!,
-                ),
-              ),
+              // Dynamically generate payment method list using map
+              ...paymentList.map((method) => ListTile(
+                    title: Text(method.type),
+                    leading: Radio<PaymentMethodType>(
+                      value: method,
+                      groupValue: selectedMethod,
+                      onChanged: (value) => ref
+                          .read(paymentMethodProvider.notifier)
+                          .state = value!,
+                    ),
+                  )),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: handlePayment,
