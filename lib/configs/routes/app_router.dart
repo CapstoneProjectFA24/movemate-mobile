@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_online/review_online.dart';
-import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen_test.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen_test/service_screen_test.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
@@ -164,6 +165,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           // initial: true,
           page: ServiceScreenRoute.page,
+        ),
+        AutoRoute(
+          // initial: true,
+          page: ServiceScreenTestRoute.page,
         ),
 
         //xem bảng giá niêm yết xe

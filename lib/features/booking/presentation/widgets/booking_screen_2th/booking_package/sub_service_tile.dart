@@ -15,7 +15,6 @@ class SubServiceTile extends ConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final bookingState = ref.watch(bookingProvider);
 
-    
     final currentSubService = bookingState.selectedSubServices.firstWhere(
       (s) => s.id == subService.id,
       orElse: () => subService.copyWith(quantity: 0),
@@ -49,7 +48,7 @@ class SubServiceTile extends ConsumerWidget {
         trailing: ServiceTrailingWidget(
           quantity: quantity,
           addService: !subService.isQuantity,
-          quantityMax: subService.quantityMax, 
+          quantityMax: subService.quantityMax,
           onQuantityChanged: (newQuantity) {
             bookingNotifier.updateSubServiceQuantity(subService, newQuantity);
             bookingNotifier.calculateAndUpdateTotalPrice();

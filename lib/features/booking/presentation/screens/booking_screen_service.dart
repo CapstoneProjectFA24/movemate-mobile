@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
 //entity
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
@@ -87,11 +88,12 @@ class BookingScreenService extends HookConsumerWidget {
                         }
                         final package = fetchResult.items[index];
                         return ServicePackageTile(servicePackage: package);
+                        // return ServicePackageList(servicePackages: servicePackages);
                       },
                     ),
                   const SizedBox(height: 16),
 
-                  const SystemFeeScreen(),
+                  // const SystemFeeScreen(),
 
                   const SizedBox(height: 16),
 

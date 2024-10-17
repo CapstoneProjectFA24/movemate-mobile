@@ -159,6 +159,18 @@ class BookingRequest {
     // Add filtered fees to serviceDetails
     serviceDetails.addAll(feeServiceDetails);
 
+    // Add selectedPackages with quantities to serviceDetails
+    serviceDetails.addAll(booking.selectedPackages
+        .where((package) => package.quantity != null && package.quantity! > 0)
+        .map((package) {
+      return ServiceDetail(
+        id: package.id,
+        isQuantity:
+            true, // Assuming that packages with quantities are isQuantity == true
+        quantity: package.quantity!,
+      );
+    }).toList());
+
     // Chuyển đổi hình ảnh thành Resource
     List<Resource> resourceList = [];
 

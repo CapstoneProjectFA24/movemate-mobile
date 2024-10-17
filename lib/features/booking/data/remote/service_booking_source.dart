@@ -30,7 +30,7 @@ abstract class ServiceBookingSource {
   );
 
   // Services
-  @GET(APIConstants.get_service)
+  @GET(APIConstants.get_service_truck_cate)
   Future<HttpResponse<ServicesResponse>> getServices(
     @Header(APIConstants.contentHeader) String contentType,
   );
@@ -42,7 +42,7 @@ abstract class ServiceBookingSource {
   );
 
   // Package Services
-  @GET(APIConstants.get_package_services)
+  @GET(APIConstants.get_service_not_type_truck)
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
     @Header(APIConstants.contentHeader) String contentType,
   );

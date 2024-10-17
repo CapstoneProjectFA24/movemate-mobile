@@ -61,7 +61,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  // Thêm phương thức này
   void updateServicesFeeQuantity(ServicesFeeSystemEntity fee, int newQuantity) {
     List<ServicesFeeSystemEntity> updatedServicesFeeList =
         List.from(state.servicesFeeList ?? []);
@@ -96,13 +95,43 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  // Replaced calculateAndUpdateTotalPrice method
+  void updateServicePackageQuantity(
+      ServicesPackageEntity servicePackage, int newQuantity) {
+    List<ServicesPackageEntity> updatedPackages =
+        List.from(state.selectedPackages);
+
+    final index = updatedPackages.indexWhere((p) => p.id == servicePackage.id);
+
+    if (index != -1) {
+      if (newQuantity > 0) {
+        // Update existing package's quantity
+        updatedPackages[index] =
+            updatedPackages[index].copyWith(quantity: newQuantity);
+      } else {
+        // Remove package if quantity is zero
+        updatedPackages.removeAt(index);
+      }
+    } else {
+      if (newQuantity > 0) {
+        // Add new package with specified quantity
+        updatedPackages.add(servicePackage.copyWith(quantity: newQuantity));
+      }
+    }
+
+    state = state.copyWith(selectedPackages: updatedPackages);
+
+    // Recalculate total price
+    calculateAndUpdateTotalPrice();
+  }
+
   void calculateAndUpdateTotalPrice() {
     double total = 0.0;
 
     // Tổng giá của các gói dịch vụ đã chọn
     for (var package in state.selectedPackages) {
-      total += package.amount;
+      if ((package.quantity != null && package.quantity! > 0)) {
+        total += package.amount * package.quantity!;
+      }
     }
 
     // Tổng giá của các dịch vụ phụ đã chọn với số lượng
@@ -124,7 +153,8 @@ class BookingNotifier extends StateNotifier<Booking> {
     if (state.isRoundTrip == true) {
       total *= 2;
     }
-// Tính thuế GTGT
+
+    // Tính thuế GTGT
     double vat = total * 0.08;
 
     // Cập nhật tổng giá bao gồm thuế GTGT
@@ -139,7 +169,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  // Added methods from booking_provider_these.dart
   void togglePackageSelection(ServicesPackageEntity package, bool isSelected) {
     List<ServicesPackageEntity> updatedPackages =
         List.from(state.selectedPackages);
@@ -171,8 +200,6 @@ class BookingNotifier extends StateNotifier<Booking> {
   bool isSubServiceSelected(SubServiceEntity subService) {
     return state.selectedSubServices.any((s) => s.id == subService.id);
   }
-
-  // Existing methods
 
   void updateHouseType(HouseTypeEntity? houseType) {
     state = state.copyWith(houseType: houseType);

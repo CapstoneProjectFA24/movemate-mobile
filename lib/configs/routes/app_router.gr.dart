@@ -164,6 +164,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ServiceScreen(),
       );
     },
+    ServiceScreenTestRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ServiceScreenTest(),
+      );
+    },
     SignInScreenRoute.name: (routeData) {
       final args = routeData.argsAs<SignInScreenRouteArgs>(
           orElse: () => const SignInScreenRouteArgs());
@@ -642,6 +648,20 @@ class ServiceScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ServiceScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ServiceScreenTest]
+class ServiceScreenTestRoute extends PageRouteInfo<void> {
+  const ServiceScreenTestRoute({List<PageRouteInfo>? children})
+      : super(
+          ServiceScreenTestRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ServiceScreenTestRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -5,6 +5,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 
 // Hooks
 import 'package:movemate/hooks/use_fetch.dart';
@@ -16,12 +18,12 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 // Data Entities
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
-import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
+// import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+// import 'package:movemate/features/booking/presentation/screens/service_screen_test/service_controller.dart';
 
 @RoutePage()
-class ServiceScreen extends HookConsumerWidget {
-  const ServiceScreen({super.key});
+class ServiceScreenTest extends HookConsumerWidget {
+  const ServiceScreenTest({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,10 +32,10 @@ class ServiceScreen extends HookConsumerWidget {
     final scrollController = useScrollController();
 
     // Fetch services
-    final fetchResult = useFetch<ServiceEntity>(
+    final fetchResult = useFetch<OrderEntity>(
       function: (model, context) => ref
-          .read(serviceControllerProvider.notifier)
-          .getServices(model, context),
+          .read(orderControllerProvider.notifier)
+          .getBookings(model, context),
       initialPagingModel: PagingModel(
         searchContent: "1",
       ),
@@ -41,15 +43,13 @@ class ServiceScreen extends HookConsumerWidget {
     );
 
     useEffect(() {
-       
       scrollController.onScrollEndsListener(fetchResult.loadMore);
       return scrollController.dispose;
-      
     }, const []);
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Available Services',
+        title: 'Available order',
         iconFirst: Icons.refresh_rounded,
         onCallBackFirst: fetchResult.refresh,
       ),
@@ -100,11 +100,9 @@ class ServiceScreen extends HookConsumerWidget {
   }
 
   Widget buildServiceCard(
-    ServiceEntity service,
+    OrderEntity service,
     bool isSelected,
   ) {
-    final truckCategory = service.truckCategory;
-
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       padding: const EdgeInsets.all(8),
@@ -131,21 +129,21 @@ class ServiceScreen extends HookConsumerWidget {
       child: Row(
         children: [
           // Service Image
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: AssetsConstants.greyColor.shade100,
-            ),
-            child: Image.network(
-              service.imageUrl,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.image, size: 50);
-              },
-            ),
-          ),
+          // Container(
+          //   width: 60,
+          //   height: 60,
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(8),
+          //     color: AssetsConstants.greyColor.shade100,
+          //   ),
+          //   child: Image.network(
+          //     service.imageUrl,
+          //     fit: BoxFit.contain,
+          //     errorBuilder: (context, error, stackTrace) {
+          //       return const Icon(Icons.image, size: 50);
+          //     },
+          //   ),
+          // ),
           const SizedBox(width: 16),
           // Service Details
           Expanded(
@@ -154,7 +152,7 @@ class ServiceScreen extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  service.name,
+                  service.id.toString(),
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -165,7 +163,7 @@ class ServiceScreen extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  service.description,
+                  service.status,
                   style: TextStyle(
                     fontSize: 12,
                     color: AssetsConstants.greyColor.shade700,
@@ -174,7 +172,7 @@ class ServiceScreen extends HookConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 6),
-                if (truckCategory != null) ...[
+                ...[
                   Row(
                     children: [
                       const Icon(
@@ -184,7 +182,7 @@ class ServiceScreen extends HookConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        truckCategory.categoryName,
+                        service.id.toString(),
                         style: const TextStyle(
                           fontSize: 12,
                           color: AssetsConstants.blackColor,
@@ -194,32 +192,25 @@ class ServiceScreen extends HookConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.straighten,
-                        size: 16,
-                        color: AssetsConstants.blackColor,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${truckCategory.estimatedLength} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AssetsConstants.blackColor,
-                        ),
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ] else
-                  Text(
-                    'No Truck Category',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AssetsConstants.greyColor.shade700,
-                    ),
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const Icon(
+                  //       Icons.straighten,
+                  //       size: 16,
+                  //       color: AssetsConstants.blackColor,
+                  //     ),
+                  //     const SizedBox(width: 4),
+                  //     Text(
+                  //       '${truckCategory.estimatedLength} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
+                  //       style: const TextStyle(
+                  //         fontSize: 12,
+                  //         color: AssetsConstants.blackColor,
+                  //       ),
+                  //       maxLines: 1,
+                  //     ),
+                  //   ],
+                  // ),
+                ],
               ],
             ),
           ),

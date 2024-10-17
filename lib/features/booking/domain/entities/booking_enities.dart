@@ -36,6 +36,7 @@ class Booking {
   // Added from booking_provider_these.dart
   final List<ServicesPackageEntity> selectedPackages;
   final List<SubServiceEntity> selectedSubServices;
+  final List<ServicesPackageEntity> selectedPackagesWithQuantity;
 
   // Image lists for each room
   final List<ImageData> livingRoomImages;
@@ -161,6 +162,8 @@ class Booking {
     // Added fields
     this.selectedPackages = const [],
     this.selectedSubServices = const [],
+    this.selectedPackagesWithQuantity = const [],
+
     // Location
     this.isSelectingPickUp = false,
     this.pickUpLocation,
@@ -200,6 +203,8 @@ class Booking {
     // Added fields
     List<ServicesPackageEntity>? selectedPackages,
     List<SubServiceEntity>? selectedSubServices,
+    List<ServicesPackageEntity>? selectedPackagesWithQuantity,
+
     // Location
     bool? isSelectingPickUp,
     LocationModel? pickUpLocation,
@@ -231,6 +236,9 @@ class Booking {
       selectedPackageIndex: selectedPackageIndex ?? this.selectedPackageIndex,
       additionalServiceQuantities:
           additionalServiceQuantities ?? this.additionalServiceQuantities,
+      selectedPackagesWithQuantity:
+          selectedPackagesWithQuantity ?? this.selectedPackagesWithQuantity,
+
       // Added fields
       selectedPackages: selectedPackages ?? this.selectedPackages,
       selectedSubServices: selectedSubServices ?? this.selectedSubServices,
