@@ -35,14 +35,9 @@ class PaymentController extends _$PaymentController {
       selectedMethod: selectedMethod,
     );
 
-    // fake
-    final accessToken =
-        "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwic2lkIjoiMSIsInJvbGUiOiIxIiwianRpIjoiMDQ2ZjQ5OTAtNGU4MS00ZDQ4LWE4OGUtMzI0ZDFjZjNlNzljIiwibmJmIjoxNzI5MTQzMzg4LCJleHAiOjIzMjkxNDMzODgsImlhdCI6MTcyOTE0MzM4OH0.SeJB2TimmQImxMrnyS0BNCYhnkQn5aYHTqHxLwHDFt06GOXijkZaKAlmGozEln9VFYoPcuVfdntK_0h2UeGE5w";
-
     state = await AsyncValue.guard(() async {
       final res = await paymentRepository.createPaymentBooking(
-        // accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        accessToken:APIConstants.prefixToken + accessToken,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
 
@@ -76,14 +71,9 @@ class PaymentController extends _$PaymentController {
       selectedMethod: selectedMethod,
     );
 
-    // fake
-    final accessToken =
-        "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwic2lkIjoiMSIsInJvbGUiOiIxIiwianRpIjoiMDQ2ZjQ5OTAtNGU4MS00ZDQ4LWE4OGUtMzI0ZDFjZjNlNzljIiwibmJmIjoxNzI5MTQzMzg4LCJleHAiOjIzMjkxNDMzODgsImlhdCI6MTcyOTE0MzM4OH0.SeJB2TimmQImxMrnyS0BNCYhnkQn5aYHTqHxLwHDFt06GOXijkZaKAlmGozEln9VFYoPcuVfdntK_0h2UeGE5w";
-
     state = await AsyncValue.guard(() async {
       final res = await paymentRepository.createPaymentDeposit(
-        // accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        accessToken:APIConstants.prefixToken + accessToken,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
 
@@ -102,6 +92,4 @@ class PaymentController extends _$PaymentController {
       );
     }
   }
-
-
 }
