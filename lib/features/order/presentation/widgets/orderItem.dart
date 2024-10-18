@@ -7,6 +7,7 @@ import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
 
+//
 class OrderItem extends HookConsumerWidget {
   const OrderItem({
     super.key,
@@ -69,9 +70,9 @@ class OrderItem extends HookConsumerWidget {
             ),
             const SizedBox(width: 15), // Space between image and content
             // Card Content
-            Padding(
-              padding: const EdgeInsets.only(top: 18.0),
-              child: Expanded(
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 18.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -101,12 +102,12 @@ class OrderItem extends HookConsumerWidget {
                         Container(
                           height: 10,
                           width: 10,
-                          decoration:  BoxDecoration(
-                             color: order.status == 'DEPOSITING'
-            ? Colors.red
-            : order.status == 'Pending'
-                ? Colors.orange
-                : const Color(0xFF28A745), // Màu mặc định
+                          decoration: BoxDecoration(
+                            color: order.status == 'DEPOSITING'
+                                ? Colors.red
+                                : order.status == 'Pending'
+                                    ? Colors.orange
+                                    : const Color(0xFF28A745), // Default color
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -119,18 +120,20 @@ class OrderItem extends HookConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          // ' ${(NumberFormat('#,###').format(order.total) ?? 0)} ₫',
                           '$formattedTotal ₫',
                           style: const TextStyle(
-                              color: Color(0xFF007BFF),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+                            color: Color(0xFF007BFF),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Text(
                           '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
                           style: const TextStyle(
-                              fontSize: 14, color: Color(0xFF555555)),
+                            fontSize: 14,
+                            color: Color(0xFF555555),
+                          ),
                         ),
                       ],
                     ),

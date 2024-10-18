@@ -11,6 +11,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
+import 'package:movemate/features/test-payment/payment_screen_method.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/models/loading_screen.dart/loading_screen.dart';
@@ -177,6 +178,7 @@ class AppRouter extends _$AppRouter {
         ),
 
         AutoRoute(
+          // initial: true,
           page: PaymentScreenRoute.page,
         ),
         AutoRoute(

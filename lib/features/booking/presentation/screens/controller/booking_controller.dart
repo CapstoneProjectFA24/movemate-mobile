@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
+import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:auto_route/auto_route.dart';
@@ -29,14 +32,19 @@ class BookingController extends _$BookingController {
     final bookingState = ref.read(bookingProvider);
     final bookingRequest = BookingRequest.fromBooking(bookingState);
     final bookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
 
     // Print the booking request for debugging
     print('Booking Request: ${jsonEncode(bookingRequest.toMap())}');
 
     state = await AsyncValue.guard(
       () async {
+        print(" gọi tới post bookingRequest: $bookingRequest");
         //comment chỗ nãy để tránh gọi api
-        await bookingRepository.postBookingservice(request: bookingRequest);
+        await bookingRepository.postBookingservice(request: bookingRequest,
+             accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        );
 
         // Clean up booking provider state
         ref.read(bookingProvider.notifier).reset();

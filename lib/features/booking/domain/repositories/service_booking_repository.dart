@@ -38,7 +38,10 @@ abstract class ServiceBookingRepository {
   });
 
   // post booking service
-  Future<SuccessModel> postBookingservice({required BookingRequest request});
+  Future<SuccessModel> postBookingservice({
+    required BookingRequest request,
+    required String accessToken,
+  });
 }
 
 @Riverpod(keepAlive: true)

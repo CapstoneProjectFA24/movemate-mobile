@@ -168,10 +168,14 @@ class _ServiceBookingSource implements ServiceBookingSource {
   Future<HttpResponse<SuccessModel>> postBookingservice(
     BookingRequest request,
     String contentType,
+    String accessToken,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(request?.toMap() ?? <String, dynamic>{});

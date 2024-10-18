@@ -12,24 +12,23 @@ import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/resources/remote_base_repository.dart';
 
-class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements ServiceBookingRepository {
+class ServiceBookingRepositoryImpl extends RemoteBaseRepository
+    implements ServiceBookingRepository {
   final bool addDelay;
   final ServiceBookingSource _serviceBookingSource;
 
-  ServiceBookingRepositoryImpl(this._serviceBookingSource, {this.addDelay = true});
+  ServiceBookingRepositoryImpl(this._serviceBookingSource,
+      {this.addDelay = true});
 
   // House Type Methods
   @override
   Future<HouseTypeResponse> getHouseTypes({
     required PagingModel request,
     required String accessToken,
-
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getHouseTypes(
-        APIConstants.contentType,
-        accessToken
-      ),
+          APIConstants.contentType, accessToken),
     );
   }
 
@@ -38,13 +37,10 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   Future<ServicesResponse> getServices({
     required PagingModel request,
     required String accessToken,
-
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getServices(
-        APIConstants.contentType,
-        accessToken
-      ),
+          APIConstants.contentType, accessToken),
     );
   }
 
@@ -53,13 +49,10 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   Future<ServicesFeeSystemResponse> getFeeSystems({
     required PagingModel request,
     required String accessToken,
-
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getFeeSystems(
-        APIConstants.contentType,
-        accessToken
-      ),
+          APIConstants.contentType, accessToken),
     );
   }
 
@@ -67,22 +60,21 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   @override
   Future<ServicesPackageResponse> getPackageServices({
     required String accessToken,
-
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getPackageServices(
-        APIConstants.contentType,
-        accessToken
-      ),
+          APIConstants.contentType, accessToken),
     );
   }
 
   @override
-  Future<SuccessModel> postBookingservice({required BookingRequest request}) {
+  Future<SuccessModel> postBookingservice({
+    required BookingRequest request,
+    required String accessToken,
+  }) {
     return getDataOf(
-      request: () => _serviceBookingSource.postBookingservice(request,
-        APIConstants.contentType,
-      ),
+      request: () => _serviceBookingSource.postBookingservice(
+          request, APIConstants.contentType, accessToken),
     );
   }
 

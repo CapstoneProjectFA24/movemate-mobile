@@ -23,6 +23,7 @@ class APIConstants {
 //post booking
 
   static const post_booking_service = '/bookings/register-booking';
+  // static const post_booking_service = '/bookings/register-booking';
   // order
   static const bookings = '/bookings';
 

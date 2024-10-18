@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class OrderEntity {
   final int id;
@@ -14,14 +15,14 @@ class OrderEntity {
   final String estimatedDistance;
   final int total;
   final int totalReal;
-  final String estimatedDeliveryTime;
+  final String? estimatedDeliveryTime;
   final bool isDeposited;
   final bool isBonus;
   final bool isReported;
   final String? reportedReason;
   final bool isDeleted;
   final DateTime createdAt;
-  final String createdBy;
+  final String? createdBy;
   final DateTime updatedAt;
   final String? updatedBy;
   final String? review;
@@ -45,6 +46,9 @@ class OrderEntity {
   final int totalFee;
   final String? feeInfo;
   final List<dynamic> bookingTrackers;
+  final List<dynamic> serviceDetails;
+  final List<dynamic> feeDetails;
+  final List<dynamic> bookingDetails;
 
   OrderEntity({
     required this.id,
@@ -91,9 +95,15 @@ class OrderEntity {
     required this.totalFee,
     required this.feeInfo,
     required this.bookingTrackers,
+    required this.serviceDetails,
+    required this.feeDetails,
+    required this.bookingDetails,
   });
 
   factory OrderEntity.fromMap(Map<String, dynamic> map) {
+    // Define the format that matches the API response
+    final dateFormat = DateFormat('MM/dd/yyyy HH:mm:ss');
+
     return OrderEntity(
       id: map['id'] ?? 0,
       userId: map['userId'] ?? 0,
@@ -108,15 +118,19 @@ class OrderEntity {
       estimatedDistance: map['estimatedDistance'] ?? '',
       total: map['total'] ?? 0,
       totalReal: map['totalReal'] ?? 0,
-      estimatedDeliveryTime: map['estimatedDeliveryTime'] ?? '',
+      estimatedDeliveryTime: map['estimatedDeliveryTime'],
       isDeposited: map['isDeposited'] ?? false,
       isBonus: map['isBonus'] ?? false,
       isReported: map['isReported'] ?? false,
       reportedReason: map['reportedReason'],
       isDeleted: map['isDeleted'] ?? false,
-      createdAt: DateTime.parse(map['createdAt'] ?? ''),
-      createdBy: map['createdBy'] ?? '',
-      updatedAt: DateTime.parse(map['updatedAt'] ?? ''),
+      createdAt: map['createdAt'] != null
+          ? dateFormat.parse(map['createdAt'])
+          : DateTime.now(),
+      createdBy: map['createdBy'],
+      updatedAt: map['updatedAt'] != null
+          ? dateFormat.parse(map['updatedAt'])
+          : DateTime.now(),
       updatedBy: map['updatedBy'],
       review: map['review'],
       bonus: map['bonus'],
@@ -139,6 +153,9 @@ class OrderEntity {
       totalFee: map['totalFee'] ?? 0,
       feeInfo: map['feeInfo'],
       bookingTrackers: List<dynamic>.from(map['bookingTrackers'] ?? []),
+      serviceDetails: List<dynamic>.from(map['serviceDetails'] ?? []),
+      feeDetails: List<dynamic>.from(map['feeDetails'] ?? []),
+      bookingDetails: List<dynamic>.from(map['bookingDetails'] ?? []),
     );
   }
 
@@ -188,6 +205,9 @@ class OrderEntity {
       'totalFee': totalFee,
       'feeInfo': feeInfo,
       'bookingTrackers': bookingTrackers,
+      'serviceDetails': serviceDetails,
+      'feeDetails': feeDetails,
+      'bookingDetails': bookingDetails,
     };
   }
 

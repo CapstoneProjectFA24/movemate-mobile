@@ -35,8 +35,8 @@
 
 import 'dart:convert';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
-import 'package:movemate/features/booking/domain/entities/bookings/resource.dart';
-import 'package:movemate/features/booking/domain/entities/bookings/service_detail.dart';
+import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
+import 'package:movemate/features/booking/domain/entities/booking_request/service_detail.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 
 class BookingRequest {
@@ -138,8 +138,8 @@ class BookingRequest {
 
     serviceDetails.addAll(booking.selectedSubServices.map((subService) {
       return ServiceDetail(
-        id: subService.id,
-        isQuantity: subService.isQuantity, // Sử dụng subService.isQuantity
+        serviceId: subService.id,
+        // isQuantity: subService.isQuantity, // Sử dụng subService.isQuantity
         quantity: subService.quantity ?? 1,
       );
     }).toList());
@@ -150,8 +150,8 @@ class BookingRequest {
             serviceFee.quantity != null && serviceFee.quantity! > 0)
         .map((serviceFee) {
       return ServiceDetail(
-        id: serviceFee.id,
-        isQuantity: true,
+        serviceId: serviceFee.id,
+        // isQuantity: true,
         quantity: serviceFee.quantity!,
       );
     }).toList();
@@ -164,9 +164,9 @@ class BookingRequest {
         .where((package) => package.quantity != null && package.quantity! > 0)
         .map((package) {
       return ServiceDetail(
-        id: package.id,
-        isQuantity:
-            true, // Assuming that packages with quantities are isQuantity == true
+        serviceId: package.id,
+        // isQuantity:
+        //     true, // Assuming that packages with quantities are isQuantity == true
         quantity: package.quantity!,
       );
     }).toList());

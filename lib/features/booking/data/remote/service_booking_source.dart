@@ -56,6 +56,7 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<SuccessModel>> postBookingservice(
     @Body() BookingRequest request,
     @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 }
 
