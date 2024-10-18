@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/features/booking/data/models/response/booking_response.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -18,6 +21,9 @@ import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
 
 part 'booking_controller.g.dart';
+
+final bookingResponseProvider =
+    StateProvider<BookingResponseEntity?>((ref) => null);
 
 @riverpod
 class BookingController extends _$BookingController {
@@ -36,21 +42,27 @@ class BookingController extends _$BookingController {
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     // Print the booking request for debugging
-    print('Booking Request: ${jsonEncode(bookingRequest.toMap())}');
+    // print('Booking Request: ${jsonEncode(bookingRequest.toMap())}');
 
     state = await AsyncValue.guard(
       () async {
-        print(" gọi tới post bookingRequest: $bookingRequest");
+        // print(" gọi tới post bookingRequest: $bookingRequest");
         //comment chỗ nãy để tránh gọi api
-        await bookingRepository.postBookingservice(request: bookingRequest,
-             accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        final bookingResponse = await bookingRepository.postBookingservice(
+          request: bookingRequest,
+          accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         );
+        print(
+            'API Response Data: ${jsonEncode(bookingResponse.payload)}');
+        // Store bookingResponse in the provider
+        ref.read(bookingResponseProvider.notifier).state =
+            bookingResponse.payload;
 
         // Clean up booking provider state
         ref.read(bookingProvider.notifier).reset();
 
         // Navigate to LoadingScreenRoute()
-        context.router.replaceAll([const LoadingScreenRoute()]);
+        // context.router.replaceAll([const LoadingScreenRoute()]);
       },
     );
 
@@ -64,6 +76,9 @@ class BookingController extends _$BookingController {
         stateError: state.error!,
         context: context,
       );
+    } else {
+      // Navigate to LoadingScreenRoute with the bookingId
+      context.router.replaceAll([const LoadingScreenRoute()]);
     }
   }
 }

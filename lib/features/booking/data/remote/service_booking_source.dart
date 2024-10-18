@@ -1,6 +1,7 @@
 // service_booking_source.dart
 
 import 'package:dio/dio.dart';
+import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
 import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
@@ -53,7 +54,7 @@ abstract class ServiceBookingSource {
 //Post , put
   // Post booking service
   @POST(APIConstants.post_booking_service)
-  Future<HttpResponse<SuccessModel>> postBookingservice(
+  Future<HttpResponse<BookingResponse>> postBookingservice(
     @Body() BookingRequest request,
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,

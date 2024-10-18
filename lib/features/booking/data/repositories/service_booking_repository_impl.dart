@@ -1,5 +1,6 @@
 // service_booking_repository_impl.dart
 
+import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
@@ -68,7 +69,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
   }
 
   @override
-  Future<SuccessModel> postBookingservice({
+  Future<BookingResponse> postBookingservice({
     required BookingRequest request,
     required String accessToken,
   }) {

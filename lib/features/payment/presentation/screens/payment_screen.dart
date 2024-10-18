@@ -1,117 +1,301 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/payment/data/data_resource/payment_shared_preferences.dart';
-import 'package:movemate/features/payment/data/models/payment_models.dart';
-import 'package:movemate/features/payment/presentation/widget/complete_payment_button.dart';
-import 'package:movemate/features/payment/presentation/widget/coupon_input.dart';
-import 'package:movemate/features/payment/presentation/widget/custom_app_bar.dart';
-import 'package:movemate/features/payment/presentation/widget/payment_deadline.dart';
-import 'package:movemate/features/payment/presentation/widget/payment_method.dart';
-import 'package:movemate/features/payment/presentation/widget/total_price.dart';
-import 'package:movemate/features/payment/presentation/widget/vehicle_info.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
+import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
+
+final paymentMethodProvider =
+    StateProvider<PaymentMethodType>((ref) => PaymentMethodType.momo);
+
+// List of available payment methods
+final paymentList = [
+  PaymentMethodType.momo,
+  PaymentMethodType.vnpay,
+  PaymentMethodType.payos,
+];
 
 @RoutePage()
-class PaymentScreen extends HookConsumerWidget {
+class PaymentScreen extends ConsumerWidget {
   const PaymentScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paymentAmount = useState<double>(1.0);
-    final paymentMethod = useState<String>("MoMo");
-    final couponCode = useState<String>("");
+    final selectedMethod = ref.watch(paymentMethodProvider);
+    final paymentController = ref.watch(paymentControllerProvider.notifier);
+    final state = ref.watch(paymentControllerProvider);
+    // Access the booking response from the provider
+    final bookingResponse = ref.watch(bookingResponseProvider);
 
-    useEffect(() {
-      // Truy xuất dữ liệu từ SharedPreferences
-      Future<void> loadPaymentData() async {
-        paymentAmount.value = await PaymentSharedPreferences.getPaymentAmount();
-        paymentMethod.value = await PaymentSharedPreferences.getPaymentMethod();
-        couponCode.value = await PaymentSharedPreferences.getCouponCode();
-      }
+    // if (bookingResponse != null) {
+    //   // Print the booking ID
+    //   print('Booking ID: ${bookingResponse.id}');
+    // } else {
+    //   print('BookingResponse is null');
+    // }
+    // print(
+    //     'list Payment Methods: ${paymentList.map((method) => method.type).toList()}');
+    print('Selected Payment Method: ${selectedMethod.type}');
 
-      loadPaymentData();
-      return null;
-    }, []);
-
-    // Hàm lưu trữ dữ liệu vào SharedPreferences
-    void savePaymentData() async {
-      await PaymentSharedPreferences.setPaymentAmount(paymentAmount.value);
-      await PaymentSharedPreferences.setPaymentMethod(paymentMethod.value);
-      await PaymentSharedPreferences.setCouponCode(couponCode.value);
+    Future<void> handlePayment() async {
+      await paymentController.createPaymentBooking(
+        context: context,
+        selectedMethod: selectedMethod.type,
+        bookingId:
+            bookingResponse?.id.toString() ?? "1", // Use actual bookingId
+      );
+      print("bookingID: ${bookingResponse?.id.toString()}");
     }
 
-    final fakeVehicleInfo = PaymentModelsVehicleInfo(
-      struckName: "xe tải nhỏ",
-      quantity: "12",
-      date: "31/07/2024",
-    );
+    return LoadingOverlay(
+      isLoading: state.isLoading,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          centerTitle: true,
+          title: "Thanh Toán Đặt Cọc",
+          iconFirst: Icons.home,
+          onCallBackFirst: () {
+            context.router.replace(const TabViewScreenRoute());
+          },
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Details
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Xe tải nhỏ',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black87),
+                              ),
+                              Text(
+                                'số lượng 1',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
 
-    final fakeDeadline = PaymentModelsDeadline(
-      hours: "00",
-      minutes: "39",
-      seconds: "11",
-    );
+                        // Date
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            bookingResponse?.createdAt ?? "",
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.black87),
+                          ),
+                        ),
 
-    // Danh sách các phương thức thanh toán
-    final List<PaymentModelsMethod> paymentMethods = [
-      PaymentModelsMethod(
-        methodName: 'MoMo',
-        imageAssetPath: 'assets/images/logo_wallets/MoMo_Logo.png',
-      ),
-      PaymentModelsMethod(
-        methodName: 'ZaloPay',
-        imageAssetPath: 'assets/images/logo_wallets/zaloPay.png',
-      ),
-      PaymentModelsMethod(
-        methodName: 'Visa',
-        imageAssetPath: 'assets/images/logo_wallets/new_Card.png',
-      ),
-    ];
+                        // Payment Method Section
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Phương thức thanh toán',
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.black87),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                // Handle 'View All' action
+                              },
+                              child: const Text(
+                                'Xem tất cả',
+                                style: TextStyle(
+                                  color: Color(0xFFFF7F00),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
 
-    // Tìm phương thức thanh toán hiện tại
-    final selectedPaymentMethod = paymentMethods.firstWhere(
-      (method) => method.methodName == paymentMethod.value,
-      orElse: () => paymentMethods[0],
-    );
+                        // Dynamically Generated Payment Options
+                        Column(
+                          children: paymentList.map((method) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 5),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.network(
+                                    method.imageUrl,
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    method.displayName,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const Spacer(),
+                                  Radio<PaymentMethodType>(
+                                    value: method,
+                                    groupValue: selectedMethod,
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        ref
+                                            .read(
+                                                paymentMethodProvider.notifier)
+                                            .state = value;
+                                      }
+                                    },
+                                    activeColor: const Color(0xFFFF7F00),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
 
-    final fakeCoupon = PaymentModelsCoupon(
-      couponHint:
-          couponCode.value.isEmpty ? "Bạn có 7 mã coupons" : couponCode.value,
-    );
+                        // Coupon Section
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Bạn có 7 mã coupons',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 10,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                side:
+                                    const BorderSide(color: Color(0xFFFF7F00)),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 10,
+                                ),
+                              ),
+                              child: const Text(
+                                'Thêm',
+                                style: TextStyle(color: Color(0xFFFF7F00)),
+                              ),
+                            ),
+                          ],
+                        ),
 
-    final fakeTotalPrice = PaymentModelsTotalPrice(
-      totalPrice: paymentAmount.value.toString(),
-    );
-
-    return Scaffold(
-      appBar: const CustomAppBarPayment(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            VehicleInfo(paymentModelsVehicleInfo: fakeVehicleInfo),
-            const SizedBox(height: 16),
-            PaymentDeadline(paymentModelsDeadline: fakeDeadline),
-            const SizedBox(height: 16),
-            PaymentMethod(
-              paymentModelsMethod: selectedPaymentMethod,
-              paymentMethods: paymentMethods,
-              onMethodChanged: (newMethod) {
-                paymentMethod.value = newMethod;
-                // Lưu phương thức mới vào SharedPreferences hoặc xử lý logic khác
-              },
-            ),
-            const SizedBox(height: 16),
-            CouponInput(paymentModelsCoupon: fakeCoupon),
-            const SizedBox(height: 16),
-            TotalPrice(paymentModelsTotalPrice: fakeTotalPrice),
-            const SizedBox(height: 16),
-            CompletePaymentButton(
-              selectedPaymentMethod: selectedPaymentMethod.methodName,
-            ),
-          ],
+                        // Note
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: const Text(
+                            'Để đảm bảo quá trình chuyển nhà được thực hiện, chúng tôi sẽ lấy phí đặt cọc dựa trên xe mà bạn chọn để sắp xếp xe đúng lịch hẹn và người review sẽ đến',
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.black87),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Total and Complete Button at the bottom
+              Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: Colors.grey.shade300,
+                            style: BorderStyle.solid,
+                          ),
+                          bottom: BorderSide(
+                            color: Colors.grey.shade300,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Tổng giá tiền',
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.black87),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  '${bookingResponse?.deposit.toString() ?? ''} VNĐ',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    '▼',
+                                    style: TextStyle(color: Color(0xFFFF7F00)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 10),
+                      child: ElevatedButton(
+                        onPressed: handlePayment,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF7F00),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: Text(
+                          'Hoàn tất thanh toán bằng ${selectedMethod.displayName}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

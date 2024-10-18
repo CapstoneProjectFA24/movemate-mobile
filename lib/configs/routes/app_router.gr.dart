@@ -129,10 +129,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PaymentScreen(),
       );
     },
-    PaymentScreenMethodRoute.name: (routeData) {
+    PaymentScreenNotUseRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const PaymentScreenMethod(),
+        child: const PaymentScreenNotUse(),
       );
     },
     PrivacyPolicyScreenRoute.name: (routeData) {
@@ -585,15 +585,15 @@ class PaymentScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PaymentScreenMethod]
-class PaymentScreenMethodRoute extends PageRouteInfo<void> {
-  const PaymentScreenMethodRoute({List<PageRouteInfo>? children})
+/// [PaymentScreenNotUse]
+class PaymentScreenNotUseRoute extends PageRouteInfo<void> {
+  const PaymentScreenNotUseRoute({List<PageRouteInfo>? children})
       : super(
-          PaymentScreenMethodRoute.name,
+          PaymentScreenNotUseRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'PaymentScreenMethodRoute';
+  static const String name = 'PaymentScreenNotUseRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

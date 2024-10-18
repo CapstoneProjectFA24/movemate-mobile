@@ -11,7 +11,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
-import 'package:movemate/features/test-payment/payment_screen_method.dart';
+import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/models/loading_screen.dart/loading_screen.dart';
@@ -40,7 +40,7 @@ import 'package:movemate/features/booking/presentation/screens/vehicles_list_pri
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/order_details_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order_screen/order_screen.dart';
 
-import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/payment_screen_not_use.dart';
 import 'package:movemate/features/profile/presentation/screens/wallet/wallet_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
@@ -194,7 +194,11 @@ class AppRouter extends _$AppRouter {
         // test route
         AutoRoute(page: TestCloudinaryScreenRoute.page),
 
-        AutoRoute(page: TestPaymentScreenRoute.page),
+        AutoRoute(
+          page: TestPaymentScreenRoute.page,
+          // initial: true,
+        ),
+
         AutoRoute(page: PaymentResultScreenRoute.page),
       ];
 }

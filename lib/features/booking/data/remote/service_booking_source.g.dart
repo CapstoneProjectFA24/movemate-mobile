@@ -165,7 +165,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
   }
 
   @override
-  Future<HttpResponse<SuccessModel>> postBookingservice(
+  Future<HttpResponse<BookingResponse>> postBookingservice(
     BookingRequest request,
     String contentType,
     String accessToken,
@@ -180,7 +180,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     final _data = <String, dynamic>{};
     _data.addAll(request?.toMap() ?? <String, dynamic>{});
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<SuccessModel>>(Options(
+        _setStreamType<HttpResponse<BookingResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -197,7 +197,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = SuccessModel.fromMap(_result.data!);
+    final _value = BookingResponse.fromMap(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
