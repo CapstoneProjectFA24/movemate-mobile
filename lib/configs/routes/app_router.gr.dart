@@ -110,6 +110,19 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PackageDetailScreen(),
       );
     },
+    PaymentResultScreenRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<PaymentResultScreenRouteArgs>(
+          orElse: () => PaymentResultScreenRouteArgs(
+              isSuccess: pathParams.getBool('isSuccess')));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PaymentResultScreen(
+          key: args.key,
+          isSuccess: args.isSuccess,
+        ),
+      );
+    },
     PaymentScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -222,6 +235,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TestCloudinaryScreen(),
+      );
+    },
+    TestPaymentScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TestPaymentScreen(),
       );
     },
     VehiclePriceListScreenRoute.name: (routeData) {
@@ -503,6 +522,46 @@ class PackageDetailScreenRoute extends PageRouteInfo<void> {
   static const String name = 'PackageDetailScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PaymentResultScreen]
+class PaymentResultScreenRoute
+    extends PageRouteInfo<PaymentResultScreenRouteArgs> {
+  PaymentResultScreenRoute({
+    Key? key,
+    required bool isSuccess,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PaymentResultScreenRoute.name,
+          args: PaymentResultScreenRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+          ),
+          rawPathParams: {'isSuccess': isSuccess},
+          initialChildren: children,
+        );
+
+  static const String name = 'PaymentResultScreenRoute';
+
+  static const PageInfo<PaymentResultScreenRouteArgs> page =
+      PageInfo<PaymentResultScreenRouteArgs>(name);
+}
+
+class PaymentResultScreenRouteArgs {
+  const PaymentResultScreenRouteArgs({
+    this.key,
+    required this.isSuccess,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  @override
+  String toString() {
+    return 'PaymentResultScreenRouteArgs{key: $key, isSuccess: $isSuccess}';
+  }
 }
 
 /// generated route for
@@ -825,6 +884,20 @@ class TestCloudinaryScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TestCloudinaryScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TestPaymentScreen]
+class TestPaymentScreenRoute extends PageRouteInfo<void> {
+  const TestPaymentScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          TestPaymentScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TestPaymentScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

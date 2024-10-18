@@ -10,6 +10,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
+import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/models/loading_screen.dart/loading_screen.dart';
 
@@ -49,6 +50,8 @@ import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
 
+import 'package:movemate/features/test-payment/payment_result_screen.dart';
+
 // model
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -82,7 +85,7 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          initial: true,
+          // initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
 
@@ -195,6 +198,12 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: TestCloudinaryScreenRoute.page,
           // initial: true,
+        ),
+
+        AutoRoute(page: TestPaymentScreenRoute.page,
+         initial: true,
+        ),
+        AutoRoute(page: PaymentResultScreenRoute.page,
         ),
       ];
 }

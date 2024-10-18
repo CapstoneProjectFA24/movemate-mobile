@@ -6,10 +6,10 @@ class APIConstants {
   static const prefixToken = 'bearer ';
 
   // auth
-  static const login = '/authenticationss/login';
-  static const register = '/authenticationss/register';
-  static const checkExists = '/authenticationss/check-exists';
-  static const verifyToken = '/authenticationss/verify-token';
+  static const login = '/authentications/login';
+  static const register = '/authentications/register';
+  static const checkExists = '/authentications/check-exists';
+  static const verifyToken = '/authentications/verify-token';
   static const reGenerateToken = '/authentications/re';
 
   // Booking endpoints
@@ -25,6 +25,10 @@ class APIConstants {
   static const post_booking_service = '/bookings/register-booking';
   // order
   static const bookings = '/bookings';
+
+  // payments
+  static const paymentsBooking = '/payments/create-payment-url';
+  static const paymentsDeposit = '/wallets/recharge';
 
   // error
   static const Map<String, String> errorTrans = {
@@ -45,5 +49,9 @@ class APIConstants {
     'You are not allowed to access this function!':
         'Bạn không có quyền truy cập hệ thống',
     'Rejected Reason is not empty.': 'Lý do hủy đơn không được trống',
+
+
+    // payment-error
+    "Booking status must be either DEPOSITING or COMPLETED" : "Trạng thái đặt đơn đã hoàn thành"
   };
 }
