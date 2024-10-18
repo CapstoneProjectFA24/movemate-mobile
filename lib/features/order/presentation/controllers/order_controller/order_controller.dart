@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 
@@ -36,10 +39,12 @@ class OrderController extends _$OrderController {
 
     state = await AsyncValue.guard(() async {
       final response = await orderRepository.getBookings(
-          // accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-          // request: request,
-          );
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        // request: request,
+      );
       orders = response.payload;
+
+      print(orders.length);
     });
 
     if (state.hasError) {
@@ -49,23 +54,19 @@ class OrderController extends _$OrderController {
           statusCode: statusCode,
           stateError: state.error!,
           context: context,
-          // onCallBackGenerateToken: () async => await reGenerateToken(
-          //   authRepository,
-          //   context,
-          // ),
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
         );
 
-        // if (state.hasError) {
-        //   await ref.read(signInControllerProvider.notifier).signOut(context);
-        //   return [];
-        // }
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
 
-        // if (statusCode != StatusCodeType.unauthentication.type) {
-        //   return [];
-        // }
+        if (statusCode != StatusCodeType.unauthentication.type) {}
 
-        // return await getHouses(context);
-        // return [];
+        await getBookings(request, context);
       });
     }
 

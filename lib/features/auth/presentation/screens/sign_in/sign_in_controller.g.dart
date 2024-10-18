@@ -6,7 +6,7 @@ part of 'sign_in_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$signInControllerHash() => r'bab83c9ffcedd331fee1a0268189b643d73725f2';
+String _$signInControllerHash() => r'd9ba9cb317ae7208dbf3af510346f35ec205c678';
 
 /// See also [SignInController].
 @ProviderFor(SignInController)

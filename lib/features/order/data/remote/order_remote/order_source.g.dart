@@ -21,10 +21,16 @@ class _OrderSource implements OrderSource {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<OrderReponse>> getBookings(String contentType) async {
+  Future<HttpResponse<OrderReponse>> getBookings(
+    String contentType,
+    String accessToken,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(

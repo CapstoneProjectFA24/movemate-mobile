@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/configs/routes/guard/auth_guard.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_online/review_online.dart';
@@ -70,13 +71,8 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         // auth
-        AutoRoute(
-          page: SignInScreenRoute.page,
-        ),
-        AutoRoute(
-          page: SignUpScreenRoute.page,
-          // initial: true,
-        ),
+        AutoRoute(page: SignInScreenRoute.page),
+        AutoRoute(page: SignUpScreenRoute.page),
         AutoRoute(page: OTPVerificationScreenRoute.page),
 
         // Màn hình Onboarding
@@ -85,11 +81,10 @@ class AppRouter extends _$AppRouter {
         // Màn hình chính
         AutoRoute(
           page: TabViewScreenRoute.page,
-          // initial: true,
+          initial: true,
           guards: [
             OnboardingGuard(ref: _ref),
-
-            // AuthGuard(ref: _ref),
+            AuthGuard(ref: _ref),
           ],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
@@ -195,16 +190,10 @@ class AppRouter extends _$AppRouter {
         ),
 
         // test route
-        AutoRoute(
-          page: TestCloudinaryScreenRoute.page,
-          // initial: true,
-        ),
+        AutoRoute(page: TestCloudinaryScreenRoute.page),
 
-        AutoRoute(page: TestPaymentScreenRoute.page,
-         initial: true,
-        ),
-        AutoRoute(page: PaymentResultScreenRoute.page,
-        ),
+        AutoRoute(page: TestPaymentScreenRoute.page),
+        AutoRoute(page: PaymentResultScreenRoute.page),
       ];
 }
 

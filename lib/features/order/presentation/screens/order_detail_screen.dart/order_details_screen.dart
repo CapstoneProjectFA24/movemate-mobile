@@ -14,7 +14,7 @@ import 'package:movemate/features/order/presentation/widgets/details/policies.da
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
-import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 
 import 'package:movemate/utils/constants/asset_constant.dart';
 

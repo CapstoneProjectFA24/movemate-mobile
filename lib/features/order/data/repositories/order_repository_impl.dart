@@ -15,9 +15,11 @@ class OrderRepositoryImpl extends RemoteBaseRepository
   OrderRepositoryImpl(this._orderSource, {this.addDelay = true});
 
   @override
-  Future<OrderReponse> getBookings() async {
+  Future<OrderReponse> getBookings({
+    required String accessToken,
+  }) async {
     return getDataOf(
-      request: () => _orderSource.getBookings(APIConstants.contentType),
+      request: () => _orderSource.getBookings(APIConstants.contentType, accessToken),
     );
   }
 }

@@ -22,10 +22,13 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   @override
   Future<HouseTypeResponse> getHouseTypes({
     required PagingModel request,
+    required String accessToken,
+
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getHouseTypes(
         APIConstants.contentType,
+        accessToken
       ),
     );
   }
@@ -34,10 +37,13 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   @override
   Future<ServicesResponse> getServices({
     required PagingModel request,
+    required String accessToken,
+
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getServices(
         APIConstants.contentType,
+        accessToken
       ),
     );
   }
@@ -46,20 +52,27 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository implements Servi
   @override
   Future<ServicesFeeSystemResponse> getFeeSystems({
     required PagingModel request,
+    required String accessToken,
+
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getFeeSystems(
         APIConstants.contentType,
+        accessToken
       ),
     );
   }
 
   // Services Package Methods
   @override
-  Future<ServicesPackageResponse> getPackageServices() async {
+  Future<ServicesPackageResponse> getPackageServices({
+    required String accessToken,
+
+  }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getPackageServices(
         APIConstants.contentType,
+        accessToken
       ),
     );
   }
