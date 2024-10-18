@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/profile/presentation/widgets/input/custom_text.dart';
 import 'package:movemate/features/profile/presentation/widgets/input/input_item.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -64,14 +65,17 @@ class InfoScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        iconFirst: Icons.chevron_left,
-        onCallBackFirst: () {
-          Navigator.pop(context); // Quay lại trang trước
-        },
+        showBackButton: true,
+        backButtonColor: AssetsConstants.whiteColor,
         title: "Thông tin cá nhân",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
-          Navigator.pushNamed(context, '/home'); // Điều hướng đến trang Home
+          final tabsRouter = context.router.root
+              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+          if (tabsRouter != null) {
+            tabsRouter.setActiveIndex(0);
+            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+          }
         },
       ),
       body: SingleChildScrollView(

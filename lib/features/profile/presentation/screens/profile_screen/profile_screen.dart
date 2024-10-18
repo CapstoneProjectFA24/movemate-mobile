@@ -3,10 +3,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
-import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 import 'package:movemate/features/profile/presentation/widgets/profile/profile_header.dart';
 import 'package:movemate/features/profile/presentation/widgets/profile/profile_menu.dart';
 import 'package:movemate/features/profile/presentation/widgets/profile/promo_section.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
@@ -77,7 +77,6 @@ class ProfileScreen extends HookConsumerWidget {
               .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
           if (tabsRouter != null) {
             tabsRouter.setActiveIndex(0);
-            // Pop back to the TabViewScreen
             context.router.popUntilRouteWithName(TabViewScreenRoute.name);
           }
         },

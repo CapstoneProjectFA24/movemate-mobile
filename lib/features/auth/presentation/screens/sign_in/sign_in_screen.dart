@@ -196,7 +196,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                                 context.router.replace(SignUpScreenRoute());
                               },
                               child: const LabelText(
-                                content: 'Đã có tài khoản?',
+                                content: 'Chưa có tài khoản?',
                                 size: AssetsConstants.defaultFontSize - 10.0,
                                 fontWeight: FontWeight.w700,
                                 color: AssetsConstants.mainColor,
