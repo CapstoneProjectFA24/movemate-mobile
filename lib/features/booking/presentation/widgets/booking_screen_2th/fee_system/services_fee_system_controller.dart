@@ -2,10 +2,15 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:movemate/utils/commons/functions/api_utils.dart';
@@ -23,11 +28,16 @@ class ServicesFeeSystemController extends _$ServicesFeeSystemController {
     BuildContext context,
   ) async {
     List<ServicesFeeSystemEntity> feesSystemData = [];
+
+    state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
 
     state = await AsyncValue.guard(() async {
       final response = await serviceBookingRepository.getFeeSystems(
         request: request,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
       );
 
       feesSystemData = response.payload;
@@ -44,10 +54,21 @@ class ServicesFeeSystemController extends _$ServicesFeeSystemController {
           statusCode: statusCode,
           stateError: state.error!,
           context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
         );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+
+        await getFeeSystems(request, context);
       });
     }
-
     return feesSystemData;
   }
 }

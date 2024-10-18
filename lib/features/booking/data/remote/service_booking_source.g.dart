@@ -22,10 +22,15 @@ class _ServiceBookingSource implements ServiceBookingSource {
 
   @override
   Future<HttpResponse<HouseTypeResponse>> getHouseTypes(
-      String contentType) async {
+    String contentType,
+    String accessToken,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -52,10 +57,16 @@ class _ServiceBookingSource implements ServiceBookingSource {
   }
 
   @override
-  Future<HttpResponse<ServicesResponse>> getServices(String contentType) async {
+  Future<HttpResponse<ServicesResponse>> getServices(
+    String contentType,
+    String accessToken,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -83,10 +94,15 @@ class _ServiceBookingSource implements ServiceBookingSource {
 
   @override
   Future<HttpResponse<ServicesFeeSystemResponse>> getFeeSystems(
-      String contentType) async {
+    String contentType,
+    String accessToken,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -114,10 +130,15 @@ class _ServiceBookingSource implements ServiceBookingSource {
 
   @override
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
-      String contentType) async {
+    String contentType,
+    String accessToken,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(

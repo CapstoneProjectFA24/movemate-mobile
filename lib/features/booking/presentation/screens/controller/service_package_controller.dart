@@ -1,9 +1,17 @@
 // service_package_controller.dart
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/functions/api_utils.dart';
+import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
+import 'package:movemate/utils/extensions/status_code_dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'service_package_controller.g.dart';
@@ -18,30 +26,44 @@ class ServicePackageController extends _$ServicePackageController {
     PagingModel request,
     BuildContext context,
   ) async {
+    List<ServicesPackageEntity> servicePackages = [];
+
+    state = const AsyncLoading();
     final servicesPackageRepository =
         ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
 
-    try {
-      // Fetch the package services from the repository
-      final response = await servicesPackageRepository.getPackageServices();
+    state = await AsyncValue.guard(() async {
+      final response = await servicesPackageRepository.getPackageServices(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        // request: request,
+      );
+      servicePackages = response.payload;
+    });
 
-      // Log the entire response
-      // print('API Response: ${response.toJson()}');
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
 
-      // If payload is already a List<ServicesPackageEntity>, use it directly
-      final servicePackages = response.payload;
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
 
-      // Log each service package in detail
-      // for (var servicePackage in servicePackages) {
-      //    print('Service Package: ${servicePackage.toJson()}');
-      // }
+        if (statusCode != StatusCodeType.unauthentication.type) {}
 
-      return servicePackages;
-    } catch (e, stackTrace) {
-      // Handle and log any errors that occur during the fetch or parsing
-      print('Error fetching service packages: $e');
-      print('StackTrace: $stackTrace');
-      return [];
+        await servicePackage(request, context);
+      });
     }
+    return servicePackages;
   }
 }

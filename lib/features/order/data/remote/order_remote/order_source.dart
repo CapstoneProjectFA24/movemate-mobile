@@ -18,7 +18,7 @@ abstract class OrderSource {
   @GET(APIConstants.bookings)
   Future<HttpResponse<OrderReponse>> getBookings(
     @Header(APIConstants.contentHeader) String contentType,
-    // @Header(APIConstants.authHeader) String accessToken,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 }
 

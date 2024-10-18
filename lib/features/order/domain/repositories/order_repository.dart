@@ -10,7 +10,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'order_repository.g.dart';
 
 abstract class OrderRepository {
-  Future<OrderReponse> getBookings();
+  Future<OrderReponse> getBookings({
+    required String accessToken,
+  });
 
 }
 

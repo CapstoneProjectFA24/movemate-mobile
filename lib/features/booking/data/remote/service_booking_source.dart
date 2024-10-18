@@ -25,24 +25,28 @@ abstract class ServiceBookingSource {
   @GET(APIConstants.get_house_types)
   Future<HttpResponse<HouseTypeResponse>> getHouseTypes(
     @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 
   // Services
   @GET(APIConstants.get_service)
   Future<HttpResponse<ServicesResponse>> getServices(
     @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 
   // System Fees
   @GET(APIConstants.get_fees_system)
   Future<HttpResponse<ServicesFeeSystemResponse>> getFeeSystems(
     @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 
   // Package Services
   @GET(APIConstants.get_package_services)
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
     @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 //Post , put
 }

@@ -15,24 +15,30 @@ abstract class ServiceBookingRepository {
   // House Type Methods
   Future<HouseTypeResponse> getHouseTypes({
     required PagingModel request,
+    required String accessToken,
   });
 
   // Services Methods
   Future<ServicesResponse> getServices({
     required PagingModel request,
+    required String accessToken,
   });
 
   // Services Fee System Methods
   Future<ServicesFeeSystemResponse> getFeeSystems({
     required PagingModel request,
+    required String accessToken,
   });
 
   // Services Package Methods
-  Future<ServicesPackageResponse> getPackageServices();
+  Future<ServicesPackageResponse> getPackageServices({
+    required String accessToken,
+  });
 }
 
 @Riverpod(keepAlive: true)
-ServiceBookingRepository serviceBookingRepository(ServiceBookingRepositoryRef ref) {
+ServiceBookingRepository serviceBookingRepository(
+    ServiceBookingRepositoryRef ref) {
   final serviceBookingSource = ref.read(serviceBookingSourceProvider);
   return ServiceBookingRepositoryImpl(serviceBookingSource);
 }

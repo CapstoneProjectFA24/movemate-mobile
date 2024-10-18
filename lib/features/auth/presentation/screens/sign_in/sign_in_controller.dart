@@ -57,7 +57,7 @@ class SignInController extends _$SignInController {
           userModel,
           'user_token',
         );
-        context.router.replaceAll([const HomeScreenRoute()]);
+        context.router.replaceAll([const TabViewScreenRoute()]);
       },
     );
 
@@ -78,15 +78,16 @@ class SignInController extends _$SignInController {
     BuildContext context,
   ) async {
     state = const AsyncLoading();
+
     ref.read(modifyProfiver.notifier).update((state) => true);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     state = await AsyncValue.guard(
       () async {
-        final userDevice = user!.userTokens!.firstWhere(
-          (element) => element.fcmToken == user.fcmToken,
-        );
+        // final userDevice = user!.userTokens!.firstWhere(
+        //   (element) => element.fcmToken == user.fcmToken,
+        // );
 
         ref.read(authProvider.notifier).update((state) => null);
         await authRepository.signOut();
