@@ -9,6 +9,7 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 import 'package:movemate/features/booking/presentation/screens/service_screen_test/service_screen_test.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
@@ -196,6 +197,11 @@ class AppRouter extends _$AppRouter {
 
         AutoRoute(
           page: TestPaymentScreenRoute.page,
+          // initial: true,
+        ),
+        //thanh toán thành công
+        AutoRoute(
+          page: TransactionResultScreenRoute.page,
           // initial: true,
         ),
 
