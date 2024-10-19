@@ -9,13 +9,14 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 import 'package:movemate/features/booking/presentation/screens/service_screen_test/service_screen_test.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
-import 'package:movemate/models/loading_screen.dart/loading_screen.dart';
+import 'package:movemate/models/loading_screen/loading_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -90,6 +91,7 @@ class AppRouter extends _$AppRouter {
           ],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
+            
             AutoRoute(page: OrderScreenRoute.page),
             AutoRoute(page: PromotionScreenRoute.page),
             AutoRoute(
@@ -204,9 +206,14 @@ class AppRouter extends _$AppRouter {
           page: TransactionResultScreenRoute.page,
           // initial: true,
         ),
+        AutoRoute(
+          page: TransactionDetailsOrderRoute.page,
+          // initial: true,
+        ),
 
         AutoRoute(page: PaymentResultScreenRoute.page),
       ];
 }
 
 final appRouterProvider = Provider((ref) => AppRouter(ref: ref));
+

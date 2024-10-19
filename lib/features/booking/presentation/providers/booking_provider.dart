@@ -333,6 +333,10 @@ class BookingNotifier extends StateNotifier<Booking> {
     return total;
   }
 
+  void updateIsReviewOnline(bool isReviewOnline) {
+    state = state.copyWith(isReviewOnline: isReviewOnline);
+  }
+
   void reset() {
     state = Booking(
       totalPrice: 0.0,

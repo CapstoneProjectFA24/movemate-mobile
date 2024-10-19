@@ -3,7 +3,6 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
-import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -58,6 +57,12 @@ abstract class ServiceBookingSource {
     @Body() BookingRequest request,
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+  );
+  @GET('${APIConstants.bookings}/{id}')
+  Future<HttpResponse<BookingResponse>> getBookingDetails(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
   );
 }
 

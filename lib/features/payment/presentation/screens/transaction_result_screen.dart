@@ -2,10 +2,15 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 
 @RoutePage()
 class TransactionResultScreen extends ConsumerWidget {
-  const TransactionResultScreen({super.key});
+  final bool isSuccess;
+  const TransactionResultScreen({
+    super.key,
+    @PathParam('isSuccess') required this.isSuccess,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -216,7 +221,8 @@ class TransactionResultScreen extends ConsumerWidget {
                           height: 48,
                           child: ElevatedButton(
                             onPressed: () {
-                              // context.router.replace( OrderDetailsScreenRoute( orderId: "20201118181445"));
+                              context.router
+                                  .push(const TransactionDetailsOrderRoute());
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange.shade800,

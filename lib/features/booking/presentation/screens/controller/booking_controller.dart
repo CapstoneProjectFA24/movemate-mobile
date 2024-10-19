@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
-import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
@@ -27,6 +26,7 @@ final bookingResponseProvider =
 
 @riverpod
 class BookingController extends _$BookingController {
+  int? bookingId;
   @override
   FutureOr<void> build() {}
 
@@ -42,7 +42,7 @@ class BookingController extends _$BookingController {
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     // Print the booking request for debugging
-    // print('Booking Request: ${jsonEncode(bookingRequest.toMap())}');
+    print('Booking Request: ${jsonEncode(bookingRequest.toMap())}');
 
     state = await AsyncValue.guard(
       () async {
@@ -52,8 +52,14 @@ class BookingController extends _$BookingController {
           request: bookingRequest,
           accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         );
-        print(
-            'API Response Data: ${jsonEncode(bookingResponse.payload)}');
+        // print('API Response Data: ${jsonEncode(bookingResponse.payload)}');
+
+        // Get the booking ID from the response
+        final id = bookingResponse.payload.id;
+
+        // Call the new function to refresh data using the booking ID
+        await refreshBookingData(id: id);
+
         // Store bookingResponse in the provider
         ref.read(bookingResponseProvider.notifier).state =
             bookingResponse.payload;
@@ -79,6 +85,35 @@ class BookingController extends _$BookingController {
     } else {
       // Navigate to LoadingScreenRoute with the bookingId
       context.router.replaceAll([const LoadingScreenRoute()]);
+    }
+  }
+
+  Future<void> refreshBookingData({required int id}) async {
+    final bookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = const AsyncLoading();
+
+    final result = await AsyncValue.guard(
+      () async {
+        final bookingResponse = await bookingRepository.getBookingDetails(
+          id: id,
+          accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        );
+        // Update the bookingResponseProvider with updated booking
+        ref.read(bookingResponseProvider.notifier).state =
+            bookingResponse.payload;
+
+        bookingId = bookingResponse.payload.id;
+        print('Refreshed booking data: ${jsonEncode(bookingResponse.payload)}');
+      },
+    );
+
+    if (result.hasError) {
+      if (kDebugMode) {
+        print('Error refreshing booking data: ${result.error}');
+      }
+      // Handle errors as needed
     }
   }
 }

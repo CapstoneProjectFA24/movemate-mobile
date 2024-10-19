@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart'; // Import for hooks
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
+import 'package:movemate/tab_screen.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -19,35 +22,58 @@ final paymentList = [
 ];
 
 @RoutePage()
-class PaymentScreen extends ConsumerWidget {
-  const PaymentScreen({super.key});
+class PaymentScreen extends HookConsumerWidget {
+  final int id;
+
+  const PaymentScreen({super.key, required this.id});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedMethod = ref.watch(paymentMethodProvider);
-    final paymentController = ref.watch(paymentControllerProvider.notifier);
-    final state = ref.watch(paymentControllerProvider);
+    final bookingController = ref.read(bookingControllerProvider.notifier);
+
+    // Call refreshBookingData when the widget is first built
+    useEffect(() {
+      bookingController.refreshBookingData(id: id);
+      return null;
+    }, []);
+
     // Access the booking response from the provider
     final bookingResponse = ref.watch(bookingResponseProvider);
 
-    // if (bookingResponse != null) {
-    //   // Print the booking ID
-    //   print('Booking ID: ${bookingResponse.id}');
-    // } else {
-    //   print('BookingResponse is null');
-    // }
-    // print(
-    //     'list Payment Methods: ${paymentList.map((method) => method.type).toList()}');
+    if (bookingResponse == null) {
+      // Show a loading indicator while data is being fetched
+      return Scaffold(
+        appBar: CustomAppBar(
+          centerTitle: true,
+          title: "Thanh Toán Đặt Cọc",
+          iconFirst: Icons.home,
+          onCallBackFirst: () {
+            final tabsRouter = context.router.root
+                .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+            if (tabsRouter != null) {
+              tabsRouter.setActiveIndex(0);
+              // Pop back to the TabViewScreen
+              context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+            }
+          },
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final selectedMethod = ref.watch(paymentMethodProvider);
+    final paymentController = ref.watch(paymentControllerProvider.notifier);
+    final state = ref.watch(paymentControllerProvider);
+
     print('Selected Payment Method: ${selectedMethod.type}');
 
     Future<void> handlePayment() async {
       await paymentController.createPaymentBooking(
         context: context,
         selectedMethod: selectedMethod.type,
-        bookingId:
-            bookingResponse?.id.toString() ?? "1", // Use actual bookingId
+        bookingId: bookingResponse.id.toString(),
       );
-      print("bookingID: ${bookingResponse?.id.toString()}");
+      print("bookingID: ${bookingResponse.id.toString()}");
     }
 
     return LoadingOverlay(
@@ -58,7 +84,13 @@ class PaymentScreen extends ConsumerWidget {
           title: "Thanh Toán Đặt Cọc",
           iconFirst: Icons.home,
           onCallBackFirst: () {
-            context.router.replace(const TabViewScreenRoute());
+            final tabsRouter = context.router.root
+                .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+            if (tabsRouter != null) {
+              tabsRouter.setActiveIndex(0);
+              // Pop back to the TabViewScreen
+              context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+            }
           },
         ),
         body: SafeArea(
@@ -75,17 +107,22 @@ class PaymentScreen extends ConsumerWidget {
                         // Details
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 'Xe tải nhỏ',
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.black87),
                               ),
-                              Text(
+                              const Text(
                                 'số lượng 1',
                                 style: TextStyle(
+                                    fontSize: 16, color: Colors.black87),
+                              ),
+                              Text(
+                                bookingResponse.status ?? "",
+                                style: const TextStyle(
                                     fontSize: 16, color: Colors.black87),
                               ),
                             ],
@@ -96,7 +133,7 @@ class PaymentScreen extends ConsumerWidget {
                         Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Text(
-                            bookingResponse?.createdAt ?? "",
+                            bookingResponse.createdAt ?? "",
                             style: const TextStyle(
                                 fontSize: 16, color: Colors.black87),
                           ),
@@ -250,7 +287,7 @@ class PaymentScreen extends ConsumerWidget {
                             Row(
                               children: [
                                 Text(
-                                  '${bookingResponse?.deposit.toString() ?? ''} VNĐ',
+                                  '${bookingResponse.deposit.toString()} VNĐ',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.black87,

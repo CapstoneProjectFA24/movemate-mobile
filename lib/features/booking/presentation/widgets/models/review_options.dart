@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
 import '../../screens/review_screen/review_at_home/review_at_home.dart';
 import '../../screens/review_screen/review_online/review_online.dart';
 
-class DailyUIChallengeCard extends StatefulWidget {
+class DailyUIChallengeCard extends ConsumerStatefulWidget {
   const DailyUIChallengeCard({super.key});
 
   @override
@@ -12,7 +14,7 @@ class DailyUIChallengeCard extends StatefulWidget {
 
 enum AssessmentType { none, home, online }
 
-class DailyUIChallengeCardState extends State<DailyUIChallengeCard> {
+class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
   AssessmentType assessmentType = AssessmentType.none;
   bool isLoading = false; // Thêm biến trạng thái isLoading
 
@@ -156,6 +158,14 @@ class DailyUIChallengeCardState extends State<DailyUIChallengeCard> {
       Expanded(
         child: ElevatedButton(
           onPressed: () {
+            final bookingNotifier = ref.read(bookingProvider.notifier);
+            if (assessmentType == AssessmentType.home) {
+              bookingNotifier.updateIsReviewOnline(false);
+            } else if (assessmentType == AssessmentType.online) {
+              bookingNotifier.updateIsReviewOnline(true);
+            }
+
+            // Điều hướng đến màn hình tương ứng
             if (assessmentType == AssessmentType.home) {
               Navigator.push(
                 context,

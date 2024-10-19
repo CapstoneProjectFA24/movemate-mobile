@@ -31,6 +31,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isExpanded = useState(false);
     final isExpanded1 = useState(false);
+    final isButtonEnabled = order.status == 'DEPOSITING';
 
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value; // Toggle the dropdown state
@@ -42,7 +43,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: CustomAppBar(
-        
         backgroundColor: AssetsConstants.primaryMain,
         // iconFirst: Icons.chevron_left,
         onCallBackFirst: () {
@@ -410,11 +410,16 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        // Add your onPressed logic here
-                      },
+                      onPressed: isButtonEnabled
+                          ? () {
+                              context
+                                  .pushRoute(PaymentScreenRoute(id: order.id));
+                            }
+                          : null, // Disable the button if not assigned
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF9900),
+                        backgroundColor: isButtonEnabled
+                            ? const Color(0xFFFF9900)
+                            : Colors.grey, // Change color based on state
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
@@ -422,10 +427,14 @@ class OrderDetailsScreen extends HookConsumerWidget {
                         fixedSize: const Size(
                             400, 50), // Chiều rộng tự động và chiều cao là 50
                       ),
-                      child: const Text(
-                        'Xác nhận',
+                      child: Text(
+                        isButtonEnabled
+                            ? 'Xác nhận'
+                            : 'đang chờ Assign', // Change text based on state
                         style: TextStyle(
-                          color: Colors.white,
+                          color: isButtonEnabled
+                              ? Colors.white
+                              : Colors.black, // Adjust text color
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),

@@ -17,6 +17,8 @@ final paymentList = [
 
 @RoutePage()
 class TestPaymentScreen extends HookConsumerWidget {
+  const TestPaymentScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedMethod = ref.watch(paymentMethodProvider);

@@ -9,7 +9,6 @@ import 'package:movemate/features/booking/data/models/resquest/booking_requesst.
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
-import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/resources/remote_base_repository.dart';
 
@@ -76,6 +75,17 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     return getDataOf(
       request: () => _serviceBookingSource.postBookingservice(
           request, APIConstants.contentType, accessToken),
+    );
+  }
+
+  @override
+  Future<BookingResponse> getBookingDetails({
+    required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _serviceBookingSource.getBookingDetails(
+          APIConstants.contentType, accessToken,id  ),
     );
   }
 

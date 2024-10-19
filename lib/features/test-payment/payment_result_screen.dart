@@ -7,9 +7,9 @@ class PaymentResultScreen extends HookConsumerWidget {
   final bool isSuccess;
 
   const PaymentResultScreen({
-    Key? key,
+    super.key,
     @PathParam('isSuccess') required this.isSuccess,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

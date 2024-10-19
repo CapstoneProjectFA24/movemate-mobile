@@ -9,7 +9,6 @@ import 'package:movemate/features/booking/data/models/resquest/booking_requesst.
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/data/repositories/service_booking_repository_impl.dart';
 import 'package:movemate/models/request/paging_model.dart';
-import 'package:movemate/models/response/success_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'service_booking_repository.g.dart';
@@ -42,6 +41,11 @@ abstract class ServiceBookingRepository {
   Future<BookingResponse> postBookingservice({
     required BookingRequest request,
     required String accessToken,
+  });
+
+  Future<BookingResponse> getBookingDetails({
+    required String accessToken,
+    required int id,
   });
 }
 

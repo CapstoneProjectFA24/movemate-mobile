@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
 //entity
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/service_package_tile.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/check_list_section.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/notes_section.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/round_trip_checkbox.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/summary_section.dart';

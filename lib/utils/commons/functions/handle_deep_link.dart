@@ -51,6 +51,6 @@ void handleDeepLink(String link, WidgetRef ref) {
     ref.read(paymentResultProvider.notifier).state = isSuccess;
     ref
         .read(appRouterProvider)
-        .push(PaymentResultScreenRoute(isSuccess: isSuccess));
+        .push(TransactionResultScreenRoute(isSuccess: isSuccess));
   }
 }

@@ -48,6 +48,7 @@ class BookingRequest {
   final int houseTypeId;
   final String note;
   final String estimatedDeliveryTime;
+  final bool isReviewOnline;
   final bool isRoundTrip;
   final bool isManyItems;
   final String roomNumber;
@@ -64,6 +65,7 @@ class BookingRequest {
     required this.deliveryPoint,
     required this.estimatedDistance,
     required this.houseTypeId,
+    required this.isReviewOnline,
     required this.note,
     required this.estimatedDeliveryTime,
     required this.isRoundTrip,
@@ -87,6 +89,7 @@ class BookingRequest {
       'note': note,
       'estimatedDeliveryTime': estimatedDeliveryTime,
       'isRoundTrip': isRoundTrip,
+      'isReviewOnline': isReviewOnline,
       'isManyItems': isManyItems,
       'roomNumber': roomNumber,
       'floorsNumber': floorsNumber,
@@ -108,6 +111,7 @@ class BookingRequest {
       note: map['note'] ?? '',
       estimatedDeliveryTime: map['estimatedDeliveryTime'] ?? '0',
       isRoundTrip: map['isRoundTrip'] ?? false,
+      isReviewOnline: map['isReviewOnline'] ?? false,
       isManyItems: map['isManyItems'] ?? false,
       roomNumber: map['roomNumber'] ?? '0',
       floorsNumber: map['floorsNumber'] ?? '0',
@@ -213,6 +217,7 @@ class BookingRequest {
       note: booking.notes,
       estimatedDeliveryTime: estimatedDeliveryTime,
       isRoundTrip: booking.isRoundTrip,
+      isReviewOnline: booking.isReviewOnline,
       isManyItems: booking.selectedSubServices.isNotEmpty,
       roomNumber: (booking.numberOfRooms ?? 1).toString(),
       floorsNumber: (booking.numberOfFloors ?? 1).toString(),

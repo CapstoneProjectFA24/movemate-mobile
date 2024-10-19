@@ -24,6 +24,7 @@ class Booking {
 
   final double packagePrice;
   final bool isRoundTrip;
+  final bool isReviewOnline;
   final List<bool> checklistValues;
   final String notes;
 
@@ -63,6 +64,7 @@ class Booking {
       selectedPackageIndex: json['selectedPackageIndex'],
       packagePrice: (json['packagePrice'] as num?)?.toDouble() ?? 0.0,
       isRoundTrip: json['isRoundTrip'] ?? false,
+      isReviewOnline: json['isReviewOnline'] ?? false,
       notes: json['notes'] ?? '',
 
       // Location
@@ -122,6 +124,7 @@ class Booking {
       'selectedPackageIndex': selectedPackageIndex,
       'packagePrice': packagePrice,
       'isRoundTrip': isRoundTrip,
+      'isReviewOnline': isReviewOnline,
       'notes': notes,
       // Location
       'pickUpLocation': pickUpLocation?.toJson(),
@@ -152,6 +155,7 @@ class Booking {
     this.totalPrice = 0.0,
     this.packagePrice = 0.0,
     this.isRoundTrip = false,
+    this.isReviewOnline = false,
     List<bool>? checklistValues,
     this.notes = '',
     this.servicesFeeList = const [],
@@ -193,6 +197,7 @@ class Booking {
     double? totalPrice,
     double? packagePrice,
     bool? isRoundTrip,
+    bool? isReviewOnline,
     List<bool>? checklistValues,
     String? notes,
     List<ServicesFeeSystemEntity>? servicesFeeList,
@@ -227,6 +232,7 @@ class Booking {
       totalPrice: totalPrice ?? this.totalPrice,
       packagePrice: packagePrice ?? this.packagePrice,
       isRoundTrip: isRoundTrip ?? this.isRoundTrip,
+      isReviewOnline: isReviewOnline ?? this.isReviewOnline,
       checklistValues: checklistValues ?? this.checklistValues,
       notes: notes ?? this.notes,
       servicesFeeList: servicesFeeList ?? this.servicesFeeList,

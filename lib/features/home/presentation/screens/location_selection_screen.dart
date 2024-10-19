@@ -59,7 +59,7 @@ class LocationSelectionScreen extends HookConsumerWidget {
                   ),
                   isScrollControlled: true,
                   context: context,
-                  builder: (context) => FractionallySizedBox(
+                  builder: (context) => const FractionallySizedBox(
                     heightFactor: 0.7,
                     child: LocationBottomSheet(),
                   ),

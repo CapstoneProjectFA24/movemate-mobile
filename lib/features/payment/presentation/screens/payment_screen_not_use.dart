@@ -11,7 +11,6 @@ import 'package:movemate/features/payment/presentation/widget/custom_app_bar.dar
 import 'package:movemate/features/payment/presentation/widget/payment_deadline.dart';
 import 'package:movemate/features/payment/presentation/widget/payment_method.dart';
 import 'package:movemate/features/payment/presentation/widget/total_price.dart';
-import 'package:movemate/features/payment/presentation/widget/vehicle_info.dart';
 
 @RoutePage()
 class PaymentScreenNotUse extends HookConsumerWidget {

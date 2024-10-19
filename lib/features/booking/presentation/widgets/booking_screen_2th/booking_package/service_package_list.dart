@@ -7,8 +7,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 class ServicePackageList extends StatelessWidget {
   final List<ServicesPackageEntity> servicePackages;
 
-  const ServicePackageList({Key? key, required this.servicePackages})
-      : super(key: key);
+  const ServicePackageList({super.key, required this.servicePackages});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +17,9 @@ class ServicePackageList extends StatelessWidget {
     // Sort the list
     sortedPackages.sort((a, b) {
       bool aHasSubServices =
-          a.inverseParentService != null && a.inverseParentService.isNotEmpty;
+          a.inverseParentService.isNotEmpty;
       bool bHasSubServices =
-          b.inverseParentService != null && b.inverseParentService.isNotEmpty;
+          b.inverseParentService.isNotEmpty;
 
       if (aHasSubServices && !bHasSubServices) {
         return -1;

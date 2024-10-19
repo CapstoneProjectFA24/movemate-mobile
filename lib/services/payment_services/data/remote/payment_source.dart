@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

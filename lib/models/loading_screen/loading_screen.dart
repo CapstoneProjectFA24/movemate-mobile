@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart'; // Added import
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart'; // Đảm bảo import này
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
@@ -14,40 +13,73 @@ class LoadingScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bookingController = ref.read(bookingControllerProvider.notifier);
+    final bookingResponse = ref.watch(bookingResponseProvider);
     final bookingControllerState = ref.watch(bookingControllerProvider);
 
-    // Use useEffect to perform an action when the widget is first built
+    final isLoading = useState(true);
+    final isMounted = useIsMounted();
+
     useEffect(() {
-      // Wait for 3 seconds
-      Future.delayed(const Duration(seconds: 3), () {
-        // Navigate to PaymentScreen after 3 seconds
-        context.router.replace(const PaymentScreenRoute());
-        // context.router.replace(PaymentScreenRoute(bookingId: bookingId));
-      });
-      return null; // Return null to indicate no cleanup is necessary
-    }, []); // Empty dependency array to ensure this runs only once
+      Future<void> performCheck() async {
+        final bookingId = bookingController.bookingId;
+
+        if (bookingId != null && isMounted()) {
+          // Hiển thị LoadingOverlay trong 3 giây
+          await Future.delayed(const Duration(seconds: 3));
+          if (!isMounted()) return;
+
+          // Tắt LoadingOverlay
+          isLoading.value = false;
+
+          // Làm mới dữ liệu đơn đặt hàng
+          await bookingController.refreshBookingData(id: bookingId);
+
+          // Lấy phản hồi đơn đặt hàng cập nhật
+          final currentBookingResponse = ref.read(bookingResponseProvider);
+
+          // Kiểm tra trạng thái
+          if (currentBookingResponse?.status == 'DEPOSITED') {
+            // Điều hướng đến màn hình Thanh toán với bookingId
+            context.router.replace(PaymentScreenRoute(id: bookingId));
+          } else {
+            // Giữ nguyên màn hình LoadingScreen mà không làm gì thêm
+            // Bạn có thể thêm thông báo hoặc nút thử lại tại đây nếu muốn
+          }
+        } else {
+          print('Booking ID is null in BookingController');
+        }
+      }
+
+      performCheck();
+
+      return () {
+        // Dọn dẹp nếu cần thiết
+      };
+    }, []);
 
     return LoadingOverlay(
-      isLoading: bookingControllerState.isLoading,
+      isLoading: isLoading.value,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Đang xem xét đơn đặt hàng'),
           centerTitle: true,
           backgroundColor: Colors.orange[700],
-          // actions: [
-          //   IconButton(
-          //     icon: const Icon(
-          //       FontAwesomeIcons.house,
-          //       size: 24,
-          //       color: Colors.black,
-          //     ),
-          //     onPressed: () {
-          //       context.router.replace(
-          //         const TabViewScreenRoute(),
-          //       );
-          //     },
-          //   ),
-          // ],
+          // Bạn có thể bỏ phần actions nếu không cần
+          actions: [
+            IconButton(
+              icon: const Icon(
+                FontAwesomeIcons.house,
+                size: 24,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                context.router.replace(
+                  const TabViewScreenRoute(),
+                );
+              },
+            ),
+          ],
         ),
         body: Container(
           decoration: const BoxDecoration(

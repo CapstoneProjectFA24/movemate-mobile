@@ -21,8 +21,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.servicePackage.inverseParentService != null &&
-        widget.servicePackage.inverseParentService.isNotEmpty) {
+    if (widget.servicePackage.inverseParentService.isNotEmpty) {
       // Package with sub-services
       return Container(
         margin: const EdgeInsets.symmetric(

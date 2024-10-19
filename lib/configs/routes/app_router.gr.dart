@@ -124,9 +124,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     PaymentScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<PaymentScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const PaymentScreen(),
+        child: PaymentScreen(
+          key: args.key,
+          id: args.id,
+        ),
       );
     },
     PaymentScreenNotUseRoute.name: (routeData) {
@@ -246,13 +250,26 @@ abstract class _$AppRouter extends RootStackRouter {
     TestPaymentScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: TestPaymentScreen(),
+        child: const TestPaymentScreen(),
+      );
+    },
+    TransactionDetailsOrderRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TransactionDetailsOrder(),
       );
     },
     TransactionResultScreenRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<TransactionResultScreenRouteArgs>(
+          orElse: () => TransactionResultScreenRouteArgs(
+              isSuccess: pathParams.getBool('isSuccess')));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const TransactionResultScreen(),
+        child: TransactionResultScreen(
+          key: args.key,
+          isSuccess: args.isSuccess,
+        ),
       );
     },
     VehiclePriceListScreenRoute.name: (routeData) {
@@ -578,16 +595,40 @@ class PaymentResultScreenRouteArgs {
 
 /// generated route for
 /// [PaymentScreen]
-class PaymentScreenRoute extends PageRouteInfo<void> {
-  const PaymentScreenRoute({List<PageRouteInfo>? children})
-      : super(
+class PaymentScreenRoute extends PageRouteInfo<PaymentScreenRouteArgs> {
+  PaymentScreenRoute({
+    Key? key,
+    required int id,
+    List<PageRouteInfo>? children,
+  }) : super(
           PaymentScreenRoute.name,
+          args: PaymentScreenRouteArgs(
+            key: key,
+            id: id,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'PaymentScreenRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<PaymentScreenRouteArgs> page =
+      PageInfo<PaymentScreenRouteArgs>(name);
+}
+
+class PaymentScreenRouteArgs {
+  const PaymentScreenRouteArgs({
+    this.key,
+    required this.id,
+  });
+
+  final Key? key;
+
+  final int id;
+
+  @override
+  String toString() {
+    return 'PaymentScreenRouteArgs{key: $key, id: $id}';
+  }
 }
 
 /// generated route for
@@ -929,17 +970,57 @@ class TestPaymentScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [TransactionResultScreen]
-class TransactionResultScreenRoute extends PageRouteInfo<void> {
-  const TransactionResultScreenRoute({List<PageRouteInfo>? children})
+/// [TransactionDetailsOrder]
+class TransactionDetailsOrderRoute extends PageRouteInfo<void> {
+  const TransactionDetailsOrderRoute({List<PageRouteInfo>? children})
       : super(
+          TransactionDetailsOrderRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionDetailsOrderRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TransactionResultScreen]
+class TransactionResultScreenRoute
+    extends PageRouteInfo<TransactionResultScreenRouteArgs> {
+  TransactionResultScreenRoute({
+    Key? key,
+    required bool isSuccess,
+    List<PageRouteInfo>? children,
+  }) : super(
           TransactionResultScreenRoute.name,
+          args: TransactionResultScreenRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+          ),
+          rawPathParams: {'isSuccess': isSuccess},
           initialChildren: children,
         );
 
   static const String name = 'TransactionResultScreenRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<TransactionResultScreenRouteArgs> page =
+      PageInfo<TransactionResultScreenRouteArgs>(name);
+}
+
+class TransactionResultScreenRouteArgs {
+  const TransactionResultScreenRouteArgs({
+    this.key,
+    required this.isSuccess,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  @override
+  String toString() {
+    return 'TransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess}';
+  }
 }
 
 /// generated route for
