@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart'; // Import this for HookConsumerWidget
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
@@ -18,6 +19,24 @@ class ServiceSelector extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
+
+    // Create a TextEditingController using Hook
+    final dateController = useTextEditingController();
+
+    // Function to format DateTime
+    String formatDateTime(DateTime dateTime) {
+      return '${dateTime.year}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.day.toString().padLeft(2, '0')} - ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    }
+
+    // Use useEffect to update the controller text whenever bookingDate changes
+    useEffect(() {
+      if (bookingState.bookingDate != null) {
+        dateController.text = formatDateTime(bookingState.bookingDate!);
+      } else {
+        dateController.text = 'Chọn ngày';
+      }
+      return null; // Return null since no cleanup is needed
+    }, [bookingState.bookingDate]);
 
     return Card(
       color: AssetsConstants.whiteColor,
@@ -101,7 +120,6 @@ class ServiceSelector extends HookConsumerWidget {
             ),
             const SizedBox(height: 4),
             GestureDetector(
-              // Commented this out to avoid issues during debugging.
               onTap: () async {
                 final selectedDate =
                     await _selectDate(context, bookingState.bookingDate);
@@ -111,6 +129,7 @@ class ServiceSelector extends HookConsumerWidget {
               },
               child: AbsorbPointer(
                 child: TextFormField(
+                  controller: dateController, // Use the controller here
                   decoration: const InputDecoration(
                     filled: true,
                     fillColor: AssetsConstants.whiteColor,
@@ -120,13 +139,12 @@ class ServiceSelector extends HookConsumerWidget {
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                   ),
-                  initialValue: bookingState.bookingDate != null
-                      ? '${bookingState.bookingDate!.year}/${bookingState.bookingDate!.month.toString().padLeft(2, '0')}/${bookingState.bookingDate!.day.toString().padLeft(2, '0')} - ${bookingState.bookingDate!.hour.toString().padLeft(2, '0')}:${bookingState.bookingDate!.minute.toString().padLeft(2, '0')}'
-                      : 'Chọn ngày',
                   style: const TextStyle(color: AssetsConstants.blackColor),
                 ),
               ),
             ),
+
+            const SizedBox(height: 16),
 
             // Kiểm tra điều kiện trước khi điều hướng
             ButtonCustom(
@@ -197,8 +215,7 @@ class ServiceSelector extends HookConsumerWidget {
     );
   }
 
-  //hàm để hiển thị modal ngày và chọn giờ
-  // Uncomment and use this function when needed.
+  // Hàm để hiển thị modal ngày và chọn giờ
   Future<DateTime?> _selectDate(
       BuildContext context, DateTime? initialDate) async {
     final now = DateTime.now();

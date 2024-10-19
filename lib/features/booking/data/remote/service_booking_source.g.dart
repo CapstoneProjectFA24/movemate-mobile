@@ -150,7 +150,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     )
             .compose(
               _dio.options,
-              '/services',
+              '/services/not-type-truck',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -160,6 +160,44 @@ class _ServiceBookingSource implements ServiceBookingSource {
               baseUrl,
             ))));
     final _value = ServicesPackageResponse.fromMap(_result.data!);
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<BookingResponse>> postBookingservice(
+    BookingRequest request,
+    String contentType,
+    String accessToken,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request?.toMap() ?? <String, dynamic>{});
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<BookingResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/bookings/register-booking',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final _value = BookingResponse.fromMap(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }

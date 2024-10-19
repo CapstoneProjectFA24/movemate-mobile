@@ -11,6 +11,7 @@ class ServicesPackageEntity {
   final bool isActived;
   final int tier;
   final String imageUrl;
+  final int? quantity; // Added quantity field
   final String? type;
   final double discountRate;
   final double amount;
@@ -25,6 +26,7 @@ class ServicesPackageEntity {
     required this.isActived,
     required this.tier,
     required this.imageUrl,
+    this.quantity, // Include in constructor
     this.type,
     required this.discountRate,
     required this.amount,
@@ -32,6 +34,39 @@ class ServicesPackageEntity {
     this.truckCategory,
     required this.inverseParentService,
   });
+
+  // Added copyWith method
+  ServicesPackageEntity copyWith({
+    int? id,
+    String? name,
+    String? description,
+    bool? isActived,
+    int? tier,
+    String? imageUrl,
+    int? quantity,
+    String? type,
+    double? discountRate,
+    double? amount,
+    int? parentServiceId,
+    TruckCategoryEntity? truckCategory,
+    List<SubServiceEntity>? inverseParentService,
+  }) {
+    return ServicesPackageEntity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      isActived: isActived ?? this.isActived,
+      tier: tier ?? this.tier,
+      imageUrl: imageUrl ?? this.imageUrl,
+      quantity: quantity ?? this.quantity, // Handle quantity
+      type: type ?? this.type,
+      discountRate: discountRate ?? this.discountRate,
+      amount: amount ?? this.amount,
+      parentServiceId: parentServiceId ?? this.parentServiceId,
+      truckCategory: truckCategory ?? this.truckCategory,
+      inverseParentService: inverseParentService ?? this.inverseParentService,
+    );
+  }
 
   factory ServicesPackageEntity.fromMap(Map<String, dynamic> map) {
     return ServicesPackageEntity(
@@ -41,6 +76,7 @@ class ServicesPackageEntity {
       isActived: map['isActived'] ?? false,
       tier: map['tier'] ?? 0,
       imageUrl: map['imageUrl'] ?? '',
+      quantity: map['quantity'], // Parse quantity
       type: map['type'],
       discountRate: (map['discountRate'] ?? 0).toDouble(),
       amount: (map['amount'] ?? 0).toDouble(),
@@ -63,6 +99,7 @@ class ServicesPackageEntity {
       'isActived': isActived,
       'tier': tier,
       'imageUrl': imageUrl,
+      'quantity': quantity, // Include in map
       'type': type,
       'discountRate': discountRate,
       'amount': amount,
@@ -74,11 +111,12 @@ class ServicesPackageEntity {
   }
 
   String toJson() => json.encode(toMap());
-  @override
-  String toString() {
-    return 'ServicesPackageEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, type: $type, discountRate: $discountRate, amount: $amount, parentServiceId: $parentServiceId, truckCategory: $truckCategory, inverseParentService: $inverseParentService)';
-  }
 
   factory ServicesPackageEntity.fromJson(String source) =>
       ServicesPackageEntity.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'ServicesPackageEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, quantity: $quantity, type: $type, discountRate: $discountRate, amount: $amount, parentServiceId: $parentServiceId, truckCategory: $truckCategory, inverseParentService: $inverseParentService)';
+  }
 }

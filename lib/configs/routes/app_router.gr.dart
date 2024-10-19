@@ -51,10 +51,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const InfoScreen(),
       );
     },
+    LoadingScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LoadingScreen(),
+      );
+    },
     LocationSelectionScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LocationSelectionScreen(),
+      );
+    },
+    MapScreenTestRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MapScreenTest(),
       );
     },
     OTPVerificationScreenRoute.name: (routeData) {
@@ -117,6 +129,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PaymentScreen(),
       );
     },
+    PaymentScreenNotUseRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const PaymentScreenNotUse(),
+      );
+    },
     PrivacyPolicyScreenRoute.name: (routeData) {
       final args = routeData.argsAs<PrivacyPolicyScreenRouteArgs>(
           orElse: () => const PrivacyPolicyScreenRouteArgs());
@@ -171,6 +189,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ServiceScreen(),
       );
     },
+    ServiceScreenTestRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ServiceScreenTest(),
+      );
+    },
     SignInScreenRoute.name: (routeData) {
       final args = routeData.argsAs<SignInScreenRouteArgs>(
           orElse: () => const SignInScreenRouteArgs());
@@ -223,6 +247,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: TestPaymentScreen(),
+      );
+    },
+    TransactionResultScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TransactionResultScreen(),
       );
     },
     VehiclePriceListScreenRoute.name: (routeData) {
@@ -325,6 +355,20 @@ class InfoScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LoadingScreen]
+class LoadingScreenRoute extends PageRouteInfo<void> {
+  const LoadingScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          LoadingScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LoadingScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [LocationSelectionScreen]
 class LocationSelectionScreenRoute extends PageRouteInfo<void> {
   const LocationSelectionScreenRoute({List<PageRouteInfo>? children})
@@ -334,6 +378,20 @@ class LocationSelectionScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LocationSelectionScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [MapScreenTest]
+class MapScreenTestRoute extends PageRouteInfo<void> {
+  const MapScreenTestRoute({List<PageRouteInfo>? children})
+      : super(
+          MapScreenTestRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MapScreenTestRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -533,6 +591,20 @@ class PaymentScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [PaymentScreenNotUse]
+class PaymentScreenNotUseRoute extends PageRouteInfo<void> {
+  const PaymentScreenNotUseRoute({List<PageRouteInfo>? children})
+      : super(
+          PaymentScreenNotUseRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PaymentScreenNotUseRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [PrivacyPolicyScreen]
 class PrivacyPolicyScreenRoute
     extends PageRouteInfo<PrivacyPolicyScreenRouteArgs> {
@@ -681,6 +753,20 @@ class ServiceScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ServiceScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ServiceScreenTest]
+class ServiceScreenTestRoute extends PageRouteInfo<void> {
+  const ServiceScreenTestRoute({List<PageRouteInfo>? children})
+      : super(
+          ServiceScreenTestRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ServiceScreenTestRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -838,6 +924,20 @@ class TestPaymentScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TestPaymentScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TransactionResultScreen]
+class TransactionResultScreenRoute extends PageRouteInfo<void> {
+  const TransactionResultScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          TransactionResultScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionResultScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

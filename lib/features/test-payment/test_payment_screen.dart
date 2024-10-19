@@ -30,7 +30,7 @@ class TestPaymentScreen extends HookConsumerWidget {
       await paymentController.createPaymentBooking(
         context: context,
         selectedMethod: selectedMethod.type,
-        bookingId: "1", // replace with actual bookingId
+        bookingId: "52", // replace with actual bookingId
       );
     }
 

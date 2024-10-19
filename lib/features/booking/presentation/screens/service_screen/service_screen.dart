@@ -41,10 +41,8 @@ class ServiceScreen extends HookConsumerWidget {
     );
 
     useEffect(() {
-       
       scrollController.onScrollEndsListener(fetchResult.loadMore);
       return scrollController.dispose;
-      
     }, const []);
 
     return Scaffold(

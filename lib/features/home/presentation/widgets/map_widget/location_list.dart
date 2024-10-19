@@ -7,10 +7,10 @@ class LocationList extends StatelessWidget {
   final Function(LocationModel) onLocationSelected;
 
   const LocationList({
-    Key? key,
+    super.key,
     required this.locations,
     required this.onLocationSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

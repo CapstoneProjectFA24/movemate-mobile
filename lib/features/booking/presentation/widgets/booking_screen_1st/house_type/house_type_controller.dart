@@ -41,7 +41,7 @@ class HouseTypeController extends _$HouseTypeController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
 
       );
-
+      print("HouseTypeEntity: $response");
       houseTypeData = response.payload;
       state = AsyncData(houseTypeData);
     });

@@ -88,11 +88,15 @@ class BookingScreenService extends HookConsumerWidget {
                         }
                         final package = fetchResult.items[index];
                         return ServicePackageTile(servicePackage: package);
+                        // return ServicePackageList(servicePackages: servicePackages);
                       },
                     ),
                   const SizedBox(height: 16),
-                  const SystemFeeScreen(),
+
+                  // const SystemFeeScreen(),
+
                   const SizedBox(height: 16),
+
                   RoundTripCheckbox(
                     isRoundTrip: bookingState.isRoundTrip,
                     onChanged: (value) {

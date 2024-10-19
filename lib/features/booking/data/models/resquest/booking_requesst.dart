@@ -35,8 +35,8 @@
 
 import 'dart:convert';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
-import 'package:movemate/features/booking/domain/entities/bookings/resource.dart';
-import 'package:movemate/features/booking/domain/entities/bookings/service_detail.dart';
+import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
+import 'package:movemate/features/booking/domain/entities/booking_request/service_detail.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 
 class BookingRequest {
@@ -138,18 +138,36 @@ class BookingRequest {
 
     serviceDetails.addAll(booking.selectedSubServices.map((subService) {
       return ServiceDetail(
-        id: subService.id,
-        isQuantity: subService.isQuantity, // Sử dụng subService.isQuantity
+        serviceId: subService.id,
+        // isQuantity: subService.isQuantity, // Sử dụng subService.isQuantity
         quantity: subService.quantity ?? 1,
       );
     }).toList());
 
-    // Thêm servicesFeeList vào serviceDetails
-    serviceDetails.addAll(booking.servicesFeeList.map((serviceFee) {
+    // Filter servicesFeeList to include only fees with quantity > 0
+    List<ServiceDetail> feeServiceDetails = booking.servicesFeeList
+        .where((serviceFee) =>
+            serviceFee.quantity != null && serviceFee.quantity! > 0)
+        .map((serviceFee) {
       return ServiceDetail(
-        id: serviceFee.id,
-        isQuantity: serviceFee.quantity != null && serviceFee.quantity! > 0,
-        quantity: serviceFee.quantity ?? 1,
+        serviceId: serviceFee.id,
+        // isQuantity: true,
+        quantity: serviceFee.quantity!,
+      );
+    }).toList();
+
+    // Add filtered fees to serviceDetails
+    serviceDetails.addAll(feeServiceDetails);
+
+    // Add selectedPackages with quantities to serviceDetails
+    serviceDetails.addAll(booking.selectedPackages
+        .where((package) => package.quantity != null && package.quantity! > 0)
+        .map((package) {
+      return ServiceDetail(
+        serviceId: package.id,
+        // isQuantity:
+        //     true, // Assuming that packages with quantities are isQuantity == true
+        quantity: package.quantity!,
       );
     }).toList());
 
@@ -186,7 +204,7 @@ class BookingRequest {
       pickupPoint: booking.pickUpLocation != null
           ? '${booking.pickUpLocation!.latitude},${booking.pickUpLocation!.longitude}'
           : '',
-      deliveryAddress: booking.dropOffLocation?.address ?? '',
+      deliveryAddress: booking.dropOffLocation?.address ?? 'string',
       deliveryPoint: booking.dropOffLocation != null
           ? '${booking.dropOffLocation!.latitude},${booking.dropOffLocation!.longitude}'
           : '',

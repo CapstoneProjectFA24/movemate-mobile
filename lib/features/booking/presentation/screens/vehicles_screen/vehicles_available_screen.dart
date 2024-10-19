@@ -46,15 +46,21 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       context: context,
     );
 
+    // useEffect(() {
+    //   scrollController.onScrollEndsListener(fetchResult.loadMore);
+    //   return scrollController.dispose;
+    // }, const []);
+
     useEffect(() {
       scrollController.onScrollEndsListener(fetchResult.loadMore);
-      return scrollController.dispose;
+      return null;
     }, const []);
 
     // final selectedService = useState<ServiceEntity?>(null);
 
     return Scaffold(
       appBar: CustomAppBar(
+        // showBackButton: true,
         title: 'Phương tiện có sẵn',
         iconFirst: Icons.refresh_rounded,
         onCallBackFirst: fetchResult.refresh,

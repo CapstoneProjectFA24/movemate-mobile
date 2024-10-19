@@ -109,6 +109,8 @@ flutter:
     - assets/images/profile/
     - assets/images/promotion/
     - assets/images/splash/
+    - assets/images/loading_map.png
+    - assets/images/Group39449.png
     - assets/images/payment_status/
 
   # fonts:

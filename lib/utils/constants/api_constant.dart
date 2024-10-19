@@ -13,12 +13,17 @@ class APIConstants {
   static const reGenerateToken = '/authentications/re';
 
   // Booking endpoints
-  static const get_truck_category = '/truckcategorys';
-  static const get_service = '/services/truck-category';
+  // static const get_truck_category = '/truckcategorys';
+  static const get_service_truck_cate = '/services/truck-category';
+  static const get_service_not_type_truck = '/services/not-type-truck';
   static const get_fees_system = '/fees/system';
   static const get_house_types = '/housetypes';
   static const get_package_services = '/services';
 
+//post booking
+
+  static const post_booking_service = '/bookings/register-booking';
+  // static const post_booking_service = '/bookings/register-booking';
   // order
   static const bookings = '/bookings';
 

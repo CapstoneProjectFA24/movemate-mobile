@@ -3,14 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/guard/auth_guard.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
-import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home.dart';
-import 'package:movemate/features/booking/presentation/screens/review_screen/review_online.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_online/review_online.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen_test/service_screen_test.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
+import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
+import 'package:movemate/models/loading_screen.dart/loading_screen.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -36,7 +41,7 @@ import 'package:movemate/features/booking/presentation/screens/vehicles_list_pri
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/order_details_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order_screen/order_screen.dart';
 
-import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/payment_screen_not_use.dart';
 import 'package:movemate/features/profile/presentation/screens/wallet/wallet_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
@@ -162,6 +167,10 @@ class AppRouter extends _$AppRouter {
           // initial: true,
           page: ServiceScreenRoute.page,
         ),
+        AutoRoute(
+          // initial: true,
+          page: ServiceScreenTestRoute.page,
+        ),
 
         //xem bảng giá niêm yết xe
         AutoRoute(
@@ -170,16 +179,32 @@ class AppRouter extends _$AppRouter {
         ),
 
         AutoRoute(
+          // initial: true,
           page: PaymentScreenRoute.page,
         ),
         AutoRoute(
           page: SplashScreenRoute.page,
         ),
 
+        //loading screen
+        AutoRoute(
+          // initial: true,
+          page: LoadingScreenRoute.page,
+        ),
+
         // test route
         AutoRoute(page: TestCloudinaryScreenRoute.page),
 
-        AutoRoute(page: TestPaymentScreenRoute.page),
+        AutoRoute(
+          page: TestPaymentScreenRoute.page,
+          // initial: true,
+        ),
+        //thanh toán thành công
+        AutoRoute(
+          page: TransactionResultScreenRoute.page,
+          // initial: true,
+        ),
+
         AutoRoute(page: PaymentResultScreenRoute.page),
       ];
 }

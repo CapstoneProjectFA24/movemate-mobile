@@ -28,6 +28,7 @@ class CompletePaymentButton extends StatelessWidget {
             color: AssetsConstants.whiteColor,
           ),
         ),
+
       ),
     );
   }

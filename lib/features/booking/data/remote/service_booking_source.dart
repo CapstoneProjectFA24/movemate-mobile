@@ -1,6 +1,9 @@
 // service_booking_source.dart
 
 import 'package:dio/dio.dart';
+import 'package:movemate/features/booking/data/models/response/booking_response.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,7 +32,7 @@ abstract class ServiceBookingSource {
   );
 
   // Services
-  @GET(APIConstants.get_service)
+  @GET(APIConstants.get_service_truck_cate)
   Future<HttpResponse<ServicesResponse>> getServices(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
@@ -43,12 +46,19 @@ abstract class ServiceBookingSource {
   );
 
   // Package Services
-  @GET(APIConstants.get_package_services)
+  @GET(APIConstants.get_service_not_type_truck)
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );
 //Post , put
+  // Post booking service
+  @POST(APIConstants.post_booking_service)
+  Future<HttpResponse<BookingResponse>> postBookingservice(
+    @Body() BookingRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+  );
 }
 
 @riverpod

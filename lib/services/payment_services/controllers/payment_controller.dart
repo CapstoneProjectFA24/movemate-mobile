@@ -40,7 +40,7 @@ class PaymentController extends _$PaymentController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
-
+      print("createPaymentBooking: ${res.payload}");
       await launchUrl(Uri.parse(res.payload),
           mode: LaunchMode.externalApplication);
     });
