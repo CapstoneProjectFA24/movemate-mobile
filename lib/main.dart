@@ -22,7 +22,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initFirebaseMessaging();
+  // await initFirebaseMessaging();
 
   // check firebase anonymous user connect
   //await testFirebaseConnection();
