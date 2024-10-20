@@ -1,4 +1,5 @@
 //round_trip_checkbox.dart
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class RoundTripCheckbox extends StatelessWidget {
@@ -13,16 +14,21 @@ class RoundTripCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(
-          value: isRoundTrip,
-          onChanged: onChanged,
-        ),
-        const Text('Vận chuyển 2 chiều'),
-        const Spacer(),
-        const Text('+70%'),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(right: 30),
+      child: Row(
+        children: [
+          FadeInLeft(
+            child: Checkbox(
+              value: isRoundTrip,
+              onChanged: onChanged,
+            ),
+          ),
+          FadeInLeft(child: const Text('Vận chuyển 2 chiều')),
+          const Spacer(),
+          FadeInRight(child: const Text('+70%')),
+        ],
+      ),
     );
   }
 }

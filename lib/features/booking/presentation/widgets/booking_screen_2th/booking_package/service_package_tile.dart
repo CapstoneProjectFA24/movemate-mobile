@@ -1,5 +1,5 @@
-// service_package_tile.dart
-
+import 'package:animate_do/animate_do.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
@@ -10,7 +10,11 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ServicePackageTile extends StatefulWidget {
   final ServicesPackageEntity servicePackage;
-  const ServicePackageTile({super.key, required this.servicePackage});
+
+  const ServicePackageTile({
+    super.key,
+    required this.servicePackage,
+  });
 
   @override
   _ServicePackageTileState createState() => _ServicePackageTileState();
@@ -22,11 +26,9 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
   @override
   Widget build(BuildContext context) {
     if (widget.servicePackage.inverseParentService.isNotEmpty) {
-      // Package with sub-services
+      // Display package with sub-services
       return Container(
-        margin: const EdgeInsets.symmetric(
-          vertical: 8,
-        ),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         child: ExpansionTile(
           initiallyExpanded: _isExpanded,
           onExpansionChanged: (bool expanded) {
@@ -54,7 +56,8 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             children: [
               if (widget.servicePackage.discountRate > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.redAccent,
                     borderRadius: BorderRadius.circular(8),
@@ -68,12 +71,19 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
                   ),
                 ),
               const SizedBox(width: 8),
-              Icon(
-                _isExpanded ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-                color: _isExpanded
-                    ? AssetsConstants.greyColor
-                    : AssetsConstants.primaryDark,
-                size: 40,
+              AnimatedRotation(
+                turns: _isExpanded ? 0.5 : 0.0, // 180-degree rotation
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: FaIcon(
+                  _isExpanded
+                      ? FontAwesomeIcons.circleChevronDown
+                      : FontAwesomeIcons.circleChevronUp,
+                  color: _isExpanded
+                      ? AssetsConstants.greyColor
+                      : AssetsConstants.primaryDark,
+                  size: 20, // Kích thước của icon
+                ),
               ),
             ],
           ),
@@ -84,7 +94,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
         ),
       );
     } else {
-      // Package without sub-services, display ServiceTrailingWidget
+      // Display package without sub-services
       return Consumer(builder: (context, ref, _) {
         final bookingNotifier = ref.read(bookingProvider.notifier);
         final bookingState = ref.watch(bookingProvider);
@@ -99,8 +109,9 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
         return Card(
           color: Colors.white,
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: ListTile(
             contentPadding: const EdgeInsets.all(12),
             title: Text(
@@ -126,7 +137,6 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             trailing: ServiceTrailingWidget(
               quantity: quantity,
               addService: true,
-              // If you have a quantityMax for packages, include it here
               onQuantityChanged: (newQuantity) {
                 bookingNotifier.updateServicePackageQuantity(
                     widget.servicePackage, newQuantity);
