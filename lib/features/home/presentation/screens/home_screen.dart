@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/features/home/presentation/widgets/background_image.dart';
@@ -12,16 +13,16 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            BackgroundImage(),
+            const BackgroundImage(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Header(),
-                Center(
+                const Header(),
+                const Center(
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
@@ -35,14 +36,16 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                VehicleCarousel(),
-                SizedBox(height: 32),
-                PromotionBanner(),
-                SizedBox(height: 16),
+                FadeInDown(child: const VehicleCarousel()),
+                const SizedBox(height: 32),
+                FadeInDown(child: const PromotionBanner()),
+                const SizedBox(height: 16),
                 Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: PromotionSection(),
+                  child: FadeInRight(
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: PromotionSection(),
+                    ),
                   ),
                 ),
               ],
