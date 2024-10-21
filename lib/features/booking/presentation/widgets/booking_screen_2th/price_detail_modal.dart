@@ -19,7 +19,9 @@ class ServiceItem {
 }
 
 class PriceDetailModal extends ConsumerWidget {
-  const PriceDetailModal({super.key});
+  final VoidCallback? onConfirm; // Add this line
+
+  const PriceDetailModal({super.key, this.onConfirm}); // Update constructor
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +90,6 @@ class PriceDetailModal extends ConsumerWidget {
 
     // Tính tổng giá sau thuế
     double totalPrice = subtotal + vat;
-
     return Container(
       color: AssetsConstants.whiteColor,
       padding: const EdgeInsets.all(16.0),
@@ -105,14 +106,14 @@ class PriceDetailModal extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 2),
-            // Hiển thị danh sách dịch vụ
+            // Display list of services
             ...allSelectedServices.map((service) => buildPriceDetailRow(
                   service.title,
                   service.totalPrice,
                   service.quantity,
                 )),
             const SizedBox(height: 4),
-            // Hiển thị tổng giá
+            // Display total price
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -124,7 +125,6 @@ class PriceDetailModal extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  // '₫${totalPrice.toStringAsFixed(0)}',
                   '${priceFormat.format(bookingState.totalPrice)} đ',
                   style: const TextStyle(
                     fontSize: 24,
@@ -138,8 +138,8 @@ class PriceDetailModal extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // chuyển đến màn hình tiếp theo
+                onPressed: onConfirm ?? () {
+                  Navigator.pop(context); // Default action
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AssetsConstants.primaryDark,
@@ -164,7 +164,7 @@ class PriceDetailModal extends ConsumerWidget {
     );
   }
 
-  // Helper để hiển thị từng dòng chi tiết giá
+  // Helper to display each price detail row
   Widget buildPriceDetailRow(String title, double price, int quantity) {
     final priceFormat = NumberFormat('#,###', 'vi_VN');
     return Padding(

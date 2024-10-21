@@ -34,6 +34,7 @@ abstract class ServiceBookingRepository {
 
   // Services Package Methods
   Future<ServicesPackageResponse> getPackageServices({
+    required PagingModel request,
     required String accessToken,
   });
 

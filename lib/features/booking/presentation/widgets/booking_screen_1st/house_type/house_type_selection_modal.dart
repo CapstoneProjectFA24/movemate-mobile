@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Import HouseTypeController
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/house_type_controller.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/selection_modal.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/selection_modal.dart';
 // Hooks
 import 'package:movemate/hooks/use_fetch.dart';
 
@@ -30,11 +30,11 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
     final bookingState = ref.watch(bookingProvider); // Watch the booking state
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final scrollController = useScrollController();
-    final state = ref.watch(houseTypeControllerProvider);
+    final state = ref.watch(servicePackageControllerProvider);
 
     final fetchResult = useFetch<HouseTypeEntity>(
       function: (model, context) => ref
-          .read(houseTypeControllerProvider.notifier)
+          .read(servicePackageControllerProvider.notifier)
           .getHouseTypes(model, context),
       initialPagingModel: PagingModel(),
       context: context,

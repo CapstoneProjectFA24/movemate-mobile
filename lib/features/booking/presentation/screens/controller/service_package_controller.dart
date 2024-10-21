@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -37,7 +38,7 @@ class ServicePackageController extends _$ServicePackageController {
     state = await AsyncValue.guard(() async {
       final response = await servicesPackageRepository.getPackageServices(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        // request: request,
+        request: request,
       );
       servicePackages = response.payload;
     });
@@ -65,5 +66,52 @@ class ServicePackageController extends _$ServicePackageController {
       });
     }
     return servicePackages;
+  }
+
+  Future<List<HouseTypeEntity>> getHouseTypes(
+    PagingModel request,
+    BuildContext context,
+  ) async {
+    List<HouseTypeEntity> houseTypeData = [];
+
+    state = const AsyncLoading();
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      final response = await serviceBookingRepository.getHouseTypes(
+        request: request,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      );
+      print("HouseTypeEntity: $response");
+      houseTypeData = response.payload;
+      state = AsyncData(houseTypeData);
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+
+        await getHouseTypes(request, context);
+      });
+    }
+    return houseTypeData;
   }
 }

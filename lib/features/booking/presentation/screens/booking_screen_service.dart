@@ -19,7 +19,7 @@ import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-import '../widgets/models/review_options.dart';
+import '../widgets/booking_screen_2th/review_options.dart';
 
 @RoutePage()
 class BookingScreenService extends HookConsumerWidget {
@@ -41,9 +41,25 @@ class BookingScreenService extends HookConsumerWidget {
             .servicePackage(model, context);
         return result; // Ensure this returns data
       },
-      initialPagingModel: PagingModel(),
+      initialPagingModel: PagingModel(
+        sortContent: "1",
+      ),
       context: context,
     );
+    // Shared method to show the confirmation dialog
+    void showConfirmationDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const DailyUIChallengeCard(),
+          );
+        },
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -91,8 +107,6 @@ class BookingScreenService extends HookConsumerWidget {
                     ),
                   const SizedBox(height: 16),
 
-                  // const SystemFeeScreen(),
-
                   const SizedBox(height: 16),
 
                   RoundTripCheckbox(
@@ -118,41 +132,15 @@ class BookingScreenService extends HookConsumerWidget {
         totalPrice: bookingState.totalPrice,
         isButtonEnabled: true,
         onPlacePress: () {
-          // Bước 1: Lấy trạng thái Booking từ provider
-          final bookingState = ref.read(bookingProvider);
-
-          // Bước 2: Tạo BookingRequest từ Booking
-          // final bookingRequest = BookingRequest.fromBooking(bookingState);
-
-          // Bước 3: Chuyển đổi BookingRequest thành chuỗi JSON
-          // final jsonRequest = bookingRequest.toJson();
-          // final jsonRequestSubservicerequest =
-          //     bookingRequest.resourceList.map((e) => e.toJson()).toList();
-
-          final jsonRequestSubservice =
-              bookingState.selectedSubServices.map((e) => e.toJson()).toList();
-
-          // final jsonRequestHousetype =
-          //     bookingState.livingRoomImages.map((e) => e.toJson()).toList();
-
-          // Bước 4: In chuỗi JSON
-          print(jsonRequestSubservice);
-          // print("hình truyền lên là : $jsonRequestSubservicerequest");
-
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const DailyUIChallengeCard(),
-              );
-            },
-          );
+     
+          showConfirmationDialog();
         },
         buttonText: 'Đặt đơn',
         priceLabel: 'Tổng giá',
+        onConfirm: () {
+          Navigator.pop(context);
+          showConfirmationDialog();
+        },
       ),
     );
   }

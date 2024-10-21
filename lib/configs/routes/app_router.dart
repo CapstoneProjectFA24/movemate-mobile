@@ -6,7 +6,6 @@ import 'package:movemate/features/booking/presentation/screens/booking_screen_se
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_online/review_online.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
-import 'package:movemate/features/booking/presentation/screens/service_screen_test/service_screen_test.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
@@ -91,7 +90,6 @@ class AppRouter extends _$AppRouter {
           ],
           children: [
             AutoRoute(page: HomeScreenRoute.page),
-            
             AutoRoute(page: OrderScreenRoute.page),
             AutoRoute(page: PromotionScreenRoute.page),
             AutoRoute(
@@ -169,10 +167,6 @@ class AppRouter extends _$AppRouter {
           // initial: true,
           page: ServiceScreenRoute.page,
         ),
-        AutoRoute(
-          // initial: true,
-          page: ServiceScreenTestRoute.page,
-        ),
 
         //xem bảng giá niêm yết xe
         AutoRoute(
@@ -216,4 +210,3 @@ class AppRouter extends _$AppRouter {
 }
 
 final appRouterProvider = Provider((ref) => AppRouter(ref: ref));
-

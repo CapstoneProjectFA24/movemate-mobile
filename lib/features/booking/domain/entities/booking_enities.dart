@@ -11,6 +11,7 @@ import 'package:movemate/features/booking/domain/entities/services_package_entit
 import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 
 class Booking {
+  // final int id;
   final HouseTypeEntity? houseType;
 
   final String? reviewType;

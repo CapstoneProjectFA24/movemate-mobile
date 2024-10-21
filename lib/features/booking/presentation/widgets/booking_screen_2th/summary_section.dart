@@ -12,6 +12,7 @@ class SummarySection extends StatelessWidget {
   final String priceLabel; // Customizable price label
   final Widget? priceDetailModal; // Customizable modal widget
   final bool isButtonEnabled;
+  final VoidCallback? onConfirm;
 
   const SummarySection({
     super.key,
@@ -22,6 +23,7 @@ class SummarySection extends StatelessWidget {
     required this.isButtonEnabled,
     this.priceLabel = 'Tổng giá',
     this.priceDetailModal,
+    this.onConfirm,
   });
 
   @override
@@ -103,8 +105,15 @@ class SummarySection extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return priceDetailModal ??
-            const PriceDetailModal(); // Use provided modal or default
+        if (priceDetailModal != null) {
+          // If a custom modal is provided, use it
+          return priceDetailModal!;
+        } else {
+          // Otherwise, use the default PriceDetailModal and pass onConfirm
+          return PriceDetailModal(
+            onConfirm: onConfirm ?? () => Navigator.pop(context),
+          );
+        }
       },
     );
   }
