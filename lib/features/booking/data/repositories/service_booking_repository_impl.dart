@@ -20,7 +20,6 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
   ServiceBookingRepositoryImpl(this._serviceBookingSource,
       {this.addDelay = true});
 
-  // House Type Methods
   @override
   Future<HouseTypeResponse> getHouseTypes({
     required PagingModel request,
@@ -32,7 +31,6 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     );
   }
 
-  // Services Methods
   @override
   Future<ServicesResponse> getServices({
     required PagingModel request,
@@ -85,7 +83,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
   }) async {
     return getDataOf(
       request: () => _serviceBookingSource.getBookingDetails(
-          APIConstants.contentType, accessToken,id  ),
+          APIConstants.contentType, accessToken, id),
     );
   }
 
