@@ -1,7 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 
 import '../../screens/review_screen/review_at_home/review_at_home.dart';
 import '../../screens/review_screen/review_online/review_online.dart';
@@ -19,6 +22,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
   AssessmentType assessmentType = AssessmentType.none;
   bool isLoading = false;
 
+  // Hàm để chọn loại đánh giá
   void selectAssessment(AssessmentType type) {
     setState(() {
       isLoading = true;
@@ -32,6 +36,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     });
   }
 
+  // Hàm để đặt lại lựa chọn đánh giá
   void resetAssessment() {
     setState(() {
       isLoading = true;
@@ -156,6 +161,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     );
   }
 
+  // Hàm xây dựng các nút lựa chọn phương thức thẩm định
   List<Widget> buildSelectionButtons() {
     return [
       Center(
@@ -231,33 +237,59 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     ];
   }
 
+  // Hàm xây dựng các nút xác nhận hoặc hủy
   List<Widget> buildConfirmationButtons() {
+    final bookingState = ref.watch(bookingControllerProvider);
+    final isLoading = bookingState is AsyncLoading;
+
     return [
       Expanded(
         child: ElevatedButton(
-          onPressed: () {
-            final bookingNotifier = ref.read(bookingProvider.notifier);
-            if (assessmentType == AssessmentType.home) {
-              bookingNotifier.updateIsReviewOnline(false);
-            } else if (assessmentType == AssessmentType.online) {
-              bookingNotifier.updateIsReviewOnline(true);
-            }
+          onPressed: isLoading
+              ? null
+              : () async {
+                  final bookingNotifier = ref.read(bookingProvider.notifier);
+                  if (assessmentType == AssessmentType.home) {
+                    bookingNotifier.updateIsReviewOnline(false);
+                  } else if (assessmentType == AssessmentType.online) {
+                    bookingNotifier.updateIsReviewOnline(true);
+                  }
 
-            if (assessmentType == AssessmentType.home) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ReviewAtHome()),
-              );
-            } else if (assessmentType == AssessmentType.online) {
-              // print("context : ${bookingNotifier.state.i}");
-              // Navigator.push(
-              // context,
-              // MaterialPageRoute(builder: (context) => const ReviewOnline()),
-              // MaterialPageRoute(builder: (context) =>  OrderDetailsScreenRoute(order: context.read(bookingProvider).state)),
+                  // Gọi submitBooking và lấy kết quả
+                  final bookingResponse = await ref
+                      .read(bookingControllerProvider.notifier)
+                      .submitBooking(
+                        context: context,
+                      );
 
-              // );
-            }
-          },
+                  if (bookingResponse != null) {
+                    try {
+                      // Chuyển đổi BookingResponseEntity thành OrderEntity
+                      final order =
+                          OrderEntity.fromBookingResponse(bookingResponse);
+                      print('OrderEntity: $order');
+
+                      // Điều hướng đến RegistrationSuccessScreen với OrderEntity
+                      context.router.push(
+                        RegistrationSuccessScreenRoute(order: order),
+                      );
+                    } catch (e) {
+                      // Xử lý ngoại lệ nếu chuyển đổi thất bại
+                      print('Error converting to OrderEntity: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+                      );
+                    }
+                  } else {
+                    // Xử lý khi bookingResponse là null
+                    print('Booking response is null');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content:
+                              Text('Đặt hàng thất bại. Vui lòng thử lại.')),
+                    );
+                  }
+                },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.orange,
             foregroundColor: Colors.white,
@@ -266,7 +298,16 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
             ),
             padding: const EdgeInsets.symmetric(vertical: 15),
           ),
-          child: const Text('Xác nhận', style: TextStyle(fontSize: 16)),
+          child: isLoading
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Text('Xác nhận', style: TextStyle(fontSize: 16)),
         ),
       ),
       const SizedBox(width: 10),
@@ -288,6 +329,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     ];
   }
 
+  // Hàm trang trí cho container chính
   BoxDecoration containerDecoration() {
     return BoxDecoration(
       color: Colors.white,
@@ -302,6 +344,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     );
   }
 
+  // Hàm xây dựng biểu tượng ở trên cùng
   Positioned buildBadge() {
     return Positioned(
       top: -40,

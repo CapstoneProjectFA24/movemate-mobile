@@ -16,6 +16,8 @@ import 'package:movemate/features/payment/presentation/screens/payment_screen.da
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/models/loading_screen/loading_screen.dart';
+import 'package:movemate/models/result_register_booking_screen/confirm_service_booking.dart';
+import 'package:movemate/models/result_register_booking_screen/register_success.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -186,6 +188,16 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           // initial: true,
           page: LoadingScreenRoute.page,
+        ),
+        //register success screen
+        AutoRoute(
+          // initial: true,
+          page: RegistrationSuccessScreenRoute.page,
+        ),
+        //register success screen
+        AutoRoute(
+          // initial: true,
+          page: ConfirmServiceBookingScreenRoute.page,
         ),
 
         // test route

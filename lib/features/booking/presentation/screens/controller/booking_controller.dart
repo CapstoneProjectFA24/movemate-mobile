@@ -30,51 +30,45 @@ class BookingController extends _$BookingController {
   @override
   FutureOr<void> build() {}
 
-  Future<void> submitBooking({
+  Future<BookingResponseEntity?> submitBooking({
     required BuildContext context,
   }) async {
+    // Kiểm tra nếu đã đang xử lý thì không làm gì cả
+    if (state is AsyncLoading) {
+      return null;
+    }
     state = const AsyncLoading();
-
     final bookingState = ref.read(bookingProvider);
     final bookingRequest = BookingRequest.fromBooking(bookingState);
     final bookingRepository = ref.read(serviceBookingRepositoryProvider);
-    final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
-    // Print the booking request for debugging
+    // Debugging
     print('Booking Request: ${jsonEncode(bookingRequest.toMap())}');
 
-    state = await AsyncValue.guard(
-      () async {
-        // print(" gọi tới post bookingRequest: $bookingRequest");
-        //comment chỗ nãy để tránh gọi api
-        final bookingResponse = await bookingRepository.postBookingservice(
-          request: bookingRequest,
-          accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        );
-        // print('API Response Data: ${jsonEncode(bookingResponse.payload)}');
+    state = await AsyncValue.guard(() async {
+      final bookingResponse = await bookingRepository.postBookingservice(
+        request: bookingRequest,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      );
 
-        // Get the booking ID from the response
-        final id = bookingResponse.payload.id;
+      final id = bookingResponse.payload.id;
 
-        // Call the new function to refresh data using the booking ID
-        await refreshBookingData(id: id);
+      // Refresh booking data
+      await refreshBookingData(id: id);
 
-        // Store bookingResponse in the provider
-        ref.read(bookingResponseProvider.notifier).state =
-            bookingResponse.payload;
+      // Store bookingResponse in the provider
+      ref.read(bookingResponseProvider.notifier).state =
+          bookingResponse.payload;
 
-        // Clean up booking provider state
-        ref.read(bookingProvider.notifier).reset();
-
-        // Navigate to LoadingScreenRoute()
-        // context.router.replaceAll([const LoadingScreenRoute()]);
-      },
-    );
+      // Reset booking provider state
+      // ref.read(bookingProvider.notifier).reset();
+      print("bookingResponse: ${jsonEncode(bookingResponse.payload)}");
+    });
 
     if (state.hasError) {
       if (kDebugMode) {
-        print('Error: ${state.error}');
+        print('Error: at controller ${state.error}');
       }
       final statusCode = (state.error as DioException).onStatusDio();
       handleAPIError(
@@ -82,9 +76,10 @@ class BookingController extends _$BookingController {
         stateError: state.error!,
         context: context,
       );
+      return null;
     } else {
-      // Navigate to LoadingScreenRoute with the bookingId
-      context.router.replaceAll([const LoadingScreenRoute()]);
+      print('Booking success ${ref.read(bookingResponseProvider)}');
+      return ref.read(bookingResponseProvider);
     }
   }
 

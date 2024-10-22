@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 
 class OrderEntity {
   final int id;
@@ -81,14 +82,14 @@ class OrderEntity {
     required this.roomNumber,
     required this.floorsNumber,
     required this.isManyItems,
-    required this.estimatedTotalWeight,
+    this.estimatedTotalWeight,
     required this.isCancel,
     required this.cancelReason,
-    required this.estimatedWeight,
-    required this.estimatedHeight,
-    required this.estimatedWidth,
-    required this.estimatedLength,
-    required this.estimatedVolume,
+    this.estimatedWeight,
+    this.estimatedHeight,
+    this.estimatedWidth,
+    this.estimatedLength,
+    this.estimatedVolume,
     required this.isPorter,
     required this.isRoundTrip,
     required this.note,
@@ -211,6 +212,70 @@ class OrderEntity {
     };
   }
 
+  factory OrderEntity.fromBookingResponse(BookingResponseEntity response) {
+    print("convert data from bookingresponse to order entity");
+    final dateFormat =
+        DateFormat('MM/dd/yyyy HH:mm:ss'); // Định dạng đúng với chuỗi từ API
+
+    DateTime parseDate(String? dateString) {
+      if (dateString == null || dateString.trim().isEmpty) {
+        // Bạn có thể chọn cách xử lý khác như trả về một ngày mặc định
+        print('Warning: Date string is null or empty.');
+        return DateTime.now();
+      }
+      try {
+        return dateFormat.parseStrict(dateString);
+      } catch (e) {
+        print('Error parsing date "$dateString": $e');
+        // Bạn có thể chọn cách xử lý khác như trả về một ngày mặc định
+        return DateTime.now();
+      }
+    }
+
+    return OrderEntity(
+      id: response.id,
+      userId: response.userId,
+      deposit: response.deposit,
+      status: response.status,
+      pickupAddress: response.pickupAddress,
+      pickupPoint: response.pickupPoint,
+      deliveryAddress: response.deliveryAddress,
+      deliveryPoint: response.deliveryPoint,
+      isUseBox: response.isUseBox,
+      boxType: response.boxType,
+      estimatedDistance: response.estimatedDistance,
+      total: response.total,
+      totalReal: response.totalReal,
+      estimatedDeliveryTime: response.estimatedDeliveryTime,
+      isDeposited: response.isDeposited,
+      isBonus: response.isBonus,
+      isReported: response.isReported,
+      reportedReason: response.reportedReason,
+      isDeleted: response.isDeleted,
+      createdAt: parseDate(response.createdAt),
+      createdBy: response.createdBy,
+      updatedAt: parseDate(response.updatedAt),
+      updatedBy: response.updatedBy,
+      review: response.review,
+      bonus: response.bonus,
+      typeBooking: response.typeBooking,
+      estimatedAcreage: response.estimatedAcreage,
+      roomNumber: response.roomNumber,
+      floorsNumber: response.floorsNumber,
+      isManyItems: response.isManyItems,
+      isCancel: response.isCancel,
+      cancelReason: response.cancelReason,
+      isPorter: response.isPorter,
+      isRoundTrip: response.isRoundTrip,
+      note: response.note ?? '',
+      totalFee: response.totalFee,
+      feeInfo: response.feeInfo,
+      bookingTrackers: response.bookingTrackers,
+      serviceDetails: response.serviceDetails,
+      feeDetails: response.feeDetails,
+      bookingDetails: response.bookingDetails,
+    );
+  }
   String toJson() => json.encode(toMap());
 
   factory OrderEntity.fromJson(String source) =>

@@ -33,6 +33,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreenService(),
       );
     },
+    ConfirmServiceBookingScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<ConfirmServiceBookingScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ConfirmServiceBookingScreen(
+          key: args.key,
+          order: args.order,
+        ),
+      );
+    },
     ContactScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -173,6 +183,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const PromotionScreen(),
+      );
+    },
+    RegistrationSuccessScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<RegistrationSuccessScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: RegistrationSuccessScreen(
+          key: args.key,
+          order: args.order,
+        ),
       );
     },
     ReviewAtHomeRoute.name: (routeData) {
@@ -321,6 +341,45 @@ class BookingScreenServiceRoute extends PageRouteInfo<void> {
   static const String name = 'BookingScreenServiceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ConfirmServiceBookingScreen]
+class ConfirmServiceBookingScreenRoute
+    extends PageRouteInfo<ConfirmServiceBookingScreenRouteArgs> {
+  ConfirmServiceBookingScreenRoute({
+    Key? key,
+    required OrderEntity order,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ConfirmServiceBookingScreenRoute.name,
+          args: ConfirmServiceBookingScreenRouteArgs(
+            key: key,
+            order: order,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ConfirmServiceBookingScreenRoute';
+
+  static const PageInfo<ConfirmServiceBookingScreenRouteArgs> page =
+      PageInfo<ConfirmServiceBookingScreenRouteArgs>(name);
+}
+
+class ConfirmServiceBookingScreenRouteArgs {
+  const ConfirmServiceBookingScreenRouteArgs({
+    this.key,
+    required this.order,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  @override
+  String toString() {
+    return 'ConfirmServiceBookingScreenRouteArgs{key: $key, order: $order}';
+  }
 }
 
 /// generated route for
@@ -748,6 +807,45 @@ class PromotionScreenRoute extends PageRouteInfo<void> {
   static const String name = 'PromotionScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RegistrationSuccessScreen]
+class RegistrationSuccessScreenRoute
+    extends PageRouteInfo<RegistrationSuccessScreenRouteArgs> {
+  RegistrationSuccessScreenRoute({
+    Key? key,
+    required OrderEntity order,
+    List<PageRouteInfo>? children,
+  }) : super(
+          RegistrationSuccessScreenRoute.name,
+          args: RegistrationSuccessScreenRouteArgs(
+            key: key,
+            order: order,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'RegistrationSuccessScreenRoute';
+
+  static const PageInfo<RegistrationSuccessScreenRouteArgs> page =
+      PageInfo<RegistrationSuccessScreenRouteArgs>(name);
+}
+
+class RegistrationSuccessScreenRouteArgs {
+  const RegistrationSuccessScreenRouteArgs({
+    this.key,
+    required this.order,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  @override
+  String toString() {
+    return 'RegistrationSuccessScreenRouteArgs{key: $key, order: $order}';
+  }
 }
 
 /// generated route for
