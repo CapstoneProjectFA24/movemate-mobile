@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/presentation/widgets/map_widget/location_bottom_sheet.dart';
 import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
-
 import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -21,7 +21,6 @@ class LocationSelectionScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mapController = ref.watch(vietmapControllerProvider);
-    final lineState = useState<Line?>(null);
 
     return Scaffold(
       body: SafeArea(
@@ -31,6 +30,10 @@ class LocationSelectionScreen extends HookConsumerWidget {
               child: Stack(
                 children: [
                   VietmapGL(
+                    trackCameraPosition: true,
+                    myLocationTrackingMode: MyLocationTrackingMode.TrackingGPS,
+                    myLocationEnabled: true,
+                    myLocationRenderMode: MyLocationRenderMode.COMPASS,
                     styleString:
                         "https://maps.vietmap.vn/api/maps/light/styles.json?apikey=$apiKey",
                     initialCameraPosition: const CameraPosition(
@@ -43,6 +46,22 @@ class LocationSelectionScreen extends HookConsumerWidget {
                           controller;
                     },
                   ),
+
+                  //bug
+
+                  // if (mapController != null)
+                  //   MarkerLayer(
+                  //     ignorePointer: true,
+                  //     mapController: mapController,
+                  //     markers: [
+                  //       Marker(
+                  //         alignment: Alignment.bottomCenter,
+                  //         child: const Icon(Icons.location_on,
+                  //             color: Colors.red, size: 50),
+                  //         latLng: const LatLng(10.762317, 106.654551),
+                  //       ),
+                  //     ],
+                  //   ),
                 ],
               ),
             ),

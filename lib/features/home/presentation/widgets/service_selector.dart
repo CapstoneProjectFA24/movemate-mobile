@@ -190,7 +190,6 @@ class ServiceSelector extends HookConsumerWidget {
     );
   }
 
-  // Widget để hiển thị lựa chọn địa điểm
   Widget _buildLocationSelection(
     BuildContext context,
     LocationModel? location,
@@ -207,12 +206,19 @@ class ServiceSelector extends HookConsumerWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              const Icon(Icons.add_location_outlined,
-                  color: AssetsConstants.primaryMain, size: 20),
+              const Icon(
+                Icons.add_location_outlined,
+                color: AssetsConstants.primaryMain,
+                size: 20,
+              ),
               const SizedBox(width: 8),
-              Text(
-                location?.label ?? 'Chọn địa điểm',
-                style: const TextStyle(fontSize: 16),
+              Expanded(
+                child: Text(
+                  location?.address ?? 'Chọn địa điểm',
+                  style: const TextStyle(fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ],
           ),
