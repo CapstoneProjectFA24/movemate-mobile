@@ -82,9 +82,9 @@ class ServiceSelector extends HookConsumerWidget {
               ),
             ),
             const SizedBox(height: 4),
-            _buildLocationSelection(context, bookingState.pickUpLocation, () {
+            buildLocationSelection(context, bookingState.pickUpLocation, () {
               bookingNotifier.toggleSelectingPickUp(true);
-              _navigateToLocationSelectionScreen(context);
+              navigateToLocationSelectionScreen(context);
             }),
 
             const SizedBox(height: 16),
@@ -103,12 +103,12 @@ class ServiceSelector extends HookConsumerWidget {
               ),
             ),
             const SizedBox(height: 4),
-            _buildLocationSelection(
+            buildLocationSelection(
               context,
               bookingState.dropOffLocation,
               () {
                 bookingNotifier.toggleSelectingPickUp(false);
-                _navigateToLocationSelectionScreen(context);
+                navigateToLocationSelectionScreen(context);
               },
             ),
 
@@ -131,7 +131,7 @@ class ServiceSelector extends HookConsumerWidget {
             GestureDetector(
               onTap: () async {
                 final selectedDate =
-                    await _selectDate(context, bookingState.bookingDate);
+                    await selectDate(context, bookingState.bookingDate);
                 if (selectedDate != null) {
                   bookingNotifier.updateBookingDate(selectedDate);
                 }
@@ -172,6 +172,10 @@ class ServiceSelector extends HookConsumerWidget {
                         "Pick-up location: ${bookingState.pickUpLocation?.address} ");
                     print(
                         "Drop-off location: ${bookingState.dropOffLocation?.address} ");
+                    print(
+                        "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
+                    print(
+                        "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
                   } else {
                     // Hiển thị cảnh báo hoặc thông báo người dùng chọn cả hai địa điểm
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -190,7 +194,7 @@ class ServiceSelector extends HookConsumerWidget {
     );
   }
 
-  Widget _buildLocationSelection(
+  Widget buildLocationSelection(
     BuildContext context,
     LocationModel? location,
     VoidCallback onTap,
@@ -228,7 +232,7 @@ class ServiceSelector extends HookConsumerWidget {
   }
 
   // Hàm để điều hướng đến màn hình chọn địa điểm
-  void _navigateToLocationSelectionScreen(BuildContext context) {
+  void navigateToLocationSelectionScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -238,7 +242,7 @@ class ServiceSelector extends HookConsumerWidget {
   }
 
   // Hàm để hiển thị modal ngày và chọn giờ
-  Future<DateTime?> _selectDate(
+  Future<DateTime?> selectDate(
       BuildContext context, DateTime? initialDate) async {
     final now = DateTime.now();
     final selectedDate = await showDatePicker(

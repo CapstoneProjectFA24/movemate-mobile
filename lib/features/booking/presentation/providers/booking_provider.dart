@@ -17,13 +17,6 @@ class BookingNotifier extends StateNotifier<Booking> {
           additionalServiceQuantities: [],
         ));
 
-  void updateAdditionalServiceQuantity(int serviceIndex, int newQuantity) {
-    final updatedQuantities = [...state.additionalServiceQuantities];
-    updatedQuantities[serviceIndex] = newQuantity;
-    state = state.copyWith(additionalServiceQuantities: updatedQuantities);
-    calculateAndUpdateTotalPrice();
-  }
-
   void updateSubServiceQuantity(SubServiceEntity subService, int newQuantity) {
     // Đảm bảo newQuantity không vượt quá quantityMax
     int finalQuantity = newQuantity;
@@ -53,12 +46,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     }
 
     state = state.copyWith(selectedSubServices: updatedSubServices);
-  }
-
-  /// Updates the services fee list in the booking state
-  void updateServicesFeeList(List<ServicesFeeSystemEntity> servicesFeeList) {
-    state = state.copyWith(servicesFeeList: servicesFeeList);
-    calculateAndUpdateTotalPrice();
   }
 
   void updateServicesFeeQuantity(ServicesFeeSystemEntity fee, int newQuantity) {
@@ -169,44 +156,8 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  void togglePackageSelection(ServicesPackageEntity package, bool isSelected) {
-    List<ServicesPackageEntity> updatedPackages =
-        List.from(state.selectedPackages);
-    if (isSelected) {
-      updatedPackages.add(package);
-    } else {
-      updatedPackages.removeWhere((p) => p.id == package.id);
-    }
-    state = state.copyWith(selectedPackages: updatedPackages);
-    calculateAndUpdateTotalPrice();
-  }
-
-  void toggleSubServiceSelection(SubServiceEntity subService, bool isSelected) {
-    List<SubServiceEntity> updatedSubServices =
-        List.from(state.selectedSubServices);
-    if (isSelected) {
-      updatedSubServices.add(subService);
-    } else {
-      updatedSubServices.removeWhere((s) => s.id == subService.id);
-    }
-    state = state.copyWith(selectedSubServices: updatedSubServices);
-    calculateAndUpdateTotalPrice();
-  }
-
-  bool isPackageSelected(ServicesPackageEntity package) {
-    return state.selectedPackages.any((p) => p.id == package.id);
-  }
-
-  bool isSubServiceSelected(SubServiceEntity subService) {
-    return state.selectedSubServices.any((s) => s.id == subService.id);
-  }
-
   void updateHouseType(HouseTypeEntity? houseType) {
     state = state.copyWith(houseType: houseType);
-  }
-
-  void updateReviewType(String? reviewType) {
-    state = state.copyWith(reviewType: reviewType);
   }
 
   void updateNumberOfRooms(int rooms) {
@@ -215,11 +166,6 @@ class BookingNotifier extends StateNotifier<Booking> {
 
   void updateNumberOfFloors(int floors) {
     state = state.copyWith(numberOfFloors: floors);
-  }
-
-  void updateTotalPrice(double totalPrice) {
-    state = state.copyWith(totalPrice: totalPrice);
-    calculateAndUpdateTotalPrice();
   }
 
   void updateNotes(String notes) {
@@ -319,18 +265,6 @@ class BookingNotifier extends StateNotifier<Booking> {
 
   void toggleSelectingPickUp(bool isSelecting) {
     state = state.copyWith(isSelectingPickUp: isSelecting);
-  }
-
-  double calculateVehiclePrice(int index) {
-    return 300000 + (index * 50000);
-  }
-
-  double calculateTotalPrice({double? vehiclePrice, double? packagePrice}) {
-    double total = 0.0;
-    total += vehiclePrice ?? state.vehiclePrice;
-    total += packagePrice ?? state.packagePrice;
-    // Add other price components as needed
-    return total;
   }
 
   void updateIsReviewOnline(bool isReviewOnline) {

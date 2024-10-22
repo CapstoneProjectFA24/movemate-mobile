@@ -273,6 +273,8 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
                       context.router.push(
                         RegistrationSuccessScreenRoute(order: order),
                       );
+                      // Xóa bookingState sau khi đã đăng ký thành công
+                      bookingNotifier.reset();
                     } catch (e) {
                       // Xử lý ngoại lệ nếu chuyển đổi thất bại
                       print('Error converting to OrderEntity: $e');

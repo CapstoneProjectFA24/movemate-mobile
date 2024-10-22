@@ -19,7 +19,7 @@ class VehiclePriceListScreen extends HookConsumerWidget {
           '+10.800đ/km (4-10km)\n+7.560đ/km (10-15km)\n+5.940đ/km (15-45km)\n+4.860đ/km (>45km)',
       longDistancePrice:
           '362,880đ/40km đầu tiên\n+5.940đ/km (40-45km)\n+4.860đ/km (>45km)',
-      imagePath: 'assets/images/booking/vehicles/truck4.png',
+      imagePath: 'assets/images/home/Group18564.png',
       bgColor: Colors.orangeAccent,
     ),
     VehicleModel(
@@ -31,7 +31,7 @@ class VehiclePriceListScreen extends HookConsumerWidget {
           '+12.420đ/km (4-10km)\n+9.720đ/km (10-15km)\n+7.020đ/km (15-45km)\n+5.400đ/km (>45km)',
       longDistancePrice:
           '447,120đ/40km đầu tiên\n+7.020đ/km (40-45km)\n+5.400đ/km (>45km)',
-      imagePath: 'assets/images/booking/vehicles/truck4.png',
+      imagePath: 'assets/images/home/Group18564.png',
       bgColor: Colors.tealAccent,
     ),
   ];

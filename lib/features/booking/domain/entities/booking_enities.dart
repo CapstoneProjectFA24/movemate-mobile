@@ -54,96 +54,96 @@ class Booking {
   final DateTime? bookingDate;
 
   // FromJson and ToJson methods
-  factory Booking.fromJson(Map<String, dynamic> json) {
-    return Booking(
-      houseType: json['houseType'],
+//   factory Booking.fromJson(Map<String, dynamic> json) {
+//     return Booking(
+//       houseType: json['houseType'],
 
-      numberOfRooms: json['numberOfRooms'],
-      numberOfFloors: json['numberOfFloors'],
-      selectedVehicleIndex: json['selectedVehicleIndex'],
-      totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
-      selectedPackageIndex: json['selectedPackageIndex'],
-      packagePrice: (json['packagePrice'] as num?)?.toDouble() ?? 0.0,
-      isRoundTrip: json['isRoundTrip'] ?? false,
-      isReviewOnline: json['isReviewOnline'] ?? false,
-      notes: json['notes'] ?? '',
+//       numberOfRooms: json['numberOfRooms'],
+//       numberOfFloors: json['numberOfFloors'],
+//       selectedVehicleIndex: json['selectedVehicleIndex'],
+//       totalPrice: (json['totalPrice'] as num?)?.toDouble() ?? 0.0,
+//       selectedPackageIndex: json['selectedPackageIndex'],
+//       packagePrice: (json['packagePrice'] as num?)?.toDouble() ?? 0.0,
+//       isRoundTrip: json['isRoundTrip'] ?? false,
+//       isReviewOnline: json['isReviewOnline'] ?? false,
+//       notes: json['notes'] ?? '',
 
-      // Location
-      pickUpLocation: json['pickUpLocation'] != null
-          ? LocationModel.fromJson(json['pickUpLocation'])
-          : null,
-      dropOffLocation: json['dropOffLocation'] != null
-          ? LocationModel.fromJson(json['dropOffLocation'])
-          : null,
+//       // Location
+//       pickUpLocation: json['pickUpLocation'] != null
+//           ? LocationModel.fromJson(json['pickUpLocation'])
+//           : null,
+//       dropOffLocation: json['dropOffLocation'] != null
+//           ? LocationModel.fromJson(json['dropOffLocation'])
+//           : null,
 
-      //add image to json
-      livingRoomImages: (json['livingRoomImages'] as List<dynamic>?)
-              ?.map((e) => ImageData.fromJson(e))
-              .toList() ??
-          [],
-      bedroomImages: (json['bedroomImages'] as List<dynamic>?)
-              ?.map((e) => ImageData.fromJson(e))
-              .toList() ??
-          [],
-      diningRoomImages: (json['diningRoomImages'] as List<dynamic>?)
-              ?.map((e) => ImageData.fromJson(e))
-              .toList() ??
-          [],
-      officeRoomImages: (json['officeRoomImages'] as List<dynamic>?)
-              ?.map((e) => ImageData.fromJson(e))
-              .toList() ??
-          [],
-      bathroomImages: (json['bathroomImages'] as List<dynamic>?)
-              ?.map((e) => ImageData.fromJson(e))
-              .toList() ??
-          [],
+//       //add image to json
+//       livingRoomImages: (json['livingRoomImages'] as List<dynamic>?)
+//               ?.map((e) => ImageData.fromJson(e))
+//               .toList() ??
+//           [],
+//       bedroomImages: (json['bedroomImages'] as List<dynamic>?)
+//               ?.map((e) => ImageData.fromJson(e))
+//               .toList() ??
+//           [],
+//       diningRoomImages: (json['diningRoomImages'] as List<dynamic>?)
+//               ?.map((e) => ImageData.fromJson(e))
+//               .toList() ??
+//           [],
+//       officeRoomImages: (json['officeRoomImages'] as List<dynamic>?)
+//               ?.map((e) => ImageData.fromJson(e))
+//               .toList() ??
+//           [],
+//       bathroomImages: (json['bathroomImages'] as List<dynamic>?)
+//               ?.map((e) => ImageData.fromJson(e))
+//               .toList() ??
+//           [],
 
-      //checklist
-      checklistValues:
-          List<bool>.from(json['checklistValues'] ?? List.filled(10, false)),
+//       //checklist
+//       checklistValues:
+//           List<bool>.from(json['checklistValues'] ?? List.filled(10, false)),
 
-      // Added fields
-      selectedPackages: (json['selectedPackages'] as List<dynamic>?)
-              ?.map((e) => ServicesPackageEntity.fromJson(e))
-              .toList() ??
-          [],
-      selectedSubServices: (json['selectedSubServices'] as List<dynamic>?)
-              ?.map((e) => SubServiceEntity.fromJson(e))
-              .toList() ??
-          [],
-    );
-  }
+//       // Added fields
+//       selectedPackages: (json['selectedPackages'] as List<dynamic>?)
+//               ?.map((e) => ServicesPackageEntity.fromJson(e))
+//               .toList() ??
+//           [],
+//       selectedSubServices: (json['selectedSubServices'] as List<dynamic>?)
+//               ?.map((e) => SubServiceEntity.fromJson(e))
+//               .toList() ??
+//           [],
+//     );
+//   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'houseType': houseType,
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'houseType': houseType,
 
-      'numberOfRooms': numberOfRooms,
-      'numberOfFloors': numberOfFloors,
-      'selectedVehicleIndex': selectedVehicleIndex,
-      'totalPrice': totalPrice,
-      'selectedPackageIndex': selectedPackageIndex,
-      'packagePrice': packagePrice,
-      'isRoundTrip': isRoundTrip,
-      'isReviewOnline': isReviewOnline,
-      'notes': notes,
-      // Location
-      'pickUpLocation': pickUpLocation?.toJson(),
-      'dropOffLocation': dropOffLocation?.toJson(),
-//add image
-      'livingRoomImages': livingRoomImages.map((e) => e.toJson()).toList(),
-      'bedroomImages': bedroomImages.map((e) => e.toJson()).toList(),
-      'diningRoomImages': diningRoomImages.map((e) => e.toJson()).toList(),
-      'officeRoomImages': officeRoomImages.map((e) => e.toJson()).toList(),
-      'bathroomImages': bathroomImages.map((e) => e.toJson()).toList(),
-      //checklist
-      'checklistValues': checklistValues,
-      // Added fields
-      'selectedPackages': selectedPackages.map((e) => e.toJson()).toList(),
-      'selectedSubServices':
-          selectedSubServices.map((e) => e.toJson()).toList(),
-    };
-  }
+//       'numberOfRooms': numberOfRooms,
+//       'numberOfFloors': numberOfFloors,
+//       'selectedVehicleIndex': selectedVehicleIndex,
+//       'totalPrice': totalPrice,
+//       'selectedPackageIndex': selectedPackageIndex,
+//       'packagePrice': packagePrice,
+//       'isRoundTrip': isRoundTrip,
+//       'isReviewOnline': isReviewOnline,
+//       'notes': notes,
+//       // Location
+//       'pickUpLocation': pickUpLocation?.toJson(),
+//       'dropOffLocation': dropOffLocation?.toJson(),
+// //add image
+//       'livingRoomImages': livingRoomImages.map((e) => e.toJson()).toList(),
+//       'bedroomImages': bedroomImages.map((e) => e.toJson()).toList(),
+//       'diningRoomImages': diningRoomImages.map((e) => e.toJson()).toList(),
+//       'officeRoomImages': officeRoomImages.map((e) => e.toJson()).toList(),
+//       'bathroomImages': bathroomImages.map((e) => e.toJson()).toList(),
+//       //checklist
+//       'checklistValues': checklistValues,
+//       // Added fields
+//       'selectedPackages': selectedPackages.map((e) => e.toJson()).toList(),
+//       'selectedSubServices':
+//           selectedSubServices.map((e) => e.toJson()).toList(),
+//     };
+//   }
 
   Booking({
     this.houseType,
@@ -216,6 +216,7 @@ class Booking {
     LocationModel? pickUpLocation,
     LocationModel? dropOffLocation,
     DateTime? bookingDate,
+    //add image
     List<ImageData>? livingRoomImages,
     List<ImageData>? bedroomImages,
     List<ImageData>? diningRoomImages,
