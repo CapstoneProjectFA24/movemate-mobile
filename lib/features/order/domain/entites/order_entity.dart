@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 
 class OrderEntity {
   final int id;
   final int userId;
+  final int houseTypeId;
+  HouseTypeEntity? houseType;
   final int deposit;
   final String status;
   final String pickupAddress;
@@ -54,6 +57,8 @@ class OrderEntity {
   OrderEntity({
     required this.id,
     required this.userId,
+    required this.houseTypeId,
+    this.houseType,
     required this.deposit,
     required this.status,
     required this.pickupAddress,
@@ -108,6 +113,7 @@ class OrderEntity {
     return OrderEntity(
       id: map['id'] ?? 0,
       userId: map['userId'] ?? 0,
+      houseTypeId: map['houseType'] ?? 0,
       deposit: map['deposit'] ?? 0,
       status: map['status'] ?? '',
       pickupAddress: map['pickupAddress'] ?? '',
@@ -164,6 +170,7 @@ class OrderEntity {
     return {
       'id': id,
       'userId': userId,
+      'houseType': houseTypeId,
       'deposit': deposit,
       'status': status,
       'pickupAddress': pickupAddress,
@@ -235,6 +242,7 @@ class OrderEntity {
     return OrderEntity(
       id: response.id,
       userId: response.userId,
+      houseTypeId: response.houseTypeId,
       deposit: response.deposit,
       status: response.status,
       pickupAddress: response.pickupAddress,
@@ -276,7 +284,14 @@ class OrderEntity {
       bookingDetails: response.bookingDetails,
     );
   }
-  String toJson() => json.encode(toMap());
+  void setHouseType(List<HouseTypeEntity> houseTypes) {
+    houseType = houseTypes.firstWhere(
+      (ht) => ht.id == houseTypeId,
+      orElse: () {
+        throw StateError('HouseTypeEntity with id $houseTypeId not found');
+      },
+    );
+  }
 
   factory OrderEntity.fromJson(String source) =>
       OrderEntity.fromMap(json.decode(source));

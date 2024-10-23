@@ -48,6 +48,10 @@ abstract class ServiceBookingRepository {
     required String accessToken,
     required int id,
   });
+    Future<BookingResponse> postValuationBooking({
+    required BookingRequest request,
+    required String accessToken,
+  });
 }
 
 @Riverpod(keepAlive: true)

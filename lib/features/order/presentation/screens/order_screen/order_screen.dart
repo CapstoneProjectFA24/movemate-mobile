@@ -25,15 +25,15 @@ class OrderScreen extends HookConsumerWidget {
           .read(orderControllerProvider.notifier)
           .getBookings(model, context),
       initialPagingModel: PagingModel(
-          // pageSize: 20,
-          // pageNumber: 2,
-          // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
+        pageSize: 50,
+        pageNumber: 2,
+        // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
 
-          // filterSystemContent:  ref.read(filterSystemStatus).type,
-          // filterContent: ref.read(filterPartnerStatus).type,
-          // searchDateFrom: dateFrom,
-          // searchDateTo: dateTo,
-          ),
+        // filterSystemContent:  ref.read(filterSystemStatus).type,
+        // filterContent: ref.read(filterPartnerStatus).type,
+        // searchDateFrom: dateFrom,
+        // searchDateTo: dateTo,
+      ),
       context: context,
     );
 

@@ -2,14 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 
 @RoutePage()
 class TransactionResultScreen extends ConsumerWidget {
+  // final OrderEntity order;
   final bool isSuccess;
   const TransactionResultScreen({
     super.key,
     @PathParam('isSuccess') required this.isSuccess,
+    // required this.order,
   });
 
   @override
@@ -223,6 +226,9 @@ class TransactionResultScreen extends ConsumerWidget {
                             onPressed: () {
                               context.router
                                   .push(const TransactionDetailsOrderRoute());
+                              // print("đi đến My booking");
+                              // context.router.replaceAll(
+                              //     [OrderDetailsScreenRoute(order: order)]);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange.shade800,

@@ -1,6 +1,7 @@
 // booking_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
@@ -148,6 +149,13 @@ class BookingNotifier extends StateNotifier<Booking> {
     total += vat;
     // Cập nhật tổng giá
     state = state.copyWith(totalPrice: total);
+  }
+
+  void updateBookingResponse(BookingResponseEntity response) {
+    state = state.copyWith(
+      totalPrice: response.total.toDouble(),
+      // Bạn có thể cập nhật thêm các trường khác nếu cần
+    );
   }
 
   // Replaced updateRoundTrip method

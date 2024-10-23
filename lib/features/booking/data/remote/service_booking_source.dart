@@ -64,6 +64,13 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,
   );
+  // Post valuation booking service
+  @POST(APIConstants.post_valuation_booking_service)
+  Future<HttpResponse<BookingResponse>> postValuationBooking(
+    @Body() BookingRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+  );
 }
 
 @riverpod

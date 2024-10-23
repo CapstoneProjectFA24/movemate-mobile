@@ -8,6 +8,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/servi
 class BookingResponseEntity {
   final int id;
   final int userId;
+  final int houseTypeId;
   final int deposit;
   final String status;
   final String pickupAddress;
@@ -52,6 +53,7 @@ class BookingResponseEntity {
   BookingResponseEntity({
     required this.id,
     required this.userId,
+    required this.houseTypeId,
     required this.deposit,
     required this.status,
     required this.pickupAddress,
@@ -98,6 +100,7 @@ class BookingResponseEntity {
     return BookingResponseEntity(
       id: json['id'] ?? 0,
       userId: json['userId'] ?? 0,
+      houseTypeId: json['houseTypeId'] ?? 0,
       deposit: json['deposit'] ?? 0,
       status: json['status'] ?? '',
       pickupAddress: json['pickupAddress'] ?? '',
@@ -157,6 +160,7 @@ class BookingResponseEntity {
     return {
       'id': id,
       'userId': userId,
+      'houseTypeId': houseTypeId,
       'deposit': deposit,
       'status': status,
       'pickupAddress': pickupAddress,

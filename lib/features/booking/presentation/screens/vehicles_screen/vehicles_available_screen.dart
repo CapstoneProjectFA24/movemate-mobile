@@ -1,12 +1,15 @@
 // available_vehicles_screen.dart
 
 import 'package:auto_route/auto_route.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/vehicles_screen/vehicle_list.dart';
 
@@ -85,19 +88,58 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         buttonIcon: false,
         totalPrice: bookingState.totalPrice ?? 0.0,
         isButtonEnabled: bookingState.selectedVehicle != null,
-        onPlacePress: () {
-          // print("${bookingState.houseType?.id} chọn nhà ");
-          // print("${bookingState.houseType?.name} loại nhà ");
-          if (bookingState.selectedVehicle != null &&
-              bookingState.houseType?.id != null) {
-            context.router.push(const BookingScreenServiceRoute());
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Vui lòng chọn phương tiện phù hợp')),
-            );
-          }
-        },
+   onPlacePress: () async {
+  if (bookingState.selectedVehicle != null &&
+      bookingState.houseType?.id != null) {
+    // Hiển thị một dialog chờ
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    // Tạo BookingRequest từ bookingState
+    final bookingRequest = BookingRequest.fromBooking(bookingState);
+
+    // Gửi yêu cầu POST đến API và nhận kết quả
+    final bookingResponse = await ref
+        .read(servicePackageControllerProvider.notifier)
+        .postValuationBooking(
+          bookingRequest: bookingRequest,
+          context: context,
+        );
+
+    // Đóng dialog chờ
+    Navigator.of(context).pop();
+
+    // Kiểm tra trạng thái sau khi gửi yêu cầu
+    final controllerState = ref.read(servicePackageControllerProvider);
+
+    if (controllerState.hasError) {
+      final errorMessage = controllerState.error is DioException
+          ? (controllerState.error as DioException).message
+          : 'Đã xảy ra lỗi không xác định';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Định giá thất bại: $errorMessage')),
+      );
+    } else {
+      if (bookingResponse != null) {
+        // Cập nhật bookingState với giá từ phản hồi
+        bookingNotifier.updateBookingResponse(bookingResponse);
+        // Điều hướng đến màn hình BookingScreenService
+        context.router.push(const BookingScreenServiceRoute());
+      } else {
+        // Xử lý trường hợp phản hồi null nếu cần
+      }
+    }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Vui lòng chọn phương tiện phù hợp')),
+    );
+  }
+},
+
       ),
     );
   }

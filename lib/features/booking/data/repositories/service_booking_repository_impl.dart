@@ -89,6 +89,19 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
           APIConstants.contentType, accessToken, id),
     );
   }
+  @override
+  Future<BookingResponse> postValuationBooking({
+    required BookingRequest request,
+    required String accessToken,
+  }) {
+    return getDataOf(
+      request: () => _serviceBookingSource.postValuationBooking(
+        request,
+        APIConstants.contentType,
+        accessToken,
+      ),
+    );
+  }
 
   // Additional methods can be added here as needed
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -168,15 +170,18 @@ class OrderDetailsScreen extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Loại nhà : ${order.boxType ?? "công ty"}',
+                                'Loại nhà : ${order.houseType?.name ?? "label"}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
+
                               const SizedBox(height: 10),
+
                               buildAddressRow(
                                 Icons.location_on_outlined,
                                 'Từ:  ${order.pickupAddress} ',
                               ),
+                              
                               const Divider(
                                   height: 12, color: Colors.grey, thickness: 1),
                               buildAddressRow(
@@ -191,7 +196,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                                   buildDetailColumn(FontAwesomeIcons.building,
                                       "Tầng :${order.floorsNumber}"),
                                   buildDetailColumn(FontAwesomeIcons.building,
-                                      order.roomNumber),
+                                      "Phòng : ${order.roomNumber}"),
                                 ],
                               ),
                               const SizedBox(height: 20),

@@ -10,10 +10,9 @@ class TransactionDetailsOrder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-
       body: Container(
         child: Container(
-          width: 350, 
+          width: 350,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -90,7 +89,7 @@ class TransactionDetailsOrder extends ConsumerWidget {
                       // Illustration
                       Center(
                         child: Image.network(
-                          'https://storage.googleapis.com/a1aa/image/XXWSx2XNlVL5HR4Ne3UfiT7XzEyK6UBPWer41Y5trJgkMgQnA.jpg',
+                          'https://cdn-icons-png.freepik.com/512/4047/4047296.png',
                           width: 64,
                           height: 64,
                         ),
@@ -101,14 +100,15 @@ class TransactionDetailsOrder extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Icon(FontAwesomeIcons.utensils, color: Colors.red),
-                          Icon(FontAwesomeIcons.mapMarkerAlt, color: Colors.red),
+                          Icon(FontAwesomeIcons.mapMarkerAlt,
+                              color: Colors.red),
                           Icon(FontAwesomeIcons.truck, color: Colors.red),
                           Icon(FontAwesomeIcons.ellipsisH, color: Colors.red),
                         ],
                       ),
                       const SizedBox(height: 16),
                       const Text(
-                        'ShopeeFood sẽ thông báo khi đơn bắt đầu được giao đến bạn.',
+                        'MoveMate sẽ thông báo khi đơn bắt đầu được giao đến bạn.',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey),
                       ),
@@ -122,7 +122,7 @@ class TransactionDetailsOrder extends ConsumerWidget {
                         ),
                       ),
                       const Text(
-                        'Đồ ăn | Bún Đậu Mắm Tôm Cụ Tí - Ăn Vặt - 306 Huỳnh Văn Lũy',
+                        ' 306 Huỳnh Văn Lũy',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const Text(

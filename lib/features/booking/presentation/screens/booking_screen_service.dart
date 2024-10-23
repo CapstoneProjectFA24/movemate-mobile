@@ -33,6 +33,7 @@ class BookingScreenService extends HookConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     final state = ref.watch(servicePackageControllerProvider);
+    final double price = bookingState.totalPrice;
 
     final fetchResult = useFetch<ServicesPackageEntity>(
       function: (model, context) async {
@@ -129,10 +130,9 @@ class BookingScreenService extends HookConsumerWidget {
       ),
       bottomNavigationBar: SummarySection(
         buttonIcon: true,
-        totalPrice: bookingState.totalPrice,
+        totalPrice: price ?? 0.0,
         isButtonEnabled: true,
         onPlacePress: () {
-     
           showConfirmationDialog();
         },
         buttonText: 'Đặt đơn',
