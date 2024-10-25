@@ -22,8 +22,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 
-
-
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
   const OrderDetailsScreen({
@@ -39,11 +37,16 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final isButtonEnabled =
         order.status.toBookingTypeEnum() == BookingStatusType.depositing;
 
-
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
-  
+    print(
+        " order có  statusorderStatusStreamProvider ${orderStatusStreamProvider(order.id.toString())}");
+
+    print(" order có order.status  ${order.status}");
+
+    print(" order statusAsync: $statusAsync");
+
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value; // Toggle the dropdown state
     }
@@ -85,11 +88,15 @@ class OrderDetailsScreen extends HookConsumerWidget {
               Padding(
                   padding: const EdgeInsets.only(left: 14.0),
                   child: statusAsync.when(
-                    data: (status) => Text(
-                      getBookingStatusText(status),
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
+                    data: (status) =>
+                      Text(
+                        getBookingStatusText(status),
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                
+               
+              
                     loading: () => const CircularProgressIndicator(),
                     error: (err, stack) => Text('Error: $err'),
                   )),

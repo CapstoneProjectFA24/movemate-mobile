@@ -43,71 +43,34 @@ Future<void> initUniLinks(BuildContext context, WidgetRef ref) async {
   }
 }
 
+// void handleDeepLink(String link, WidgetRef ref) {
+//   print('Received deep link: $link');
+
+//   if (link.startsWith('movemate://payment-result')) {
+//     final uri = Uri.parse(link);
+//     final isSuccess = uri.queryParameters['isSuccess'] == 'true';
+
+//     ref.read(paymentResultProvider.notifier).state = isSuccess;
+//     ref
+//         .read(appRouterProvider)
+//         .push(TransactionResultScreenRoute(isSuccess: isSuccess));
+//   }
+// }
+
 void handleDeepLink(String link, WidgetRef ref) {
   print('Received deep link: $link');
 
   if (link.startsWith('movemate://payment-result')) {
     final uri = Uri.parse(link);
     final isSuccess = uri.queryParameters['isSuccess'] == 'true';
+    final bookingId = uri.queryParameters['bookingId'];
 
     ref.read(paymentResultProvider.notifier).state = isSuccess;
-    ref
-        .read(appRouterProvider)
-        .push(TransactionResultScreenRoute(isSuccess: isSuccess));
+
+    // Điều hướng tới TransactionResultScreen và truyền bookingId
+    ref.read(appRouterProvider).push(TransactionResultScreenRoute(
+          isSuccess: isSuccess,
+          bookingId: bookingId ?? '',
+        ));
   }
 }
-
-// void handleDeepLink(String link, WidgetRef ref) async {
-//   print('Received deep link: $link');
-
-//   if (link.startsWith('movemate://payment-result')) {
-//     final uri = Uri.parse(link);
-//     final isSuccess = uri.queryParameters['isSuccess'] == 'true';
-//     final orderId = uri.queryParameters['orderId'];
-
-//     if (orderId != null) {
-//       // Giả sử bạn có một phương thức để lấy OrderEntity dựa trên orderId
-//       final order = await fetchOrderById(orderId, ref);
-      
-//       if (order != null) {
-//         ref.read(paymentResultProvider.notifier).state = isSuccess;
-//         ref.read(appRouterProvider).push(TransactionResultScreenRoute(
-//           isSuccess: isSuccess,
-//           order: order,
-//         ));
-//       } else {
-//         // Xử lý khi không tìm thấy đơn hàng
-//         showSnackBar(
-//           context: context,
-//           content: "Đơn hàng không tồn tại",
-//           icon: AssetsConstants.iconError,
-//           backgroundColor: Colors.red,
-//           textColor: AssetsConstants.whiteColor,
-//         );
-//       }
-//     } else {
-//       // Xử lý khi không có orderId trong deep link
-//       showSnackBar(
-//         context: context,
-//         content: "Không tìm thấy ID đơn hàng trong deep link",
-//         icon: AssetsConstants.iconError,
-//         backgroundColor: Colors.red,
-//         textColor: AssetsConstants.whiteColor,
-//       );
-//     }
-//   }
-// }
-
-// // Ví dụ phương thức fetchOrderById
-// Future<OrderEntity?> fetchOrderById(String orderId, WidgetRef ref) async {
-//   // Thực hiện logic để lấy OrderEntity từ repository hoặc provider dựa trên orderId
-//   // Ví dụ:
-//   try {
-//     final orderRepository = ref.read(orderRepositoryProvider);
-//     final order = await orderRepository.getOrderById(orderId);
-//     return order;
-//   } catch (e) {
-//     print('Error fetching order by id: $e');
-//     return null;
-//   }
-// }

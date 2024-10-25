@@ -17,7 +17,7 @@ enum BookingStatusType {
 
 extension ConvertOrderPartnerStatus on String {
   BookingStatusType toBookingTypeEnum() {
-    switch (this.toUpperCase()) {
+    switch (toUpperCase()) {
       case 'PENDING':
         return BookingStatusType.pending;
       case 'DEPOSITING':

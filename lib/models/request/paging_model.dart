@@ -10,7 +10,7 @@ class PagingModel {
 
   PagingModel({
     this.pageNumber = 1,
-    this.pageSize = 50,
+    this.pageSize = 80,
     this.searchContent,
     this.sortContent,
     this.filterContent,

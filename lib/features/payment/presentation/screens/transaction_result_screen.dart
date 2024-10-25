@@ -2,17 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 
 @RoutePage()
 class TransactionResultScreen extends ConsumerWidget {
-  // final OrderEntity order;
+  final String bookingId;
   final bool isSuccess;
   const TransactionResultScreen({
     super.key,
     @PathParam('isSuccess') required this.isSuccess,
-    // required this.order,
+    @PathParam('bookingId') required this.bookingId,
   });
 
   @override
@@ -223,13 +225,45 @@ class TransactionResultScreen extends ConsumerWidget {
                         child: SizedBox(
                           height: 48,
                           child: ElevatedButton(
-                            onPressed: () {
-                              context.router
-                                  .push(const TransactionDetailsOrderRoute());
-                              // print("đi đến My booking");
-                              // context.router.replaceAll(
-                              //     [OrderDetailsScreenRoute(order: order)]);
+                            // onPressed: () {
+                            //   context.router
+                            //       .push(const TransactionDetailsOrderRoute());
+                            // },
+
+                            onPressed: () async {
+                              // Trích xuất phần số nguyên từ bookingId để lấy id
+                              final idPart = bookingId.split('-').first;
+                              final id = int.tryParse(idPart);
+
+                              if (id != null) {
+                                // Sử dụng BookingController để lấy OrderEntity
+                                final bookingController = ref
+                                    .read(bookingControllerProvider.notifier);
+                                final orderEntity = await bookingController
+                                    .getOrderEntityById(id);
+
+                                if (orderEntity != null) {
+                                  // Điều hướng đến OrderDetailsScreen với orderEntity
+                                  context.router.push(OrderDetailsScreenRoute(
+                                      order: orderEntity));
+                                } else {
+                                  // Xử lý lỗi nếu không tìm thấy OrderEntity
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Không tìm thấy thông tin đơn hàng')),
+                                  );
+                                }
+                              } else {
+                                // Xử lý lỗi nếu không thể trích xuất id
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Không thể lấy id từ bookingId')),
+                                );
+                              }
                             },
+
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange.shade800,
                               shape: RoundedRectangleBorder(

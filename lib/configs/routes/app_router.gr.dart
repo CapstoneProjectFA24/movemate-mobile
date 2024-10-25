@@ -283,12 +283,15 @@ abstract class _$AppRouter extends RootStackRouter {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<TransactionResultScreenRouteArgs>(
           orElse: () => TransactionResultScreenRouteArgs(
-              isSuccess: pathParams.getBool('isSuccess')));
+                isSuccess: pathParams.getBool('isSuccess'),
+                bookingId: pathParams.getString('bookingId'),
+              ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: TransactionResultScreen(
           key: args.key,
           isSuccess: args.isSuccess,
+          bookingId: args.bookingId,
         ),
       );
     },
@@ -1088,14 +1091,19 @@ class TransactionResultScreenRoute
   TransactionResultScreenRoute({
     Key? key,
     required bool isSuccess,
+    required String bookingId,
     List<PageRouteInfo>? children,
   }) : super(
           TransactionResultScreenRoute.name,
           args: TransactionResultScreenRouteArgs(
             key: key,
             isSuccess: isSuccess,
+            bookingId: bookingId,
           ),
-          rawPathParams: {'isSuccess': isSuccess},
+          rawPathParams: {
+            'isSuccess': isSuccess,
+            'bookingId': bookingId,
+          },
           initialChildren: children,
         );
 
@@ -1109,15 +1117,18 @@ class TransactionResultScreenRouteArgs {
   const TransactionResultScreenRouteArgs({
     this.key,
     required this.isSuccess,
+    required this.bookingId,
   });
 
   final Key? key;
 
   final bool isSuccess;
 
+  final String bookingId;
+
   @override
   String toString() {
-    return 'TransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess}';
+    return 'TransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId}';
   }
 }
 

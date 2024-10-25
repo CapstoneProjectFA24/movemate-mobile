@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -81,7 +82,6 @@ class BookingController extends _$BookingController {
       print('Booking success ${ref.read(bookingResponseProvider)}');
       return ref.read(bookingResponseProvider);
     }
-    
   }
 
   Future<void> refreshBookingData({required int id}) async {
@@ -110,6 +110,32 @@ class BookingController extends _$BookingController {
         print('Error refreshing booking data: ${result.error}');
       }
       // Handle errors as needed
+    }
+  }
+
+  Future<OrderEntity?> getOrderEntityById(int id) async {
+    final bookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    try {
+      final bookingResponse = await bookingRepository.getBookingDetails(
+        id: id,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      );
+
+      // Cập nhật bookingResponseProvider
+      ref.read(bookingResponseProvider.notifier).state =
+          bookingResponse.payload;
+
+      // Chuyển đổi BookingResponseEntity thành OrderEntity
+      final orderEntity =
+          OrderEntity.fromBookingResponse(bookingResponse.payload);
+
+      return orderEntity;
+    } catch (e) {
+      // Xử lý lỗi
+      print('Error fetching booking details: $e');
+      return null;
     }
   }
 }
