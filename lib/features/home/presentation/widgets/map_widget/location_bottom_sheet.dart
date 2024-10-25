@@ -20,6 +20,9 @@ final pickupSelectedLocationProvider =
 final dropoffSelectedLocationProvider =
     StateProvider<Map<String, dynamic>?>((ref) => null);
 
+final uiUpdateTriggerProvider = StateProvider<bool>((ref) => false);
+final selectedRefIdProvider = StateProvider<String?>((ref) => null);
+
 class LocationBottomSheet extends HookConsumerWidget {
   const LocationBottomSheet({super.key});
 
@@ -94,10 +97,14 @@ class LocationBottomSheet extends HookConsumerWidget {
   }
 
   Widget LocationTab(BuildContext context, WidgetRef ref, bool isPickUp) {
+    // Theo dõi thay đổi UI
+    final _ = ref.watch(uiUpdateTriggerProvider);
+
+    // Truy cập booking notifier và state
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final bookingState = ref.watch(bookingProvider);
 
-    print(bookingState.pickUpLocation?.toJson());
+    // Lấy kết quả tự động hoàn thành và vị trí đã chọn dựa trên isPickUp
     final autocompleteResults = ref.watch(isPickUp
         ? pickupAutocompleteResultsProvider
         : dropoffAutocompleteResultsProvider);
@@ -105,8 +112,12 @@ class LocationBottomSheet extends HookConsumerWidget {
         ? pickupSelectedLocationProvider
         : dropoffSelectedLocationProvider);
 
+    // Theo dõi `ref_id` được chọn
+    final selectedRefId = ref.watch(selectedRefIdProvider);
+
     const apiKey = APIConstants.apiVietMapKey;
 
+    // Hàm lấy kết quả tự động hoàn thành
     void fetchAutocompleteResults(
         String query, WidgetRef ref, bool isPickUp) async {
       final url = Uri.parse(
@@ -129,6 +140,7 @@ class LocationBottomSheet extends HookConsumerWidget {
       }
     }
 
+    // Hàm lấy chi tiết vị trí
     void fetchLocationDetails(
         String refId, WidgetRef ref, bool isPickUp) async {
       final url = Uri.parse(
@@ -149,101 +161,133 @@ class LocationBottomSheet extends HookConsumerWidget {
       }
     }
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
+    // Cấu trúc widget với nút xác nhận nằm ngoài Expanded
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        // Phần nội dung có thể cuộn
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.search, color: Colors.grey),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: isPickUp ? 'Tìm điểm đi' : 'Tìm điểm đến',
-                      ),
-                      onChanged: (value) {
-                        if (value.length > 2) {
-                          fetchAutocompleteResults(value, ref, isPickUp);
-                        }
-                      },
+                  // Ô tìm kiếm
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.search, color: Colors.grey),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText:
+                                  isPickUp ? 'Tìm điểm đi' : 'Tìm điểm đến',
+                            ),
+                            onChanged: (value) {
+                              if (value.length > 2) {
+                                fetchAutocompleteResults(value, ref, isPickUp);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  const SizedBox(height: 20),
+
+                  // Kết quả tự động hoàn thành
+                  ...autocompleteResults.map((result) {
+                    final isSelected = selectedRefId == result['ref_id'];
+                    return ListTile(
+                      leading: Icon(
+                        Icons.location_on,
+                        color: isSelected ? Colors.blue : Colors.grey,
+                      ),
+                      title: Text(
+                        result['display'],
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      tileColor:
+                          isSelected ? Colors.blue.withOpacity(0.1) : null,
+                      onTap: () {
+                        fetchLocationDetails(result['ref_id'], ref, isPickUp);
+                        ref.read(selectedRefIdProvider.notifier).state =
+                            result['ref_id'];
+                      },
+                    );
+                  }),
+                  const SizedBox(height: 20),
+
+                  // Chi tiết vị trí đã chọn
+                  if (selectedLocation != null) ...[
+                    Text('Địa điểm đã chọn: ${selectedLocation['display']}'),
+                    Text('Vĩ độ: ${selectedLocation['lat']}'),
+                    Text('Kinh độ: ${selectedLocation['lng']}'),
+                  ],
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-
-            // Autocomplete results
-            ...autocompleteResults.map((result) => ListTile(
-                  leading: const Icon(Icons.location_on, color: Colors.grey),
-                  title: Text(result['display']),
-                  onTap: () =>
-                      fetchLocationDetails(result['ref_id'], ref, isPickUp),
-                )),
-
-            const SizedBox(height: 20),
-
-            // Selected location details
-            if (selectedLocation != null) ...[
-              Text('Selected Location: ${selectedLocation['display']}'),
-              Text('Latitude: ${selectedLocation['lat']}'),
-              Text('Longitude: ${selectedLocation['lng']}'),
-            ],
-
-            const SizedBox(height: 20),
-
-            // Confirm button
-            if (selectedLocation != null)
-              ButtonCustom(
-                buttonText: 'Xác nhận',
-                buttonColor: AssetsConstants.primaryDark,
-                isButtonEnabled: true,
-                onButtonPressed: () {
-                  final location = LocationModel(
-                    label: selectedLocation['name'],
-                    address: selectedLocation['display'],
-                    latitude: selectedLocation['lat'],
-                    longitude: selectedLocation['lng'],
-                    distance: '',
-                  );
-                  if (isPickUp) {
-                    bookingNotifier.updatePickUpLocation(location);
-                  } else {
-                    bookingNotifier.updateDropOffLocation(location);
-                  }
-
-                  final pickupLocation =
-                      ref.read(pickupSelectedLocationProvider);
-                  final dropoffLocation =
-                      ref.read(dropoffSelectedLocationProvider);
-
-                  if (pickupLocation != null && dropoffLocation != null) {
-                    final tabsRouter = context.router.root
-                        .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
-                    if (tabsRouter != null) {
-                      tabsRouter.setActiveIndex(0);
-                      context.router
-                          .popUntilRouteWithName(TabViewScreenRoute.name);
-                    }
-                  } else {
-                    final tabController = DefaultTabController.of(context);
-                    tabController.animateTo(isPickUp ? 1 : 0);
-                  }
-                },
-              ),
-          ],
+          ),
         ),
-      ),
+        // Nút xác nhận nằm ngoài Expanded, luôn ở cuối modal
+        if (selectedLocation != null)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ButtonCustom(
+              buttonText: 'Xác nhận',
+              buttonColor: AssetsConstants.primaryDark,
+              isButtonEnabled: true,
+              onButtonPressed: () {
+                final location = LocationModel(
+                  label: selectedLocation['name'],
+                  address: selectedLocation['display'],
+                  latitude: selectedLocation['lat'],
+                  longitude: selectedLocation['lng'],
+                  distance: '',
+                );
+                if (isPickUp) {
+                  bookingNotifier.updatePickUpLocation(location);
+                } else {
+                  bookingNotifier.updateDropOffLocation(location);
+                }
+                // final pickUpLocation = bookingState.pickUpLocation;
+                // final dropOffLocation = bookingState.dropOffLocation;
+                // Kiểm tra xem cả điểm đi và điểm đến đã được chọn chưa
+                final pickUpLocation = ref.read(pickupSelectedLocationProvider);
+                final dropOffLocation =
+                    ref.read(dropoffSelectedLocationProvider);
+
+                if (pickUpLocation != null && dropOffLocation != null) {
+                  final tabsRouter = context.router.root
+                      .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+                  if (tabsRouter != null) {
+                    tabsRouter.setActiveIndex(0);
+                    context.router
+                        .popUntilRouteWithName(TabViewScreenRoute.name);
+                  }
+                } else {
+                  final tabController = DefaultTabController.of(context);
+                  tabController.animateTo(isPickUp ? 1 : 0);
+                }
+              },
+            ),
+          ),
+      ],
     );
   }
 }

@@ -33,7 +33,7 @@ class LocationList extends StatelessWidget {
             location.address,
             style: const TextStyle(
               fontSize: 12,
-              color: AssetsConstants.greyColor,
+              color: AssetsConstants.blackColor,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -41,6 +41,7 @@ class LocationList extends StatelessWidget {
             location.distance,
             style: const TextStyle(
               fontSize: 12,
+              color: AssetsConstants.blackColor,
               fontWeight: FontWeight.w400,
             ),
           ),
