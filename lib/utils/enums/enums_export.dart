@@ -5,3 +5,4 @@ export './status_code_type.dart';
 export './verification_otp_type.dart';
 export './share_preference_type.dart';
 export './payment_method_type.dart';
+export './booking_status_type.dart';

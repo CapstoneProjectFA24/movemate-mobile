@@ -17,10 +17,22 @@ import 'package:movemate/features/order/presentation/widgets/details/priceItem.d
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
+import 'package:movemate/utils/commons/functions/string_utils.dart';
 
-// Nhập khẩu các widget đã tạo
+final orderStatusStreamProvider =
+    StreamProvider.family<BookingStatusType, String>((ref, bookingId) {
+  return FirebaseFirestore.instance
+      .collection('bookings')
+      .doc(bookingId)
+      .snapshots()
+      .map((snapshot) {
+    final statusString = snapshot.data()?['Status'] as String? ?? 'PENDING';
+    return statusString.toBookingTypeEnum();
+  });
+});
 
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
@@ -33,8 +45,19 @@ class OrderDetailsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isExpanded = useState(false);
     final isExpanded1 = useState(false);
-    final isButtonEnabled = order.status == 'DEPOSITING';
 
+    final isButtonEnabled =
+        order.status.toBookingTypeEnum() == BookingStatusType.depositing;
+    final statusAsync =
+        ref.watch(orderStatusStreamProvider(order.id.toString()));
+
+    useEffect(() {
+      // Log initial status
+      print('Initial status: ${order.status}');
+      print('Initial status statusAsync: $statusAsync');
+
+      return null;
+    }, []);
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value; // Toggle the dropdown state
     }
@@ -78,11 +101,12 @@ class OrderDetailsScreen extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 14.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0),
                 child: Text(
-                  "đang chờ reviewer xét duyệt",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  getBookingStatusText(order.status.toBookingTypeEnum()),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
                 ),
               ),
               const SizedBox(height: 10),
@@ -174,14 +198,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-
                               const SizedBox(height: 10),
-
                               buildAddressRow(
                                 Icons.location_on_outlined,
                                 'Từ:  ${order.pickupAddress} ',
                               ),
-                              
                               const Divider(
                                   height: 12, color: Colors.grey, thickness: 1),
                               buildAddressRow(
