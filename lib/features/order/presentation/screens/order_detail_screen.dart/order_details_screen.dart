@@ -16,23 +16,13 @@ import 'package:movemate/features/order/presentation/widgets/details/policies.da
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 
-final orderStatusStreamProvider =
-    StreamProvider.family<BookingStatusType, String>((ref, bookingId) {
-  return FirebaseFirestore.instance
-      .collection('bookings')
-      .doc(bookingId)
-      .snapshots()
-      .map((snapshot) {
-    final statusString = snapshot.data()?['Status'] as String? ?? 'PENDING';
-    return statusString.toBookingTypeEnum();
-  });
-});
+
 
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
@@ -48,16 +38,12 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final isButtonEnabled =
         order.status.toBookingTypeEnum() == BookingStatusType.depositing;
+
+
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
-    useEffect(() {
-      // Log initial status
-      print('Initial status: ${order.status}');
-      print('Initial status statusAsync: $statusAsync');
-
-      return null;
-    }, []);
+  
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value; // Toggle the dropdown state
     }
@@ -69,21 +55,16 @@ class OrderDetailsScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        // iconFirst: Icons.chevron_left,
         onCallBackFirst: () {
-          Navigator.pop(context); // Quay lại trang trước
+          Navigator.pop(context);
         },
         title: "Thông tin đơn hàng",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
-          // Navigator.pushNamed(context, '/home'); // Điều hướng đến trang Home
-
           final tabsRouter = context.router.root
               .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
-          print(tabsRouter);
           if (tabsRouter != null) {
             tabsRouter.setActiveIndex(0);
-            // Pop back to the TabViewScreen
             context.router.popUntilRouteWithName(TabViewScreenRoute.name);
           } else {
             context.router.pushAndPopUntil(
@@ -102,13 +83,16 @@ class OrderDetailsScreen extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 14.0),
-                child: Text(
-                  getBookingStatusText(order.status.toBookingTypeEnum()),
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w500),
-                ),
-              ),
+                  padding: const EdgeInsets.only(left: 14.0),
+                  child: statusAsync.when(
+                    data: (status) => Text(
+                      getBookingStatusText(status),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    loading: () => const CircularProgressIndicator(),
+                    error: (err, stack) => Text('Error: $err'),
+                  )),
               const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.only(left: 14.0),
