@@ -32,6 +32,9 @@ class APIConstants {
   static const paymentsBooking = '/payments/create-payment-url';
   static const paymentsDeposit = '/wallets/recharge';
 
+  // api vietmap-key
+  static const apiVietMapKey = "38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444";
+
   // error
   static const Map<String, String> errorTrans = {
     'Email is already registered.': 'Email này đã được đăng kí',
@@ -52,8 +55,8 @@ class APIConstants {
         'Bạn không có quyền truy cập hệ thống',
     'Rejected Reason is not empty.': 'Lý do hủy đơn không được trống',
 
-
     // payment-error
-    "Booking status must be either DEPOSITING or COMPLETED" : "Trạng thái đặt đơn đã hoàn thành"
+    "Booking status must be either DEPOSITING or COMPLETED":
+        "Trạng thái đặt đơn đã hoàn thành"
   };
 }
