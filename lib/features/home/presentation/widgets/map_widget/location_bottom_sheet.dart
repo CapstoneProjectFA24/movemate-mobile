@@ -7,6 +7,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 final pickupAutocompleteResultsProvider =
@@ -104,7 +105,7 @@ class LocationBottomSheet extends HookConsumerWidget {
         ? pickupSelectedLocationProvider
         : dropoffSelectedLocationProvider);
 
-    const apiKey = '38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444';
+    const apiKey = APIConstants.apiVietMapKey;
 
     void fetchAutocompleteResults(
         String query, WidgetRef ref, bool isPickUp) async {
