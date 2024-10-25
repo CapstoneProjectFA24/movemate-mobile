@@ -38,7 +38,8 @@ dependencies:
   firebase_messaging: ^14.7.6
   firebase_auth: ^4.0.0
   flutter_local_notifications: ^16.3.3
-
+  cloud_firestore: ^4.17.5
+  
   # Vietmap
   vietmap_flutter_gl: ^3.0.0
   vietmap_flutter_navigation: ^3.1.1
