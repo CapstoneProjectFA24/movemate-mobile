@@ -19,6 +19,7 @@ abstract class OrderSource {
   Future<HttpResponse<OrderReponse>> getBookings(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+    @Query('per_page') int pageSize,
   );
 }
 

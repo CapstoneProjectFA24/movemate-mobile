@@ -40,7 +40,7 @@ class OrderController extends _$OrderController {
     state = await AsyncValue.guard(() async {
       final response = await orderRepository.getBookings(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        // request: request,
+        request: request,
       );
       orders = response.payload;
 

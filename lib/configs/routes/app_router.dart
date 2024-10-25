@@ -8,6 +8,7 @@ import 'package:movemate/features/booking/presentation/screens/review_screen/rev
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
+import 'package:movemate/features/order/presentation/widgets/details/time_line_booking.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
 
@@ -210,6 +211,11 @@ class AppRouter extends _$AppRouter {
         //thanh toán thành công
         AutoRoute(
           page: TransactionResultScreenRoute.page,
+          // initial: true,
+        ),
+        //timeline test
+        AutoRoute(
+          page: TimeLineBookingRoute.page,
           // initial: true,
         ),
         AutoRoute(

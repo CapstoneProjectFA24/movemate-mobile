@@ -78,11 +78,46 @@ class OrderDetailsScreen extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 14.0),
-                child: Text(
-                  "đang chờ reviewer xét duyệt",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      // Sử dụng Flexible để linh hoạt phân bổ không gian
+                      child: Text(
+                        (order.status == 'PENDING')
+                            ? "Đang chờ xếp review cho đơn của bạn"
+                            : (order.status == 'ASSIGNED')
+                                ? "Người đánh giá đang xếp lịch"
+                                : (order.status == 'WAITING')
+                                    ? "Người đánh giá đã xếp lịch xong"
+                                    : (order.status == 'COMMING')
+                                        ? "Comming"
+                                        : (order.status == 'REVIEWED')
+                                            ? "Chờ người đánh giá xử lý"
+                                            : (order.status == 'CANCEL')
+                                                ? "Đơn đã hủy"
+                                                : "Đang chờ reviewer xét duyệt",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow
+                            .ellipsis, // Thêm dấu "..." nếu văn bản quá dài
+                        maxLines: 2,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        order.status,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 10),
@@ -174,14 +209,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
-
                               const SizedBox(height: 10),
-
                               buildAddressRow(
                                 Icons.location_on_outlined,
                                 'Từ:  ${order.pickupAddress} ',
                               ),
-                              
                               const Divider(
                                   height: 12, color: Colors.grey, thickness: 1),
                               buildAddressRow(

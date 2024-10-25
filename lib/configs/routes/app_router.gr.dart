@@ -267,6 +267,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TestPaymentScreen(),
       );
     },
+    TimeLineBookingRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const TimeLineBooking(),
+      );
+    },
     TransactionDetailsOrderRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1043,6 +1049,20 @@ class TestPaymentScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'TestPaymentScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TimeLineBooking]
+class TimeLineBookingRoute extends PageRouteInfo<void> {
+  const TimeLineBookingRoute({List<PageRouteInfo>? children})
+      : super(
+          TimeLineBookingRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'TimeLineBookingRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

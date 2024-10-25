@@ -2,6 +2,7 @@
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
 import 'package:movemate/features/order/domain/repositories/order_repository.dart';
+import 'package:movemate/models/request/paging_model.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -16,10 +17,15 @@ class OrderRepositoryImpl extends RemoteBaseRepository
 
   @override
   Future<OrderReponse> getBookings({
+    required PagingModel request,
     required String accessToken,
   }) async {
     return getDataOf(
-      request: () => _orderSource.getBookings(APIConstants.contentType, accessToken),
+      request: () => _orderSource.getBookings(
+        APIConstants.contentType,
+        accessToken,
+        request.pageSize,
+      ),
     );
   }
 }

@@ -24,9 +24,10 @@ class _OrderSource implements OrderSource {
   Future<HttpResponse<OrderReponse>> getBookings(
     String contentType,
     String accessToken,
+    int pageSize,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'per_page': pageSize};
     final _headers = <String, dynamic>{
       r'Content-Type': contentType,
       r'Authorization': accessToken,
