@@ -1,3 +1,9 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
+import '../constants/asset_constant.dart';
+
 enum BookingStatusType {
   pending('PENDING'),
   depositing('DEPOSITING'),
@@ -43,5 +49,27 @@ extension ConvertOrderPartnerStatus on String {
       default:
         return BookingStatusType.pending;
     }
+  }
+}
+
+// Helper method to get status color
+Color getStatusColor(BookingStatusType status) {
+  switch (status) {
+    case BookingStatusType.depositing:
+      return AssetsConstants.errorMain; // Red color
+    case BookingStatusType.pending:
+      return AssetsConstants.warningMain; // Yellow color
+    case BookingStatusType.assigned:
+      return AssetsConstants.secondaryMain; // Blueish color
+    case BookingStatusType.approved:
+      return AssetsConstants.successMain; // Green color
+    case BookingStatusType.completed:
+      return AssetsConstants.purpleMain; // Purple color
+    case BookingStatusType.cancelled:
+      return AssetsConstants.greyColor; // Grey color
+    case BookingStatusType.refunded:
+      return AssetsConstants.pinkColor; // Pink color
+    default:
+      return AssetsConstants.primaryMain; // Default primary color
   }
 }

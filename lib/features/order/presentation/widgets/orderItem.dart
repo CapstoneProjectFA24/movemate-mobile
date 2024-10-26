@@ -6,6 +6,9 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
+import 'package:movemate/utils/enums/booking_status_type.dart';
+import 'package:movemate/utils/commons/functions/string_utils.dart'; // For getBookingStatusText
 
 //
 class OrderItem extends HookConsumerWidget {
@@ -22,16 +25,9 @@ class OrderItem extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
 
-    int displayTotal;
-    if (order.status == 'DEPOSITING') {
-      displayTotal = order.deposit;
-    } else if (order.status == 'Pending') {
-      displayTotal = order.total;
-    } else {
-      displayTotal = 0;
-    }
-
-    String formattedTotal = NumberFormat('#,###').format(displayTotal);
+    // Listen to the real-time status from Firestore
+    final statusAsync =
+        ref.watch(orderStatusStreamProvider(order.id.toString()));
 
     return GestureDetector(
       onTap: () {
@@ -73,71 +69,209 @@ class OrderItem extends HookConsumerWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    LabelText(
-                      content: 'Mã đơn hàng : #${order.id}',
-                      size: AssetsConstants.defaultFontSize - 12.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    const SizedBox(height: 5),
-                    const Row(
+                child: statusAsync.when(
+                  data: (status) {
+                    // Calculate displayTotal based on real-time status
+                    int displayTotal;
+                    if (status == BookingStatusType.depositing) {
+                      displayTotal = order.deposit;
+                    } else if (status == BookingStatusType.pending) {
+                      displayTotal = order.total;
+                    } else {
+                      displayTotal = 0;
+                    }
+                    String formattedTotal =
+                        NumberFormat('#,###').format(displayTotal);
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         LabelText(
-                          content: 'Loại nhà: ',
+                          content: 'Mã đơn hàng : #${order.id}',
                           size: AssetsConstants.defaultFontSize - 12.0,
                           fontWeight: FontWeight.w600,
                         ),
-                        Text(
-                          'Nhà riêng',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        const SizedBox(height: 5),
+                        const Row(
+                          children: [
+                            LabelText(
+                              content: 'Loại nhà: ',
+                              size: AssetsConstants.defaultFontSize - 12.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            Text(
+                              'Nhà riêng',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        // Display real-time status
+                        Row(
+                          children: [
+                            Container(
+                              height: 10,
+                              width: 10,
+                              decoration: BoxDecoration(
+                                color: getStatusColor(status),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(getBookingStatusText(status)),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '$formattedTotal ₫',
+                              style: const TextStyle(
+                                color: Color(0xFF007BFF),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF555555),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                    const SizedBox(height: 5),
-                    // Status
-                    Row(
-                      children: [
-                        Container(
-                          height: 10,
-                          width: 10,
-                          decoration: BoxDecoration(
-                            color: order.status == 'DEPOSITING'
-                                ? Colors.red
-                                : order.status == 'Pending'
-                                    ? Colors.orange
-                                    : const Color(0xFF28A745), // Default color
-                            shape: BoxShape.circle,
+                    );
+                  },
+                  loading: () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LabelText(
+                        content: 'Mã đơn hàng : #${order.id}',
+                        size: AssetsConstants.defaultFontSize - 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      const SizedBox(height: 5),
+                      const Row(
+                        children: [
+                          LabelText(
+                            content: 'Loại nhà: ',
+                            size: AssetsConstants.defaultFontSize - 12.0,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                        const SizedBox(width: 5),
-                        Text(order.status),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '$formattedTotal ₫',
-                          style: const TextStyle(
-                            color: Color(0xFF007BFF),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            'Nhà riêng',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF555555),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      // Loading status
+                      Row(
+                        children: [
+                          Container(
+                            height: 10,
+                            width: 10,
+                            decoration: const BoxDecoration(
+                              color: Colors.grey,
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 5),
+                          const Text('Loading...'),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      // Placeholder for total
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '... ₫',
+                            style: TextStyle(
+                              color: Color(0xFF007BFF),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF555555),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  error: (error, stack) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LabelText(
+                        content: 'Mã đơn hàng : #${order.id}',
+                        size: AssetsConstants.defaultFontSize - 12.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      const SizedBox(height: 5),
+                      const Row(
+                        children: [
+                          LabelText(
+                            content: 'Loại nhà: ',
+                            size: AssetsConstants.defaultFontSize - 12.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          Text(
+                            'Nhà riêng',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      // Error status
+                      Row(
+                        children: [
+                          Container(
+                            height: 10,
+                            width: 10,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Text('Error'),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      // Placeholder for total
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text(
+                            '... ₫',
+                            style: TextStyle(
+                              color: Color(0xFF007BFF),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AssetsConstants.greyColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -146,4 +280,6 @@ class OrderItem extends HookConsumerWidget {
       ),
     );
   }
+
+
 }

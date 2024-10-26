@@ -29,9 +29,9 @@ class LocationBottomSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.9,
+      initialChildSize: 0.98,
       minChildSize: 0.9,
-      maxChildSize: 0.9,
+      maxChildSize: 0.98,
       builder: (_, controller) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -39,16 +39,29 @@ class LocationBottomSheet extends HookConsumerWidget {
         ),
         child: Column(
           children: [
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Chọn địa chỉ',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   IconButton(
+                    padding: EdgeInsets.zero,
                     icon: const Icon(Icons.close, color: Colors.grey),
                     onPressed: () => context.router.pop(),
                   ),
@@ -60,23 +73,44 @@ class LocationBottomSheet extends HookConsumerWidget {
                 length: 2,
                 child: Column(
                   children: [
-                    TabBar(
-                      tabs: const [
-                        Tab(text: 'Điểm đi'),
-                        Tab(text: 'Điểm đến'),
-                      ],
-                      onTap: (index) {
-                        // Clear autocomplete results when switching tabs
-                        if (index == 0) {
-                          ref
-                              .read(pickupAutocompleteResultsProvider.notifier)
-                              .state = [];
-                        } else {
-                          ref
-                              .read(dropoffAutocompleteResultsProvider.notifier)
-                              .state = [];
-                        }
-                      },
+                    // CHANGE 4: Enhanced TabBar styling
+                    Container(
+                      margin: const EdgeInsets.only(top: 8),
+                      // Added bottom border for tab bar
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom:
+                              BorderSide(color: Colors.grey[200]!, width: 1),
+                        ),
+                      ),
+                      child: TabBar(
+                        // CHANGE 5: Improved tab styling
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.grey,
+                        labelStyle: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorWeight: 2,
+                        tabs: const [
+                          Tab(text: 'Điểm đi'),
+                          Tab(text: 'Điểm đến'),
+                        ],
+                        onTap: (index) {
+                          if (index == 0) {
+                            ref
+                                .read(
+                                    pickupAutocompleteResultsProvider.notifier)
+                                .state = [];
+                          } else {
+                            ref
+                                .read(
+                                    dropoffAutocompleteResultsProvider.notifier)
+                                .state = [];
+                          }
+                        },
+                      ),
                     ),
                     Expanded(
                       child: TabBarView(
@@ -232,11 +266,11 @@ class LocationBottomSheet extends HookConsumerWidget {
                   const SizedBox(height: 20),
 
                   // Chi tiết vị trí đã chọn
-                  if (selectedLocation != null) ...[
-                    Text('Địa điểm đã chọn: ${selectedLocation['display']}'),
-                    Text('Vĩ độ: ${selectedLocation['lat']}'),
-                    Text('Kinh độ: ${selectedLocation['lng']}'),
-                  ],
+                  // if (selectedLocation != null) ...[
+                  //   Text('Địa điểm đã chọn: ${selectedLocation['display']}'),
+                  //   Text('Vĩ độ: ${selectedLocation['lat']}'),
+                  //   Text('Kinh độ: ${selectedLocation['lng']}'),
+                  // ],
 
                   const SizedBox(height: 20),
                 ],

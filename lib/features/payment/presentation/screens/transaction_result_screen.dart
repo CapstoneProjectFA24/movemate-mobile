@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
-import 'package:movemate/features/order/domain/entites/order_entity.dart';
-import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
-import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 
 @RoutePage()
 class TransactionResultScreen extends ConsumerWidget {

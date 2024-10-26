@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/utils/commons/functions/firebase_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:auto_route/auto_route.dart';

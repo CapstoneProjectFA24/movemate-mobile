@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -88,15 +86,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
               Padding(
                   padding: const EdgeInsets.only(left: 14.0),
                   child: statusAsync.when(
-                    data: (status) =>
-                      Text(
-                        getBookingStatusText(status),
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                
-               
-              
+                    data: (status) => Text(
+                      getBookingStatusText(status),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
                     loading: () => const CircularProgressIndicator(),
                     error: (err, stack) => Text('Error: $err'),
                   )),
@@ -434,36 +428,80 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: isButtonEnabled
-                          ? () {
-                              context
-                                  .pushRoute(PaymentScreenRoute(id: order.id));
-                            }
-                          : null, // Disable the button if not assigned
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isButtonEnabled
-                            ? const Color(0xFFFF9900)
-                            : Colors.grey, // Change color based on state
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        fixedSize: const Size(
-                            400, 50), // Chiều rộng tự động và chiều cao là 50
-                      ),
-                      child: Text(
-                        isButtonEnabled
-                            ? 'Xác nhận'
-                            : 'đang chờ Assign', // Change text based on state
-                        style: TextStyle(
-                          color: isButtonEnabled
-                              ? Colors.white
-                              : Colors.black, // Adjust text color
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    // ElevatedButton(
+                    //   onPressed: isButtonEnabled
+                    //       ? () {
+                    //           context
+                    //               .pushRoute(PaymentScreenRoute(id: order.id));
+                    //         }
+                    //       : null, // Disable the button if not assigned
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: isButtonEnabled
+                    //         ? const Color(0xFFFF9900)
+                    //         : Colors.grey, // Change color based on state
+                    //     padding: const EdgeInsets.symmetric(vertical: 15),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(5),
+                    //     ),
+                    //     fixedSize: const Size(
+                    //         400, 50), // Chiều rộng tự động và chiều cao là 50
+                    //   ),
+                    //   child: Text(
+                    //     isButtonEnabled
+                    //         ? 'Xác nhận'
+                    //         : 'đang chờ Assign', // Change text based on state
+                    //     style: TextStyle(
+                    //       color: isButtonEnabled
+                    //           ? Colors.white
+                    //           : Colors.black, // Adjust text color
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
+                    statusAsync.when(
+                      data: (status) {
+                        final isButtonEnabled =
+                            status == BookingStatusType.depositing;
+
+                        // Determine the button text
+                        String buttonText;
+                        if (status == BookingStatusType.depositing) {
+                          buttonText = 'Xác nhận';
+                        } else {
+                          buttonText = getBookingStatusText(status);
+                        }
+
+                        return ElevatedButton(
+                          onPressed: isButtonEnabled
+                              ? () {
+                                  context.pushRoute(
+                                      PaymentScreenRoute(id: order.id));
+                                }
+                              : null, // Disable the button if not 'depositing'
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isButtonEnabled
+                                ? const Color(0xFFFF9900)
+                                : Colors.grey,
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            fixedSize: const Size(400, 50),
+                          ),
+                          child: Text(
+                            buttonText,
+                            style: TextStyle(
+                              color:
+                                  isButtonEnabled ? Colors.white : Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      },
+                      loading: () => const CircularProgressIndicator(),
+                      error: (err, stack) => Text('Error: $err'),
                     ),
                   ],
                 ),

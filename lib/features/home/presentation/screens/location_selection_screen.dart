@@ -179,7 +179,10 @@ class LocationSelectionScreenState
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ButtonCustom(
-                buttonText: "Chọn địa chỉ",
+                buttonText: (bookingState.dropOffLocation != null &&
+                        bookingState.pickUpLocation != null)
+                    ? "Chọn lại địa chỉ"
+                    : "Chọn địa chỉ",
                 isButtonEnabled: mapController != null,
                 onButtonPressed: () {
                   if (mapController != null) {
