@@ -1,4 +1,9 @@
-class BookingTrackersResponseEntity {
+// lib/features/booking/domain/entities/booking_tracker_response_entity.dart
+
+import 'dart:convert';
+import 'tracker_source_response_entity.dart';
+
+class BookingTrackerResponseEntity {
   final int id;
   final int bookingId;
   final String time;
@@ -7,9 +12,9 @@ class BookingTrackersResponseEntity {
   final String? point;
   final String? description;
   final String? status;
-  final List<dynamic> trackerSources;
+  final List<TrackerSourceResponseEntity> trackerSources;
 
-  BookingTrackersResponseEntity({
+  BookingTrackerResponseEntity({
     required this.id,
     required this.bookingId,
     required this.time,
@@ -21,8 +26,8 @@ class BookingTrackersResponseEntity {
     required this.trackerSources,
   });
 
-  factory BookingTrackersResponseEntity.fromMap(Map<String, dynamic> json) {
-    return BookingTrackersResponseEntity(
+  factory BookingTrackerResponseEntity.fromMap(Map<String, dynamic> json) {
+    return BookingTrackerResponseEntity(
       id: json['id'] ?? 0,
       bookingId: json['bookingId'] ?? 0,
       time: json['time'] ?? '',
@@ -31,7 +36,10 @@ class BookingTrackersResponseEntity {
       point: json['point'],
       description: json['description'],
       status: json['status'],
-      trackerSources: json['trackerSources'] ?? [],
+      trackerSources: (json['trackerSources'] as List<dynamic>?)
+              ?.map((e) => TrackerSourceResponseEntity.fromMap(e))
+              .toList() ??
+          [],
     );
   }
 
@@ -45,11 +53,12 @@ class BookingTrackersResponseEntity {
       'point': point,
       'description': description,
       'status': status,
-      'trackerSources': trackerSources,
+      'trackerSources': trackerSources.map((e) => e.toMap()).toList(),
     };
   }
 
-  Map<String, dynamic> toJson() {
-    return toMap();
-  }
+  String toJson() => json.encode(toMap());
+
+  factory BookingTrackerResponseEntity.fromJson(String source) =>
+      BookingTrackerResponseEntity.fromMap(json.decode(source));
 }

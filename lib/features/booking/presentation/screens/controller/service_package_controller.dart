@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
-import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
@@ -25,7 +25,6 @@ class ServicePackageController extends _$ServicePackageController {
   @override
   FutureOr<void> build() {}
 
-  @override
   Future<List<ServicesPackageEntity>> servicePackage(
     PagingModel request,
     BuildContext context,

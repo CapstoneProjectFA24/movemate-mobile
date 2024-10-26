@@ -47,7 +47,7 @@ class BookingRequest {
   final String estimatedDistance;
   final int houseTypeId;
   final String note;
-  final String estimatedDeliveryTime;
+  // final String estimatedDeliveryTime;
   final bool isReviewOnline;
   final bool isRoundTrip;
   final bool isManyItems;
@@ -67,7 +67,7 @@ class BookingRequest {
     required this.houseTypeId,
     required this.isReviewOnline,
     required this.note,
-    required this.estimatedDeliveryTime,
+    // required this.estimatedDeliveryTime,
     required this.isRoundTrip,
     required this.isManyItems,
     required this.roomNumber,
@@ -87,13 +87,13 @@ class BookingRequest {
       'estimatedDistance': estimatedDistance,
       'houseTypeId': houseTypeId,
       'note': note,
-      'estimatedDeliveryTime': estimatedDeliveryTime,
+      // 'estimatedDeliveryTime': estimatedDeliveryTime,
       'isRoundTrip': isRoundTrip,
       'isReviewOnline': isReviewOnline,
       'isManyItems': isManyItems,
       'roomNumber': roomNumber,
       'floorsNumber': floorsNumber,
-      'serviceDetails': serviceDetails.map((x) => x.toMap()).toList(),
+      'bookingDetails': serviceDetails.map((x) => x.toMap()).toList(),
       'truckCategoryId': truckCategoryId,
       'bookingAt': bookingAt,
       'resourceList': resourceList.map((x) => x.toMap()).toList(),
@@ -109,15 +109,15 @@ class BookingRequest {
       estimatedDistance: map['estimatedDistance'] ?? '0',
       houseTypeId: map['houseTypeId'] ?? 1,
       note: map['note'] ?? '',
-      estimatedDeliveryTime: map['estimatedDeliveryTime'] ?? '0',
+      // estimatedDeliveryTime: map['estimatedDeliveryTime'] ?? '0',
       isRoundTrip: map['isRoundTrip'] ?? false,
       isReviewOnline: map['isReviewOnline'] ?? false,
       isManyItems: map['isManyItems'] ?? false,
       roomNumber: map['roomNumber'] ?? '0',
       floorsNumber: map['floorsNumber'] ?? '0',
-      serviceDetails: map['serviceDetails'] != null
+      serviceDetails: map['bookingDetails'] != null
           ? List<ServiceDetail>.from(
-              map['serviceDetails']?.map((x) => ServiceDetail.fromMap(x)))
+              map['bookingDetails']?.map((x) => ServiceDetail.fromMap(x)))
           : [],
       truckCategoryId: map['truckCategoryId'] ?? 1,
       bookingAt: map['bookingAt'] ?? '',
@@ -215,7 +215,7 @@ class BookingRequest {
       estimatedDistance: estimatedDistance,
       houseTypeId: booking.houseType?.id ?? 1,
       note: booking.notes,
-      estimatedDeliveryTime: estimatedDeliveryTime,
+      // estimatedDeliveryTime: estimatedDeliveryTime,
       isRoundTrip: booking.isRoundTrip,
       isReviewOnline: booking.isReviewOnline,
       isManyItems: booking.selectedSubServices.isNotEmpty,

@@ -50,7 +50,7 @@ class OrderEntity {
   final int totalFee;
   final String? feeInfo;
   final List<dynamic> bookingTrackers;
-  final List<dynamic> serviceDetails;
+  final List<dynamic> assignments;
   final List<dynamic> feeDetails;
   final List<dynamic> bookingDetails;
 
@@ -101,7 +101,7 @@ class OrderEntity {
     required this.totalFee,
     required this.feeInfo,
     required this.bookingTrackers,
-    required this.serviceDetails,
+    required this.assignments,
     required this.feeDetails,
     required this.bookingDetails,
   });
@@ -160,7 +160,7 @@ class OrderEntity {
       totalFee: map['totalFee'] ?? 0,
       feeInfo: map['feeInfo'],
       bookingTrackers: List<dynamic>.from(map['bookingTrackers'] ?? []),
-      serviceDetails: List<dynamic>.from(map['serviceDetails'] ?? []),
+      assignments: List<dynamic>.from(map['assignments'] ?? []),
       feeDetails: List<dynamic>.from(map['feeDetails'] ?? []),
       bookingDetails: List<dynamic>.from(map['bookingDetails'] ?? []),
     );
@@ -213,7 +213,7 @@ class OrderEntity {
       'totalFee': totalFee,
       'feeInfo': feeInfo,
       'bookingTrackers': bookingTrackers,
-      'serviceDetails': serviceDetails,
+      'assignments': assignments,
       'feeDetails': feeDetails,
       'bookingDetails': bookingDetails,
     };
@@ -279,7 +279,7 @@ class OrderEntity {
       totalFee: response.totalFee,
       feeInfo: response.feeInfo,
       bookingTrackers: response.bookingTrackers,
-      serviceDetails: response.serviceDetails,
+      assignments: response.assignments,
       feeDetails: response.feeDetails,
       bookingDetails: response.bookingDetails,
     );

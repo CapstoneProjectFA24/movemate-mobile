@@ -1,31 +1,35 @@
-class FeeDetailsResponseEntity {
+// lib/features/booking/domain/entities/fee_detail_response_entity.dart
+
+import 'dart:convert';
+
+class FeeDetailResponseEntity {
   final int id;
   final int bookingId;
   final int feeSettingId;
   final String name;
   final String description;
   final int amount;
-  final String? quantity;
+  final int quantity;
 
-  FeeDetailsResponseEntity({
+  FeeDetailResponseEntity({
     required this.id,
     required this.bookingId,
     required this.feeSettingId,
     required this.name,
     required this.description,
     required this.amount,
-    this.quantity,
+    required this.quantity,
   });
 
-  factory FeeDetailsResponseEntity.fromMap(Map<String, dynamic> json) {
-    return FeeDetailsResponseEntity(
+  factory FeeDetailResponseEntity.fromMap(Map<String, dynamic> json) {
+    return FeeDetailResponseEntity(
       id: json['id'] ?? 0,
       bookingId: json['bookingId'] ?? 0,
       feeSettingId: json['feeSettingId'] ?? 0,
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       amount: json['amount'] ?? 0,
-      quantity: json['quantity']?.toString(),
+      quantity: json['quantity'] ?? 0,
     );
   }
 
@@ -41,7 +45,8 @@ class FeeDetailsResponseEntity {
     };
   }
 
-  Map<String, dynamic> toJson() {
-    return toMap();
-  }
+  String toJson() => json.encode(toMap());
+
+  factory FeeDetailResponseEntity.fromJson(String source) =>
+      FeeDetailResponseEntity.fromMap(json.decode(source));
 }

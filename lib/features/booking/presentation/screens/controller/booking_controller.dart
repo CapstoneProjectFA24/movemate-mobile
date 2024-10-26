@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
@@ -11,7 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
 import 'package:movemate/utils/commons/functions/api_utils.dart';
@@ -49,6 +50,7 @@ class BookingController extends _$BookingController {
         request: bookingRequest,
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
       );
+      print('Booking bookingResponse: ${jsonEncode(bookingResponse.toMap())}');
 
       final id = bookingResponse.payload.id;
 
@@ -61,7 +63,7 @@ class BookingController extends _$BookingController {
 
       // Reset booking provider state
       // ref.read(bookingProvider.notifier).reset();
-      print("bookingResponse: ${jsonEncode(bookingResponse.payload)}");
+      print("booking Response: ${jsonEncode(bookingResponse.payload)}");
     });
 
     if (state.hasError) {

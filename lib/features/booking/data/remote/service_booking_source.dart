@@ -2,7 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
-import 'package:movemate/features/booking/data/models/resquest/booking_requesst.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

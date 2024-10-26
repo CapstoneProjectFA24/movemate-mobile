@@ -1,9 +1,12 @@
 import 'dart:convert';
 
-import 'package:movemate/features/booking/domain/entities/booking_response/booking_details_response_entity.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/booking_trackers_response_entity.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/fee_details_response_entity.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/service_details_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
+
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
+
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_tracker_response_entity.dart';
+
+import 'package:movemate/features/booking/domain/entities/booking_response/fee_detail_response_entity.dart';
 
 class BookingResponseEntity {
   final int id;
@@ -27,6 +30,7 @@ class BookingResponseEntity {
   final String? reportedReason;
   final bool isDeleted;
   final String createdAt;
+  final String? bookingAt;
   final String? createdBy;
   final String updatedAt;
   final String? updatedBy;
@@ -45,10 +49,11 @@ class BookingResponseEntity {
   final int totalFee;
   final String? feeInfo;
   final bool isReviewOnline;
-  final List<BookingDetailsResponseEntity> bookingDetails;
-  final List<BookingTrackersResponseEntity> bookingTrackers;
-  final List<ServiceDetailsResponseEntity> serviceDetails;
-  final List<FeeDetailsResponseEntity> feeDetails;
+  final String? reviewAt;
+  final List<AssignmentResponseEntity> assignments;
+  final List<BookingTrackerResponseEntity> bookingTrackers;
+  final List<BookingDetailResponseEntity> bookingDetails;
+  final List<FeeDetailResponseEntity> feeDetails;
 
   BookingResponseEntity({
     required this.id,
@@ -72,6 +77,7 @@ class BookingResponseEntity {
     this.reportedReason,
     required this.isDeleted,
     required this.createdAt,
+    this.bookingAt,
     this.createdBy,
     required this.updatedAt,
     this.updatedBy,
@@ -90,9 +96,10 @@ class BookingResponseEntity {
     required this.totalFee,
     this.feeInfo,
     required this.isReviewOnline,
-    required this.bookingDetails,
+    this.reviewAt,
+    required this.assignments,
     required this.bookingTrackers,
-    required this.serviceDetails,
+    required this.bookingDetails,
     required this.feeDetails,
   });
 
@@ -119,6 +126,7 @@ class BookingResponseEntity {
       reportedReason: json['reportedReason'],
       isDeleted: json['isDeleted'] ?? false,
       createdAt: json['createdAt'] ?? '',
+      bookingAt: json['bookingAt'],
       createdBy: json['createdBy'],
       updatedAt: json['updatedAt'] ?? '',
       updatedBy: json['updatedBy'],
@@ -137,20 +145,21 @@ class BookingResponseEntity {
       totalFee: json['totalFee'] ?? 0,
       feeInfo: json['feeInfo'],
       isReviewOnline: json['isReviewOnline'] ?? false,
-      bookingDetails: (json['bookingDetails'] as List<dynamic>?)
-              ?.map((e) => BookingDetailsResponseEntity.fromMap(e))
+      reviewAt: json['reviewAt'],
+      assignments: (json['assignments'] as List<dynamic>?)
+              ?.map((e) => AssignmentResponseEntity.fromMap(e))
               .toList() ??
           [],
       bookingTrackers: (json['bookingTrackers'] as List<dynamic>?)
-              ?.map((e) => BookingTrackersResponseEntity.fromMap(e))
+              ?.map((e) => BookingTrackerResponseEntity.fromMap(e))
               .toList() ??
           [],
-      serviceDetails: (json['serviceDetails'] as List<dynamic>?)
-              ?.map((e) => ServiceDetailsResponseEntity.fromMap(e))
+      bookingDetails: (json['bookingDetails'] as List<dynamic>?)
+              ?.map((e) => BookingDetailResponseEntity.fromMap(e))
               .toList() ??
           [],
       feeDetails: (json['feeDetails'] as List<dynamic>?)
-              ?.map((e) => FeeDetailsResponseEntity.fromMap(e))
+              ?.map((e) => FeeDetailResponseEntity.fromMap(e))
               .toList() ??
           [],
     );
@@ -179,6 +188,7 @@ class BookingResponseEntity {
       'reportedReason': reportedReason,
       'isDeleted': isDeleted,
       'createdAt': createdAt,
+      'bookingAt': bookingAt,
       'createdBy': createdBy,
       'updatedAt': updatedAt,
       'updatedBy': updatedBy,
@@ -197,9 +207,10 @@ class BookingResponseEntity {
       'totalFee': totalFee,
       'feeInfo': feeInfo,
       'isReviewOnline': isReviewOnline,
-      'bookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
+      'reviewAt': reviewAt,
+      'assignments': assignments.map((e) => e.toMap()).toList(),
       'bookingTrackers': bookingTrackers.map((e) => e.toMap()).toList(),
-      'serviceDetails': serviceDetails.map((e) => e.toMap()).toList(),
+      'bookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
       'feeDetails': feeDetails.map((e) => e.toMap()).toList(),
     };
   }
