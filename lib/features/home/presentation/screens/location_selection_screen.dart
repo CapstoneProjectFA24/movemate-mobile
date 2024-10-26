@@ -1,16 +1,17 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
-import 'package:movemate/features/home/presentation/widgets/map_widget/location_bottom_sheet.dart';
-import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
 import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
-import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/location_bottom_sheet.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/location_info_card.dart';
+import 'package:movemate/services/map_services/location_service.dart';
+import 'package:movemate/services/map_services/map_service.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
-
-final vietmapControllerProvider = Provider<VietmapController?>((ref) => null);
+import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
+import 'package:geolocator/geolocator.dart';
 
 @RoutePage()
 class LocationSelectionScreen extends ConsumerStatefulWidget {
@@ -26,106 +27,150 @@ class LocationSelectionScreen extends ConsumerStatefulWidget {
 class LocationSelectionScreenState
     extends ConsumerState<LocationSelectionScreen> {
   VietmapController? mapController;
+  Position? currentPosition;
+  Line? currentRoute;
+  bool isTracking = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeLocationGPS();
+  }
 
   @override
   void dispose() {
+    clearCurrentRoute();
     mapController?.dispose();
     super.dispose();
   }
 
-  void focusOnLocation(LatLng location) {
-    mapController?.animateCamera(
-      CameraUpdate.newLatLngZoom(location, 15),
-    );
+  Future<void> clearCurrentRoute() async {
+    if (mapController != null) {
+      await MapService.clearRoute(mapController!);
+      currentRoute = null;
+    }
   }
 
-  void focusOnAllMarkers(List<LatLng> locations) {
-    if (locations.isEmpty || mapController == null) return;
-
-    if (locations.length == 1) {
-      focusOnLocation(locations.first);
+  // todo draw -- notwork
+  Future<void> drawRouteBetweenLocations(Booking bookingState) async {
+    if (mapController == null ||
+        bookingState.pickUpLocation == null ||
+        bookingState.dropOffLocation == null) {
       return;
     }
 
-    double minLat = double.infinity;
-    double maxLat = -double.infinity;
-    double minLng = double.infinity;
-    double maxLng = -double.infinity;
+    // Xóa route cũ nếu có
+    await clearCurrentRoute();
 
-    for (var location in locations) {
-      minLat = math.min(minLat, location.latitude);
-      maxLat = math.max(maxLat, location.latitude);
-      minLng = math.min(minLng, location.longitude);
-      maxLng = math.max(maxLng, location.longitude);
+    // Vẽ route mới
+    currentRoute = await MapService.drawRoute(
+      controller: mapController!,
+      origin: LatLng(
+        bookingState.pickUpLocation!.latitude,
+        bookingState.pickUpLocation!.longitude,
+      ),
+      destination: LatLng(
+        bookingState.dropOffLocation!.latitude,
+        bookingState.dropOffLocation!.longitude,
+      ),
+      routeColor: Colors.orange,
+      routeWidth: 4.0,
+    );
+  }
+
+  Future<void> initializeLocationGPS() async {
+    if (await LocationService.checkLocationPermission()) {
+      if (await LocationService.isLocationServiceEnabled()) {
+        print("oke gps ");
+        startLocationTracking();
+      } else {
+        LocationService.showEnableLocationDialog(context);
+      }
+    } else {
+      LocationService.showPermissionDeniedDialog(context);
+    }
+  }
+
+  void startLocationTracking() {
+    setState(() => isTracking = true);
+
+    LocationService.getPositionStream().listen((Position position) {
+      setState(() => currentPosition = position);
+
+      if (mapController != null) {
+        MapService.focusOnLocation(
+          mapController!,
+          LatLng(position.latitude, position.longitude),
+        );
+      }
+    });
+  }
+
+  List<Marker> buildMarkers(Booking bookingState) {
+    final markers = <Marker>[];
+
+    if (bookingState.pickUpLocation != null) {
+      markers.add(
+        Marker(
+          alignment: Alignment.bottomCenter,
+          child: const Icon(Icons.location_on, color: Colors.green, size: 50),
+          latLng: LatLng(
+            bookingState.pickUpLocation!.latitude,
+            bookingState.pickUpLocation!.longitude,
+          ),
+        ),
+      );
     }
 
-    final latPadding = (maxLat - minLat) * 0.1;
-    final lngPadding = (maxLng - minLng) * 0.1;
-
-    mapController?.animateCamera(
-      CameraUpdate.newLatLngBounds(
-        LatLngBounds(
-          southwest: LatLng(minLat - latPadding, minLng - lngPadding),
-          northeast: LatLng(maxLat + latPadding, maxLng + lngPadding),
+    if (bookingState.dropOffLocation != null) {
+      markers.add(
+        Marker(
+          alignment: Alignment.bottomCenter,
+          child: const Icon(Icons.location_on, color: Colors.red, size: 50),
+          latLng: LatLng(
+            bookingState.dropOffLocation!.latitude,
+            bookingState.dropOffLocation!.longitude,
+          ),
         ),
-        left: 50,
-        top: 50,
-        right: 50,
-        bottom: 50,
-      ),
-    );
+      );
+    }
+
+    return markers;
+  }
+
+  List<LatLng> getLocations(Booking bookingState) {
+    final locations = <LatLng>[];
+
+    if (bookingState.pickUpLocation != null) {
+      locations.add(LatLng(
+        bookingState.pickUpLocation!.latitude,
+        bookingState.pickUpLocation!.longitude,
+      ));
+    }
+
+    if (bookingState.dropOffLocation != null) {
+      locations.add(LatLng(
+        bookingState.dropOffLocation!.latitude,
+        bookingState.dropOffLocation!.longitude,
+      ));
+    }
+
+    return locations;
   }
 
   @override
   Widget build(BuildContext context) {
     final bookingState = ref.watch(bookingProvider);
-
-    List<Marker> markers = [];
-    List<LatLng> locations = [];
-
-    // Thêm điểm đón
-    if (bookingState.pickUpLocation != null) {
-      final pickupLatLng = LatLng(
-        bookingState.pickUpLocation!.latitude,
-        bookingState.pickUpLocation!.longitude,
-      );
-      locations.add(pickupLatLng);
-      markers.add(
-        Marker(
-          alignment: Alignment.bottomCenter,
-          child: const Icon(
-            Icons.location_on,
-            color: Colors.green,
-            size: 50,
-          ),
-          latLng: pickupLatLng,
-        ),
-      );
-    }
-
-    // Thêm điểm đến
-    if (bookingState.dropOffLocation != null) {
-      final dropoffLatLng = LatLng(
-        bookingState.dropOffLocation!.latitude,
-        bookingState.dropOffLocation!.longitude,
-      );
-      locations.add(dropoffLatLng);
-      markers.add(
-        Marker(
-          alignment: Alignment.bottomCenter,
-          child: const Icon(
-            Icons.location_on,
-            color: Colors.red,
-            size: 50,
-          ),
-          latLng: dropoffLatLng,
-        ),
-      );
-    }
+    final markers = buildMarkers(bookingState);
+    final locations = getLocations(bookingState);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (locations.isNotEmpty) {
-        focusOnAllMarkers(locations);
+      if (locations.isNotEmpty && mapController != null) {
+        MapService.focusOnAllMarkers(mapController!, locations);
+
+        if (locations.length == 2) {
+          drawRouteBetweenLocations(bookingState);
+        }
       }
     });
 
@@ -148,11 +193,15 @@ class LocationSelectionScreenState
                       zoom: 15,
                     ),
                     onStyleLoadedCallback: () => debugPrint("Map style loaded"),
-                    onMapCreated: (VietmapController controller) {
+                    onMapCreated: (controller) {
                       setState(() {
                         mapController = controller;
                         if (locations.isNotEmpty) {
-                          focusOnAllMarkers(locations);
+                          MapService.focusOnAllMarkers(controller, locations);
+                          // Vẽ route khi khởi tạo map nếu có đủ điểm
+                          if (locations.length == 2) {
+                            drawRouteBetweenLocations(bookingState);
+                          }
                         }
                       });
                     },
@@ -163,16 +212,36 @@ class LocationSelectionScreenState
                       mapController: mapController!,
                       markers: markers,
                     ),
-                  if (markers.length > 1)
+                  if (currentPosition != null)
                     Positioned(
-                      right: 16,
-                      bottom: 16,
-                      child: FloatingActionButton(
-                        mini: true,
-                        onPressed: () => focusOnAllMarkers(locations),
-                        child: const Icon(Icons.center_focus_strong),
-                      ),
+                      bottom: 80,
+                      left: 16,
+                      child: LocationInfoCard(position: currentPosition!),
                     ),
+                  Positioned(
+                    right: 16,
+                    bottom: 16,
+                    child: MapActionButtons(
+                      onMyLocationPressed: () {
+                        if (currentPosition != null && mapController != null) {
+                          MapService.focusOnLocation(
+                            mapController!,
+                            LatLng(currentPosition!.latitude,
+                                currentPosition!.longitude),
+                          );
+                        }
+                      },
+                      showFocusAllMarkers: markers.length > 1,
+                      onFocusAllMarkersPressed: markers.length > 1
+                          ? () => MapService.focusOnAllMarkers(
+                              mapController!, locations)
+                          : null,
+                      showDrawRoute: locations.length == 2,
+                      onDrawRoutePressed: locations.length == 2
+                          ? () => drawRouteBetweenLocations(bookingState)
+                          : null,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -45,7 +45,9 @@ dependencies:
   vietmap_flutter_navigation: ^3.1.1
   vietmap_flutter_plugin: ^0.3.0
   vietmap_gl_platform_interface: ^0.2.0
-
+  permission_handler: ^11.1.0
+  geolocator: ^13.0.1
+  
   # Cloudinary
   cloudinary_flutter: ^1.0.0
   cloudinary_url_gen: ^1.0.0
