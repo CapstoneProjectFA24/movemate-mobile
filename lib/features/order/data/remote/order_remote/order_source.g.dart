@@ -25,9 +25,13 @@ class _OrderSource implements OrderSource {
     String contentType,
     String accessToken,
     int pageSize,
+    int UserId,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'per_page': pageSize};
+    final queryParameters = <String, dynamic>{
+      r'per_page': pageSize,
+      r'UserId': UserId,
+    };
     final _headers = <String, dynamic>{
       r'Content-Type': contentType,
       r'Authorization': accessToken,

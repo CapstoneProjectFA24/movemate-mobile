@@ -14,6 +14,7 @@ abstract class OrderRepository {
   Future<OrderReponse> getBookings({
     required PagingModel request,
     required String accessToken,
+    required int userId,
   });
 
 }

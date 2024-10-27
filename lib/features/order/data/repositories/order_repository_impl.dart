@@ -19,12 +19,14 @@ class OrderRepositoryImpl extends RemoteBaseRepository
   Future<OrderReponse> getBookings({
     required PagingModel request,
     required String accessToken,
+    required int userId,
   }) async {
     return getDataOf(
       request: () => _orderSource.getBookings(
         APIConstants.contentType,
         accessToken,
         request.pageSize,
+        userId,
       ),
     );
   }
