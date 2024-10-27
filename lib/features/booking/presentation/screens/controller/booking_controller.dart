@@ -160,9 +160,12 @@ class BookingController extends _$BookingController {
             id: id,
           );
 
+      // stream realtime -> ref status
       // case1
-      // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscren
-      if (request.status.type == BookingStatusType.waiting) {
+      // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscrent
+
+      // case 2 online
+      if (request.status.type == BookingStatusType.depositing) {
         context.router.push(PaymentScreenRoute(id: id));
       }
 
@@ -183,7 +186,7 @@ class BookingController extends _$BookingController {
       );
 
       if (state.hasError) {
-        // await ref.read(signInControllerProvider.notifier).signOut(context);
+        await ref.read(signInControllerProvider.notifier).signOut(context);
       }
     }
   }

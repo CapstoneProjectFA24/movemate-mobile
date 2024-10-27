@@ -52,25 +52,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final houseType = fetchHouseType.items.firstOrNull;
 
-    print(
-        " order có  statusorderStatusStreamProvider ${orderStatusStreamProvider(order.id.toString())}");
-
-    print(" order có order.status  ${order.status}");
-
-    print(" order statusAsync: $statusAsync");
-
-    print(" order có  housetype name ${order.houseType?.name}");
-    print(" order có  housetype id ${order.houseTypeId}");
-    print(" order có  user id ${order.userId}");
-    // print(" order  ${order.toString()}");
+    ;
 
     void toggleDropdown() {
-      isExpanded.value = !isExpanded.value; // Toggle the dropdown state
+      isExpanded.value = !isExpanded.value;
     }
 
-    void toggleDropdown1() {
-      isExpanded1.value = !isExpanded1.value; // Toggle the dropdown state
-    }
+    void toggleDropdown1() {}
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -252,14 +240,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 padding: const EdgeInsets.only(
                     left: 20.0, top: 16, right: 16, bottom: 16),
                 child: Container(
-                  width: 400, // Chiều rộng của container, bạn có thể tùy chỉnh
-                  height:
-                      150, // Chiều cao của container, tùy chỉnh theo nhu cầu
+                  width: 400,
+                  height: 150,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), // Bo góc container
+                    borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1), // Màu bóng đổ
+                        color: Colors.black.withOpacity(0.1),
                         spreadRadius: 2,
                         blurRadius: 4,
                       ),
@@ -451,25 +438,27 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     statusAsync.when(
                       data: (status) {
                         final isButtonEnabled =
-                            status == BookingStatusType.waiting;
+                            status == BookingStatusType.waiting ||
+                                status == BookingStatusType.depositing ||
+                                status == BookingStatusType.reviewed ||
+                                status == BookingStatusType.coming;
 
-                        // Determine the button text
                         String buttonText;
-                        if (status == BookingStatusType.waiting) {
-                          buttonText = 'Xem lịch hẹn';
-                        } else {
-                          buttonText = getBookingStatusText(status);
-                        }
+
+                        buttonText = getBookingStatusText(status);
 
                         return ElevatedButton(
                           onPressed: isButtonEnabled
                               ? () {
-                                  // context.pushRoute(
-                                  //     PaymentScreenRoute(id: order.id));
-                                  context.pushRoute(
-                                      ReviewAtHomeRoute(order: order));
+                                  if (status == BookingStatusType.depositing) {
+                                    context.pushRoute(
+                                        PaymentScreenRoute(id: order.id));
+                                  } else {
+                                    context.pushRoute(
+                                        ReviewAtHomeRoute(order: order));
+                                  }
                                 }
-                              : null, // Disable the button if not 'depositing'
+                              : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isButtonEnabled
                                 ? const Color(0xFFFF9900)

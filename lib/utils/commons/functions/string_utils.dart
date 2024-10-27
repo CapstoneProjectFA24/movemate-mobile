@@ -13,9 +13,9 @@ String getBookingStatusText(BookingStatusType status) {
     case BookingStatusType.reviewed:
       return 'Đang chờ reviewer xét duyệt';
     case BookingStatusType.coming:
-      return 'Đang đến';
+      return 'Xác nhận dọn nhà';
     case BookingStatusType.waiting:
-      return 'Đang chờ bạn xác nhận ';
+      return 'Xem lịch hẹn';
     case BookingStatusType.inProgress:
       return 'Đang thực hiện';
     case BookingStatusType.completed:

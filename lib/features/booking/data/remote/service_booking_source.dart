@@ -81,7 +81,7 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.authHeader) String accessToken,
   );
 
-    @GET('${APIConstants.confirm_review}/{id}')
+  @PUT('${APIConstants.confirm_review}/{id}')
   Future<HttpResponse<SuccessModel>> confirmReviewBooking(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
