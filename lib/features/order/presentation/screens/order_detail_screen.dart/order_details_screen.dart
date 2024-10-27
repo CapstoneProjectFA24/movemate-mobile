@@ -4,6 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
 import 'package:movemate/features/order/presentation/widgets/details/booking_code.dart';
@@ -14,11 +16,14 @@ import 'package:movemate/features/order/presentation/widgets/details/policies.da
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
+import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
+// Hooks
+import 'package:movemate/hooks/use_fetch.dart';
 
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
@@ -32,11 +37,20 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final isExpanded = useState(false);
     final isExpanded1 = useState(false);
 
-    final isButtonEnabled =
-        order.status.toBookingTypeEnum() == BookingStatusType.depositing;
-
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
+
+    final fetchHouseType = useFetch<HouseTypeEntity?>(
+      function: (_, context) async {
+        final houseType = await ref
+            .read(servicePackageControllerProvider.notifier)
+            .getHouseTypeById(order.houseTypeId, context);
+        return [houseType];
+      },
+      initialPagingModel: PagingModel(),
+      context: context,
+    );
+    final houseType = fetchHouseType.items.firstOrNull;
 
     print(
         " order có  statusorderStatusStreamProvider ${orderStatusStreamProvider(order.id.toString())}");
@@ -44,6 +58,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
     print(" order có order.status  ${order.status}");
 
     print(" order statusAsync: $statusAsync");
+
+    print(" order có  housetype name ${order.houseType?.name}");
+    print(" order có  housetype id ${order.houseTypeId}");
+    print(" order có  user id ${order.userId}");
+    // print(" order  ${order.toString()}");
 
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value; // Toggle the dropdown state
@@ -179,7 +198,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Loại nhà : ${order.houseType?.name ?? "label"}',
+                                // 'Loại nhà : ${order.houseTypeId ?? "label"}',
+                                'Loại nhà : ${houseType?.name ?? "label"}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -428,37 +448,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // ElevatedButton(
-                    //   onPressed: isButtonEnabled
-                    //       ? () {
-                    //           context
-                    //               .pushRoute(PaymentScreenRoute(id: order.id));
-                    //         }
-                    //       : null, // Disable the button if not assigned
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: isButtonEnabled
-                    //         ? const Color(0xFFFF9900)
-                    //         : Colors.grey, // Change color based on state
-                    //     padding: const EdgeInsets.symmetric(vertical: 15),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(5),
-                    //     ),
-                    //     fixedSize: const Size(
-                    //         400, 50), // Chiều rộng tự động và chiều cao là 50
-                    //   ),
-                    //   child: Text(
-                    //     isButtonEnabled
-                    //         ? 'Xác nhận'
-                    //         : 'đang chờ Assign', // Change text based on state
-                    //     style: TextStyle(
-                    //       color: isButtonEnabled
-                    //           ? Colors.white
-                    //           : Colors.black, // Adjust text color
-                    //       fontSize: 16,
-                    //       fontWeight: FontWeight.bold,
-                    //     ),
-                    //   ),
-                    // ),
                     statusAsync.when(
                       data: (status) {
                         final isButtonEnabled =

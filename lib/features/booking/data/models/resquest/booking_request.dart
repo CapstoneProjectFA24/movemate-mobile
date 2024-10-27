@@ -222,7 +222,7 @@ class BookingRequest {
       roomNumber: (booking.numberOfRooms ?? 1).toString(),
       floorsNumber: (booking.numberOfFloors ?? 1).toString(),
       serviceDetails: serviceDetails,
-      truckCategoryId: booking.selectedVehicle?.id ?? 1,
+      truckCategoryId: booking.selectedVehicle?.truckCategory?.id ?? 1,
       bookingAt: bookingAt,
       resourceList: resourceList,
     );

@@ -54,13 +54,16 @@ class VehicleList extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             print("Xe được chọn là: ${service.name}");
+            print("Xe được chọn là: ${service.id}");
+            print("Xe được chọn là: ${service.truckCategory?.id}");
             // selectedService.value = service;
             bookingNotifier.updateSelectedVehicle(service);
           },
           child: VehicleCard(
             service: service,
             // isSelected: selectedService.value?.id == service.id,
-            isSelected: bookingState.selectedVehicle?.id == service.id,
+            isSelected: bookingState.selectedVehicle?.truckCategory?.id ==
+                service.truckCategory?.id,
           ),
         );
       },

@@ -93,6 +93,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         onPlacePress: () async {
           if (bookingState.selectedVehicle != null &&
               bookingState.houseType?.id != null) {
+                
             // Hiển thị một dialog chờ
             showDialog(
               context: context,

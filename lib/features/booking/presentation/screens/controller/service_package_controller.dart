@@ -117,6 +117,55 @@ class ServicePackageController extends _$ServicePackageController {
     return houseTypeData;
   }
 
+  Future<HouseTypeEntity?> getHouseTypeById(
+      int id, BuildContext context) async {
+    HouseTypeEntity? houseType;
+
+    state = const AsyncLoading();
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      final response = await serviceBookingRepository.getHouseTypeById(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+
+      if (response.payload.isNotEmpty) {
+        houseType = response.payload.first;
+        print(" response  ${houseType?.name.toString()}");
+      }
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+
+        await getHouseTypeById(id, context);
+      });
+    }
+
+    return houseType;
+  }
+
+  //----------------------------------------------------------------
+
   Future<BookingResponseEntity?> postValuationBooking({
     required BookingRequest bookingRequest,
     required BuildContext context,

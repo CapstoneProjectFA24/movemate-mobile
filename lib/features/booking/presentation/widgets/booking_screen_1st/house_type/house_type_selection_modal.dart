@@ -39,10 +39,7 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
       initialPagingModel: PagingModel(),
       context: context,
     );
-    // useEffect(() {
-    //   scrollController.onScrollEndsListener(fetchResult.loadMore);
-    //   return scrollController.dispose;
-    // }, const []);
+
     useEffect(() {
       scrollController.onScrollEndsListener(fetchResult.loadMore);
       return null; 

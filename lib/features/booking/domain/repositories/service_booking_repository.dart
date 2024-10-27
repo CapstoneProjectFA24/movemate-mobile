@@ -19,6 +19,11 @@ abstract class ServiceBookingRepository {
     required PagingModel request,
     required String accessToken,
   });
+  // House Type Methods get by id
+  Future<HouseTypeResponse> getHouseTypeById({
+    required String accessToken,
+    required int id,
+  });
 
   // Services Methods
   Future<ServicesResponse> getServices({
@@ -48,7 +53,7 @@ abstract class ServiceBookingRepository {
     required String accessToken,
     required int id,
   });
-    Future<BookingResponse> postValuationBooking({
+  Future<BookingResponse> postValuationBooking({
     required BookingRequest request,
     required String accessToken,
   });

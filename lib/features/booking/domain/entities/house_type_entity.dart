@@ -4,12 +4,14 @@ class HouseTypeEntity {
   final int? id;
   final String name;
   final String description;
+  final bool? isActived;
   final int? bookingId;
 
   HouseTypeEntity({
     this.id,
     required this.name,
     required this.description,
+    this.isActived,
     this.bookingId,
   });
 
@@ -18,6 +20,7 @@ class HouseTypeEntity {
       id: map['id'],
       name: map['name'] ?? '',
       description: map['description'] ?? '',
+      isActived: map['isActived'],
       bookingId: map['bookingId'],
     );
   }
@@ -27,6 +30,7 @@ class HouseTypeEntity {
       'id': id,
       'name': name,
       'description': description,
+      'isActived': isActived,
       'bookingId': bookingId,
     };
   }

@@ -113,7 +113,7 @@ class OrderEntity {
     return OrderEntity(
       id: map['id'] ?? 0,
       userId: map['userId'] ?? 0,
-      houseTypeId: map['houseType'] ?? 0,
+      houseTypeId: map['houseTypeId'] ?? 0,
       deposit: map['deposit'] ?? 0,
       status: map['status'] ?? '',
       pickupAddress: map['pickupAddress'] ?? '',
@@ -170,7 +170,7 @@ class OrderEntity {
     return {
       'id': id,
       'userId': userId,
-      'houseType': houseTypeId,
+      'houseTypeId': houseTypeId,
       'deposit': deposit,
       'status': status,
       'pickupAddress': pickupAddress,
@@ -284,14 +284,7 @@ class OrderEntity {
       bookingDetails: response.bookingDetails,
     );
   }
-  void setHouseType(List<HouseTypeEntity> houseTypes) {
-    houseType = houseTypes.firstWhere(
-      (ht) => ht.id == houseTypeId,
-      orElse: () {
-        throw StateError('HouseTypeEntity with id $houseTypeId not found');
-      },
-    );
-  }
+
 
   factory OrderEntity.fromJson(String source) =>
       OrderEntity.fromMap(json.decode(source));

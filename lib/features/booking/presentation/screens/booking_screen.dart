@@ -23,7 +23,7 @@ class BookingScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: const CustomAppBar(
-        title: 'Phương tiện có sẵn',
+        title: 'Chọn loại nhà ',
         iconFirst: Icons.refresh_rounded,
         centerTitle: true,
         backButtonColor: AssetsConstants.whiteColor,

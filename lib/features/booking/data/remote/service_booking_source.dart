@@ -29,6 +29,13 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );
+  // house types get by id
+    @GET('${APIConstants.get_house_types}/{id}')
+  Future<HttpResponse<HouseTypeResponse>> getHouseTypeById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
+  );
 
   // Services
   @GET(APIConstants.get_service_truck_cate)
