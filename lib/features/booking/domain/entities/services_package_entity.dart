@@ -18,7 +18,7 @@ class ServicesPackageEntity {
   final int? parentServiceId;
   final TruckCategoryEntity? truckCategory;
   final List<SubServiceEntity> inverseParentService;
-
+              
   ServicesPackageEntity({
     required this.id,
     required this.name,

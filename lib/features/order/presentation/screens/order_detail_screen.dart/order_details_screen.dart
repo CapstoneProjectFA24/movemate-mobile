@@ -451,12 +451,12 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     statusAsync.when(
                       data: (status) {
                         final isButtonEnabled =
-                            status == BookingStatusType.depositing;
+                            status == BookingStatusType.waiting;
 
                         // Determine the button text
                         String buttonText;
-                        if (status == BookingStatusType.depositing) {
-                          buttonText = 'Xác nhận';
+                        if (status == BookingStatusType.waiting) {
+                          buttonText = 'Xem lịch hẹn';
                         } else {
                           buttonText = getBookingStatusText(status);
                         }
@@ -464,8 +464,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
                         return ElevatedButton(
                           onPressed: isButtonEnabled
                               ? () {
+                                  // context.pushRoute(
+                                  //     PaymentScreenRoute(id: order.id));
                                   context.pushRoute(
-                                      PaymentScreenRoute(id: order.id));
+                                      ReviewAtHomeRoute(order: order));
                                 }
                               : null, // Disable the button if not 'depositing'
                           style: ElevatedButton.styleFrom(

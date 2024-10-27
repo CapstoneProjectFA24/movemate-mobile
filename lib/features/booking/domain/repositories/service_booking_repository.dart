@@ -6,9 +6,11 @@ import 'package:movemate/features/booking/data/models/response/services_fee_syst
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/data/repositories/service_booking_repository_impl.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'service_booking_repository.g.dart';
@@ -56,6 +58,12 @@ abstract class ServiceBookingRepository {
   Future<BookingResponse> postValuationBooking({
     required BookingRequest request,
     required String accessToken,
+  });
+
+    Future<SuccessModel> confirmReviewBooking({
+    required String accessToken,
+    required ReviewerStatusRequest request,
+    required int id,
   });
 }
 

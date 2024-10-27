@@ -196,9 +196,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ReviewAtHomeRoute.name: (routeData) {
+      final args = routeData.argsAs<ReviewAtHomeRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ReviewAtHome(),
+        child: ReviewAtHome(
+          key: args.key,
+          order: args.order,
+        ),
       );
     },
     ReviewOnlineRoute.name: (routeData) {
@@ -859,16 +863,40 @@ class RegistrationSuccessScreenRouteArgs {
 
 /// generated route for
 /// [ReviewAtHome]
-class ReviewAtHomeRoute extends PageRouteInfo<void> {
-  const ReviewAtHomeRoute({List<PageRouteInfo>? children})
-      : super(
+class ReviewAtHomeRoute extends PageRouteInfo<ReviewAtHomeRouteArgs> {
+  ReviewAtHomeRoute({
+    Key? key,
+    required OrderEntity order,
+    List<PageRouteInfo>? children,
+  }) : super(
           ReviewAtHomeRoute.name,
+          args: ReviewAtHomeRouteArgs(
+            key: key,
+            order: order,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ReviewAtHomeRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ReviewAtHomeRouteArgs> page =
+      PageInfo<ReviewAtHomeRouteArgs>(name);
+}
+
+class ReviewAtHomeRouteArgs {
+  const ReviewAtHomeRouteArgs({
+    this.key,
+    required this.order,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  @override
+  String toString() {
+    return 'ReviewAtHomeRouteArgs{key: $key, order: $order}';
+  }
 }
 
 /// generated route for

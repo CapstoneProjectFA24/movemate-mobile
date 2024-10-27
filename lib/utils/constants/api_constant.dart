@@ -25,6 +25,8 @@ class APIConstants {
 
   static const post_booking_service = '/bookings/register-booking';
   // static const post_booking_service = '/bookings/register-booking';
+  static const confirm_review = '/bookings/user/confirm';
+
   // order
   static const bookings = '/bookings';
 
@@ -33,7 +35,8 @@ class APIConstants {
   static const paymentsDeposit = '/wallets/recharge';
 
   // api vietmap-key
-  static const apiVietMapKey = "38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444";
+  static const apiVietMapKey =
+      "38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444";
 
   // error
   static const Map<String, String> errorTrans = {

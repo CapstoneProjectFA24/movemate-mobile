@@ -2,12 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -15,6 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
 
@@ -135,6 +141,50 @@ class BookingController extends _$BookingController {
       // Xử lý lỗi
       print('Error fetching booking details: $e');
       return null;
+    }
+  }
+
+  Future<void> confirmReviewBooking({
+    required ReviewerStatusRequest request,
+    required int id,
+    required BuildContext context,
+  }) async {
+    state = const AsyncLoading();
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(serviceBookingRepositoryProvider).confirmReviewBooking(
+            accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+            request: request,
+            id: id,
+          );
+
+      // case1
+      // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscren
+      if (request.status.type == BookingStatusType.waiting) {
+        context.router.push(PaymentScreenRoute(id: id));
+      }
+
+      // TO DO MORE
+    });
+
+    if (state.hasError) {
+      final statusCode = (state.error as DioException).onStatusDio();
+
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: state.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (state.hasError) {
+        // await ref.read(signInControllerProvider.notifier).signOut(context);
+      }
     }
   }
 }

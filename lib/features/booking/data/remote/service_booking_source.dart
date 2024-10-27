@@ -3,6 +3,8 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -77,6 +79,14 @@ abstract class ServiceBookingSource {
     @Body() BookingRequest request,
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+  );
+
+    @GET('${APIConstants.confirm_review}/{id}')
+  Future<HttpResponse<SuccessModel>> confirmReviewBooking(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Body() ReviewerStatusRequest request,
+    @Path('id') int id,
   );
 }
 

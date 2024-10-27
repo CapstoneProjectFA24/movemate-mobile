@@ -21,7 +21,6 @@ class ServicePackageTile extends StatefulWidget {
 
 class _ServicePackageTileState extends State<ServicePackageTile> {
   bool _isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     if (widget.servicePackage.inverseParentService.isNotEmpty) {

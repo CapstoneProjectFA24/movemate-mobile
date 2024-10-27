@@ -6,13 +6,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 //widgets
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/auth/presentation/screens/otp_verification/otp_verification_screen.dart';
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
 class ReviewAtHome extends ConsumerWidget {
-  const ReviewAtHome({super.key});
+  final OrderEntity order;
+  const ReviewAtHome({super.key, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,10 +65,10 @@ class ReviewAtHome extends ConsumerWidget {
             ),
           ),
         ),
-        bottomNavigationBar: const Padding(
-          padding: EdgeInsets.all(16.0),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: SafeArea(
-            child: Buttons(),
+            child: Buttons(order: order),
           ),
         ),
       ),
@@ -70,7 +77,8 @@ class ReviewAtHome extends ConsumerWidget {
 }
 
 class Buttons extends ConsumerWidget {
-  const Buttons({super.key});
+  final OrderEntity order;
+  const Buttons({super.key, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -92,7 +100,21 @@ class Buttons extends ConsumerWidget {
           color: const Color(0xFFFF6600),
           textColor: Colors.white,
           onPressed: () async {
-            await ref.read(bookingControllerProvider.notifier).submitBooking(
+            // await ref.read(bookingControllerProvider.notifier).submitBooking(
+            //       context: context,
+            //     );
+
+            // to do to fix
+            final bookingStatus = order.status.toBookingTypeEnum();
+
+            final reviewerStatusRequest = ReviewerStatusRequest(
+              status: BookingStatusType.depositing,
+            );
+            await ref
+                .read(bookingControllerProvider.notifier)
+                .confirmReviewBooking(
+                  request: reviewerStatusRequest,
+                  id: order.id,
                   context: context,
                 );
           },

@@ -6,9 +6,11 @@ import 'package:movemate/features/booking/data/models/response/services_fee_syst
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/resources/remote_base_repository.dart';
 
@@ -31,7 +33,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     );
   }
 
-@override
+  @override
   Future<HouseTypeResponse> getHouseTypeById({
     required String accessToken,
     required int id,
@@ -104,6 +106,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
           APIConstants.contentType, accessToken, id),
     );
   }
+
   @override
   Future<BookingResponse> postValuationBooking({
     required BookingRequest request,
@@ -114,6 +117,23 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
         request,
         APIConstants.contentType,
         accessToken,
+      ),
+    );
+  }
+
+  @override
+  Future<SuccessModel> confirmReviewBooking({
+    required String accessToken,
+    required ReviewerStatusRequest request,
+    required int id,
+  }) async {
+    print('vinh log repo : ${request.toJson()} + $id');
+    return getDataOf(
+      request: () => _serviceBookingSource.confirmReviewBooking(
+        APIConstants.contentType,
+        accessToken,
+        request,
+        id,
       ),
     );
   }

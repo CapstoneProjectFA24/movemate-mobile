@@ -3,7 +3,7 @@ import 'package:movemate/utils/enums/enums_export.dart';
 String getBookingStatusText(BookingStatusType status) {
   switch (status) {
     case BookingStatusType.pending:
-      return 'Đang chờ xử lý';
+      return 'Đang chờ reviewer xếp lịch';
     case BookingStatusType.depositing:
       return 'Đang chờ đặt cọc';
     case BookingStatusType.assigned:
@@ -15,7 +15,7 @@ String getBookingStatusText(BookingStatusType status) {
     case BookingStatusType.coming:
       return 'Đang đến';
     case BookingStatusType.waiting:
-      return 'Đang chờ';
+      return 'Đang chờ bạn xác nhận ';
     case BookingStatusType.inProgress:
       return 'Đang thực hiện';
     case BookingStatusType.completed:
