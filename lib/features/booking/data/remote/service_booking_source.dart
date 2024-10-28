@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
+import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/models/response/success_model.dart';
@@ -33,7 +34,7 @@ abstract class ServiceBookingSource {
   );
   // house types get by id
     @GET('${APIConstants.get_house_types}/{id}')
-  Future<HttpResponse<HouseTypeResponse>> getHouseTypeById(
+  Future<HttpResponse<HouseTypeObjResponse>> getHouseTypeById(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,

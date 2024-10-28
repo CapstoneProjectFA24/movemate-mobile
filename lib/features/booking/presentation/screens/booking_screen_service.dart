@@ -28,7 +28,6 @@ class BookingScreenService extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
-    final scrollController = useScrollController();
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
@@ -63,9 +62,10 @@ class BookingScreenService extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thông tin đặt hàng'),
+      appBar: const CustomAppBar(
+        title: 'Chọn các dịch vụ',
         backgroundColor: AssetsConstants.primaryMain,
+        backButtonColor: AssetsConstants.whiteColor,
       ),
       body: Column(
         children: [

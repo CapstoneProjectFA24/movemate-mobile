@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
@@ -17,6 +18,7 @@ import 'package:movemate/features/order/presentation/widgets/details/policies.da
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
@@ -41,6 +43,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final isExpanded1 = useState(false);
     final expandedIndex = useState<int>(-1);
 
+    final state = ref.watch(bookingControllerProvider);
+
     final List<Map<String, dynamic>> steps = [
       {
         'title': 'Đặt hàng',
@@ -63,17 +67,18 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
-    final fetchHouseType = useFetch<HouseTypeEntity?>(
-      function: (_, context) async {
-        final houseType = await ref
-            .read(servicePackageControllerProvider.notifier)
-            .getHouseTypeById(order.houseTypeId, context);
-        return [houseType];
-      },
-      initialPagingModel: PagingModel(),
+    final useFetchResult = useFetchObject<HouseTypeEntity>(
+      function: (context) => ref
+          .read(servicePackageControllerProvider.notifier)
+          .getHouseTypeById(order.houseTypeId, context),
       context: context,
     );
-    final houseType = fetchHouseType.items.firstOrNull;
+
+    final houseType = useFetchResult.data;
+    final logTest = useFetchResult.data;
+
+    print(houseType?.toJson());
+    print(logTest);
 
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value;
@@ -505,8 +510,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     ),
                     ...order.bookingDetails.map<Widget>((detail) {
                       return buildPriceItem(
-                        // detail['name'] ?? '',
-                        // '${detail['price'] ?? 0} đ',
                         detail.name ?? '',
                         detail.price.toString() ?? '',
                       );

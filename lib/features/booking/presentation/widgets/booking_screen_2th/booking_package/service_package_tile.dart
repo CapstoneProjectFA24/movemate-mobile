@@ -24,7 +24,6 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
   @override
   Widget build(BuildContext context) {
     if (widget.servicePackage.inverseParentService.isNotEmpty) {
-      // Display package with sub-services
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: ExpansionTile(
@@ -70,7 +69,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
                 ),
               const SizedBox(width: 8),
               AnimatedRotation(
-                turns: _isExpanded ? 0.5 : 0.0, // 180-degree rotation
+                turns: _isExpanded ? 0.5 : 0.0,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeInOut,
                 child: FaIcon(
@@ -80,7 +79,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
                   color: _isExpanded
                       ? AssetsConstants.greyColor
                       : AssetsConstants.primaryDark,
-                  size: 20, // Kích thước của icon
+                  size: 20,
                 ),
               ),
             ],
@@ -92,7 +91,6 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
         ),
       );
     } else {
-      // Display package without sub-services
       return Consumer(builder: (context, ref, _) {
         final bookingNotifier = ref.read(bookingProvider.notifier);
         final bookingState = ref.watch(bookingProvider);
