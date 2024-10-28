@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
+import 'package:movemate/models/request/paging_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 // data impl
@@ -18,8 +20,7 @@ abstract class OrderSource {
   Future<HttpResponse<OrderReponse>> getBookings(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
-    @Query('per_page') int pageSize,
-    @Query('userId') int userId,
+    @Queries() OrderQueryRequest request,
   );
 }
 

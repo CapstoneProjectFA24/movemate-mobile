@@ -6,6 +6,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 final paymentMethodProvider =
@@ -42,6 +43,7 @@ class PaymentScreen extends HookConsumerWidget {
       return Scaffold(
         appBar: CustomAppBar(
           centerTitle: true,
+          backButtonColor: AssetsConstants.whiteColor,
           title: "Thanh Toán Đặt Cọc",
           iconFirst: Icons.home,
           onCallBackFirst: () {
@@ -78,6 +80,7 @@ class PaymentScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: CustomAppBar(
           centerTitle: true,
+          backButtonColor: AssetsConstants.whiteColor,
           title: "Thanh Toán Đặt Cọc",
           iconFirst: Icons.home,
           onCallBackFirst: () {
