@@ -27,7 +27,25 @@ Future<void> testFirebaseConnectionWithPhone(String phoneNumber) async {
     print('Kết nối với Firebase thất bại: $e');
   }
 }
+class UserDetails {
+  final String? uid;
+  final String? email;
+  final String? displayName;
 
+  UserDetails({
+    this.uid,
+    this.email,
+    this.displayName,
+  });
+
+  factory UserDetails.fromFirebaseUser(User user) {
+    return UserDetails(
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+    );
+  }
+}
 Future<void> testFirebaseConnection() async {
   try {
     UserCredential userCredential =

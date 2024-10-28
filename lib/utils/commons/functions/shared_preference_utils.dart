@@ -100,6 +100,8 @@ class SharedPreferencesUtils {
     await prefs.remove(key);
     await prefs.setBool(key, value);
   }
+
+  
 }
 
 

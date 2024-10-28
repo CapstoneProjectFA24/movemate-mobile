@@ -62,7 +62,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     }, const []);
 
     // final selectedService = useState<ServiceEntity?>(null);
-
     return Scaffold(
       appBar: CustomAppBar(
         // showBackButton: true,
@@ -93,7 +92,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         onPlacePress: () async {
           if (bookingState.selectedVehicle != null &&
               bookingState.houseType?.id != null) {
-                
             // Hiển thị một dialog chờ
             showDialog(
               context: context,

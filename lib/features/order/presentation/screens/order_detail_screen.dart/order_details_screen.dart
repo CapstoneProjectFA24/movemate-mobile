@@ -117,7 +117,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     padding: const EdgeInsets.only(left: 14.0),
                     child: statusAsync.when(
                       data: (status) => Text(
-                        getBookingStatusText(status),
+                        getBookingStatusText(status).statusText,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w500),
                       ),
@@ -505,8 +505,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     ),
                     ...order.bookingDetails.map<Widget>((detail) {
                       return buildPriceItem(
-                        detail['name'] ?? '',
-                        '${detail['price'] ?? 0} đ',
+                        // detail['name'] ?? '',
+                        // '${detail['price'] ?? 0} đ',
+                        detail.name ?? '',
+                        detail.price.toString() ?? '',
                       );
                     }),
                     buildSummary('Tiền đặt cọc', order.total.toString()),
@@ -556,7 +558,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
                         String buttonText;
 
-                        buttonText = getBookingStatusText(status);
+                        buttonText = getBookingStatusText(status).nextStep;
 
                         return ElevatedButton(
                           onPressed: isButtonEnabled

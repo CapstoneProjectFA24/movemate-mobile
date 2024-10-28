@@ -6,7 +6,6 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 
-
 class DailyUIChallengeCard extends ConsumerStatefulWidget {
   const DailyUIChallengeCard({super.key});
 

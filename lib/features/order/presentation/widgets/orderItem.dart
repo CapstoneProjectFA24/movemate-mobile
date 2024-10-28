@@ -118,7 +118,7 @@ class OrderItem extends HookConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            Text(getBookingStatusText(status)),
+                            Text(getBookingStatusText(status).statusText),
                           ],
                         ),
                         const SizedBox(height: 5),
@@ -280,6 +280,4 @@ class OrderItem extends HookConsumerWidget {
       ),
     );
   }
-
-
 }

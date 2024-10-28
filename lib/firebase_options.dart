@@ -42,10 +42,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBquGjA3fx_RlGcDupTtNFwUctoFXj-zAY',
-    appId: '1:708811505333:web:ac5c28e6b14ef594f508fc',
+    appId: '1:708811505333:web:559654e66388b825f508fc',
     messagingSenderId: '708811505333',
     projectId: 'movemate-bb487',
     authDomain: 'movemate-bb487.firebaseapp.com',
+    databaseURL: 'https://movemate-bb487-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'movemate-bb487.appspot.com',
   );
 
@@ -54,6 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:708811505333:android:e8384ec3e06734d1f508fc',
     messagingSenderId: '708811505333',
     projectId: 'movemate-bb487',
+    databaseURL: 'https://movemate-bb487-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'movemate-bb487.appspot.com',
   );
 
@@ -62,6 +64,7 @@ class DefaultFirebaseOptions {
     appId: '1:708811505333:ios:8322c52cbdbfbc1ff508fc',
     messagingSenderId: '708811505333',
     projectId: 'movemate-bb487',
+    databaseURL: 'https://movemate-bb487-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'movemate-bb487.appspot.com',
     iosBundleId: 'com.example.test',
   );
@@ -71,6 +74,7 @@ class DefaultFirebaseOptions {
     appId: '1:708811505333:ios:8322c52cbdbfbc1ff508fc',
     messagingSenderId: '708811505333',
     projectId: 'movemate-bb487',
+    databaseURL: 'https://movemate-bb487-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'movemate-bb487.appspot.com',
     iosBundleId: 'com.example.test',
   );
@@ -81,6 +85,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '708811505333',
     projectId: 'movemate-bb487',
     authDomain: 'movemate-bb487.firebaseapp.com',
+    databaseURL: 'https://movemate-bb487-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'movemate-bb487.appspot.com',
   );
 
