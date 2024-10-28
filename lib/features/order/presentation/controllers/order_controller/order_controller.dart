@@ -44,8 +44,6 @@ class OrderController extends _$OrderController {
         userId: user.id!,
       );
       orders = response.payload;
-
-      print(orders.length);
     });
 
     if (state.hasError) {

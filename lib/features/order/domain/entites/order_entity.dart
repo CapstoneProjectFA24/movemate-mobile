@@ -30,6 +30,7 @@ class OrderEntity {
   final DateTime updatedAt;
   final String? updatedBy;
   final String? review;
+  final bool? isReviewOnline;
   final String? bonus;
   final String typeBooking;
   final String? estimatedAcreage;
@@ -81,6 +82,7 @@ class OrderEntity {
     required this.updatedAt,
     required this.updatedBy,
     required this.review,
+    required this.isReviewOnline,
     required this.bonus,
     required this.typeBooking,
     required this.estimatedAcreage,
@@ -140,6 +142,7 @@ class OrderEntity {
           : DateTime.now(),
       updatedBy: map['updatedBy'],
       review: map['review'],
+      isReviewOnline: map['isReviewOnline'],
       bonus: map['bonus'],
       typeBooking: map['typeBooking'] ?? '',
       estimatedAcreage: map['estimatedAcreage'],
@@ -193,6 +196,7 @@ class OrderEntity {
       'updatedAt': updatedAt.toIso8601String(),
       'updatedBy': updatedBy,
       'review': review,
+      'isReviewOnline': isReviewOnline,
       'bonus': bonus,
       'typeBooking': typeBooking,
       'estimatedAcreage': estimatedAcreage,
@@ -265,6 +269,7 @@ class OrderEntity {
       updatedAt: parseDate(response.updatedAt),
       updatedBy: response.updatedBy,
       review: response.review,
+      isReviewOnline: response.isReviewOnline,
       bonus: response.bonus,
       typeBooking: response.typeBooking,
       estimatedAcreage: response.estimatedAcreage,
@@ -284,7 +289,6 @@ class OrderEntity {
       bookingDetails: response.bookingDetails,
     );
   }
-
 
   factory OrderEntity.fromJson(String source) =>
       OrderEntity.fromMap(json.decode(source));

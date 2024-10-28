@@ -16,7 +16,6 @@ import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 
@@ -146,7 +145,7 @@ class BookingController extends _$BookingController {
 
   Future<void> confirmReviewBooking({
     required ReviewerStatusRequest request,
-    required int id,
+    required OrderEntity order,
     required BuildContext context,
   }) async {
     state = const AsyncLoading();
@@ -157,7 +156,7 @@ class BookingController extends _$BookingController {
       await ref.read(serviceBookingRepositoryProvider).confirmReviewBooking(
             accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
             request: request,
-            id: id,
+            id: order.id,
           );
 
       // stream realtime -> ref status
@@ -165,8 +164,10 @@ class BookingController extends _$BookingController {
       // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscrent
 
       // case 2 online
-      if (request.status.type == BookingStatusType.depositing) {
-        context.router.push(PaymentScreenRoute(id: id));
+
+      if (request.status.type == BookingStatusType.waiting &&
+          order.isReviewOnline!) {
+        context.router.push(PaymentScreenRoute(id: order.id));
       }
 
       // TO DO MORE

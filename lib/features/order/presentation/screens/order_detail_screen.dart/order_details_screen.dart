@@ -52,8 +52,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final houseType = fetchHouseType.items.firstOrNull;
 
-    ;
-
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value;
     }
@@ -446,7 +444,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                         String buttonText;
 
                         buttonText = getBookingStatusText(status);
-
+                     
                         return ElevatedButton(
                           onPressed: isButtonEnabled
                               ? () {
