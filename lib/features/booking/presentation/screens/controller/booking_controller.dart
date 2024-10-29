@@ -165,10 +165,10 @@ class BookingController extends _$BookingController {
 
       // case 2 online
 
-      if (request.status.type == BookingStatusType.waiting &&
-          order.isReviewOnline!) {
+      // if (request.status.type == BookingStatusType.waiting &&
+      //     order.isReviewOnline!) {
         context.router.push(PaymentScreenRoute(id: order.id));
-      }
+      // }
 
       // TO DO MORE
     });

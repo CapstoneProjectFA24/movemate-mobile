@@ -569,6 +569,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
                                   if (status == BookingStatusType.depositing) {
                                     context.pushRoute(
                                         PaymentScreenRoute(id: order.id));
+                                  } else if (status ==
+                                      BookingStatusType.reviewed) {
+                                    context.pushRoute(
+                                        ReviewOnlineRoute(order: order));
                                   } else {
                                     context.pushRoute(
                                         ReviewAtHomeRoute(order: order));
