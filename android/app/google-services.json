@@ -1,33 +1,13 @@
 {
   "project_info": {
-    "project_number": "708811505333",
-    "firebase_url": "https://movemate-bb487-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "movemate-bb487",
-    "storage_bucket": "movemate-bb487.appspot.com"
+    "project_number": "739539035350",
+    "project_id": "movemate-firebase",
+    "storage_bucket": "movemate-firebase.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:708811505333:android:77f0a00ce8f42172f508fc",
-        "android_client_info": {
-          "package_name": "com.example.MoveMate"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAaZy4VTx61msImwqQUiABaHliQhTkXc5g"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:708811505333:android:e8384ec3e06734d1f508fc",
+        "mobilesdk_app_id": "1:739539035350:android:ac85fd0b6f2940ba08d577",
         "android_client_info": {
           "package_name": "com.movemate.app"
         }
@@ -35,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAaZy4VTx61msImwqQUiABaHliQhTkXc5g"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:708811505333:android:69e520c4c167bffef508fc",
-        "android_client_info": {
-          "package_name": "com.movemate_staff.app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAaZy4VTx61msImwqQUiABaHliQhTkXc5g"
+          "current_key": "AIzaSyClEBLwLjSXE9N3e4eaa0VmqfAk0PxomMw"
         }
       ],
       "services": {
