@@ -37,8 +37,9 @@ dependencies:
   firebase_core: ^2.24.0
   firebase_messaging: ^14.7.6
   firebase_auth: ^4.0.0
-  flutter_local_notifications: ^16.3.3
+  flutter_local_notifications: ^17.2.4
   cloud_firestore: ^4.17.5
+  location: ^7.0.1
   
   # Vietmap
   vietmap_flutter_gl: ^3.0.0
@@ -77,6 +78,7 @@ dependencies:
   # Order
   photo_view: ^0.14.0
   intl: ^0.19.0
+  firebase_database: ^10.5.7
 # config launcher icon
 flutter_launcher_icons:
   android: "launcher_icon"
@@ -117,6 +119,7 @@ flutter:
     - assets/images/Group39449.png
     - assets/images/payment_status/
     - assets/images/logo/MoveMateLogo2.png
+    - assets/images/booking/vehicles/truck1.png
   # fonts:
   #   - family: Open Sans
   #     fonts:

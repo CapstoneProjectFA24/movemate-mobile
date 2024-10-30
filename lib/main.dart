@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/splash_screen.dart';
 import 'configs/routes/app_router.dart';
 import 'configs/theme/app_theme.dart';
+import 'features/home/presentation/screens/map_test_screen.dart';
 import 'utils/constants/asset_constant.dart';
 
 // deep link payment uri
@@ -43,18 +44,18 @@ class MyApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showSplashScreen = useState(true);
 
-    useEffect(() {
-      Future.delayed(const Duration(seconds: 3)).then((_) {
-        showSplashScreen.value = false;
-      });
-       initUniLinks(context, ref);
-      return null;
-    }, []);
+    // useEffect(() {
+    //   Future.delayed(const Duration(seconds: 3)).then((_) {
+    //     showSplashScreen.value = false;
+    //   });
+    //    initUniLinks(context, ref);
+    //   return null;
+    // }, []);
 
     if (showSplashScreen.value) {
       return const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: MapScreenTest(),
       );
     }
 

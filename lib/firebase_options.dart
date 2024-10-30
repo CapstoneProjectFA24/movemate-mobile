@@ -50,11 +50,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAaZy4VTx61msImwqQUiABaHliQhTkXc5g',
-    appId: '1:708811505333:android:e8384ec3e06734d1f508fc',
-    messagingSenderId: '708811505333',
-    projectId: 'movemate-bb487',
-    storageBucket: 'movemate-bb487.appspot.com',
+    apiKey: 'AIzaSyClEBLwLjSXE9N3e4eaa0VmqfAk0PxomMw',
+    appId: '1:739539035350:android:b47131be51a511d708d577',
+    messagingSenderId: '739539035350',
+    projectId: 'movemate-firebase',
+    storageBucket: 'movemate-firebase.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
