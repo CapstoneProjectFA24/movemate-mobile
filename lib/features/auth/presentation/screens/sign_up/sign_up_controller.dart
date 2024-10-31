@@ -88,6 +88,7 @@ class SignUpController extends _$SignUpController {
 
   Future<void> sendOTP(String phone) async {
     await firebaseAuth.verifyPhoneNumber(
+      timeout: const Duration( seconds: 120),
       phoneNumber: phone,
       verificationCompleted: (PhoneAuthCredential credential) async {
         await firebaseAuth.signInWithCredential(credential);

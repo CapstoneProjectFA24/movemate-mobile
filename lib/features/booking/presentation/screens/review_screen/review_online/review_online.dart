@@ -1,14 +1,22 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/price_detail_modal.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
-class ReviewOnline extends StatelessWidget {
-  const ReviewOnline({super.key});
+class ReviewOnline extends ConsumerWidget {
+  final OrderEntity order;
+  const ReviewOnline({super.key, required this.order});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(
@@ -35,7 +43,6 @@ class ReviewOnline extends StatelessWidget {
               const SizedBox(height: 16),
               buildContactCard(),
               const SizedBox(height: 24),
-              // Loại bỏ hai nút khỏi đây
             ],
           ),
         ),
@@ -49,7 +56,20 @@ class ReviewOnline extends StatelessWidget {
               buildButton(
                 'Xác nhận',
                 Colors.orange,
-                onPressed: () => showPriceDetailModal(context),
+                onPressed: () async {
+                  final bookingStatus = order.status.toBookingTypeEnum();
+                  final reviewerStatusRequest = ReviewerStatusRequest(
+                    status: BookingStatusType.depositing,
+                  );
+
+                  await ref
+                      .read(bookingControllerProvider.notifier)
+                      .confirmReviewBooking(
+                        request: reviewerStatusRequest,
+                        order: order,
+                        context: context,
+                      );
+                },
               ),
               const SizedBox(height: 12),
               buildButton(
@@ -63,17 +83,6 @@ class ReviewOnline extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void showPriceDetailModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return const PriceDetailModal();
-      },
     );
   }
 

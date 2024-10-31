@@ -41,10 +41,9 @@ class OrderController extends _$OrderController {
       final response = await orderRepository.getBookings(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
+        userId: user.id!,
       );
       orders = response.payload;
-
-      print(orders.length);
     });
 
     if (state.hasError) {

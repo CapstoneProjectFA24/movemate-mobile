@@ -6,7 +6,6 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 
-
 class DailyUIChallengeCard extends ConsumerStatefulWidget {
   const DailyUIChallengeCard({super.key});
 
@@ -164,7 +163,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     return [
       Center(
         child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
+          width: MediaQuery.of(context).size.width * 0.65,
           child: Column(
             children: [
               ElevatedButton(
@@ -275,14 +274,13 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
                       bookingNotifier.reset();
                     } catch (e) {
                       // Xử lý ngoại lệ nếu chuyển đổi thất bại
-                      print('Error converting to OrderEntity: $e');
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Đã xảy ra lỗi: $e')),
                       );
                     }
                   } else {
                     // Xử lý khi bookingResponse là null
-                    print('Booking response is null');
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content:

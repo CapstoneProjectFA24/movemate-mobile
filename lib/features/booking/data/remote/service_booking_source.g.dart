@@ -57,7 +57,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
   }
 
   @override
-  Future<HttpResponse<HouseTypeResponse>> getHouseTypeById(
+  Future<HttpResponse<HouseTypeObjResponse>> getHouseTypeById(
     String contentType,
     String accessToken,
     int id,
@@ -71,7 +71,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<HouseTypeResponse>>(Options(
+        _setStreamType<HttpResponse<HouseTypeObjResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -88,7 +88,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = HouseTypeResponse.fromMap(_result.data!);
+    final _value = HouseTypeObjResponse.fromMap(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
@@ -332,7 +332,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     _data.addAll(request?.toMap() ?? <String, dynamic>{});
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<SuccessModel>>(Options(
-      method: 'GET',
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
       contentType: contentType,

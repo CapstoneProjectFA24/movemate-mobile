@@ -114,7 +114,7 @@ class Buttons extends ConsumerWidget {
                 .read(bookingControllerProvider.notifier)
                 .confirmReviewBooking(
                   request: reviewerStatusRequest,
-                  id: order.id,
+                  order: order,
                   context: context,
                 );
           },

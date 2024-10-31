@@ -21,6 +21,7 @@ import 'package:movemate/hooks/use_fetch.dart';
 // Widgets and Extensions
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 import 'package:movemate/utils/extensions/scroll_controller.dart';
 
@@ -62,13 +63,13 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
     }, const []);
 
     // final selectedService = useState<ServiceEntity?>(null);
-
     return Scaffold(
       appBar: CustomAppBar(
         // showBackButton: true,
         title: 'Phương tiện có sẵn',
         iconFirst: Icons.refresh_rounded,
         onCallBackFirst: fetchResult.refresh,
+        backButtonColor: AssetsConstants.whiteColor,
       ),
       body: Column(
         children: [
@@ -93,7 +94,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         onPlacePress: () async {
           if (bookingState.selectedVehicle != null &&
               bookingState.houseType?.id != null) {
-                
             // Hiển thị một dialog chờ
             showDialog(
               context: context,

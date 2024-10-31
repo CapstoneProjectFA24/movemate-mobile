@@ -9,6 +9,7 @@ import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/extensions/scroll_controller.dart';
 
 @RoutePage()
 class OrderScreen extends HookConsumerWidget {
@@ -25,17 +26,27 @@ class OrderScreen extends HookConsumerWidget {
           .read(orderControllerProvider.notifier)
           .getBookings(model, context),
       initialPagingModel: PagingModel(
-        pageSize: 50,
-        // pageNumber: 2,
-        // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
+          // pageNumber: 2,
+          // ví dụ ở đây và trong widgetshowCustomButtom ở widget test floder luôn
 
-        // filterSystemContent:  ref.read(filterSystemStatus).type,
-        // filterContent: ref.read(filterPartnerStatus).type,
-        // searchDateFrom: dateFrom,
-        // searchDateTo: dateTo,
-      ),
+          // filterSystemContent:  ref.read(filterSystemStatus).type,
+          // filterContent: ref.read(filterPartnerStatus).type,
+          // searchDateFrom: dateFrom,
+          // searchDateTo: dateTo,
+          ),
       context: context,
     );
+
+    useEffect(() {
+      scrollController.onScrollEndsListener(fetchReslut.loadMore);
+
+      //  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      //   if (message.data['screen'] == OrderDetailScreenRoute.name) {
+      //     fetchResult.refresh();
+      //   }
+
+      return scrollController.dispose;
+    }, const []);
 
     return Scaffold(
       appBar: CustomAppBar(

@@ -30,8 +30,8 @@ class SystemFeeScreen extends HookConsumerWidget {
           .read(servicesFeeSystemControllerProvider.notifier)
           .getFeeSystems(model, context),
       initialPagingModel: PagingModel(
-        pageSize: 20,
-      ),
+          // per_page: 20,
+          ),
       context: context,
     );
 

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
@@ -16,6 +18,7 @@ import 'package:movemate/features/order/presentation/widgets/details/policies.da
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
@@ -24,6 +27,8 @@ import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 // Hooks
 import 'package:movemate/hooks/use_fetch.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
@@ -36,41 +41,50 @@ class OrderDetailsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isExpanded = useState(false);
     final isExpanded1 = useState(false);
+    final expandedIndex = useState<int>(-1);
+
+    final state = ref.watch(bookingControllerProvider);
+
+    final List<Map<String, dynamic>> steps = [
+      {
+        'title': 'Đặt hàng',
+        'details': ['Đơn hàng được tạo', 'Xác nhận thông tin'],
+      },
+      {
+        'title': 'Gói hàng',
+        'details': ['Sản phẩm được đóng gói', 'Chuẩn bị giao'],
+      },
+      {
+        'title': 'Giao hàng',
+        'details': ['Đang vận chuyển', 'Giao hàng đến nơi'],
+      },
+      {
+        'title': 'Thành công',
+        'details': ['Giao hàng thành công', 'Hoàn tất đơn hàng'],
+      },
+    ];
 
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
-    final fetchHouseType = useFetch<HouseTypeEntity?>(
-      function: (_, context) async {
-        final houseType = await ref
-            .read(servicePackageControllerProvider.notifier)
-            .getHouseTypeById(order.houseTypeId, context);
-        return [houseType];
-      },
-      initialPagingModel: PagingModel(),
+    final useFetchResult = useFetchObject<HouseTypeEntity>(
+      function: (context) => ref
+          .read(servicePackageControllerProvider.notifier)
+          .getHouseTypeById(order.houseTypeId, context),
       context: context,
     );
-    final houseType = fetchHouseType.items.firstOrNull;
 
-    print(
-        " order có  statusorderStatusStreamProvider ${orderStatusStreamProvider(order.id.toString())}");
+    final houseType = useFetchResult.data;
+    final logTest = useFetchResult.data;
 
-    print(" order có order.status  ${order.status}");
-
-    print(" order statusAsync: $statusAsync");
-
-    print(" order có  housetype name ${order.houseType?.name}");
-    print(" order có  housetype id ${order.houseTypeId}");
-    print(" order có  user id ${order.userId}");
-    // print(" order  ${order.toString()}");
+    print(houseType?.toJson());
+    print(logTest);
 
     void toggleDropdown() {
-      isExpanded.value = !isExpanded.value; // Toggle the dropdown state
+      isExpanded.value = !isExpanded.value;
     }
 
-    void toggleDropdown1() {
-      isExpanded1.value = !isExpanded1.value; // Toggle the dropdown state
-    }
+    void toggleDropdown1() {}
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -78,6 +92,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
         onCallBackFirst: () {
           Navigator.pop(context);
         },
+        backButtonColor: AssetsConstants.whiteColor,
         title: "Thông tin đơn hàng",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
@@ -102,23 +117,27 @@ class OrderDetailsScreen extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                  padding: const EdgeInsets.only(left: 14.0),
-                  child: statusAsync.when(
-                    data: (status) => Text(
-                      getBookingStatusText(status),
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                    loading: () => const CircularProgressIndicator(),
-                    error: (err, stack) => Text('Error: $err'),
-                  )),
+              FadeInUp(
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 14.0),
+                    child: statusAsync.when(
+                      data: (status) => Text(
+                        getBookingStatusText(status).statusText,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      loading: () => const CircularProgressIndicator(),
+                      error: (err, stack) => Text('Error: $err'),
+                    )),
+              ),
               const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.only(left: 14.0),
-                child: Text(
-                  "MoveMate sẽ gửi thông tin đến bạn sau",
-                  style: TextStyle(fontSize: 14),
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0),
+                child: FadeInUp(
+                  child: const Text(
+                    "MoveMate sẽ gửi thông tin đến bạn sau",
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ),
               ),
               const SizedBox(height: 50),
@@ -126,44 +145,223 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 height: 35,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: const [
-                      MyTimelineTitle(
-                          isFirst: true, isLast: false, isPast: true),
-                      MyTimelineTitle(
-                          isFirst: false, isLast: false, isPast: true),
-                      MyTimelineTitle(
-                          isFirst: false, isLast: false, isPast: false),
-                      MyTimelineTitle(
-                          isFirst: false, isLast: true, isPast: false),
-                      //isFirst: xét là đầu tiên
-                      //isLast: xét là cuối cùng
-                      //isPast: xét là enable
+                  child: FadeInLeft(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: const [
+                        MyTimelineTitle(
+                            isFirst: true, isLast: false, isPast: true),
+                        MyTimelineTitle(
+                            isFirst: false, isLast: false, isPast: true),
+                        MyTimelineTitle(
+                            isFirst: false, isLast: false, isPast: false),
+                        MyTimelineTitle(
+                            isFirst: false, isLast: true, isPast: false),
+                        //isFirst: xét là đầu tiên
+                        //isLast: xét là cuối cùng
+                        //isPast: xét là enable
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 2.0),
+                child: FadeInLeft(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(steps.length, (index) {
+                          final step = steps[index];
+                          return GestureDetector(
+                            onTap: () {
+                              expandedIndex.value =
+                                  expandedIndex.value == index ? -1 : index;
+                            },
+                            child: Column(
+                              children: [
+                                // Tiêu đề
+                                Text(
+                                  step['title'],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ),
+                      ...List.generate(steps.length, (index) {
+                        final step = steps[index];
+                        return Visibility(
+                          visible: expandedIndex.value == index,
+                          child: Container(
+                            width: 350,
+                            height: 300,
+                            margin: const EdgeInsets.only(top: 20.0),
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: List.generate(step['details'].length,
+                                  (detailIndex) {
+                                return TimelineTile(
+                                  alignment: TimelineAlign.start,
+                                  isFirst: detailIndex == 0,
+                                  isLast:
+                                      detailIndex == step['details'].length - 1,
+                                  indicatorStyle: IndicatorStyle(
+                                    color: detailIndex <= index
+                                        ? AssetsConstants.primaryMain
+                                        : Colors.grey,
+                                    iconStyle: IconStyle(
+                                      iconData: Icons.circle,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  endChild: Container(
+                                    margin: const EdgeInsets.only(left: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16), // Thêm padding dọc
+                                    child: Text(
+                                      step['details'][detailIndex],
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                  ),
+                                  beforeLineStyle: LineStyle(
+                                    color: detailIndex <= index
+                                        ? AssetsConstants.primaryMain
+                                        : Colors.grey,
+                                    thickness: 4,
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 2.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Đặt hàng', style: TextStyle(fontSize: 14)),
-                    Text('Gói hàng', style: TextStyle(fontSize: 14)),
-                    Text('Giao hàng', style: TextStyle(fontSize: 14)),
-                    Text('Thành công', style: TextStyle(fontSize: 14)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Center(
+                child: FadeInUp(
+                  child: Center(
+                    child: Container(
+                      width: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 2,
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: AssetsConstants.primaryMain,
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(10)),
+                            ),
+                            padding: const EdgeInsets.all(15),
+                            child: const Row(
+                              children: [
+                                Icon(FontAwesomeIcons.home,
+                                    color: Colors.white),
+                                SizedBox(width: 10),
+                                Text('Thông tin dịch vụ',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18)),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  // 'Loại nhà : ${order.houseTypeId ?? "label"}',
+                                  'Loại nhà : ${houseType?.name ?? "label"}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 10),
+                                buildAddressRow(
+                                  Icons.location_on_outlined,
+                                  'Từ:  ${order.pickupAddress} ',
+                                ),
+                                const Divider(
+                                    height: 12,
+                                    color: Colors.grey,
+                                    thickness: 1),
+                                buildAddressRow(
+                                  Icons.location_searching,
+                                  'Đến : ${order.pickupAddress}',
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    buildDetailColumn(FontAwesomeIcons.building,
+                                        "Tầng :${order.floorsNumber}"),
+                                    buildDetailColumn(FontAwesomeIcons.building,
+                                        "Phòng : ${order.roomNumber}"),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                buildPolicies(FontAwesomeIcons.checkCircle,
+                                    'Miễn phí đặt lại'),
+                                const SizedBox(height: 20),
+                                buildPolicies(FontAwesomeIcons.checkCircle,
+                                    'Áp dụng chính sách đổi lịch'),
+                                const SizedBox(height: 20),
+                                buildBookingCode('Mã đặt chỗ', 'FD8UH6'),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              FadeInLeft(
+                child: const Padding(
+                  padding: EdgeInsets.only(left: 16.0),
+                  child: Text("Map",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20.0, top: 16, right: 16, bottom: 16),
+                child: FadeInUp(
                   child: Container(
-                    width: 350,
+                    width: 400,
+                    height: 150,
                     decoration: BoxDecoration(
-                      color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
@@ -173,129 +371,41 @@ class OrderDetailsScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF007bff),
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(10)),
-                          ),
-                          padding: const EdgeInsets.all(15),
-                          child: const Row(
-                            children: [
-                              Icon(FontAwesomeIcons.home, color: Colors.white),
-                              SizedBox(width: 10),
-                              Text('Thông tin dịch vụ',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18)),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                // 'Loại nhà : ${order.houseTypeId ?? "label"}',
-                                'Loại nhà : ${houseType?.name ?? "label"}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 10),
-                              buildAddressRow(
-                                Icons.location_on_outlined,
-                                'Từ:  ${order.pickupAddress} ',
-                              ),
-                              const Divider(
-                                  height: 12, color: Colors.grey, thickness: 1),
-                              buildAddressRow(
-                                Icons.location_searching,
-                                'Đến : ${order.pickupAddress}',
-                              ),
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  buildDetailColumn(FontAwesomeIcons.building,
-                                      "Tầng :${order.floorsNumber}"),
-                                  buildDetailColumn(FontAwesomeIcons.building,
-                                      "Phòng : ${order.roomNumber}"),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              buildPolicies(FontAwesomeIcons.checkCircle,
-                                  'Miễn phí đặt lại'),
-                              const SizedBox(height: 20),
-                              buildPolicies(FontAwesomeIcons.checkCircle,
-                                  'Áp dụng chính sách đổi lịch'),
-                              const SizedBox(height: 20),
-                              buildBookingCode('Mã đặt chỗ', 'FD8UH6'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Text("Map",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, top: 16, right: 16, bottom: 16),
-                child: Container(
-                  width: 400, // Chiều rộng của container, bạn có thể tùy chỉnh
-                  height:
-                      150, // Chiều cao của container, tùy chỉnh theo nhu cầu
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), // Bo góc container
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1), // Màu bóng đổ
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10), // Bo góc cho ảnh
-                    child: Image.network(
-                      'https://storage.googleapis.com/a1aa/image/h2LnipfLWGVDFSNFJQfaZSX6zdfSAbOI7N8q2e1ECXUTMXVOB.jpg',
-                      fit: BoxFit.cover, // Điều chỉnh ảnh để vừa khít container
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons
-                              .error), // Hiển thị icon khi không tải được ảnh
-                        );
-                      },
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child; // Hiển thị ảnh nếu đã tải xong
-                        } else {
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10), // Bo góc cho ảnh
+                      child: Image.network(
+                        'https://storage.googleapis.com/a1aa/image/h2LnipfLWGVDFSNFJQfaZSX6zdfSAbOI7N8q2e1ECXUTMXVOB.jpg',
+                        fit: BoxFit
+                            .cover, // Điều chỉnh ảnh để vừa khít container
+                        errorBuilder: (context, error, stackTrace) {
                           return const Center(
-                            child:
-                                CircularProgressIndicator(), // Hiển thị loading khi đang tải ảnh
+                            child: Icon(Icons
+                                .error), // Hiển thị icon khi không tải được ảnh
                           );
-                        }
-                      },
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child; // Hiển thị ảnh nếu đã tải xong
+                          } else {
+                            return const Center(
+                              child:
+                                  CircularProgressIndicator(), // Hiển thị loading khi đang tải ảnh
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0),
-                child: Text("Thông tin khách hàng",
-                    style:
-                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: FadeInLeft(
+                  child: const Text("Thông tin khách hàng",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                ),
               ),
               const Padding(
                 padding: EdgeInsets.only(left: 16.0, top: 20),
@@ -398,21 +508,14 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       description:
                           'Giờ Cấm Tải 6H-9H & 16H-20H | Chở tới đa 1250kg & 7CBM\n3.1 x 1.6 x 1.6 Mét - Lên đến 1250 kg',
                     ),
-                    buildPriceItem('Phí giao hàng', '282.900 đ'),
-                    buildPriceItem(
-                        'Dịch Vụ Bốc Xếp Bốc Xếp Tận Nơi (Bởi tài xế)',
-                        '140.000 đ'),
-                    buildPriceItem(
-                        'Dịch Vụ Bốc Xếp. Bốc Xếp Tận Nơi (Có người hỗ trợ)',
-                        '282.900 đ'),
-                    buildPriceItem(
-                        'Dịch Vụ Bốc Xếp - Bốc Xếp Dưới Xe (Có người hỗ trợ)',
-                        '240.000 đ'),
-                    buildPriceItem('Phí cầu đường', '40.000 đ'),
-                    buildPriceItem('Giao hàng siêu tốc', '22.900 đ'),
-                    buildPriceItem('Giao hàng 2 chiều', '20.000 đ'),
-                    buildSummary('Giảm giá', '-00.000 đ'),
-                    buildSummary('Thuế GTGT', '-00.000 đ'),
+                    ...order.bookingDetails.map<Widget>((detail) {
+                      return buildPriceItem(
+                        detail.name ?? '',
+                        detail.price.toString() ?? '',
+                      );
+                    }),
+                    buildSummary('Tiền đặt cọc', order.total.toString()),
+                    buildSummary('Tiền trả liền', order.totalFee.toString()),
                     const Divider(color: Colors.grey, thickness: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -420,7 +523,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'Giảm giá',
+                            'Đặt cọc',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
@@ -451,25 +554,31 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     statusAsync.when(
                       data: (status) {
                         final isButtonEnabled =
-                            status == BookingStatusType.waiting;
+                            status == BookingStatusType.waiting ||
+                                status == BookingStatusType.depositing ||
+                                status == BookingStatusType.reviewed ||
+                                status == BookingStatusType.coming;
 
-                        // Determine the button text
                         String buttonText;
-                        if (status == BookingStatusType.waiting) {
-                          buttonText = 'Xem lịch hẹn';
-                        } else {
-                          buttonText = getBookingStatusText(status);
-                        }
+
+                        buttonText = getBookingStatusText(status).nextStep;
 
                         return ElevatedButton(
                           onPressed: isButtonEnabled
                               ? () {
-                                  // context.pushRoute(
-                                  //     PaymentScreenRoute(id: order.id));
-                                  context.pushRoute(
-                                      ReviewAtHomeRoute(order: order));
+                                  if (status == BookingStatusType.depositing) {
+                                    context.pushRoute(
+                                        PaymentScreenRoute(id: order.id));
+                                  } else if (status ==
+                                      BookingStatusType.reviewed) {
+                                    context.pushRoute(
+                                        ReviewOnlineRoute(order: order));
+                                  } else {
+                                    context.pushRoute(
+                                        ReviewAtHomeRoute(order: order));
+                                  }
                                 }
-                              : null, // Disable the button if not 'depositing'
+                              : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isButtonEnabled
                                 ? const Color(0xFFFF9900)

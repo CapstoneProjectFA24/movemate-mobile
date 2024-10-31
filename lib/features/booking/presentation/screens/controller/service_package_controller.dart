@@ -114,11 +114,14 @@ class ServicePackageController extends _$ServicePackageController {
         await getHouseTypes(request, context);
       });
     }
+
     return houseTypeData;
   }
 
   Future<HouseTypeEntity?> getHouseTypeById(
-      int id, BuildContext context) async {
+    int id,
+    BuildContext context,
+  ) async {
     HouseTypeEntity? houseType;
 
     state = const AsyncLoading();
@@ -132,10 +135,8 @@ class ServicePackageController extends _$ServicePackageController {
         id: id,
       );
 
-      if (response.payload.isNotEmpty) {
-        houseType = response.payload.first;
-        print(" response  ${houseType?.name.toString()}");
-      }
+      houseType = response.payload;
+      print('vinh log ${houseType?.toJson()}');
     });
 
     if (state.hasError) {
@@ -156,7 +157,6 @@ class ServicePackageController extends _$ServicePackageController {
         }
 
         if (statusCode != StatusCodeType.unauthentication.type) {}
-
         await getHouseTypeById(id, context);
       });
     }

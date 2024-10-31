@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/splash_screen.dart';
+import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 import 'configs/routes/app_router.dart';
 import 'configs/theme/app_theme.dart';
 import 'features/home/presentation/screens/map_test_screen.dart';
@@ -25,7 +26,7 @@ void main() async {
   // await initFirebaseMessaging();
 
   // check firebase anonymous user connect
-  //await testFirebaseConnection();
+  // await testFirebaseConnection();
   // await testFirebaseConnectionWithPhone('+84382703625');
   Cloudinary.fromCloudName(cloudName: "dkpnkjnxs");
 
@@ -44,13 +45,13 @@ class MyApp extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showSplashScreen = useState(true);
 
-    // useEffect(() {
-    //   Future.delayed(const Duration(seconds: 3)).then((_) {
-    //     showSplashScreen.value = false;
-    //   });
-    //    initUniLinks(context, ref);
-    //   return null;
-    // }, []);
+    useEffect(() {
+      Future.delayed(const Duration(seconds: 3)).then((_) {
+        showSplashScreen.value = false;
+      });
+       initUniLinks(context, ref);
+      return null;
+    }, []);
 
     if (showSplashScreen.value) {
       return const MaterialApp(
@@ -69,4 +70,3 @@ class MyApp extends HookConsumerWidget {
     );
   }
 }
-

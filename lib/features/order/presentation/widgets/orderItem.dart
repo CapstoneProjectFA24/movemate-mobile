@@ -8,7 +8,7 @@ import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
-import 'package:movemate/utils/commons/functions/string_utils.dart'; // For getBookingStatusText
+import 'package:movemate/utils/commons/functions/string_utils.dart';
 
 //
 class OrderItem extends HookConsumerWidget {
@@ -35,7 +35,7 @@ class OrderItem extends HookConsumerWidget {
       },
       child: Container(
         width: 380,
-        height: 140,
+        height: 170,
         padding: const EdgeInsets.all(AssetsConstants.defaultPadding - 12.0),
         margin: const EdgeInsets.only(bottom: AssetsConstants.defaultMargin),
         decoration: BoxDecoration(
@@ -64,7 +64,7 @@ class OrderItem extends HookConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 15), // Space between image and content
+            const SizedBox(width: 15),
             // Card Content
             Expanded(
               child: Padding(
@@ -106,6 +106,28 @@ class OrderItem extends HookConsumerWidget {
                           ],
                         ),
                         const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(
+                              order.isReviewOnline!
+                                  ? Icons.computer
+                                  : Icons.home,
+                              size: 16,
+                              color: const Color(0xFF555555),
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              order.isReviewOnline!
+                                  ? 'Đánh giá trực tuyến'
+                                  : 'Đánh giá tại nhà',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF555555),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
                         // Display real-time status
                         Row(
                           children: [
@@ -118,7 +140,7 @@ class OrderItem extends HookConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            Text(getBookingStatusText(status)),
+                            Text(getBookingStatusText(status).statusText),
                           ],
                         ),
                         const SizedBox(height: 5),
@@ -146,132 +168,8 @@ class OrderItem extends HookConsumerWidget {
                       ],
                     );
                   },
-                  loading: () => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LabelText(
-                        content: 'Mã đơn hàng : #${order.id}',
-                        size: AssetsConstants.defaultFontSize - 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      const SizedBox(height: 5),
-                      const Row(
-                        children: [
-                          LabelText(
-                            content: 'Loại nhà: ',
-                            size: AssetsConstants.defaultFontSize - 12.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          Text(
-                            'Nhà riêng',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      // Loading status
-                      Row(
-                        children: [
-                          Container(
-                            height: 10,
-                            width: 10,
-                            decoration: const BoxDecoration(
-                              color: Colors.grey,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          const Text('Loading...'),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      // Placeholder for total
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '... ₫',
-                            style: TextStyle(
-                              color: Color(0xFF007BFF),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF555555),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  error: (error, stack) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      LabelText(
-                        content: 'Mã đơn hàng : #${order.id}',
-                        size: AssetsConstants.defaultFontSize - 12.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      const SizedBox(height: 5),
-                      const Row(
-                        children: [
-                          LabelText(
-                            content: 'Loại nhà: ',
-                            size: AssetsConstants.defaultFontSize - 12.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          Text(
-                            'Nhà riêng',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      // Error status
-                      Row(
-                        children: [
-                          Container(
-                            height: 10,
-                            width: 10,
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 5),
-                          const Text('Error'),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                      // Placeholder for total
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Text(
-                            '... ₫',
-                            style: TextStyle(
-                              color: Color(0xFF007BFF),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: AssetsConstants.greyColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  loading: () => _buildLoadingState(order),
+                  error: (error, stack) => _buildErrorState(order),
                 ),
               ),
             ),
@@ -281,5 +179,174 @@ class OrderItem extends HookConsumerWidget {
     );
   }
 
+  Widget _buildLoadingState(OrderEntity order) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LabelText(
+          content: 'Mã đơn hàng : #${order.id}',
+          size: AssetsConstants.defaultFontSize - 12.0,
+          fontWeight: FontWeight.w600,
+        ),
+        const SizedBox(height: 5),
+        const Row(
+          children: [
+            LabelText(
+              content: 'Loại nhà: ',
+              size: AssetsConstants.defaultFontSize - 12.0,
+              fontWeight: FontWeight.w600,
+            ),
+            Text(
+              'Nhà riêng',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        // Review Type
+        Row(
+          children: [
+            Icon(
+              order.isReviewOnline! ? Icons.computer : Icons.home,
+              size: 16,
+              color: const Color(0xFF555555),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              order.isReviewOnline!
+                  ? 'Đánh giá trực tuyến'
+                  : 'Đánh giá tại nhà',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF555555),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        // Loading status
+        Row(
+          children: [
+            Transform.scale(
+              scale: 0.5, // Điều chỉnh kích thước của CircularProgressIndicator
+              child: const CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+              ),
+            ),
+            const SizedBox(width: 5),
+            const Text('Đang tải...'),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text(
+              '... ₫',
+              style: TextStyle(
+                color: Color(0xFF007BFF),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF555555),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
+  Widget _buildErrorState(OrderEntity order) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LabelText(
+          content: 'Mã đơn hàng : #${order.id}',
+          size: AssetsConstants.defaultFontSize - 12.0,
+          fontWeight: FontWeight.w600,
+        ),
+        const SizedBox(height: 5),
+        const Row(
+          children: [
+            LabelText(
+              content: 'Loại nhà: ',
+              size: AssetsConstants.defaultFontSize - 12.0,
+              fontWeight: FontWeight.w600,
+            ),
+            Text(
+              'Nhà riêng',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        // Review Type
+        Row(
+          children: [
+            Icon(
+              order.isReviewOnline! ? Icons.computer : Icons.home,
+              size: 16,
+              color: const Color(0xFF555555),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              order.isReviewOnline!
+                  ? 'Đánh giá trực tuyến'
+                  : 'Đánh giá tại nhà',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF555555),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        // Error status
+        const Row(
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 16,
+              color: Colors.red,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'Error loading status',
+              style: TextStyle(color: Colors.red),
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Text(
+              '... ₫',
+              style: TextStyle(
+                color: Color(0xFF007BFF),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF555555),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }

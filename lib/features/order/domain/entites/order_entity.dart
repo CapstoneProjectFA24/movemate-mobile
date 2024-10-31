@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_tracker_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/fee_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 
 class OrderEntity {
@@ -30,6 +34,7 @@ class OrderEntity {
   final DateTime updatedAt;
   final String? updatedBy;
   final String? review;
+  final bool? isReviewOnline;
   final String? bonus;
   final String typeBooking;
   final String? estimatedAcreage;
@@ -49,10 +54,10 @@ class OrderEntity {
   final String? note;
   final int totalFee;
   final String? feeInfo;
-  final List<dynamic> bookingTrackers;
-  final List<dynamic> assignments;
-  final List<dynamic> feeDetails;
-  final List<dynamic> bookingDetails;
+  final List<AssignmentResponseEntity> assignments;
+  final List<BookingTrackerResponseEntity> bookingTrackers;
+  final List<BookingDetailResponseEntity> bookingDetails;
+  final List<FeeDetailResponseEntity> feeDetails;
 
   OrderEntity({
     required this.id,
@@ -81,6 +86,7 @@ class OrderEntity {
     required this.updatedAt,
     required this.updatedBy,
     required this.review,
+    required this.isReviewOnline,
     required this.bonus,
     required this.typeBooking,
     required this.estimatedAcreage,
@@ -140,6 +146,7 @@ class OrderEntity {
           : DateTime.now(),
       updatedBy: map['updatedBy'],
       review: map['review'],
+      isReviewOnline: map['isReviewOnline'],
       bonus: map['bonus'],
       typeBooking: map['typeBooking'] ?? '',
       estimatedAcreage: map['estimatedAcreage'],
@@ -159,10 +166,22 @@ class OrderEntity {
       note: map['note'],
       totalFee: map['totalFee'] ?? 0,
       feeInfo: map['feeInfo'],
-      bookingTrackers: List<dynamic>.from(map['bookingTrackers'] ?? []),
-      assignments: List<dynamic>.from(map['assignments'] ?? []),
-      feeDetails: List<dynamic>.from(map['feeDetails'] ?? []),
-      bookingDetails: List<dynamic>.from(map['bookingDetails'] ?? []),
+     assignments: (map['assignments'] as List<dynamic>?)
+              ?.map((e) => AssignmentResponseEntity.fromMap(e))
+              .toList() ??
+          [],
+      bookingTrackers: (map['bookingTrackers'] as List<dynamic>?)
+              ?.map((e) => BookingTrackerResponseEntity.fromMap(e))
+              .toList() ??
+          [],
+      bookingDetails: (map['bookingDetails'] as List<dynamic>?)
+              ?.map((e) => BookingDetailResponseEntity.fromMap(e))
+              .toList() ??
+          [],
+      feeDetails: (map['feeDetails'] as List<dynamic>?)
+              ?.map((e) => FeeDetailResponseEntity.fromMap(e))
+              .toList() ??
+          [],
     );
   }
 
@@ -193,6 +212,7 @@ class OrderEntity {
       'updatedAt': updatedAt.toIso8601String(),
       'updatedBy': updatedBy,
       'review': review,
+      'isReviewOnline': isReviewOnline,
       'bonus': bonus,
       'typeBooking': typeBooking,
       'estimatedAcreage': estimatedAcreage,
@@ -212,10 +232,10 @@ class OrderEntity {
       'note': note,
       'totalFee': totalFee,
       'feeInfo': feeInfo,
-      'bookingTrackers': bookingTrackers,
-      'assignments': assignments,
-      'feeDetails': feeDetails,
-      'bookingDetails': bookingDetails,
+   'assignments': assignments.map((e) => e.toMap()).toList(),
+      'bookingTrackers': bookingTrackers.map((e) => e.toMap()).toList(),
+      'bookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
+      'feeDetails': feeDetails.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -265,6 +285,7 @@ class OrderEntity {
       updatedAt: parseDate(response.updatedAt),
       updatedBy: response.updatedBy,
       review: response.review,
+      isReviewOnline: response.isReviewOnline,
       bonus: response.bonus,
       typeBooking: response.typeBooking,
       estimatedAcreage: response.estimatedAcreage,
@@ -284,7 +305,6 @@ class OrderEntity {
       bookingDetails: response.bookingDetails,
     );
   }
-
 
   factory OrderEntity.fromJson(String source) =>
       OrderEntity.fromMap(json.decode(source));
