@@ -26,7 +26,7 @@ void main() async {
   // await initFirebaseMessaging();
 
   // check firebase anonymous user connect
-  // await testFirebaseConnection();
+  await testFirebaseConnection();
   // await testFirebaseConnectionWithPhone('+84382703625');
   Cloudinary.fromCloudName(cloudName: "dkpnkjnxs");
 
@@ -49,14 +49,14 @@ class MyApp extends HookConsumerWidget {
       Future.delayed(const Duration(seconds: 3)).then((_) {
         showSplashScreen.value = false;
       });
-       initUniLinks(context, ref);
+      initUniLinks(context, ref);
       return null;
     }, []);
 
     if (showSplashScreen.value) {
       return const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: MapScreenTest(),
+        home: SplashScreen(),
       );
     }
 

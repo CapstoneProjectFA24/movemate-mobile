@@ -204,24 +204,13 @@ class AppRouter extends _$AppRouter {
         // test route
         AutoRoute(page: TestCloudinaryScreenRoute.page),
 
-        AutoRoute(
-          page: TestPaymentScreenRoute.page,
-          // initial: true,
-        ),
+        AutoRoute(page: TestPaymentScreenRoute.page),
         //thanh toán thành công
-        AutoRoute(
-          page: TransactionResultScreenRoute.page,
-          // initial: true,
-        ),
+        AutoRoute(page: TransactionResultScreenRoute.page),
         //timeline test
-        AutoRoute(
-          page: TimeLineBookingRoute.page,
-          // initial: true,
-        ),
-        AutoRoute(
-          page: TransactionDetailsOrderRoute.page,
-          // initial: true,
-        ),
+        AutoRoute(page: TimeLineBookingRoute.page),
+        AutoRoute(page: MapScreenTestRoute.page),
+        AutoRoute(page: TransactionDetailsOrderRoute.page),
 
         AutoRoute(page: PaymentResultScreenRoute.page),
       ];
