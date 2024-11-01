@@ -6,8 +6,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
 import 'package:movemate/features/order/presentation/widgets/details/booking_code.dart';
@@ -18,6 +20,7 @@ import 'package:movemate/features/order/presentation/widgets/details/policies.da
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/details/summary.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
+import 'package:movemate/features/order/presentation/widgets/profile_card.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -37,12 +40,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
     required this.order,
   });
   final OrderEntity order;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isExpanded = useState(false);
     final isExpanded1 = useState(false);
     final expandedIndex = useState<int>(-1);
-
+    final truckImgUrl = useState<String>('');
     final state = ref.watch(bookingControllerProvider);
 
     final List<Map<String, dynamic>> steps = [
@@ -73,12 +77,42 @@ class OrderDetailsScreen extends HookConsumerWidget {
           .getHouseTypeById(order.houseTypeId, context),
       context: context,
     );
+    // Fetch Services
+    final fetchResultVehicle = useFetch<ServiceEntity>(
+      function: (model, context) => ref
+          .read(serviceControllerProvider.notifier)
+          .getServices(model, context),
+      initialPagingModel: PagingModel(
+        searchContent: "1",
+      ),
+      context: context,
+    );
 
     final houseType = useFetchResult.data;
-    final logTest = useFetchResult.data;
+    // final logTest = useFetchResult.data;
+    final truckBookingDetails =
+        order.bookingDetails.where((detail) => detail.type == 'TRUCK').toList();
+
+    String getServiceImageUrl(int serviceId) {
+      final service = fetchResultVehicle.items.firstWhere(
+        (service) => service.id == serviceId,
+        orElse: () => ServiceEntity(
+          id: 0,
+          name: '',
+          description: '',
+          isActived: false,
+          tier: 0,
+          imageUrl: '',
+          type: '',
+          discountRate: 0,
+          amount: 0,
+        ),
+      );
+      return service.truckCategory?.imgUrl ?? '';
+    }
 
     print(houseType?.toJson());
-    print(logTest);
+    // print(logTest);
 
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value;
@@ -93,7 +127,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
           Navigator.pop(context);
         },
         backButtonColor: AssetsConstants.whiteColor,
-        title: "Thông tin đơn hàng",
+        title: "Thông tin đơn hàng #${order.id ?? ""}",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
           final tabsRouter = context.router.root
@@ -330,12 +364,12 @@ class OrderDetailsScreen extends HookConsumerWidget {
                                 ),
                                 const SizedBox(height: 20),
                                 buildPolicies(FontAwesomeIcons.checkCircle,
-                                    'Miễn phí đặt lại'),
+                                    'Miễn phí hủy đơn hàng'),
                                 const SizedBox(height: 20),
                                 buildPolicies(FontAwesomeIcons.checkCircle,
                                     'Áp dụng chính sách đổi lịch'),
                                 const SizedBox(height: 20),
-                                buildBookingCode('Mã đặt chỗ', 'FD8UH6'),
+                                buildBookingCode('Mã khuyến mãi', 'FD8UH6'),
                               ],
                             ),
                           ),
@@ -400,6 +434,26 @@ class OrderDetailsScreen extends HookConsumerWidget {
               ),
               const SizedBox(height: 20),
               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ProfileCard(
+                  title: "Thông tin người đánh giá",
+                  profileImageUrl:
+                      'https://storage.googleapis.com/a1aa/image/kQqIOadQcVp4CFdZfMh5llKP6sUMpfDr5KIUucyHmaXaArsTA.jpg',
+                  name: 'Lê Văn Phước Đại',
+                  rating: 5.0,
+                  ratingDetails: '73-H1 613.58',
+                  onPhonePressed: () {
+                    // Xử lý khi nhấn vào biểu tượng điện thoại
+                    // Ví dụ: Mở ứng dụng gọi điện
+                  },
+                  onCommentPressed: () {
+                    // Xử lý khi nhấn vào biểu tượng bình luận
+                    // Ví dụ: Mở ứng dụng nhắn tin
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: FadeInLeft(
                   child: const Text("Thông tin khách hàng",
@@ -407,18 +461,19 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 16.0, top: 20),
-                child: Text("Thông tin liên hệ",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Text("id :${order.userId}",
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold)),
-              ),
+              // const Padding(
+              //   padding: EdgeInsets.only(left: 16.0, top: 20),
+              //   child: Text("Thông tin liên hệ",
+              //       style:
+              //           TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 16.0),
+              //   child: Text("id :${order.userId}",
+              //       style: const TextStyle(
+              //           fontSize: 18, fontWeight: FontWeight.bold)),
+              // ),
+
               const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
@@ -501,13 +556,21 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    buildItem(
-                      imageUrl:
-                          'https://storage.googleapis.com/a1aa/image/9rjSBLSWxmoedSK8EHEZx3zrEUxndkuAofGOwCAMywzUTWlTA.jpg',
-                      title: 'Xe Tải 1250 kg',
-                      description:
-                          'Giờ Cấm Tải 6H-9H & 16H-20H | Chở tới đa 1250kg & 7CBM\n3.1 x 1.6 x 1.6 Mét - Lên đến 1250 kg',
-                    ),
+                    // buildItem(
+                    //   imageUrl:
+                    //       'https://storage.googleapis.com/a1aa/image/9rjSBLSWxmoedSK8EHEZx3zrEUxndkuAofGOwCAMywzUTWlTA.jpg',
+                    //   title: 'Xe Tải 1250 kg',
+                    //   description:
+                    //       'Giờ Cấm Tải 6H-9H & 16H-20H | Chở tới đa 1250kg & 7CBM\n3.1 x 1.6 x 1.6 Mét - Lên đến 1250 kg',
+                    // ),
+                    ...truckBookingDetails.map<Widget>((detail) {
+                      final imageUrl = getServiceImageUrl(detail.serviceId);
+                      return buildItem(
+                        imageUrl: imageUrl,
+                        title: detail.name,
+                        description: detail.description,
+                      );
+                    }),
                     ...order.bookingDetails.map<Widget>((detail) {
                       return buildPriceItem(
                         detail.name ?? '',

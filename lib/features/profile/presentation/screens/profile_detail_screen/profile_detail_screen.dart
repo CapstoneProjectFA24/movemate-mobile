@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
+import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/features/profile/presentation/widgets/details/profile_info.dart';
 import 'package:movemate/features/profile/presentation/widgets/details/profile_status.dart';
+import 'package:movemate/hooks/use_fetch.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,8 +17,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ProfileDetailScreen extends HookConsumerWidget {
   const ProfileDetailScreen({super.key});
 
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+        final profileController = ref.read(profileControllerProvider.notifier);
+
+  // final useFetchResult = useFetch<ProfileEntity>(
+  //        function: (context) => profileController.getProfileInfo(context),
+  //     initialPagingModel: PagingModel(),
+  //     context: context,
+  //   );
+
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,

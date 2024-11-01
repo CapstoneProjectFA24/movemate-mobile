@@ -34,8 +34,9 @@ class OrderItem extends HookConsumerWidget {
         context.router.push(OrderDetailsScreenRoute(order: order));
       },
       child: Container(
-        width: 380,
-        height: 170,
+        // width: 380,
+        // height: 170,
+        width: double.infinity,
         padding: const EdgeInsets.all(AssetsConstants.defaultPadding - 12.0),
         margin: const EdgeInsets.only(bottom: AssetsConstants.defaultMargin),
         decoration: BoxDecoration(
@@ -52,18 +53,18 @@ class OrderItem extends HookConsumerWidget {
         child: Row(
           children: [
             // Image
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  'https://storage.googleapis.com/a1aa/image/fpR5CaQW2ny0CCt8MBn1ufzjTBuLAgHXz4yQMiYIxzaWDIlTA.jpg',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 10.0),
+            //   child: ClipRRect(
+            //     borderRadius: BorderRadius.circular(10),
+            //     child: Image.network(
+            //       'https://storage.googleapis.com/a1aa/image/fpR5CaQW2ny0CCt8MBn1ufzjTBuLAgHXz4yQMiYIxzaWDIlTA.jpg',
+            //       width: 100,
+            //       height: 100,
+            //       fit: BoxFit.cover,
+            //     ),
+            //   ),
+            // ),
             const SizedBox(width: 15),
             // Card Content
             Expanded(
@@ -72,16 +73,9 @@ class OrderItem extends HookConsumerWidget {
                 child: statusAsync.when(
                   data: (status) {
                     // Calculate displayTotal based on real-time status
-                    int displayTotal;
-                    if (status == BookingStatusType.depositing) {
-                      displayTotal = order.deposit;
-                    } else if (status == BookingStatusType.pending) {
-                      displayTotal = order.total;
-                    } else {
-                      displayTotal = 0;
-                    }
+
                     String formattedTotal =
-                        NumberFormat('#,###').format(displayTotal);
+                        NumberFormat('#,###').format(order.totalReal);
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,8 +162,8 @@ class OrderItem extends HookConsumerWidget {
                       ],
                     );
                   },
-                  loading: () => _buildLoadingState(order),
-                  error: (error, stack) => _buildErrorState(order),
+                  loading: () => buildLoadingState(order),
+                  error: (error, stack) => buildErrorState(order),
                 ),
               ),
             ),
@@ -179,7 +173,7 @@ class OrderItem extends HookConsumerWidget {
     );
   }
 
-  Widget _buildLoadingState(OrderEntity order) {
+  Widget buildLoadingState(OrderEntity order) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -264,7 +258,7 @@ class OrderItem extends HookConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(OrderEntity order) {
+  Widget buildErrorState(OrderEntity order) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
