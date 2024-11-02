@@ -11,6 +11,8 @@ import 'package:movemate/features/booking/presentation/screens/controller/bookin
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/domain/entites/truck_categories_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
 import 'package:movemate/features/order/presentation/widgets/details/booking_code.dart';
 import 'package:movemate/features/order/presentation/widgets/details/column.dart';
@@ -30,7 +32,6 @@ import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 // Hooks
 import 'package:movemate/hooks/use_fetch.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 @RoutePage()
@@ -82,34 +83,32 @@ class OrderDetailsScreen extends HookConsumerWidget {
       function: (model, context) => ref
           .read(serviceControllerProvider.notifier)
           .getServices(model, context),
-      initialPagingModel: PagingModel(
-        searchContent: "1",
-      ),
+      initialPagingModel: PagingModel(),
       context: context,
     );
+    final fetchResultVehicleId =
+        fetchResultVehicle.items.map((e) => e.id).toList();
+    print("object: fetchResultVehicle.data = $fetchResultVehicleId");
+
+    final checkID = fetchResultVehicleId ==
+        order.bookingDetails.map((e) => e.serviceId).toList();
+
+    print("object: fetchResultVehicle.data = $checkID");
+
 
     final houseType = useFetchResult.data;
     // final logTest = useFetchResult.data;
-    final truckBookingDetails =
+    final truckBookingDetails = order.bookingDetails
+        .map((e) => e.serviceId)
+        .where((e) => e.toString() == 'TRUCK')
+        .toList();
+
+    final truckBookingDetailsGetId =
         order.bookingDetails.where((detail) => detail.type == 'TRUCK').toList();
 
-    String getServiceImageUrl(int serviceId) {
-      final service = fetchResultVehicle.items.firstWhere(
-        (service) => service.id == serviceId,
-        orElse: () => ServiceEntity(
-          id: 0,
-          name: '',
-          description: '',
-          isActived: false,
-          tier: 0,
-          imageUrl: '',
-          type: '',
-          discountRate: 0,
-          amount: 0,
-        ),
-      );
-      return service.truckCategory?.imgUrl ?? '';
-    }
+    print("object: truckBookingDetails  ${truckBookingDetails.toString()}");
+    print(
+        "object: truckBookingDetailsGetId  ${truckBookingDetailsGetId.toString()}");
 
     print(houseType?.toJson());
     // print(logTest);
@@ -556,21 +555,33 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    // buildItem(
-                    //   imageUrl:
-                    //       'https://storage.googleapis.com/a1aa/image/9rjSBLSWxmoedSK8EHEZx3zrEUxndkuAofGOwCAMywzUTWlTA.jpg',
-                    //   title: 'Xe Tải 1250 kg',
-                    //   description:
-                    //       'Giờ Cấm Tải 6H-9H & 16H-20H | Chở tới đa 1250kg & 7CBM\n3.1 x 1.6 x 1.6 Mét - Lên đến 1250 kg',
-                    // ),
-                    ...truckBookingDetails.map<Widget>((detail) {
-                      final imageUrl = getServiceImageUrl(detail.serviceId);
-                      return buildItem(
-                        imageUrl: imageUrl,
-                        title: detail.name,
-                        description: detail.description,
-                      );
-                    }),
+                    buildItem(
+                      imageUrl:
+                          'https://storage.googleapis.com/a1aa/image/9rjSBLSWxmoedSK8EHEZx3zrEUxndkuAofGOwCAMywzUTWlTA.jpg',
+                      title: 'Xe Tải 1250 kg',
+                      description:
+                          'Giờ Cấm Tải 6H-9H & 16H-20H | Chở tới đa 1250kg & 7CBM\n3.1 x 1.6 x 1.6 Mét - Lên đến 1250 kg',
+                    ),
+                    // ...truckBookingDetails.map<Widget>((detail) {
+                    //   final imageUrl = getServiceImageUrl(detail.serviceId);
+                    //   print("object: imageUrl : $imageUrl");
+                    //   return buildItem(
+                    //     imageUrl: imageUrl,
+                    //     title: detail.name,
+                    //     description: detail.description,
+                    //   );
+                    // }),
+
+                    ...order.bookingDetails
+                        .where((detail) => detail.type == "TRUCK")
+                        .map((truckDetail) => buildItem(
+                              imageUrl:
+                                  'https://storage.googleapis.com/a1aa/image/9rjSBLSWxmoedSK8EHEZx3zrEUxndkuAofGOwCAMywzUTWlTA.jpg',
+                              title: truckDetail.name ?? 'Xe Tải',
+                              description:
+                                  truckDetail.description ?? 'Không có mô tả',
+                            )),
+
                     ...order.bookingDetails.map<Widget>((detail) {
                       return buildPriceItem(
                         detail.name ?? '',

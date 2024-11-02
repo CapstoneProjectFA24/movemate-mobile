@@ -1,13 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/price_detail_modal.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
-import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()

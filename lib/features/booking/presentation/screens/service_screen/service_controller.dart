@@ -26,21 +26,18 @@ class ServiceController extends _$ServiceController {
     BuildContext context,
   ) async {
     List<ServiceEntity> serviceCateData = [];
-    state = const AsyncLoading();
+    // state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-
 
     state = await AsyncValue.guard(() async {
       final response = await serviceBookingRepository.getServices(
         request: request,
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-
       );
 
       serviceCateData = response.payload;
-
     });
     if (state.hasError) {
       state = await AsyncValue.guard(() async {

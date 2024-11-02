@@ -1,6 +1,8 @@
 // import local
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
+import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
+import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
 import 'package:movemate/features/order/domain/repositories/order_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -28,14 +30,37 @@ class OrderRepositoryImpl extends RemoteBaseRepository
       perPage: request.pageSize,
       UserId: userId,
     );
-
-
-
     return getDataOf(
       request: () => _orderSource.getBookings(
         APIConstants.contentType,
         accessToken,
         orderQueryRequest,
+      ),
+    );
+  }
+
+  @override
+  Future<TruckCategorysResponse> getTruckList({
+    required PagingModel request,
+    required String accessToken,
+  }) async {
+    return getDataOf(
+      request: () =>
+          _orderSource.getTruckList(APIConstants.contentType, accessToken),
+    );
+  }
+
+    @override
+  Future<TruckCategoryObjResponse> getTruckById({
+    required String accessToken,
+    required int id,
+  }) async {
+    // print("repo log $id");
+    return getDataOf(
+      request: () => _orderSource.getTruckById(
+        APIConstants.contentType,
+        accessToken,
+        id,
       ),
     );
   }

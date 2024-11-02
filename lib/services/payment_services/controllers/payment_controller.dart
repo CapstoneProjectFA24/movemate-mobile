@@ -1,6 +1,5 @@
 // config
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';

@@ -124,7 +124,7 @@ class ServicePackageController extends _$ServicePackageController {
   ) async {
     HouseTypeEntity? houseType;
 
-    state = const AsyncLoading();
+    // state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');

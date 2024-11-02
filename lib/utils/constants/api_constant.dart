@@ -28,8 +28,10 @@ class APIConstants {
   static const confirm_review = '/bookings/user/confirm';
 
   // order
+  
   static const bookings = '/bookings';
-
+//get list truck
+static const get_list_truck = '/bookings';
   // payments
   static const paymentsBooking = '/payments/create-payment-url';
   static const paymentsDeposit = '/wallets/recharge';

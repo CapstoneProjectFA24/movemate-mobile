@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
+import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 // data impl
@@ -21,6 +22,19 @@ abstract class OrderSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Queries() OrderQueryRequest request,
+  );
+  //get list truck
+  @GET(APIConstants.get_list_truck)
+  Future<HttpResponse<TruckCategorysResponse>> getTruckList(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+  );
+  //get  truck by id
+   @GET('${APIConstants.get_list_truck}/{id}')
+  Future<HttpResponse<TruckCategoryObjResponse>> getTruckById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
   );
 }
 

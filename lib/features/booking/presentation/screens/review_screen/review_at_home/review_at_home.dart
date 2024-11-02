@@ -6,12 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 //widgets
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/auth/presentation/screens/otp_verification/otp_verification_screen.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
-import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/enums/enums_export.dart';

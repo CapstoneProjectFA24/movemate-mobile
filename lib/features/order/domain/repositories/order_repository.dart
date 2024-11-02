@@ -1,12 +1,13 @@
 // local
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
+import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
+import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
 
 // system
 import 'package:movemate/features/order/data/repositories/order_repository_impl.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 
 part 'order_repository.g.dart';
 
@@ -17,6 +18,17 @@ abstract class OrderRepository {
     required int userId,
   });
 
+  // Truck list Methods
+  Future<TruckCategorysResponse> getTruckList({
+    required PagingModel request,
+    required String accessToken,
+  });
+
+  Future<TruckCategoryObjResponse> getTruckById({
+    // required PagingModel request,
+    required String accessToken,
+    required int id,
+  });
 }
 
 @Riverpod(keepAlive: true)

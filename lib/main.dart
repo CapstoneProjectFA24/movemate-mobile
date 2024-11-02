@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/splash_screen.dart';
-import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 import 'configs/routes/app_router.dart';
 import 'configs/theme/app_theme.dart';
-import 'features/home/presentation/screens/map_test_screen.dart';
 import 'utils/constants/asset_constant.dart';
 
 // deep link payment uri

@@ -1,17 +1,13 @@
 // available_vehicles_screen.dart
 
-import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
-import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/vehicles_screen/vehicle_list.dart';
 

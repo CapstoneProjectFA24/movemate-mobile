@@ -7,12 +7,10 @@ import 'package:movemate/features/auth/domain/repositories/auth_repository.dart'
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
-import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
-import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
