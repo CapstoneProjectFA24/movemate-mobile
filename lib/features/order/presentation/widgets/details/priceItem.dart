@@ -4,32 +4,66 @@ import 'package:flutter/material.dart';
 
 Widget buildPriceItem(String description, String price) {
   return Container(
-    padding: const EdgeInsets.symmetric(vertical: 10),
-    decoration: const BoxDecoration(
-      border: Border(bottom: BorderSide(color: Colors.grey)),
+    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ],
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          // Sử dụng Expanded để cho phép text chiếm không gian còn lại
           child: Text(
             description,
-            maxLines: 2, // Giới hạn số dòng là 2
-            overflow: TextOverflow
-                .ellipsis, // Hiển thị dấu "..." nếu vượt quá 5 ký tự
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-                fontSize: 14), // Bạn có thể tùy chỉnh kích thước chữ
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+            ),
           ),
         ),
         Row(
           children: [
-            Text(price, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8), // Thêm khoảng cách giữa price và icon
-            const Icon(Icons.sync_alt, color: Colors.black),
+            const SizedBox(width: 12),
+            Text(
+              price,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(width: 12),
+            IconButton(
+              icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
+              onPressed: () {
+                // Xử lý sự kiện khi nhấp vào biểu tượng 3 chấm
+              },
+              tooltip: 'More options',
+            ),
           ],
         ),
       ],
     ),
+  );
+}
+
+Widget buildSummary(String label, String value) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(label, style: TextStyle(color: Colors.grey.shade800)),
+      Text(value, style: const TextStyle(color: Colors.black)),
+    ],
   );
 }
