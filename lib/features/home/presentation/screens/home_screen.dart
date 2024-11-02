@@ -24,8 +24,7 @@ class HomeScreen extends StatelessWidget {
                 const Header(),
                 const Center(
                   child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -37,8 +36,6 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
                 FadeInDown(child: const VehicleCarousel()),
-                const SizedBox(height: 32),
-                FadeInDown(child: const PromotionBanner()),
                 const SizedBox(height: 16),
                 Center(
                   child: FadeInRight(

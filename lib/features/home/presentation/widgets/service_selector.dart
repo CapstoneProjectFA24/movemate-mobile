@@ -34,7 +34,7 @@ class ServiceSelector extends HookConsumerWidget {
       if (bookingState.bookingDate != null) {
         dateController.text = formatDateTime(bookingState.bookingDate!);
       } else {
-        dateController.text = 'Chọn ngày';
+        dateController.text = 'Chọn ngày - giờ';
       }
       return null; // Return null since no cleanup is needed
     }, [bookingState.bookingDate]);
@@ -51,7 +51,7 @@ class ServiceSelector extends HookConsumerWidget {
           children: [
             FadeInLeft(
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 7.0),
                 decoration: BoxDecoration(
                   color: AssetsConstants.primaryLighter,
                   borderRadius: BorderRadius.circular(8),
@@ -59,8 +59,8 @@ class ServiceSelector extends HookConsumerWidget {
                 child: const Center(
                   child: LabelText(
                     content: 'Số dư 0 đ',
-                    size: 18,
-                    fontWeight: FontWeight.w700,
+                    size: 14,
+                    fontWeight: FontWeight.w600,
                     color: AssetsConstants.whiteColor,
                   ),
                 ),
@@ -73,7 +73,7 @@ class ServiceSelector extends HookConsumerWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: FadeInUp(
                 child: const LabelText(
-                  content: 'Từ',
+                  content: 'Địa điểm nhà hiện tại',
                   size: 16,
                   fontFamily: 'bold',
                   color: AssetsConstants.blackColor,
@@ -94,7 +94,7 @@ class ServiceSelector extends HookConsumerWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: FadeInUp(
                 child: const LabelText(
-                  content: 'Đến',
+                  content: 'Địa điểm chuyển đến',
                   size: 16,
                   fontFamily: 'bold',
                   color: AssetsConstants.blackColor,
@@ -119,7 +119,7 @@ class ServiceSelector extends HookConsumerWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: FadeInUp(
                 child: const LabelText(
-                  content: 'Ngày',
+                  content: 'Ngày và giờ',
                   size: 16,
                   fontFamily: 'bold',
                   color: AssetsConstants.blackColor,
@@ -155,8 +155,6 @@ class ServiceSelector extends HookConsumerWidget {
               ),
             ),
 
-            const SizedBox(height: 16),
-
             // Kiểm tra điều kiện trước khi điều hướng
             FadeInRight(
               child: ButtonCustom(
@@ -164,7 +162,6 @@ class ServiceSelector extends HookConsumerWidget {
                 buttonColor: AssetsConstants.primaryMain,
                 isButtonEnabled: true, // Cho phép luôn hiển thị nút
                 onButtonPressed: () {
-                  // Điều kiện kiểm tra xem cả 2 giá trị pickUpLocation và dropOffLocation có tồn tại không
                   if (bookingState.pickUpLocation != null &&
                       bookingState.dropOffLocation != null) {
                     context.router.push(const BookingScreenRoute());
@@ -177,7 +174,6 @@ class ServiceSelector extends HookConsumerWidget {
                     print(
                         "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
                   } else {
-                    // Hiển thị cảnh báo hoặc thông báo người dùng chọn cả hai địa điểm
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content:
