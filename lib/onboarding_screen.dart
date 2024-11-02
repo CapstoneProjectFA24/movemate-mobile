@@ -17,21 +17,43 @@ final onboardingServiceProvider = Provider((ref) => OnboardingService());
 class OnboardingScreen extends ConsumerWidget {
   final List<Introduction> list = [
     const Introduction(
-        imageUrl: "assets/images/onboarding/onboarding1.png",
-        title: "Chào Mừng Bạn Đến Với MoveMate!",
-        subTitle:
-            "Bất cứ nơi nào bạn đang ở, chuyển nhà dễ dàng với sự trợ giúp của MoveMate! Chúng tôi ở đây để làm cho việc chuyển nhà trở nên đơn giản và thuận tiện hơn bao giờ hết."),
+      imageUrl: "assets/images/onboarding/onboarding1.png",
+      title: "Chào Mừng Bạn Đến Với MoveMate!",
+      subTitle:
+          "Bất cứ nơi nào bạn đang ở, chuyển nhà dễ dàng với sự trợ giúp của MoveMate! Chúng tôi ở đây để làm cho việc chuyển nhà trở nên đơn giản và thuận tiện hơn bao giờ hết.",
+      titleTextStyle: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      subTitleTextStyle: TextStyle(
+        fontSize: 12,
+      ),
+    ),
     const Introduction(
       imageUrl: "assets/images/onboarding/onboarding2.png",
       title: "Tại Sao Chọn MoveMate?",
       subTitle:
           "Dễ Dàng và Tiện Lợi\nAn Toàn và Đáng Tin Cậy\nTiết Kiệm Thời Gian và Chi Phí",
+      titleTextStyle: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      subTitleTextStyle: TextStyle(
+        fontSize: 12,
+      ),
     ),
     const Introduction(
       imageUrl: "assets/images/onboarding/onboarding3.png",
       title: "Đặt Xe Dễ Dàng",
       subTitle:
           "Chuyển nhà dễ dàng với sự trợ giúp của MoveMate. Chọn dịch vụ, nhập thông tin, và hoàn tất đặt xe chỉ trong vài phút. MoveMate giúp bạn tiết kiệm thời gian và công sức!",
+      titleTextStyle: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      subTitleTextStyle: TextStyle(
+        fontSize: 12,
+      ),
     ),
   ];
 

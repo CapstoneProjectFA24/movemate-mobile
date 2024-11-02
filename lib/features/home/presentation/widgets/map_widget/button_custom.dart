@@ -21,7 +21,7 @@ class ButtonCustom extends StatelessWidget {
     this.disabledButtonColor =
         AssetsConstants.greyColor, // Màu sắc mặc định khi disabled
     this.buttonFontSize = 16.0, // Kích thước font chữ mặc định của button
-    this.buttonHeight = 55.0, // Chiều cao mặc định của button
+    this.buttonHeight = 55.0,
   });
 
   @override

@@ -17,20 +17,46 @@ class VehicleCarouselState extends State<VehicleCarousel> {
 
   final vehicleData = [
     const VehicleData(
-      imagePath: "assets/images/home/Group18564.png",
-      title: "Xe VAN 500KG",
-      description: "Thích hợp cho hàng hóa to",
+      imagePath: "assets/images/home/xe-van-500kg.jpg",
+      title: "Xe Van 500 kg",
+      description: "Hoạt động tất cả khung giờ",
       grossTon: "500kg",
-      size: "1.6 x 1.2 x 1.1 mét",
-      tripCount: "120 chuyến",
+      size: "1.7 x 1.2 x 1.2 Mét",
     ),
     const VehicleData(
-      imagePath: "assets/images/home/Group18564.png",
-      title: "Xe TẢI 1000KG",
-      description: "Phù hợp với mọi loại hàng hóa",
+      imagePath: "assets/images/home/xe-van-1000kg.png",
+      title: "Xe Van 1000 kg",
+      description: "Hoạt động tất cả khung giờ",
       grossTon: "1000kg",
-      size: "2.0 x 1.5 x 1.5 mét",
-      tripCount: "80 chuyến",
+      size: "2.0 x 1.5 x 1.5 Mét",
+    ),
+    const VehicleData(
+      imagePath: "assets/images/home/xe-tai-500kg.jpg",
+      title: "Xe Tải 500 kg",
+      description: "Cấm tải 6-9H & 16-20H",
+      grossTon: "500kg",
+      size: "1.9 x 1.4 x 1.4 Mét",
+    ),
+    const VehicleData(
+      imagePath: "assets/images/home/xe-tai-1000.jpg",
+      title: "Xe Tải 1000 kg",
+      description: "Cấm tải 6-9H & 16-20H",
+      grossTon: "1000kg",
+      size: "3.0 x 1.6 x 1.6 Mét",
+    ),
+    const VehicleData(
+      imagePath: "assets/images/home/xe tai 2000kg.jpg",
+      title: "Xe Tải 2000 kg",
+      description: "Cấm tải 6-9H & 16-20H",
+      grossTon: "2000kg",
+      size: "4 x 1.7 x 1.7 mét",
+    ),
+    const VehicleData(
+      imagePath: "assets/images/home/xe tai 2500kg.jpg",
+      title: "Xe Tải 2500 kg",
+      description: "Cấm tải 6-9H & 16-20H",
+      grossTon: "2500kg",
+      size: "4.2 x 1.8 x 1.7 mét",
     ),
   ];
 
@@ -55,7 +81,7 @@ class VehicleCarouselState extends State<VehicleCarousel> {
         final nextPage = (activePage + 1) % vehicleData.length;
         pageController.animateToPage(
           nextPage,
-          duration: const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 1000),
           curve: Curves.easeInOut,
         );
       },
@@ -166,7 +192,6 @@ class VehicleData {
   final String description;
   final String grossTon;
   final String size;
-  final String tripCount;
 
   const VehicleData({
     required this.imagePath,
@@ -174,7 +199,6 @@ class VehicleData {
     required this.description,
     required this.grossTon,
     required this.size,
-    required this.tripCount,
   });
 }
 
@@ -232,8 +256,6 @@ class VehicleCard extends StatelessWidget {
         buildInfoItem(Icons.fitness_center, vehicle.grossTon),
         const SizedBox(width: 13),
         buildInfoItem(Icons.aspect_ratio, vehicle.size),
-        const SizedBox(width: 16),
-        buildInfoItem(Icons.format_list_numbered, vehicle.tripCount),
       ],
     );
   }

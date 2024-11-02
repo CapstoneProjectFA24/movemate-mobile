@@ -60,17 +60,13 @@ class CircleProgressBarState extends State<CircleProgressBar>
     super.didUpdateWidget(oldWidget);
 
     if (widget.value != oldWidget.value) {
-      // Try to start with the previous tween's end value. This ensures that we
-      // have a smooth transition from where the previous animation reached.
       double beginValue = valueTween?.evaluate(curve) ?? oldWidget.value!;
 
-      // Update the value tween.
       valueTween = Tween<double>(
         begin: beginValue,
         end: widget.value,
       );
 
-      // Clear cached color tweens when the color hasn't changed.
       if (oldWidget.backgroundColor != widget.backgroundColor) {
         backgroundColorTween = ColorTween(
           begin: oldWidget.backgroundColor,

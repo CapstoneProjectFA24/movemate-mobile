@@ -7,7 +7,7 @@ class Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+      padding: const EdgeInsets.only(top: 50, left: 16, right: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -18,7 +18,7 @@ class Header extends StatelessWidget {
                 child: const Text(
                   'Chào mừng Pi!',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -37,7 +37,7 @@ class Header extends StatelessWidget {
                         child: const Text(
                           'Vị trí hiện tại',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             color: Colors.white,
                           ),
                         ),
@@ -48,7 +48,7 @@ class Header extends StatelessWidget {
                     child: const Text(
                       'Quận 9, HCM',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
