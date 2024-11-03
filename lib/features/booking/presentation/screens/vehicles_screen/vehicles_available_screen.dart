@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
@@ -32,24 +33,14 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
-    final state = ref.watch(serviceControllerProvider);
 
     final bookingState = ref.watch(bookingProvider); // Watch the booking state
     final bookingNotifier =
         ref.read(bookingProvider.notifier); // Read the booking notifier
 
-    final fetchResult = useFetch<ServiceEntity>(
-      function: (model, context) => ref
-          .read(serviceControllerProvider.notifier)
-          .getServices(model, context),
-      initialPagingModel: PagingModel(
-        searchContent: "1",
-      ),
-      context: context,
-    );
     final controller = ref.read(serviceControllerProvider.notifier);
 
-    final fetchResultTrucksList = useFetch<ServicesPackageTruckEntity>(
+    final fetchResult = useFetch<InverseParentServiceEntity>(
       function: (model, context) async {
         return await controller.getServicesTruck(model, context);
       },
@@ -58,23 +49,16 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       ),
       context: context,
     );
-    print(
-        "fetchResultTrucksList.isFetchingData ${fetchResultTrucksList.isFetchingData}");
 
     // useEffect(() {
     //   scrollController.onScrollEndsListener(fetchResult.loadMore);
-    //   return scrollController.dispose;
-    // }, const []);
+    //   return () {
+    //     scrollController.dispose();
+    //   };
+    // }, [scrollController, fetchResult.loadMore]);
 
-    useEffect(() {
-      scrollController.onScrollEndsListener(fetchResult.loadMore);
-      return null;
-    }, const []);
-
-    // final selectedService = useState<ServiceEntity?>(null);
     return Scaffold(
       appBar: CustomAppBar(
-        // showBackButton: true,
         title: 'Phương tiện có sẵn',
         iconFirst: Icons.refresh_rounded,
         onCallBackFirst: fetchResult.refresh,
@@ -85,7 +69,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
           SizedBox(height: size.height * 0.02),
           Expanded(
             child: VehicleList(
-              state: state,
               fetchResult: fetchResult,
               scrollController: scrollController,
               bookingNotifier: bookingNotifier,

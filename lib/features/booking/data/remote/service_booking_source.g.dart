@@ -133,11 +133,11 @@ class _ServiceBookingSource implements ServiceBookingSource {
   Future<HttpResponse<ServiceTruckResponse>> getServicesTruck(
     String contentType,
     String accessToken,
-    TruckQueries queries,
+    Map<String, dynamic> queries,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries.toMap());
+    queryParameters.addAll(queries);
     final _headers = <String, dynamic>{
       r'Content-Type': contentType,
       r'Authorization': accessToken,

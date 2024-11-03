@@ -5,6 +5,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/booki
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
@@ -78,7 +79,7 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
 // Method to update selected vehicle
-  void updateSelectedVehicle(ServiceEntity vehicle) {
+  void updateSelectedVehicle(InverseParentServiceEntity vehicle) {
     state = state.copyWith(selectedVehicle: vehicle);
     calculateAndUpdateTotalPrice();
   }

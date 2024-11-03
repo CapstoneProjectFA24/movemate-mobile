@@ -70,16 +70,14 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     final truckQueries = TruckQueries(
       page: request.pageNumber,
       perPage: request.pageSize,
-      type: request.type,
-    );
+      type: request.type ?? 'truck', // Đảm bảo `type` được đặt
+    ).toMap();
 
     return getDataOf(
       request: () => _serviceBookingSource.getServicesTruck(
           APIConstants.contentType, accessToken, truckQueries),
     );
   }
-
-
 
   // Services Fee System Methods
   @override

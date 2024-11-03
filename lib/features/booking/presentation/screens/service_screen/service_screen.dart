@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 
 // Hooks
@@ -25,30 +26,32 @@ class ServiceScreen extends HookConsumerWidget {
   const ServiceScreen({super.key});
 
   @override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Initialize
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
 
-
-   final controller = ref.read(serviceControllerProvider.notifier);
+    final controller = ref.read(serviceControllerProvider.notifier);
     final servicesState = ref.watch(serviceControllerProvider);
 
-final fetchResult = useFetch<ServicesPackageTruckEntity>(
-  function: (model, context) async {
-    return await controller.getServicesTruck(model, context);
-  },
-  initialPagingModel: PagingModel(
-    type: 'TRUCK',
-  ),
-  context: context,
-);
+    // Sử dụng useFetch để lấy danh sách ServicesPackageTruckEntity
+    final fetchResult = useFetch<List<InverseParentServiceEntity>>(
+      function: (model, context) async {
+        // Gọi API và lấy dữ liệu ban đầu
+        final servicesList = await controller.getServicesTruck(model, context);
 
+        // Trả về danh sách ServicesPackageTruckEntity
+        return [servicesList];
+      },
+      initialPagingModel: PagingModel(
+        type: 'TRUCK',
+      ),
+      context: context,
+    );
 
-    useEffect(() {
-      scrollController.onScrollEndsListener(fetchResult.loadMore);
-      return scrollController.dispose;
-    }, const []);
+    // In thông tin để debug
+    print("TRUCK ${fetchResult.items.first.toString()}");
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -83,14 +86,17 @@ final fetchResult = useFetch<ServicesPackageTruckEntity>(
                                 ? const NoMoreContent()
                                 : Container();
                           }
+
+                          // Sử dụng trực tiếp fetchResult.items[index] mà không cần ép kiểu
                           final service = fetchResult.items[index];
+
                           return GestureDetector(
                             onTap: () {
                               // Handle service selection
                               // You can manage selected service using another provider if needed
                             },
                             child: buildServiceCard(
-                              service,
+                              service as ServicesPackageTruckEntity,
                               false, // Pass true if the service is selected
                             ),
                           );

@@ -4,6 +4,7 @@ import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
@@ -21,7 +22,7 @@ class Booking {
   final double vehiclePrice;
   final List<Vehicle> availableVehicles;
   final double totalPrice;
-  final ServiceEntity? selectedVehicle;
+  final InverseParentServiceEntity? selectedVehicle;
 
   final double packagePrice;
   final bool isRoundTrip;
@@ -111,7 +112,7 @@ class Booking {
     String? notes,
     List<ServicesFeeSystemEntity>? servicesFeeList,
     // Booking select package
-    ServiceEntity? selectedVehicle,
+    InverseParentServiceEntity? selectedVehicle,
     int? selectedPackageIndex,
     List<int>? additionalServiceQuantities,
     // Added fields

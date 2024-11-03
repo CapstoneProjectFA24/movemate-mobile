@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 // vehicle_card.dart
 class VehicleCard extends StatelessWidget {
-  final ServiceEntity service;
+  final InverseParentServiceEntity service;
   final bool isSelected;
 
   const VehicleCard({
@@ -43,6 +44,7 @@ class VehicleCard extends StatelessWidget {
       width: double.infinity,
       child: Row(
         children: [
+          // Vehicle Image
           Container(
             width: 60,
             height: 60,
@@ -59,6 +61,7 @@ class VehicleCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
+          // Vehicle Details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +117,7 @@ class VehicleCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${truckCategory.estimatedLength} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
+                        '${truckCategory.estimatedLength ?? ''} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AssetsConstants.blackColor,
@@ -125,7 +128,7 @@ class VehicleCard extends StatelessWidget {
                   ),
                 ] else
                   Text(
-                    'No Truck Category',
+                    'Không có thông tin loại xe',
                     style: TextStyle(
                       fontSize: 12,
                       color: AssetsConstants.greyColor.shade700,
@@ -134,6 +137,7 @@ class VehicleCard extends StatelessWidget {
               ],
             ),
           ),
+          // Selection Icon
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

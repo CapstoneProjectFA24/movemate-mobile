@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -67,11 +68,10 @@ class ServiceController extends _$ServiceController {
   }
 
   // Truck services
-  Future<List<ServicesPackageTruckEntity>> getServicesTruck(
+  Future<List<InverseParentServiceEntity>> getServicesTruck(
     PagingModel request,
     BuildContext context,
   ) async {
-    List<ServicesPackageTruckEntity> truckServices = [];
     final servicesPackageRepository =
         ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
@@ -83,20 +83,16 @@ class ServiceController extends _$ServiceController {
         request: request,
       );
 
-      for (var service in response.payload) {
-        // ServicesPackageTruckEntity service =
-        //     ServicesPackageTruckEntity.fromMap();
+      List<InverseParentServiceEntity> inverseServices = [];
 
-        if (service.type == 'TRUCK') {
-          // print("Response Service: ${service.toString()}");
-          truckServices.add(service);
-        }
+      // Collect all inverseParentServices from payload
+      for (var servicePackage in response.payload) {
+        inverseServices.addAll(servicePackage.inverseParentService);
       }
 
-      // Trả về danh sách các dịch vụ loại 'TRUCK'
-      print("object: truckServices ${truckServices.toString()}");
-      return truckServices;
+      return inverseServices;
     } catch (error) {
+      // Handle error as before
       final statusCode = (error as DioException).onStatusDio();
       await handleAPIError(
         statusCode: statusCode,
@@ -111,7 +107,7 @@ class ServiceController extends _$ServiceController {
       if (statusCode == StatusCodeType.unauthentication.type) {
         await ref.read(signInControllerProvider.notifier).signOut(context);
       } else {
-        // Retry the request if not unauthenticated
+        // Retry if necessary
         return await getServicesTruck(request, context);
       }
       // Return empty list if error persists

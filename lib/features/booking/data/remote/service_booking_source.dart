@@ -53,7 +53,7 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<ServiceTruckResponse>> getServicesTruck(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
-    @Queries() TruckQueries queries,
+    @Queries() Map<String, dynamic> queries,
   );
 
   // System Fees
