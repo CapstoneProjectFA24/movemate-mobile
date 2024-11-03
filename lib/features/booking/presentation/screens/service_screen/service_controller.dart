@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/api_utils.dart';
@@ -62,5 +63,45 @@ class ServiceController extends _$ServiceController {
       });
     }
     return serviceCateData;
+  }
+
+  // Truck services
+  Future<List<ServicesPackageTruckEntity>> getServicesTruck(
+    PagingModel request,
+    BuildContext context,
+  ) async {
+    final servicesPackageRepository =
+        ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    try {
+      final response = await servicesPackageRepository.getServicesTruck(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
+      // Return the data directly
+      return response.payload;
+    } catch (error) {
+      final statusCode = (error as DioException).onStatusDio();
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: error,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (statusCode == StatusCodeType.unauthentication.type) {
+        await ref.read(signInControllerProvider.notifier).signOut(context);
+      } else {
+        // Retry the request if not unauthenticated
+        return await getServicesTruck(request, context);
+      }
+      // Return empty list if error persists
+      return [];
+    }
   }
 }

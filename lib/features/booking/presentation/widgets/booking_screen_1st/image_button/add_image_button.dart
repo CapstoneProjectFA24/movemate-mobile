@@ -56,8 +56,8 @@ class AddImageButton extends StatelessWidget {
       },
       child: Center(
         child: Container(
-          width: hasImages ? 71 : 295,
-          height: hasImages ? 56 : 44,
+          width: hasImages ? 71 : 340,
+          height: hasImages ? 56 : 60,
           margin: const EdgeInsets.only(right: 8),
           child: DottedBorder(
             color: AssetsConstants.greyColor,

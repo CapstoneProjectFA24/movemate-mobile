@@ -39,11 +39,11 @@ class BookingSelection extends HookConsumerWidget {
           children: [
             Expanded(
               child: RoomFloorCountButton(
-                label: 'Số phòng ngủ',
+                label: 'Số phòng',
                 value: bookingState.numberOfRooms ?? 1,
                 onTap: () => showNumberSelectionModal(
                   context,
-                  title: 'Số lượng phòng ngủ',
+                  title: 'Số lượng phòng',
                   maxNumber: 10,
                   onNumberSelected: (number) {
                     bookingNotifier.updateNumberOfRooms(number);

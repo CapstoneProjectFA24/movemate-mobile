@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 
 Widget buildDetailColumn(IconData icon, String text) {
-  return Column(
+  return Row(
     children: [
-      Icon(icon, size: 24),
+      const SizedBox(width: 44),
+      Icon(icon, size: 16, color: Colors.black),
       const SizedBox(height: 5),
+      const SizedBox(width: 5),
       Text(text),
     ],
   );

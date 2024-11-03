@@ -5,8 +5,8 @@ class TruckCategoryEntity {
   final String categoryName;
   final int maxLoad;
   final String description;
-  final String imgUrl;
-  final String estimatedLength;
+  final String imageUrl;
+  final String? estimatedLength;
   final String estimatedWidth;
   final String estimatedHeight;
   final int price;
@@ -17,8 +17,8 @@ class TruckCategoryEntity {
     required this.categoryName,
     required this.maxLoad,
     required this.description,
-    required this.imgUrl,
-    required this.estimatedLength,
+    required this.imageUrl,
+    this.estimatedLength,
     required this.estimatedWidth,
     required this.estimatedHeight,
     required this.price,
@@ -31,8 +31,8 @@ class TruckCategoryEntity {
       categoryName: map['categoryName'] ?? '',
       maxLoad: map['maxLoad'] ?? 0,
       description: map['description'] ?? '',
-      imgUrl: map['imgUrl'] ?? '',
-      estimatedLength: map['estimatedLength'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
+      estimatedLength: map['estimatedLength'],
       estimatedWidth: map['estimatedWidth'] ?? '',
       estimatedHeight: map['estimatedHeight'] ?? '',
       price: map['price'] ?? 0,
@@ -46,7 +46,7 @@ class TruckCategoryEntity {
       'categoryName': categoryName,
       'maxLoad': maxLoad,
       'description': description,
-      'imgUrl': imgUrl,
+      'imageUrl': imageUrl,
       'estimatedLength': estimatedLength,
       'estimatedWidth': estimatedWidth,
       'estimatedHeight': estimatedHeight,
@@ -58,7 +58,7 @@ class TruckCategoryEntity {
   String toJson() => json.encode(toMap());
   @override
   String toString() {
-    return 'TruckCategoryEntity(id: $id, categoryName: $categoryName, maxLoad: $maxLoad, description: $description, imgUrl: $imgUrl, estimatedLength: $estimatedLength, estimatedWidth: $estimatedWidth, estimatedHeight: $estimatedHeight, price: $price, totalTrips: $totalTrips)';
+    return 'TruckCategoryEntity(id: $id, categoryName: $categoryName, maxLoad: $maxLoad, description: $description, imageUrl: $imageUrl, estimatedLength: $estimatedLength, estimatedWidth: $estimatedWidth, estimatedHeight: $estimatedHeight, price: $price, totalTrips: $totalTrips)';
   }
 
   factory TruckCategoryEntity.fromJson(String source) =>

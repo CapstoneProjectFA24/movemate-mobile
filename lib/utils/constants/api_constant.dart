@@ -18,7 +18,7 @@ class APIConstants {
   static const get_service_not_type_truck = '/services/not-type-truck';
   static const get_fees_system = '/fees/system';
   static const get_house_types = '/housetypes';
-  static const get_package_services = '/services';
+  static const get_all_package_services = '/services';
   static const post_valuation_booking_service = '/bookings/valuation-booking';
 
 //post booking
@@ -31,7 +31,7 @@ class APIConstants {
   
   static const bookings = '/bookings';
 //get list truck
-static const get_list_truck = '/bookings';
+static const get_list_truck = '/services';
   // payments
   static const paymentsBooking = '/payments/create-payment-url';
   static const paymentsDeposit = '/wallets/recharge';

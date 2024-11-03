@@ -33,7 +33,7 @@ class OrderController extends _$OrderController {
   ) async {
     List<OrderEntity> orders = [];
 
-    state = const AsyncLoading();
+    // state = const AsyncLoading();
     final orderRepository = ref.read(orderRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');

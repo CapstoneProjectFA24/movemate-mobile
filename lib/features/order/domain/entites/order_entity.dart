@@ -5,6 +5,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/booki
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_tracker_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/fee_detail_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/list_vouchers_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 
 class OrderEntity {
@@ -53,11 +54,13 @@ class OrderEntity {
   final bool isRoundTrip;
   final String? note;
   final int totalFee;
+  final int truckNumber;
   final String? feeInfo;
   final List<AssignmentResponseEntity> assignments;
   final List<BookingTrackerResponseEntity> bookingTrackers;
   final List<BookingDetailResponseEntity> bookingDetails;
   final List<FeeDetailResponseEntity> feeDetails;
+  final List<ListVouchersResponseEntity>? vouchers;
 
   OrderEntity({
     required this.id,
@@ -106,10 +109,12 @@ class OrderEntity {
     required this.note,
     required this.totalFee,
     required this.feeInfo,
+    required this.truckNumber,
     required this.bookingTrackers,
     required this.assignments,
     required this.feeDetails,
     required this.bookingDetails,
+    this.vouchers,
   });
 
   factory OrderEntity.fromMap(Map<String, dynamic> map) {
@@ -165,8 +170,9 @@ class OrderEntity {
       isRoundTrip: map['isRoundTrip'] ?? false,
       note: map['note'],
       totalFee: map['totalFee'] ?? 0,
+      truckNumber: map['truckNumber'] ?? 0,
       feeInfo: map['feeInfo'],
-     assignments: (map['assignments'] as List<dynamic>?)
+      assignments: (map['assignments'] as List<dynamic>?)
               ?.map((e) => AssignmentResponseEntity.fromMap(e))
               .toList() ??
           [],
@@ -180,6 +186,10 @@ class OrderEntity {
           [],
       feeDetails: (map['feeDetails'] as List<dynamic>?)
               ?.map((e) => FeeDetailResponseEntity.fromMap(e))
+              .toList() ??
+          [],
+      vouchers: (map['vouchers'] as List<dynamic>?)
+              ?.map((e) => ListVouchersResponseEntity.fromMap(e))
               .toList() ??
           [],
     );
@@ -231,11 +241,13 @@ class OrderEntity {
       'isRoundTrip': isRoundTrip,
       'note': note,
       'totalFee': totalFee,
+      'truckNumber': truckNumber,
       'feeInfo': feeInfo,
-   'assignments': assignments.map((e) => e.toMap()).toList(),
+      'assignments': assignments.map((e) => e.toMap()).toList(),
       'bookingTrackers': bookingTrackers.map((e) => e.toMap()).toList(),
       'bookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
       'feeDetails': feeDetails.map((e) => e.toMap()).toList(),
+      'vouchers': vouchers?.map((e) => e.toMap()).toList(),
     };
   }
 
@@ -298,11 +310,13 @@ class OrderEntity {
       isRoundTrip: response.isRoundTrip,
       note: response.note ?? '',
       totalFee: response.totalFee,
+      truckNumber: response.truckNumber,
       feeInfo: response.feeInfo,
       bookingTrackers: response.bookingTrackers,
       assignments: response.assignments,
       feeDetails: response.feeDetails,
       bookingDetails: response.bookingDetails,
+      vouchers: response.vouchers,
     );
   }
 

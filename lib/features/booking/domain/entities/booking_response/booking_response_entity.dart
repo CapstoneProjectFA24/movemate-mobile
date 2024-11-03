@@ -7,6 +7,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/booki
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_tracker_response_entity.dart';
 
 import 'package:movemate/features/booking/domain/entities/booking_response/fee_detail_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/list_vouchers_response_entity.dart';
 
 class BookingResponseEntity {
   final int id;
@@ -47,6 +48,7 @@ class BookingResponseEntity {
   final bool isRoundTrip;
   final String note;
   final int totalFee;
+  final int truckNumber;
   final String? feeInfo;
   final bool isReviewOnline;
   final String? reviewAt;
@@ -54,6 +56,7 @@ class BookingResponseEntity {
   final List<BookingTrackerResponseEntity> bookingTrackers;
   final List<BookingDetailResponseEntity> bookingDetails;
   final List<FeeDetailResponseEntity> feeDetails;
+  final List<ListVouchersResponseEntity>? vouchers;
 
   BookingResponseEntity({
     required this.id,
@@ -95,12 +98,14 @@ class BookingResponseEntity {
     required this.note,
     required this.totalFee,
     this.feeInfo,
+    required this.truckNumber,
     required this.isReviewOnline,
     this.reviewAt,
     required this.assignments,
     required this.bookingTrackers,
     required this.bookingDetails,
     required this.feeDetails,
+    this.vouchers,
   });
 
   factory BookingResponseEntity.fromMap(Map<String, dynamic> json) {
@@ -143,6 +148,7 @@ class BookingResponseEntity {
       isRoundTrip: json['isRoundTrip'] ?? false,
       note: json['note'] ?? '',
       totalFee: json['totalFee'] ?? 0,
+      truckNumber: json['truckNumber'] ?? 0,
       feeInfo: json['feeInfo'],
       isReviewOnline: json['isReviewOnline'] ?? false,
       reviewAt: json['reviewAt'],
@@ -160,6 +166,10 @@ class BookingResponseEntity {
           [],
       feeDetails: (json['feeDetails'] as List<dynamic>?)
               ?.map((e) => FeeDetailResponseEntity.fromMap(e))
+              .toList() ??
+          [],
+      vouchers: (json['vouchers'] as List<dynamic>?)
+              ?.map((e) => ListVouchersResponseEntity.fromMap(e))
               .toList() ??
           [],
     );
@@ -205,6 +215,7 @@ class BookingResponseEntity {
       'isRoundTrip': isRoundTrip,
       'note': note,
       'totalFee': totalFee,
+      'truckNumber': truckNumber,
       'feeInfo': feeInfo,
       'isReviewOnline': isReviewOnline,
       'reviewAt': reviewAt,
@@ -212,6 +223,7 @@ class BookingResponseEntity {
       'bookingTrackers': bookingTrackers.map((e) => e.toMap()).toList(),
       'bookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
       'feeDetails': feeDetails.map((e) => e.toMap()).toList(),
+      'vouchers': vouchers?.map((e) => e.toMap()).toList(),
     };
   }
 

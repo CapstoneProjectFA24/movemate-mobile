@@ -1,8 +1,10 @@
 // service_booking_source.dart
 
 import 'package:dio/dio.dart';
+import 'package:movemate/features/booking/data/models/queries/truck_queries.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
+import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/models/response/success_model.dart';
@@ -33,7 +35,7 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.authHeader) String accessToken,
   );
   // house types get by id
-    @GET('${APIConstants.get_house_types}/{id}')
+  @GET('${APIConstants.get_house_types}/{id}')
   Future<HttpResponse<HouseTypeObjResponse>> getHouseTypeById(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
@@ -45,6 +47,13 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<ServicesResponse>> getServices(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+  );
+  // get all Services truck
+  @GET(APIConstants.get_all_package_services)
+  Future<HttpResponse<ServiceTruckResponse>> getServicesTruck(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Queries() TruckQueries queries,
   );
 
   // System Fees

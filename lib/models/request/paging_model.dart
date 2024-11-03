@@ -7,6 +7,7 @@ class PagingModel {
   final String? filterSystemContent;
   final String? searchDateFrom;
   final String? searchDateTo;
+  final String? type;
 
   PagingModel({
     this.pageNumber = 1,
@@ -17,5 +18,6 @@ class PagingModel {
     this.filterSystemContent,
     this.searchDateFrom,
     this.searchDateTo,
+    this.type,
   });
 }

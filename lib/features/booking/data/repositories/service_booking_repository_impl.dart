@@ -1,8 +1,10 @@
 // service_booking_repository_impl.dart
 
+import 'package:movemate/features/booking/data/models/queries/truck_queries.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_response.dart';
+import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
@@ -59,6 +61,25 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
           APIConstants.contentType, accessToken),
     );
   }
+
+  @override
+  Future<ServiceTruckResponse> getServicesTruck({
+    required PagingModel request,
+    required String accessToken,
+  }) async {
+    final truckQueries = TruckQueries(
+      page: request.pageNumber,
+      perPage: request.pageSize,
+      type: request.type,
+    );
+
+    return getDataOf(
+      request: () => _serviceBookingSource.getServicesTruck(
+          APIConstants.contentType, accessToken, truckQueries),
+    );
+  }
+
+
 
   // Services Fee System Methods
   @override
@@ -128,7 +149,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     required ReviewerStatusRequest request,
     required int id,
   }) async {
-    print('vinh log repo : ${request.toJson()} + $id');
+    // print('vinh log repo : ${request.toJson()} + $id');
     return getDataOf(
       request: () => _serviceBookingSource.confirmReviewBooking(
         APIConstants.contentType,

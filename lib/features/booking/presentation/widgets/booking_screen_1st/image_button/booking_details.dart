@@ -5,7 +5,6 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 
 // Import the ImageData class
 
-
 class BookingDetails extends HookConsumerWidget {
   const BookingDetails({super.key});
 
@@ -20,35 +19,35 @@ class BookingDetails extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RoomImageSection(
-            roomTitle: 'Phòng khách',
+            roomTitle: 'Tải ảnh lên',
             images: bookingState.livingRoomImages,
             roomType: RoomType.livingRoom,
             bookingNotifier: bookingNotifier,
           ),
-          RoomImageSection(
-            roomTitle: 'Phòng ngủ',
-            images: bookingState.bedroomImages,
-            roomType: RoomType.bedroom,
-            bookingNotifier: bookingNotifier,
-          ),
-          RoomImageSection(
-            roomTitle: 'Phòng ăn/ bếp',
-            images: bookingState.diningRoomImages,
-            roomType: RoomType.diningRoom,
-            bookingNotifier: bookingNotifier,
-          ),
-          RoomImageSection(
-            roomTitle: 'Phòng làm việc',
-            images: bookingState.officeRoomImages,
-            roomType: RoomType.officeRoom,
-            bookingNotifier: bookingNotifier,
-          ),
-          RoomImageSection(
-            roomTitle: 'Phòng vệ sinh',
-            images: bookingState.bathroomImages,
-            roomType: RoomType.bathroom,
-            bookingNotifier: bookingNotifier,
-          ),
+          // RoomImageSection(
+          //   roomTitle: 'Phòng ngủ',
+          //   images: bookingState.bedroomImages,
+          //   roomType: RoomType.bedroom,
+          //   bookingNotifier: bookingNotifier,
+          // ),
+          // RoomImageSection(
+          //   roomTitle: 'Phòng ăn/ bếp',
+          //   images: bookingState.diningRoomImages,
+          //   roomType: RoomType.diningRoom,
+          //   bookingNotifier: bookingNotifier,
+          // ),
+          // RoomImageSection(
+          //   roomTitle: 'Phòng làm việc',
+          //   images: bookingState.officeRoomImages,
+          //   roomType: RoomType.officeRoom,
+          //   bookingNotifier: bookingNotifier,
+          // ),
+          // RoomImageSection(
+          //   roomTitle: 'Phòng vệ sinh',
+          //   images: bookingState.bathroomImages,
+          //   roomType: RoomType.bathroom,
+          //   bookingNotifier: bookingNotifier,
+          // ),
         ],
       ),
     );

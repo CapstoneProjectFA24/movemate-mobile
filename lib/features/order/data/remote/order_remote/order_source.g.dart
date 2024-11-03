@@ -80,7 +80,7 @@ class _OrderSource implements OrderSource {
     )
             .compose(
               _dio.options,
-              '/bookings',
+              '/services',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -117,7 +117,7 @@ class _OrderSource implements OrderSource {
     )
             .compose(
               _dio.options,
-              '/bookings/${id}',
+              '/services/${id}',
               queryParameters: queryParameters,
               data: _data,
             )

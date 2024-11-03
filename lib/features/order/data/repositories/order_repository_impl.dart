@@ -30,6 +30,7 @@ class OrderRepositoryImpl extends RemoteBaseRepository
       perPage: request.pageSize,
       UserId: userId,
     );
+
     return getDataOf(
       request: () => _orderSource.getBookings(
         APIConstants.contentType,
@@ -50,7 +51,7 @@ class OrderRepositoryImpl extends RemoteBaseRepository
     );
   }
 
-    @override
+  @override
   Future<TruckCategoryObjResponse> getTruckById({
     required String accessToken,
     required int id,

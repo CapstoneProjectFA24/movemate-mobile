@@ -163,6 +163,18 @@ class BookingRequest {
     // Add filtered fees to serviceDetails
     serviceDetails.addAll(feeServiceDetails);
 
+    // List<ServiceDetail> selectedVehicle = booking.selectedVehicle
+    //     .where((service) =>
+    //         service.quantity != null && service.quantity! > 0)
+    //     .map((service) {
+    //   return ServiceDetail(
+    //     serviceId: service.id,
+    //     // isQuantity: true,
+    //     quantity: service.quantity!,
+    //   );
+    // }).toList();
+    // serviceDetails.addAll(selectedVehicle);
+
     // Add selectedPackages with quantities to serviceDetails
     serviceDetails.addAll(booking.selectedPackages
         .where((package) => package.quantity != null && package.quantity! > 0)

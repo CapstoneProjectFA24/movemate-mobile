@@ -69,6 +69,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
+    final statusOrders = statusAsync.when(
+      data: (status) => status,
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
+    );
+
+    // print("  statusOrders  $statusOrders");
     final useFetchResult = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
           .read(servicePackageControllerProvider.notifier)
@@ -76,36 +83,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
       context: context,
     );
 
-    // Fetch Services
-    final fetchResultVehicle = useFetch<ServiceEntity>(
-      function: (model, context) => ref
-          .read(serviceControllerProvider.notifier)
-          .getServices(model, context),
-      initialPagingModel: PagingModel(),
-      context: context,
-    );
-
-    final fetchResultVehicleId =
-        fetchResultVehicle.items.map((e) => e.id).toList();
-    print("object: fetchResultVehicle.data = $fetchResultVehicleId");
-
-    final checkID = fetchResultVehicleId ==
-        order.bookingDetails.map((e) => e.serviceId).toList();
-
-    print("object: fetchResultVehicle.data = $checkID");
-
     final houseType = useFetchResult.data;
-
-    final truckBookingDetails = order.bookingDetails
-        .map((e) => e.serviceId)
-        .where((e) => e.toString() == 'TRUCK')
-        .toList();
-
-    final truckBookingDetailsGetId =
-        order.bookingDetails.where((detail) => detail.type == 'TRUCK').toList();
-
-
-    // print(houseType?.toJson());
 
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value;
@@ -149,36 +127,53 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 expandedIndex: expandedIndex,
               ),
               const SizedBox(height: 30),
-              ServiceInfoCard(
-                order: order,
-                houseType: houseType,
-              ),
+              statusOrders == BookingStatusType.pending
+                  ? ServiceInfoCard(
+                      statusAsync: statusAsync,
+                      order: order,
+                      houseType: houseType,
+                    )
+                  : statusOrders == BookingStatusType.assigned
+                      ? Column(
+                          children: [
+                            const ProfileInfo(),
+                            ServiceInfoCard(
+                              statusAsync: statusAsync,
+                              order: order,
+                              houseType: houseType,
+                            ),
+                          ],
+                        )
+                      : const ProfileInfo(),
               const SizedBox(height: 20),
-              FadeInLeft(
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: Text("Map",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                ),
-              ),
-              const MapWidget(),
-              const SizedBox(height: 20),
-              const ProfileInfo(),
-              const SizedBox(height: 20),
-              FadeInLeft(
-                child: const Padding(
-                  padding: EdgeInsets.only(left: 16.0),
-                  child: Text("Thông tin khách hàng",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              CustomerInfo(
-                isExpanded: isExpanded,
-                toggleDropdown: toggleDropdown,
-              ),
+              (statusOrders == BookingStatusType.assigned &&
+                          order.isReviewOnline == false) ||
+                      (statusOrders == BookingStatusType.reviewed &&
+                          order.isReviewOnline == true)
+                  ? Column(
+                      children: [
+                        FadeInLeft(
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 16.0),
+                            child: Text(
+                              "Map",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const MapWidget(),
+                      ],
+                    )
+                  : Container(),
+              const SizedBox(height: 10),
+              (statusOrders == BookingStatusType.reviewed)
+                  ? CustomerInfo(
+                      statusOrders: statusOrders,
+                      isExpanded: isExpanded,
+                      toggleDropdown: toggleDropdown,
+                    )
+                  : Container(),
               const SizedBox(height: 20),
               PriceDetails(
                 order: order,

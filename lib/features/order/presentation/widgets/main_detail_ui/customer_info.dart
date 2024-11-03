@@ -7,16 +7,18 @@ import 'package:movemate/features/order/presentation/widgets/details/infoItem.da
 class CustomerInfo extends StatelessWidget {
   final ValueNotifier<bool> isExpanded;
   final VoidCallback toggleDropdown;
-
+  final Object statusOrders;
   const CustomerInfo({
     super.key,
     required this.isExpanded,
+    required this.statusOrders,
     required this.toggleDropdown,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return
+     Container(
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: const Color(0xFFDDDDDD)),
@@ -38,7 +40,7 @@ class CustomerInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Thông tin liên hệ',
+                'Thông tin dị vụ cũ',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -56,11 +58,11 @@ class CustomerInfo extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          if (isExpanded.value) ...[
-            buildInfoItem('Họ và tên', 'NGUYEN VAN ANH'),
-            buildInfoItem('Số điện thoại', '0900123456'),
-            buildInfoItem('Email', 'nguyenvananh@gmail.com'),
-          ],
+          // if (isExpanded.value) ...[
+          //   buildInfoItem('Họ và tên', 'NGUYEN VAN ANH'),
+          //   buildInfoItem('Số điện thoại', '0900123456'),
+          //   buildInfoItem('Email', 'nguyenvananh@gmail.com'),
+          // ],
         ],
       ),
     );

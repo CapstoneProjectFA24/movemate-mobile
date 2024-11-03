@@ -36,13 +36,16 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
       function: (model, context) => ref
           .read(servicePackageControllerProvider.notifier)
           .getHouseTypes(model, context),
-      initialPagingModel: PagingModel(),
+      initialPagingModel: PagingModel(
+        sortContent: "1",
+        searchContent: '1',
+      ),
       context: context,
     );
 
     useEffect(() {
       scrollController.onScrollEndsListener(fetchResult.loadMore);
-      return null; 
+      return null;
     }, const []);
 
     if (state.isLoading && fetchResult.items.isEmpty) {
