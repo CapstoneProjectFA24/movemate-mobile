@@ -11,7 +11,8 @@ class NoMoreContent extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: AssetsConstants.defaultMargin),
         child: LabelText(
-          content: 'Không còn dữ liệu',
+          // content: 'Không còn dữ liệu',
+          content: '',
           size: AssetsConstants.defaultFontSize - 12.0,
           fontWeight: FontWeight.w600,
           color: Colors.grey[700]!,

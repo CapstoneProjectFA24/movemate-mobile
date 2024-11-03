@@ -15,22 +15,56 @@ class NotesSection extends StatefulHookConsumerWidget {
 
 class NotesSectionState extends ConsumerState<NotesSection> {
   final FocusNode focusNode = FocusNode();
+  late TextEditingController textController; // Khởi tạo controller
   final Duration inactiveDuration = const Duration(seconds: 5);
   Timer? timer;
   bool isSaved = false;
   bool isActive = false;
   Color borderColor = Colors.orange;
 
+  // Giá trị mặc định khi không có ghi chú
+  final String defaultNote = 'Không có ghi chú';
+
+  @override
+  void initState() {
+    super.initState();
+    // Khởi tạo TextEditingController và gán giá trị ban đầu từ bookingProvider
+    final bookingState = ref.read(bookingProvider);
+    textController = TextEditingController(text: bookingState.notes ?? '');
+
+    // Thêm listener nếu cần xử lý khi focus thay đổi
+    focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    if (!focusNode.hasFocus) {
+      // Bạn có thể thực hiện hành động khi mất focus nếu cần
+      // Tuy nhiên, không cần disable TextField ở đây
+    }
+  }
+
   @override
   void dispose() {
     timer?.cancel();
     focusNode.dispose();
+    textController.dispose(); // Dispose controller khi widget bị dispose
     super.dispose();
   }
 
   void startTimer() {
     timer?.cancel();
     timer = Timer(inactiveDuration, () {
+      String currentText = textController.text.trim();
+
+      // Kiểm tra nếu ghi chú trống, gán giá trị mặc định
+      if (currentText.isEmpty) {
+        currentText = defaultNote;
+        textController.text = defaultNote;
+
+        // Cập nhật bookingProvider với giá trị mặc định
+        ref.read(bookingProvider.notifier).updateNotes(currentText);
+      }
+
       setState(() {
         isSaved = true;
         isActive = false;
@@ -53,7 +87,6 @@ class NotesSectionState extends ConsumerState<NotesSection> {
   Widget build(BuildContext context) {
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
-    final textController = TextEditingController(text: bookingState.notes);
 
     return Padding(
       padding: const EdgeInsets.all(5.0),
@@ -76,7 +109,6 @@ class NotesSectionState extends ConsumerState<NotesSection> {
                 child: TextField(
                   controller: textController,
                   focusNode: focusNode,
-                  enabled: !isSaved,
                   maxLines: 3,
                   onChanged: (value) {
                     bookingNotifier.updateNotes(value);
@@ -97,6 +129,15 @@ class NotesSectionState extends ConsumerState<NotesSection> {
                 ),
               ),
             ),
+            // Hiển thị thông báo khi ghi chú đã được lưu
+            if (isSaved)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text(
+                  'Ghi chú đã được lưu.',
+                  style: TextStyle(color: Colors.green),
+                ),
+              ),
           ],
         ),
       ),

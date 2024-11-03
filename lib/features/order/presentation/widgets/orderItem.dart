@@ -144,14 +144,14 @@ class OrderItem extends HookConsumerWidget {
                             Text(
                               '$formattedTotal ₫',
                               style: const TextStyle(
-                                color: Color(0xFF007BFF),
+                                color: AssetsConstants.primaryMain,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+                              ' •  ${order.roomNumber} phòng - ${order.floorsNumber} tầng ',
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF555555),

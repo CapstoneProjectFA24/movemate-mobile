@@ -108,7 +108,7 @@ class BookingRequest {
       deliveryPoint: map['deliveryPoint'] ?? '',
       estimatedDistance: map['estimatedDistance'] ?? '0',
       houseTypeId: map['houseTypeId'] ?? 1,
-      note: map['note'] ?? '',
+      note: map['note'] ?? 'ghi chú',
       // estimatedDeliveryTime: map['estimatedDeliveryTime'] ?? '0',
       isRoundTrip: map['isRoundTrip'] ?? false,
       isReviewOnline: map['isReviewOnline'] ?? false,

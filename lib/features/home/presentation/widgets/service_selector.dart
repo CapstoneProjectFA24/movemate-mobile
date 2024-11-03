@@ -273,13 +273,8 @@ class ServiceSelector extends HookConsumerWidget {
                         "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
                     print(
                         "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Vui lòng điền đầy đủ thông tin"),
-                      ),
-                    );
                   }
+              
                 },
               ),
             ),

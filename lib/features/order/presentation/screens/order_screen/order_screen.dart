@@ -71,7 +71,7 @@ class OrderScreen extends HookConsumerWidget {
               : fetchReslut.items.isEmpty
                   ? const Align(
                       alignment: Alignment.topCenter,
-                      child: EmptyBox(title: 'list ko có dữ liệu'),
+                      child: EmptyBox(title: ''),
                     )
                   : Expanded(
                       child: ListView.builder(
