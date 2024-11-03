@@ -147,14 +147,14 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       houseType: houseType,
                     )
                   : statusOrders == BookingStatusType.assigned
-                      ? Column(
+                      ? const Column(
                           children: [
-                            const ProfileInfo(),
-                            ServiceInfoCard(
-                              statusAsync: statusAsync,
-                              order: order,
-                              houseType: houseType,
-                            ),
+                            ProfileInfo(),
+                            // ServiceInfoCard(
+                            //   statusAsync: statusAsync,
+                            //   order: order,
+                            //   houseType: houseType,
+                            // ),
                           ],
                         )
                       : const ProfileInfo(),

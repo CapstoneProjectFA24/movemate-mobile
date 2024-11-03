@@ -54,7 +54,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
     final isOnline = assessmentType == AssessmentType.online;
 
     String title = 'Thẩm định';
-    String description = 'Chọn phương thức thẩm định nhé ?';
+    String description = 'Chọn phương thức thẩm định ?';
     Widget note = const Text(
       'Movemate khuyến nghị bạn nên chọn phương thức thẩm định tại nhà để có thể đảm bảo chất lượng dịch vụ tốt nhất.',
       style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
