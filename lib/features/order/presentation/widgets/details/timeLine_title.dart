@@ -1,3 +1,4 @@
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -5,13 +6,12 @@ class MyTimelineTitle extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final bool isPast;
- 
+
   const MyTimelineTitle({
     super.key,
     required this.isFirst,
     required this.isLast,
     required this.isPast,
-
   });
 
   @override
@@ -21,19 +21,17 @@ class MyTimelineTitle extends StatelessWidget {
       isFirst: isFirst,
       isLast: isLast,
       beforeLineStyle: LineStyle(
-        color: isPast ? Colors.orange : Colors.grey,
+        color: isPast ? AssetsConstants.primaryMain : Colors.grey,
         thickness: 2,
       ),
       indicatorStyle: IndicatorStyle(
         width: 25,
-        color: isPast ? Colors.orange : Colors.grey,
+        color: isPast ? AssetsConstants.primaryMain : Colors.grey,
         iconStyle: IconStyle(
           color: Colors.white,
-          iconData: Icons.check,
+          iconData: isPast ? Icons.check : Icons.circle,
         ),
-       
       ),
-
     );
   }
 }

@@ -1,24 +1,27 @@
-// components/timeline_steps.dart
-
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/enums/booking_status_type.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
 
 class TimelineSteps extends HookWidget {
   final List<Map<String, dynamic>> steps;
   final ValueNotifier<int> expandedIndex;
+  final BookingStatusType currentStatus;
 
   const TimelineSteps({
     super.key,
     required this.steps,
     required this.expandedIndex,
+    required this.currentStatus,
   });
 
   @override
   Widget build(BuildContext context) {
+    final currentStepIndex = getStatusIndex(currentStatus);
+
     return FadeInLeft(
       child: Column(
         children: [
@@ -28,12 +31,14 @@ class TimelineSteps extends HookWidget {
               padding: const EdgeInsets.only(right: 8.0),
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: const [
-                  MyTimelineTitle(isFirst: true, isLast: false, isPast: true),
-                  MyTimelineTitle(isFirst: false, isLast: false, isPast: true),
-                  MyTimelineTitle(isFirst: false, isLast: false, isPast: false),
-                  MyTimelineTitle(isFirst: false, isLast: true, isPast: false),
-                ],
+                children: List.generate(
+                  steps.length,
+                  (index) => MyTimelineTitle(
+                    isFirst: index == 0,
+                    isLast: index == steps.length - 1,
+                    isPast: index <= currentStepIndex,
+                  ),
+                ),
               ),
             ),
           ),
@@ -41,34 +46,43 @@ class TimelineSteps extends HookWidget {
             padding: const EdgeInsets.only(left: 2.0),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(steps.length, (index) {
-                    final step = steps[index];
-                    return GestureDetector(
-                      onTap: () {
-                        expandedIndex.value =
-                            expandedIndex.value == index ? -1 : index;
-                      },
-                      child: Column(
-                        children: [
-                          Text(
+                // Wrap the Row with SingleChildScrollView
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(steps.length, (index) {
+                      final step = steps[index];
+                      return GestureDetector(
+                        onTap: () {
+                          expandedIndex.value =
+                              expandedIndex.value == index ? -1 : index;
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
                             step['title'],
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: index <= currentStepIndex
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                              color: index <= currentStepIndex
+                                  ? AssetsConstants.primaryMain
+                                  : Colors.grey,
+                            ),
                           ),
-                        ],
-                      ),
-                    );
-                  }),
+                        ),
+                      );
+                    }),
+                  ),
                 ),
                 ...List.generate(steps.length, (index) {
                   final step = steps[index];
                   return Visibility(
                     visible: expandedIndex.value == index,
                     child: Container(
-                      width: 350,
-                      height: 300,
+                      width: MediaQuery.of(context).size.width * 0.9,
                       margin: const EdgeInsets.only(top: 20.0),
                       padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
@@ -84,37 +98,45 @@ class TimelineSteps extends HookWidget {
                         ],
                       ),
                       child: Column(
-                        children: List.generate(step['details'].length,
-                            (detailIndex) {
-                          return TimelineTile(
-                            alignment: TimelineAlign.start,
-                            isFirst: detailIndex == 0,
-                            isLast: detailIndex == step['details'].length - 1,
-                            indicatorStyle: IndicatorStyle(
-                              color: detailIndex <= index
-                                  ? AssetsConstants.primaryMain
-                                  : Colors.grey,
-                              iconStyle: IconStyle(
-                                iconData: Icons.circle,
-                                color: Colors.white,
+                        children: List.generate(
+                          step['details'].length,
+                          (detailIndex) {
+                            return TimelineTile(
+                              alignment: TimelineAlign.start,
+                              isFirst: detailIndex == 0,
+                              isLast: detailIndex == step['details'].length - 1,
+                              indicatorStyle: IndicatorStyle(
+                                color: index <= currentStepIndex
+                                    ? AssetsConstants.primaryMain
+                                    : Colors.grey,
+                                iconStyle: IconStyle(
+                                  iconData: Icons.circle,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            endChild: Container(
-                              margin: const EdgeInsets.only(left: 8),
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              child: Text(
-                                step['details'][detailIndex],
-                                style: const TextStyle(fontSize: 18),
+                              endChild: Container(
+                                margin: const EdgeInsets.only(left: 8),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Text(
+                                  step['details'][detailIndex],
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: index <= currentStepIndex
+                                        ? Colors.black
+                                        : Colors.grey,
+                                  ),
+                                ),
                               ),
-                            ),
-                            beforeLineStyle: LineStyle(
-                              color: detailIndex <= index
-                                  ? AssetsConstants.primaryMain
-                                  : Colors.grey,
-                              thickness: 4,
-                            ),
-                          );
-                        }),
+                              beforeLineStyle: LineStyle(
+                                color: index <= currentStepIndex
+                                    ? AssetsConstants.primaryMain
+                                    : Colors.grey,
+                                thickness: 4,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   );
@@ -125,5 +147,20 @@ class TimelineSteps extends HookWidget {
         ],
       ),
     );
+  }
+
+  int getStatusIndex(BookingStatusType status) {
+    switch (status) {
+      case BookingStatusType.pending:
+        return 0;
+      case BookingStatusType.assigned:
+        return 1;
+      case BookingStatusType.waiting:
+        return 2;
+      case BookingStatusType.reviewed:
+        return 3;
+      default:
+        return -1;
+    }
   }
 }

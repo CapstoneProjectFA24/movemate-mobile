@@ -26,6 +26,7 @@ import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
@@ -46,7 +47,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final isExpanded = useState(false);
     final expandedIndex = useState<int>(-1);
 
-    final state = ref.watch(bookingControllerProvider);
+    final state = ref.watch(orderControllerProvider);
 
     final List<Map<String, dynamic>> steps = [
       {
@@ -54,19 +55,34 @@ class OrderDetailsScreen extends HookConsumerWidget {
         'details': ['Đơn hàng được tạo', 'Xác nhận thông tin'],
       },
       {
-        'title': 'Gói hàng',
-        'details': ['Sản phẩm được đóng gói', 'Chuẩn bị giao'],
+        'title': 'Chờ thanh toán',
+        'details': ['Khách hàng chờ thanh toán'],
       },
       {
-        'title': 'Giao hàng',
-        'details': ['Đang vận chuyển', 'Giao hàng đến nơi'],
+        'title': 'Đã giao cho nhân viên',
+        'details': ['Đơn hàng được phân công', 'Chờ xếp lịch với khách hàng'],
       },
       {
-        'title': 'Thành công',
-        'details': ['Giao hàng thành công', 'Hoàn tất đơn hàng'],
+        'title': 'Chờ xác nhận',
+        'details': ['Chờ khách hàng chấp nhận lịch'],
+      },
+      {
+        'title': 'Đang thực hiện',
+        'details': [
+          'Nhân viên di chuyển',
+          'Nhân viên đã đến',
+          'Đang thực hiện'
+        ],
+      },
+      {
+        'title': 'Đã hoàn thành',
+        'details': ['Đã giao hàng', 'Hoàn thành đơn hàng'],
+      },
+      {
+        'title': 'Hủy/Hoàn tiền',
+        'details': ['Đã hủy', 'Đã hoàn tiền'],
       },
     ];
-
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -90,109 +106,97 @@ class OrderDetailsScreen extends HookConsumerWidget {
       isExpanded.value = !isExpanded.value;
     }
 
-    // final controller = ref.read(serviceControllerProvider.notifier);
-    // final fetchResultTrucksList = useFetch<ServicesPackageTruckEntity>(
-    //   function: (model, context) async {
-    //     return await controller.getServicesTruck(model, context);
-    //   },
-    //   initialPagingModel: PagingModel(
-    //     type: 'TRUCK',
-    //   ),
-    //   context: context,
-    // );
-    // print(
-    //     "fetchResultTrucksList.isFetchingData ${fetchResultTrucksList.isFetchingData}");
-    return Scaffold(
-      appBar: CustomAppBar(
-        backgroundColor: AssetsConstants.primaryMain,
-        onCallBackFirst: () {
-          Navigator.pop(context);
-        },
-        backButtonColor: AssetsConstants.whiteColor,
-        title: "Thông tin đơn hàng #${order.id ?? ""}",
-        iconSecond: Icons.home_outlined,
-        onCallBackSecond: () {
-          final tabsRouter = context.router.root
-              .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
-          if (tabsRouter != null) {
-            tabsRouter.setActiveIndex(0);
-            context.router.popUntilRouteWithName(TabViewScreenRoute.name);
-          } else {
-            context.router.pushAndPopUntil(
-              const TabViewScreenRoute(children: [
-                HomeScreenRoute(),
-              ]),
-              predicate: (route) => false,
-            );
-          }
-        },
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 2.0, top: 40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BookingStatus(statusAsync: statusAsync, order: order),
-              const SizedBox(height: 50),
-              TimelineSteps(
-                steps: steps,
-                expandedIndex: expandedIndex,
-              ),
-              const SizedBox(height: 30),
-              statusOrders == BookingStatusType.pending
-                  ? ServiceInfoCard(
-                      statusAsync: statusAsync,
-                      order: order,
-                      houseType: houseType,
-                    )
-                  : statusOrders == BookingStatusType.assigned
-                      ? const Column(
-                          children: [
-                            ProfileInfo(),
-                            // ServiceInfoCard(
-                            //   statusAsync: statusAsync,
-                            //   order: order,
-                            //   houseType: houseType,
-                            // ),
-                          ],
-                        )
-                      : const ProfileInfo(),
-              const SizedBox(height: 20),
-              (statusOrders == BookingStatusType.assigned &&
-                          order.isReviewOnline == false) ||
-                      (statusOrders == BookingStatusType.reviewed &&
-                          order.isReviewOnline == true)
-                  ? Column(
-                      children: [
-                        FadeInLeft(
-                          child: const Padding(
-                            padding: EdgeInsets.only(left: 16.0),
-                            child: Text(
-                              "Map",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+    return LoadingOverlay(
+      isLoading: statusAsync is AsyncLoading || state.isLoading,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          backgroundColor: AssetsConstants.primaryMain,
+          onCallBackFirst: () {
+            Navigator.pop(context);
+          },
+          backButtonColor: AssetsConstants.whiteColor,
+          title: "Thông tin đơn hàng #${order.id ?? ""}",
+          iconSecond: Icons.home_outlined,
+          onCallBackSecond: () {
+            final tabsRouter = context.router.root
+                .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+            if (tabsRouter != null) {
+              tabsRouter.setActiveIndex(0);
+              context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+            } else {
+              context.router.pushAndPopUntil(
+                const TabViewScreenRoute(children: [
+                  HomeScreenRoute(),
+                ]),
+                predicate: (route) => false,
+              );
+            }
+          },
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 2.0, top: 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BookingStatus(statusAsync: statusAsync, order: order),
+                const SizedBox(height: 50),
+                TimelineSteps(
+                  steps: steps,
+                  expandedIndex: expandedIndex,
+                  currentStatus: statusOrders
+                      as BookingStatusType, // Thêm currentStatus vào đây
+                ),
+                const SizedBox(height: 30),
+                statusOrders == BookingStatusType.pending
+                    ? ServiceInfoCard(
+                        statusAsync: statusAsync,
+                        order: order,
+                        houseType: houseType,
+                      )
+                    : statusOrders == BookingStatusType.assigned
+                        ? const Column(
+                            children: [
+                              ProfileInfo(),
+                            ],
+                          )
+                        : const ProfileInfo(),
+                const SizedBox(height: 20),
+                (statusOrders == BookingStatusType.assigned &&
+                            order.isReviewOnline == false) ||
+                        (statusOrders == BookingStatusType.reviewed &&
+                            order.isReviewOnline == true)
+                    ? Column(
+                        children: [
+                          FadeInLeft(
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 16.0),
+                              child: Text(
+                                "Map",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                        ),
-                        const MapWidget(),
-                      ],
-                    )
-                  : Container(),
-              const SizedBox(height: 10),
-              (statusOrders == BookingStatusType.reviewed)
-                  ? CustomerInfo(
-                      statusOrders: statusOrders,
-                      isExpanded: isExpanded,
-                      toggleDropdown: toggleDropdown,
-                    )
-                  : Container(),
-              const SizedBox(height: 20),
-              PriceDetails(
-                order: order,
-                statusAsync: statusAsync,
-              ),
-            ],
+                          const MapWidget(),
+                        ],
+                      )
+                    : Container(),
+                const SizedBox(height: 10),
+                (statusOrders == BookingStatusType.reviewed)
+                    ? CustomerInfo(
+                        statusOrders: statusOrders,
+                        isExpanded: isExpanded,
+                        toggleDropdown: toggleDropdown,
+                      )
+                    : Container(),
+                const SizedBox(height: 20),
+                PriceDetails(
+                  order: order,
+                  statusAsync: statusAsync,
+                ),
+              ],
+            ),
           ),
         ),
       ),
