@@ -35,7 +35,8 @@ class APIConstants {
   // payments
   static const paymentsBooking = '/payments/create-payment-url';
   static const paymentsDeposit = '/wallets/recharge';
-
+//get user 
+  static const get_user = '/users';
   // api vietmap-key
   static const apiVietMapKey =
       "38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444";

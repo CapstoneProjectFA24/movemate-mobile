@@ -16,6 +16,12 @@ abstract class ProfileRepository {
     required PagingModel request,
     required String accessToken,
   });
+
+    // House Type Methods get by id
+  Future<ProfileResponse> getProfileInforById({
+    required String accessToken,
+    required int id,
+  });
 }
 
 @Riverpod(keepAlive: true)

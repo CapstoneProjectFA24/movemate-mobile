@@ -67,4 +67,47 @@ class ProfileController extends _$ProfileController {
     }
     return null;
   }
+
+  Future<ProfileEntity?> getProfileInforById(
+    int id,
+    BuildContext context,
+  ) async {
+    ProfileEntity? profileInfor;
+
+    // state = const AsyncLoading();
+    final profileRepository = ref.read(profileRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      final response = await profileRepository.getProfileInforById(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+      profileInfor = response.payload;
+      print("controller ${profileInfor?.email}");
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+      });
+    }
+    return profileInfor;
+  }
 }

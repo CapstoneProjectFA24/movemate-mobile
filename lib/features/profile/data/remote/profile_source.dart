@@ -15,10 +15,17 @@ part 'profile_source.g.dart';
 abstract class ProfileSource {
   factory ProfileSource(Dio dio, {String baseUrl}) = _ProfileSource;
     // House Types
-  @GET(APIConstants.get_house_types)
+  @GET(APIConstants.get_user)
   Future<HttpResponse<ProfileResponse>> getProfileInfor(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+  );
+    // house types get by id
+  @GET('${APIConstants.get_user}/{id}')
+  Future<HttpResponse<ProfileResponse>> getProfileInforById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
   );
 }
 

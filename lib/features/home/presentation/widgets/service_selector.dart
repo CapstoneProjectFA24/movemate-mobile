@@ -274,7 +274,6 @@ class ServiceSelector extends HookConsumerWidget {
                     print(
                         "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
                   }
-              
                 },
               ),
             ),
@@ -359,7 +358,6 @@ class ServiceSelector extends HookConsumerWidget {
         return date.difference(now).inDays <= 30;
       },
     );
-
     if (selectedDate != null) {
       // Hiển thị time picker với giờ mặc định là giờ hiện tại + 1
       final selectedTime = await showTimePicker(

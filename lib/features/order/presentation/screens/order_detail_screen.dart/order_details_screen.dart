@@ -22,6 +22,8 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/pric
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/service_info_card.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
+import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
+import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -46,6 +48,9 @@ class OrderDetailsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isExpanded = useState(false);
     final expandedIndex = useState<int>(-1);
+    void toggleDropdown() {
+      isExpanded.value = !isExpanded.value;
+    }
 
     final state = ref.watch(orderControllerProvider);
 
@@ -92,19 +97,23 @@ class OrderDetailsScreen extends HookConsumerWidget {
       error: (err, stack) => Text('Error: $err'),
     );
 
-    // print("  statusOrders  $statusOrders");
     final useFetchResult = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
           .read(servicePackageControllerProvider.notifier)
           .getHouseTypeById(order.houseTypeId, context),
       context: context,
     );
-
     final houseType = useFetchResult.data;
 
-    void toggleDropdown() {
-      isExpanded.value = !isExpanded.value;
-    }
+    final useFetchResultProfile = useFetchObject<ProfileEntity>(
+      function: (context) async {
+        return ref
+            .read(profileControllerProvider.notifier)
+            .getProfileInforById(order.userId, context);
+      },
+      context: context,
+    );
+    final profileUser = useFetchResultProfile.data;
 
     return LoadingOverlay(
       isLoading: statusAsync is AsyncLoading || state.isLoading,
@@ -153,6 +162,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                         statusAsync: statusAsync,
                         order: order,
                         houseType: houseType,
+                        profileUser: profileUser,
                       )
                     : statusOrders == BookingStatusType.assigned
                         ? const Column(

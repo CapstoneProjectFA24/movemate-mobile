@@ -24,4 +24,18 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
       request: () => _profileSource.getProfileInfor(APIConstants.contentType, accessToken),
     );
   }
+
+    @override
+  Future<ProfileResponse> getProfileInforById({
+    required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _profileSource.getProfileInforById(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
 }
