@@ -1,5 +1,6 @@
 // service_controller.dart
-
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
@@ -80,6 +81,10 @@ class ServiceController extends _$ServiceController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
+      for (var service in response.payload) {
+        print(" response Service: ${service.toString()}");
+      }
+
       // Return the data directly
       return response.payload;
     } catch (error) {

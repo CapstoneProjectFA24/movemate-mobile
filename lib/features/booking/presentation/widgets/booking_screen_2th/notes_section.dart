@@ -10,43 +10,43 @@ class NotesSection extends StatefulHookConsumerWidget {
   const NotesSection({super.key});
 
   @override
-  _NotesSectionState createState() => _NotesSectionState();
+  NotesSectionState createState() => NotesSectionState();
 }
 
-class _NotesSectionState extends ConsumerState<NotesSection> {
-  final FocusNode _focusNode = FocusNode();
-  final Duration _inactiveDuration = const Duration(seconds: 5);
-  Timer? _timer;
-  bool _isSaved = false;
-  bool _isActive = false;
-  Color _borderColor = Colors.orange;
+class NotesSectionState extends ConsumerState<NotesSection> {
+  final FocusNode focusNode = FocusNode();
+  final Duration inactiveDuration = const Duration(seconds: 5);
+  Timer? timer;
+  bool isSaved = false;
+  bool isActive = false;
+  Color borderColor = Colors.orange;
 
   @override
   void dispose() {
-    _timer?.cancel();
-    _focusNode.dispose();
+    timer?.cancel();
+    focusNode.dispose();
     super.dispose();
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer(_inactiveDuration, () {
+  void startTimer() {
+    timer?.cancel();
+    timer = Timer(inactiveDuration, () {
       setState(() {
-        _isSaved = true;
-        _isActive = false;
-        _borderColor = Colors.grey;
-        _focusNode.unfocus();
+        isSaved = true;
+        isActive = false;
+        borderColor = Colors.grey;
+        focusNode.unfocus();
       });
     });
   }
 
-  void _onTextChanged(String value) {
+  void onTextChanged(String value) {
     setState(() {
-      _isSaved = false;
-      _isActive = true;
-      _borderColor = Colors.orange;
+      isSaved = false;
+      isActive = true;
+      borderColor = Colors.orange;
     });
-    _startTimer();
+    startTimer();
   }
 
   @override
@@ -75,19 +75,19 @@ class _NotesSectionState extends ConsumerState<NotesSection> {
               child: FadeInDown(
                 child: TextField(
                   controller: textController,
-                  focusNode: _focusNode,
-                  enabled: !_isSaved,
+                  focusNode: focusNode,
+                  enabled: !isSaved,
                   maxLines: 3,
                   onChanged: (value) {
                     bookingNotifier.updateNotes(value);
-                    _onTextChanged(value);
+                    onTextChanged(value);
                   },
                   decoration: InputDecoration(
-                    hintText: _isSaved ? 'Đã lưu ghi chú' : 'Nhập ghi chú...',
+                    hintText: isSaved ? 'Đã lưu ghi chú' : 'Nhập ghi chú...',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
-                        color: _borderColor,
+                        color: borderColor,
                         width: 2.0,
                       ),
                     ),

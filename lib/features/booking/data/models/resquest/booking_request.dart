@@ -226,7 +226,7 @@ class BookingRequest {
           : '',
       estimatedDistance: estimatedDistance,
       houseTypeId: booking.houseType?.id ?? 1,
-      note: booking.notes,
+      note: booking.notes ?? 'ghi chú',
       // estimatedDeliveryTime: estimatedDeliveryTime,
       isRoundTrip: booking.isRoundTrip,
       isReviewOnline: booking.isReviewOnline,

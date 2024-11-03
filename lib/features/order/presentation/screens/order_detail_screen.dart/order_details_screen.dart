@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
@@ -89,6 +90,18 @@ class OrderDetailsScreen extends HookConsumerWidget {
       isExpanded.value = !isExpanded.value;
     }
 
+    final controller = ref.read(serviceControllerProvider.notifier);
+    final fetchResultTrucksList = useFetch<ServicesPackageTruckEntity>(
+      function: (model, context) async {
+        return await controller.getServicesTruck(model, context);
+      },
+      initialPagingModel: PagingModel(
+        type: 'TRUCK',
+      ),
+      context: context,
+    );
+    print(
+        "fetchResultTrucksList.isFetchingData ${fetchResultTrucksList.isFetchingData}");
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,

@@ -49,7 +49,7 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.authHeader) String accessToken,
   );
   // get all Services truck
-  @GET(APIConstants.get_all_package_services)
+  @GET(APIConstants.get_list_truck)
   Future<HttpResponse<ServiceTruckResponse>> getServicesTruck(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,

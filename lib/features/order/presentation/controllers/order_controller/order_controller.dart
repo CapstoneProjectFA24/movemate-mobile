@@ -91,7 +91,7 @@ class OrderController extends _$OrderController {
         request: request,
       );
       TruckList = response.payload;
-      // print("controller ${TruckList.length}");
+      print("controller TruckList.length ${TruckList.length}");
     });
 
     if (state.hasError) {
