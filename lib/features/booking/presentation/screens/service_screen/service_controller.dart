@@ -71,6 +71,7 @@ class ServiceController extends _$ServiceController {
     PagingModel request,
     BuildContext context,
   ) async {
+    List<ServicesPackageTruckEntity> truckServices = [];
     final servicesPackageRepository =
         ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
@@ -81,15 +82,20 @@ class ServiceController extends _$ServiceController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
+
       for (var service in response.payload) {
-        // print(" response Service: ${service.toString()}");
+        // ServicesPackageTruckEntity service =
+        //     ServicesPackageTruckEntity.fromMap();
+
         if (service.type == 'TRUCK') {
-          print(" response Service: ${service.toString()}");
+          // print("Response Service: ${service.toString()}");
+          truckServices.add(service);
         }
       }
 
-      // Return the data directly
-      return response.payload;
+      // Trả về danh sách các dịch vụ loại 'TRUCK'
+      print("object: truckServices ${truckServices.toString()}");
+      return truckServices;
     } catch (error) {
       final statusCode = (error as DioException).onStatusDio();
       await handleAPIError(

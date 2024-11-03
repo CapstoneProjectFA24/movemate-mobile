@@ -47,8 +47,19 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       ),
       context: context,
     );
+    final controller = ref.read(serviceControllerProvider.notifier);
 
-    
+    final fetchResultTrucksList = useFetch<ServicesPackageTruckEntity>(
+      function: (model, context) async {
+        return await controller.getServicesTruck(model, context);
+      },
+      initialPagingModel: PagingModel(
+        type: 'TRUCK',
+      ),
+      context: context,
+    );
+    print(
+        "fetchResultTrucksList.isFetchingData ${fetchResultTrucksList.isFetchingData}");
 
     // useEffect(() {
     //   scrollController.onScrollEndsListener(fetchResult.loadMore);

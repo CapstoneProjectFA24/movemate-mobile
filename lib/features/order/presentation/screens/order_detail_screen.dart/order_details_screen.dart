@@ -90,18 +90,18 @@ class OrderDetailsScreen extends HookConsumerWidget {
       isExpanded.value = !isExpanded.value;
     }
 
-    final controller = ref.read(serviceControllerProvider.notifier);
-    final fetchResultTrucksList = useFetch<ServicesPackageTruckEntity>(
-      function: (model, context) async {
-        return await controller.getServicesTruck(model, context);
-      },
-      initialPagingModel: PagingModel(
-        type: 'TRUCK',
-      ),
-      context: context,
-    );
-    print(
-        "fetchResultTrucksList.isFetchingData ${fetchResultTrucksList.isFetchingData}");
+    // final controller = ref.read(serviceControllerProvider.notifier);
+    // final fetchResultTrucksList = useFetch<ServicesPackageTruckEntity>(
+    //   function: (model, context) async {
+    //     return await controller.getServicesTruck(model, context);
+    //   },
+    //   initialPagingModel: PagingModel(
+    //     type: 'TRUCK',
+    //   ),
+    //   context: context,
+    // );
+    // print(
+    //     "fetchResultTrucksList.isFetchingData ${fetchResultTrucksList.isFetchingData}");
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
