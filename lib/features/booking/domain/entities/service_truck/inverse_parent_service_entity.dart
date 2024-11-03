@@ -115,6 +115,10 @@ class InverseParentServiceEntity {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return 'InverseParentServiceEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, type: $type, discountRate: $discountRate, amount: $amount, parentServiceId: $parentServiceId, truckCategoryId: $truckCategoryId, quantity: $quantity, isQuantity: $isQuantity, quantityMax: $quantityMax, truckCategory: $truckCategory)';
+  }
 
   factory InverseParentServiceEntity.fromJson(String source) =>
       InverseParentServiceEntity.fromMap(json.decode(source));

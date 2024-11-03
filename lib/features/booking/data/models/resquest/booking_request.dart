@@ -137,7 +137,7 @@ class BookingRequest {
   factory BookingRequest.fromBooking(Booking booking) {
     // Khởi tạo danh sách serviceDetails
     List<ServiceDetail> serviceDetails = [];
-
+    List<ServiceDetail> selectedVehicle = [];
     // Thêm selectedSubServices vào serviceDetails
 
     serviceDetails.addAll(booking.selectedSubServices.map((subService) {
@@ -163,17 +163,15 @@ class BookingRequest {
     // Add filtered fees to serviceDetails
     serviceDetails.addAll(feeServiceDetails);
 
-    // List<ServiceDetail> selectedVehicle = booking.selectedVehicle
-    //     .where((service) =>
-    //         service.quantity != null && service.quantity! > 0)
-    //     .map((service) {
-    //   return ServiceDetail(
-    //     serviceId: service.id,
-    //     // isQuantity: true,
-    //     quantity: service.quantity!,
-    //   );
-    // }).toList();
-    // serviceDetails.addAll(selectedVehicle);
+    if (booking.selectedVehicle != null) {
+      selectedVehicle.add(
+        ServiceDetail(
+          serviceId: booking.selectedVehicle!.id,
+          quantity: 1, // Giá trị mặc định là 1
+        ),
+      );
+    }
+    serviceDetails.addAll(selectedVehicle);
 
     // Add selectedPackages with quantities to serviceDetails
     serviceDetails.addAll(booking.selectedPackages

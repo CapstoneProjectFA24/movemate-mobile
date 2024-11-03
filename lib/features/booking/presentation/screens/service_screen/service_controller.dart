@@ -82,7 +82,10 @@ class ServiceController extends _$ServiceController {
         request: request,
       );
       for (var service in response.payload) {
-        print(" response Service: ${service.toString()}");
+        // print(" response Service: ${service.toString()}");
+        if (service.type == 'TRUCK') {
+          print(" response Service: ${service.toString()}");
+        }
       }
 
       // Return the data directly
