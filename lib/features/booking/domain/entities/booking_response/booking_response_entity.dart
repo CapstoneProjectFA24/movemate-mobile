@@ -13,7 +13,7 @@ class BookingResponseEntity {
   final int id;
   final int userId;
   final int houseTypeId;
-  final int deposit;
+  final double? deposit;
   final String status;
   final String pickupAddress;
   final String pickupPoint;
@@ -22,8 +22,8 @@ class BookingResponseEntity {
   final bool isUseBox;
   final String? boxType;
   final String estimatedDistance;
-  final int total;
-  final int totalReal;
+  final double total;
+  final double totalReal;
   final String? estimatedDeliveryTime;
   final bool isDeposited;
   final bool isBonus;
@@ -47,7 +47,7 @@ class BookingResponseEntity {
   final bool isPorter;
   final bool isRoundTrip;
   final String note;
-  final int totalFee;
+  final double totalFee;
   final int truckNumber;
   final String? feeInfo;
   final bool isReviewOnline;
@@ -62,7 +62,7 @@ class BookingResponseEntity {
     required this.id,
     required this.userId,
     required this.houseTypeId,
-    required this.deposit,
+    this.deposit,
     required this.status,
     required this.pickupAddress,
     required this.pickupPoint,
@@ -113,7 +113,7 @@ class BookingResponseEntity {
       id: json['id'] ?? 0,
       userId: json['userId'] ?? 0,
       houseTypeId: json['houseTypeId'] ?? 0,
-      deposit: json['deposit'] ?? 0,
+      deposit: json['deposit'] ?? 0.0,
       status: json['status'] ?? '',
       pickupAddress: json['pickupAddress'] ?? '',
       pickupPoint: json['pickupPoint'] ?? '',

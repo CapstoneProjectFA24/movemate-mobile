@@ -103,7 +103,7 @@ class OrderItem extends HookConsumerWidget {
                         Row(
                           children: [
                             Icon(
-                              order.isReviewOnline!
+                              order.isReviewOnline
                                   ? Icons.computer
                                   : Icons.home,
                               size: 16,
@@ -111,7 +111,7 @@ class OrderItem extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              order.isReviewOnline!
+                              order.isReviewOnline
                                   ? 'Đánh giá trực tuyến'
                                   : 'Đánh giá tại nhà',
                               style: const TextStyle(
@@ -201,13 +201,13 @@ class OrderItem extends HookConsumerWidget {
         Row(
           children: [
             Icon(
-              order.isReviewOnline! ? Icons.computer : Icons.home,
+              order.isReviewOnline ? Icons.computer : Icons.home,
               size: 16,
               color: const Color(0xFF555555),
             ),
             const SizedBox(width: 5),
             Text(
-              order.isReviewOnline!
+              order.isReviewOnline
                   ? 'Đánh giá trực tuyến'
                   : 'Đánh giá tại nhà',
               style: const TextStyle(
@@ -286,13 +286,13 @@ class OrderItem extends HookConsumerWidget {
         Row(
           children: [
             Icon(
-              order.isReviewOnline! ? Icons.computer : Icons.home,
+              order.isReviewOnline ? Icons.computer : Icons.home,
               size: 16,
               color: const Color(0xFF555555),
             ),
             const SizedBox(width: 5),
             Text(
-              order.isReviewOnline!
+              order.isReviewOnline
                   ? 'Đánh giá trực tuyến'
                   : 'Đánh giá tại nhà',
               style: const TextStyle(

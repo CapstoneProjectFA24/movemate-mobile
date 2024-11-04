@@ -9,7 +9,6 @@ import 'package:movemate/features/home/presentation/widgets/service_selector/bal
 import 'package:movemate/features/home/presentation/widgets/service_selector/location_section.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/date_time_section.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/confirmation_button.dart';
-import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 

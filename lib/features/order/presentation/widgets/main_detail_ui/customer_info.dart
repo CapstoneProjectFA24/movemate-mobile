@@ -1,8 +1,6 @@
 // components/customer_info.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:movemate/features/order/presentation/widgets/details/infoItem.dart';
 
 class CustomerInfo extends StatelessWidget {
   final ValueNotifier<bool> isExpanded;

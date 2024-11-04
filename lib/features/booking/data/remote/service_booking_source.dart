@@ -1,7 +1,6 @@
 // service_booking_source.dart
 
 import 'package:dio/dio.dart';
-import 'package:movemate/features/booking/data/models/queries/truck_queries.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';

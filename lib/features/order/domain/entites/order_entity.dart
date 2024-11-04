@@ -13,7 +13,7 @@ class OrderEntity {
   final int userId;
   final int houseTypeId;
   HouseTypeEntity? houseType;
-  final int deposit;
+  final double? deposit;
   final String status;
   final String pickupAddress;
   final String pickupPoint;
@@ -22,8 +22,8 @@ class OrderEntity {
   final bool isUseBox;
   final String? boxType;
   final String estimatedDistance;
-  final int total;
-  final int totalReal;
+  final double total;
+  final double totalReal;
   final String? estimatedDeliveryTime;
   final bool isDeposited;
   final bool isBonus;
@@ -53,7 +53,7 @@ class OrderEntity {
   final bool isPorter;
   final bool isRoundTrip;
   final String? note;
-  final int totalFee;
+  final double totalFee;
   final int truckNumber;
   final String? feeInfo;
   final List<AssignmentResponseEntity> assignments;
@@ -67,7 +67,7 @@ class OrderEntity {
     required this.userId,
     required this.houseTypeId,
     this.houseType,
-    required this.deposit,
+    this.deposit,
     required this.status,
     required this.pickupAddress,
     required this.pickupPoint,
@@ -125,7 +125,7 @@ class OrderEntity {
       id: map['id'] ?? 0,
       userId: map['userId'] ?? 0,
       houseTypeId: map['houseTypeId'] ?? 0,
-      deposit: map['deposit'] ?? 0,
+      deposit: map['deposit'] ?? 0.0,
       status: map['status'] ?? '',
       pickupAddress: map['pickupAddress'] ?? '',
       pickupPoint: map['pickupPoint'] ?? '',

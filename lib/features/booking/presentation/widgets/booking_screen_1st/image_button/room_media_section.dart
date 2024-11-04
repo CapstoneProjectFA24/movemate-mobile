@@ -6,9 +6,7 @@ import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 
 import 'room_image.dart';
-import 'room_video.dart';
 import 'add_image_button.dart';
-import 'add_video_button.dart';
 
 class RoomMediaSection extends StatelessWidget {
   final String roomTitle;
