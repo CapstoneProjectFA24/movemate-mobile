@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/room_image_section.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/room_media_section.dart';
 
 // Import the ImageData class
 
@@ -18,9 +19,8 @@ class BookingDetails extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          RoomImageSection(
+          RoomMediaSection(
             roomTitle: 'Tải ảnh lên',
-            images: bookingState.livingRoomImages,
             roomType: RoomType.livingRoom,
             bookingNotifier: bookingNotifier,
           ),

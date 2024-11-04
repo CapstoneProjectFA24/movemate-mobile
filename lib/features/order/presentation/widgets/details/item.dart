@@ -8,16 +8,25 @@ Widget buildItem(
     required String description}) {
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 10),
+    constraints: const BoxConstraints(maxWidth: 250),
     child: Row(
       children: [
-        Image.network(imageUrl, width: 80, height: 80),
+        Flexible(
+          child: Image.network(imageUrl, width: 60, height: 60),
+        ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(description, style: const TextStyle(color: Colors.grey)),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: const TextStyle(color: Colors.grey),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
             ],
           ),
         ),

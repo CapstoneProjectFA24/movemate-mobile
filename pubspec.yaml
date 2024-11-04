@@ -41,7 +41,7 @@ dependencies:
   flutter_local_notifications: ^17.2.4
   firebase_database: ^11.1.4
   location: ^7.0.1
-  
+
   # Vietmap
   vietmap_flutter_gl: ^3.0.0
   vietmap_flutter_navigation: ^3.1.1
@@ -79,6 +79,9 @@ dependencies:
   # Order
   photo_view: ^0.14.0
   intl: ^0.19.0
+  flutter_datetime_picker: ^1.5.1
+  flash: ^3.1.1
+  video_player: ^2.9.2
 
 # config launcher icon
 flutter_launcher_icons:

@@ -7,6 +7,7 @@ import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
@@ -47,7 +48,7 @@ class Booking {
   final List<ImageData> diningRoomImages;
   final List<ImageData> officeRoomImages;
   final List<ImageData> bathroomImages;
-
+  final List<VideoData> livingRoomVideos;
   // Location
   final bool isSelectingPickUp;
   final LocationModel? pickUpLocation;
@@ -84,6 +85,7 @@ class Booking {
     this.dropOffLocation,
     this.bookingDate,
     // Initialize image lists (empty by default)
+    this.livingRoomVideos = const [],
     List<ImageData>? livingRoomImages,
     List<ImageData>? bedroomImages,
     List<ImageData>? diningRoomImages,
@@ -126,6 +128,7 @@ class Booking {
     LocationModel? dropOffLocation,
     DateTime? bookingDate,
     //add image
+    List<VideoData>? livingRoomVideos,
     List<ImageData>? livingRoomImages,
     List<ImageData>? bedroomImages,
     List<ImageData>? diningRoomImages,
@@ -165,6 +168,7 @@ class Booking {
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       bookingDate: bookingDate ?? this.bookingDate,
       //add image
+      livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,
       bedroomImages: bedroomImages ?? this.bedroomImages,
       diningRoomImages: diningRoomImages ?? this.diningRoomImages,

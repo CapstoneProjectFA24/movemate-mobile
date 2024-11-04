@@ -7,12 +7,17 @@ import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 import '/features/booking/domain/entities/booking_enities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {
+  static const int maxImages = 5; // Giới hạn hình ảnh tối đa
+  static const int maxVideos = 2; // Giới hạn video tối đa
+  static const int maxVideoSize = 25 * 1024 * 1024; // 25 MB tính bằng bytes
+
   BookingNotifier()
       : super(Booking(
           totalPrice: 0.0,
@@ -181,8 +186,49 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(notes: notes);
   }
 
+// Phương thức lấy danh sách hình ảnh cho một loại phòng
+  List<ImageData> getImages(RoomType roomType) {
+    switch (roomType) {
+      case RoomType.livingRoom:
+        return state.livingRoomImages;
+      case RoomType.bedroom:
+        return state.bedroomImages;
+      case RoomType.diningRoom:
+        return state.diningRoomImages;
+      case RoomType.officeRoom:
+        return state.officeRoomImages;
+      case RoomType.bathroom:
+        return state.bathroomImages;
+    }
+  }
+
+  // Phương thức lấy danh sách video cho phòng khách
+  List<VideoData> getVideos(RoomType roomType) {
+    switch (roomType) {
+      case RoomType.livingRoom:
+        return state.livingRoomVideos;
+      // Nếu muốn mở rộng cho các loại phòng khác, thêm vào đây
+      default:
+        return [];
+    }
+  }
+
+  // Phương thức kiểm tra xem có thể thêm hình ảnh mới hay không
+  bool canAddImage(RoomType roomType) {
+    return getImages(roomType).length < maxImages;
+  }
+
+  // Phương thức kiểm tra xem có thể thêm video mới hay không
+  bool canAddVideo(RoomType roomType) {
+    return getVideos(roomType).length < maxVideos;
+  }
+
   // Method to add image to a room
   void addImageToRoom(RoomType roomType, ImageData imageData) {
+    if (!canAddImage(roomType)) {
+      // Không thêm hình ảnh nếu đã đạt giới hạn
+      return;
+    }
     switch (roomType) {
       case RoomType.livingRoom:
         state = state.copyWith(
@@ -212,7 +258,7 @@ class BookingNotifier extends StateNotifier<Booking> {
     }
   }
 
-// Method to remove image to a room
+// Xóa hình ảnh khỏi phòng
   void removeImageFromRoom(RoomType roomType, ImageData imageData) {
     switch (roomType) {
       case RoomType.livingRoom:
@@ -249,6 +295,46 @@ class BookingNotifier extends StateNotifier<Booking> {
               .where((img) => img.publicId != imageData.publicId)
               .toList(),
         );
+        break;
+    }
+  }
+
+  // Xóa video khỏi phòng
+  void removeVideoFromRoom(RoomType roomType, VideoData videoData) {
+    switch (roomType) {
+      case RoomType.livingRoom:
+        state = state.copyWith(
+          livingRoomVideos: state.livingRoomVideos
+              .where((vid) => vid.publicId != videoData.publicId)
+              .toList(),
+        );
+        break;
+      // Nếu muốn mở rộng cho các loại phòng khác, thêm vào đây
+      default:
+        break;
+    }
+  }
+
+  // Thêm video vào phòng với kiểm tra giới hạn và kích thước
+  void addVideoToRoom(RoomType roomType, VideoData videoData) {
+    if (!canAddVideo(roomType)) {
+      // Không thêm video nếu đã đạt giới hạn
+      return;
+    }
+
+    if (videoData.size > maxVideoSize) {
+      // Không thêm video nếu kích thước vượt quá giới hạn
+      return;
+    }
+
+    switch (roomType) {
+      case RoomType.livingRoom:
+        state = state.copyWith(
+          livingRoomVideos: [...state.livingRoomVideos, videoData],
+        );
+        break;
+      // Nếu muốn mở rộng cho các loại phòng khác, thêm vào đây
+      default:
         break;
     }
   }

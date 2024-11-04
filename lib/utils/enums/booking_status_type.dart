@@ -8,9 +8,10 @@ enum BookingStatusType {
   pending('PENDING'),
   depositing('DEPOSITING'),
   assigned('ASSIGNED'),
-  approved('APPROVED'),
   reviewed('REVIEWED'),
-  coming('COMMING'),
+  approved('APPROVED'),
+  reviewing('REVIEWING'),
+  coming('COMING'),
   waiting('WAITING'),
   inProgress('IN_PROGRESS'),
   completed('COMPLETED'),
@@ -20,6 +21,7 @@ enum BookingStatusType {
   final String type;
   const BookingStatusType(this.type);
 }
+
 
 extension ConvertOrderPartnerStatus on String {
   BookingStatusType toBookingTypeEnum() {

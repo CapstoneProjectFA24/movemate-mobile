@@ -107,5 +107,11 @@ BookingStatusInfo getBookingStatusText(BookingStatusType status) {
         description: 'Tiền đặt cọc đã được hoàn trả',
         nextStep: 'Kiểm tra tài khoản của bạn',
       );
+    case BookingStatusType.reviewing:
+      return BookingStatusInfo(
+        statusText: 'Đang đánh giá',
+        description: 'Đang trong quá trình đánh giá',
+        nextStep: 'Đã hoàn thành',
+      );
   }
 }

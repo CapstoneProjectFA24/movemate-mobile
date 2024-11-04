@@ -153,12 +153,14 @@ class TimelineSteps extends HookWidget {
     switch (status) {
       case BookingStatusType.pending:
         return 0;
-      case BookingStatusType.assigned:
-        return 1;
       case BookingStatusType.waiting:
+        return 1;
+      case BookingStatusType.assigned:
         return 2;
-      case BookingStatusType.reviewed:
+      case BookingStatusType.reviewing:
         return 3;
+      case BookingStatusType.reviewed:
+        return 4;
       default:
         return -1;
     }

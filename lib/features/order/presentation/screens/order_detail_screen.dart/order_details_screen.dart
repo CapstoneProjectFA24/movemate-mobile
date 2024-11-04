@@ -56,16 +56,16 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final List<Map<String, dynamic>> steps = [
       {
-        'title': 'Đặt hàng',
+        'title': 'Đã tạo',
         'details': ['Đơn hàng được tạo', 'Xác nhận thông tin'],
       },
       {
-        'title': 'Chờ thanh toán',
-        'details': ['Khách hàng chờ thanh toán'],
+        'title': 'Chờ xếp người đánh giá',
+        'details': ['đang chờ xếp người đánh giá'],
       },
       {
-        'title': 'Đã giao cho nhân viên',
-        'details': ['Đơn hàng được phân công', 'Chờ xếp lịch với khách hàng'],
+        'title': 'Đã xếp người đánh giá',
+        'details': ['Đã xếp người đánh giá', 'Chờ người đánh giá xử lý'],
       },
       {
         'title': 'Chờ xác nhận',

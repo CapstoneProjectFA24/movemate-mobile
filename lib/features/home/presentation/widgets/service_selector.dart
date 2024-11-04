@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-
+import 'dart:async';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
@@ -35,6 +35,8 @@ class ServiceSelector extends HookConsumerWidget {
         isDateTimeInvalid.value = false;
       }
     }
+
+    Timer? errorTimer;
 
     // Validate datetime whenever it changes
     useEffect(() {
