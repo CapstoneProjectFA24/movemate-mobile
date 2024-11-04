@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ButtonCustom extends StatelessWidget {
@@ -45,12 +46,11 @@ class ButtonCustom extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
-                  buttonText,
-                  style: TextStyle(
-                    fontSize: buttonFontSize, // Kích thước font chữ của button
-                    color: AssetsConstants.whiteColor,
-                  ),
+                child: LabelText(
+                  content: buttonText,
+                  size: buttonFontSize, // Kích thước font chữ của button
+                  color: Colors.white, // Màu chữ của button
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
