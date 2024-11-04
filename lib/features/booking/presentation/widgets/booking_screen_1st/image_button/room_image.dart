@@ -19,35 +19,41 @@ class RoomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: NetworkImage(imageData.url),
-          fit: BoxFit.cover,
+    return SizedBox(
+      width: 80, // Chiều rộng cố định
+      height: 80, // Chiều cao cố định
+      child: Container(
+        width: 80, // Đảm bảo kích thước khớp với SizedBox
+        height: 80, // Đảm bảo kích thước khớp với SizedBox
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          image: DecorationImage(
+            image: NetworkImage(imageData.url),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 4,
-            right: 4,
-            child: GestureDetector(
-              onTap: () {
-                bookingNotifier.removeImageFromRoom(roomType, imageData);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AssetsConstants.pinkColor,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 4,
+              right: 4,
+              child: GestureDetector(
+                onTap: () {
+                  bookingNotifier.removeImageFromRoom(roomType, imageData);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AssetsConstants.pinkColor,
+                  ),
+                  child: const Icon(Icons.delete,
+                      color: AssetsConstants.whiteColor, size: 16),
                 ),
-                child: const Icon(Icons.delete,
-                    color: AssetsConstants.whiteColor, size: 16),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -45,73 +45,82 @@ class _RoomVideoState extends State<RoomVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return _isInitialized
-        ? Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.black,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
+    return SizedBox(
+      width: 80, // Chiều rộng cố định
+      height: 80, // Chiều cao cố định
+      child: _isInitialized
+          ? Stack(
+              children: [
+                Container(
+                  width: 80, // Đảm bảo kích thước khớp với SizedBox
+                  height: 80, // Đảm bảo kích thước khớp với SizedBox
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.black,
                   ),
-                ),
-              ),
-              // Nút play/pause
-              Positioned.fill(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _controller.value.isPlaying
-                          ? _controller.pause()
-                          : _controller.play();
-                    });
-                  },
-                  child: Center(
-                    child: Icon(
-                      _controller.value.isPlaying
-                          ? Icons.pause_circle
-                          : Icons.play_circle,
-                      color: Colors.white,
-                      size: 40,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
                     ),
                   ),
                 ),
-              ),
-              // Nút xóa video
-              Positioned(
-                top: 4,
-                right: 4,
-                child: GestureDetector(
-                  onTap: () {
-                    widget.bookingNotifier
-                        .removeVideoFromRoom(widget.roomType, widget.videoData);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AssetsConstants.pinkColor,
+                // Nút play/pause
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _controller.value.isPlaying
+                            ? _controller.pause()
+                            : _controller.play();
+                      });
+                    },
+                    child: Center(
+                      child: Icon(
+                        _controller.value.isPlaying
+                            ? Icons.pause_circle
+                            : Icons.play_circle,
+                        color: Colors.white,
+                        size: 24, // Kích thước nhỏ hơn phù hợp với 80x80
+                      ),
                     ),
-                    child: const Icon(Icons.delete,
-                        color: AssetsConstants.whiteColor, size: 16),
                   ),
                 ),
+                // Nút xóa video
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.bookingNotifier.removeVideoFromRoom(
+                          widget.roomType, widget.videoData);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AssetsConstants.pinkColor,
+                      ),
+                      child: const Icon(Icons.delete,
+                          color: AssetsConstants.whiteColor,
+                          size: 12), // Kích thước nhỏ hơn
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Container(
+              width: 80, // Đảm bảo kích thước khớp với SizedBox
+              height: 80, // Đảm bảo kích thước khớp với SizedBox
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.grey[300],
               ),
-            ],
-          )
-        : Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[300],
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+    );
   }
 }
