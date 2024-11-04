@@ -42,8 +42,8 @@ class RoomMediaSection extends StatelessWidget {
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3, // Số cột
             mainAxisSpacing: 8, // Khoảng cách dọc giữa các hàng
-            crossAxisSpacing: 8, // Khoảng cách ngang giữa các cột
-            childAspectRatio: 1, // Tỉ lệ chiều rộng và chiều cao của mỗi ô
+            crossAxisSpacing: 16, // Khoảng cách ngang giữa các cột
+            childAspectRatio: 2, // Tỉ lệ chiều rộng và chiều cao của mỗi ô
           ),
           itemCount: images.length +
               videos.length +
@@ -68,14 +68,14 @@ class RoomMediaSection extends StatelessWidget {
             }
 
             // Hiển thị video
-            if (index < imageCount + videoCount) {
-              final video = videos[index - imageCount];
-              return RoomVideo(
-                videoData: video,
-                roomType: roomType,
-                bookingNotifier: bookingNotifier,
-              );
-            }
+            // if (index < imageCount + videoCount) {
+            //   final video = videos[index - imageCount];
+            //   return RoomVideo(
+            //     videoData: video,
+            //     roomType: roomType,
+            //     bookingNotifier: bookingNotifier,
+            //   );
+            // }
 
             // Hiển thị nút thêm hình ảnh
             if (canAddMoreImages && index == imageCount + videoCount) {
@@ -87,14 +87,14 @@ class RoomMediaSection extends StatelessWidget {
             }
 
             // Hiển thị nút thêm video
-            if (canAddMoreVideos &&
-                index == imageCount + videoCount + (canAddMoreImages ? 1 : 0)) {
-              return AddVideoButton(
-                roomType: roomType,
-                bookingNotifier: bookingNotifier,
-                hasVideos: videos.isNotEmpty,
-              );
-            }
+            // if (canAddMoreVideos &&
+            //     index == imageCount + videoCount + (canAddMoreImages ? 1 : 0)) {
+            //   return AddVideoButton(
+            //     roomType: roomType,
+            //     bookingNotifier: bookingNotifier,
+            //     hasVideos: videos.isNotEmpty,
+            //   );
+            // }
 
             return const SizedBox.shrink(); // Không hiển thị gì
           },

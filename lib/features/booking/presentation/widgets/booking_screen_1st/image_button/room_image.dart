@@ -20,11 +20,11 @@ class RoomImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 80, // Chiều rộng cố định
-      height: 80, // Chiều cao cố định
+      width: 50, // Chiều rộng cố định
+      height: 50, // Chiều cao cố định
       child: Container(
-        width: 80, // Đảm bảo kích thước khớp với SizedBox
-        height: 80, // Đảm bảo kích thước khớp với SizedBox
+        width: 50, // Đảm bảo kích thước khớp với SizedBox
+        height: 50, // Đảm bảo kích thước khớp với SizedBox
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           image: DecorationImage(

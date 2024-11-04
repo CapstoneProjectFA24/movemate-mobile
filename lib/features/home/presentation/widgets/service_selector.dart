@@ -36,13 +36,21 @@ class ServiceSelector extends HookConsumerWidget {
       }
     }
 
-    Timer? errorTimer;
+    // Sử dụng useRef để quản lý Timer
+    final errorTimer = useRef<Timer?>(null);
 
     // Validate datetime whenever it changes
     useEffect(() {
       validateDateTime();
       return null;
     }, [bookingState.bookingDate]);
+
+    // Hủy Timer khi widget bị dispose
+    useEffect(() {
+      return () {
+        errorTimer.value?.cancel();
+      };
+    }, []);
 
     final dateController = useTextEditingController();
 
@@ -240,8 +248,8 @@ class ServiceSelector extends HookConsumerWidget {
                     padding: const EdgeInsets.only(left: 8.0, top: 4.0),
                     child: Text(
                       isDateTimeInvalid.value
-                          ? 'Vui lòng chọn thời gian sau thời điểm hiện tại'
-                          : 'Vui lòng chọn thời gian',
+                          ? 'Không được là thời gian trong quá khứ'
+                          : 'Vui lòng chọn thời gian thích hợp',
                       style: const TextStyle(
                         color: Colors.red,
                         fontSize: 12,
@@ -260,8 +268,20 @@ class ServiceSelector extends HookConsumerWidget {
                 buttonColor: AssetsConstants.primaryMain,
                 isButtonEnabled: true,
                 onButtonPressed: () {
-                  showErrors.value = true; // Show validation errors
+                  showErrors.value = true; // Hiển thị các thông báo lỗi
 
+                  // Nếu đã có Timer đang chạy, hủy nó
+                  if (errorTimer.value != null) {
+                    errorTimer.value!.cancel();
+                  }
+
+                  // Khởi chạy Timer mới để ẩn lỗi sau 2 giây
+                  errorTimer.value = Timer(const Duration(seconds: 2), () {
+                    showErrors.value = false; // Ẩn các thông báo lỗi
+                    errorTimer.value = null; // Đặt lại Timer
+                  });
+
+                  // Kiểm tra các điều kiện để xác nhận
                   if (bookingState.pickUpLocation != null &&
                       bookingState.dropOffLocation != null &&
                       bookingState.bookingDate != null &&

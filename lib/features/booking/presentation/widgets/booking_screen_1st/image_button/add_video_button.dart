@@ -25,7 +25,7 @@ class AddVideoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 100, // Chiều rộng cố định
-      height: 50, // Chiều cao cố định
+      height: 20, // Chiều cao cố định
       child: GestureDetector(
         onTap: () {
           // Hiển thị modal khi nhấp vào nút thêm video
