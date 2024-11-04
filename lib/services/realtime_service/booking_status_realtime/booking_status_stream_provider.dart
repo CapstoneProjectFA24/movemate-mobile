@@ -9,6 +9,9 @@ final orderStatusStreamProvider =
       .doc(bookingId)
       .snapshots()
       .map((snapshot) {
+    if (!snapshot.exists) {
+      throw Exception('status not found');
+    }
     final statusString = snapshot.data()?['Status'] as String? ?? 'PENDING';
     return statusString.toBookingTypeEnum();
   });

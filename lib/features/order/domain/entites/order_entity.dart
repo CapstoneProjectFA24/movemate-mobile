@@ -35,7 +35,7 @@ class OrderEntity {
   final DateTime updatedAt;
   final String? updatedBy;
   final String? review;
-  final bool? isReviewOnline;
+  final bool isReviewOnline;
   final String? bonus;
   final String typeBooking;
   final String? estimatedAcreage;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
@@ -10,17 +11,22 @@ class TimelineSteps extends HookWidget {
   final List<Map<String, dynamic>> steps;
   final ValueNotifier<int> expandedIndex;
   final BookingStatusType currentStatus;
+  final OrderEntity order;
 
   const TimelineSteps({
     super.key,
     required this.steps,
     required this.expandedIndex,
     required this.currentStatus,
+    required this.order,
   });
 
   @override
   Widget build(BuildContext context) {
-    final currentStepIndex = getStatusIndex(currentStatus);
+    final currentStepIndex =
+        getStatusIndex(currentStatus, order.isReviewOnline);
+    print("Current status:  ${order.isReviewOnline} ");
+    print("Current status:  $currentStatus ");
 
     return FadeInLeft(
       child: Column(
@@ -149,20 +155,29 @@ class TimelineSteps extends HookWidget {
     );
   }
 
-  int getStatusIndex(BookingStatusType status) {
-    switch (status) {
-      case BookingStatusType.pending:
-        return 0;
-      case BookingStatusType.waiting:
-        return 1;
-      case BookingStatusType.assigned:
-        return 2;
-      case BookingStatusType.reviewing:
-        return 3;
-      case BookingStatusType.reviewed:
-        return 4;
-      default:
-        return -1;
+  int getStatusIndex(BookingStatusType status, bool isReviewOnline) {
+    if (status == BookingStatusType.pending) {
+      return 0;
+    } else if (status == BookingStatusType.assigned) {
+      return 1;
+    } else if (status == BookingStatusType.reviewing && isReviewOnline) {
+      return 2;
+    } else if (status == BookingStatusType.reviewed) {
+      return 3;
+    } else if (status == BookingStatusType.depositing) {
+      return 4;
+    } else if (status == BookingStatusType.coming) {
+      return 5;
+    } else if (status == BookingStatusType.waiting && !isReviewOnline) {
+      return 3;
+    } else if (status == BookingStatusType.reviewing && !isReviewOnline) {
+      return 5;
+    } else if (status == BookingStatusType.reviewed && !isReviewOnline) {
+      return 6;
+    } else if (status == BookingStatusType.coming && !isReviewOnline) {
+      return 7;
+    } else {
+      return -1;
     }
   }
 }

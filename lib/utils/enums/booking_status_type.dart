@@ -22,7 +22,6 @@ enum BookingStatusType {
   const BookingStatusType(this.type);
 }
 
-
 extension ConvertOrderPartnerStatus on String {
   BookingStatusType toBookingTypeEnum() {
     switch (toUpperCase()) {
@@ -34,6 +33,8 @@ extension ConvertOrderPartnerStatus on String {
         return BookingStatusType.assigned;
       case 'APPROVED':
         return BookingStatusType.approved;
+      case 'REVIEWING':
+        return BookingStatusType.reviewing;
       case 'REVIEWED':
         return BookingStatusType.reviewed;
       case 'COMMING':

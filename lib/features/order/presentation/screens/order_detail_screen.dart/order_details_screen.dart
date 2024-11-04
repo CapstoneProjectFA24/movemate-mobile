@@ -61,7 +61,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
       },
       {
         'title': 'Chờ xếp người đánh giá',
-        'details': ['đang chờ xếp người đánh giá'],
+        'details': ['Đang chờ xếp người đánh giá'],
       },
       {
         'title': 'Đã xếp người đánh giá',
@@ -72,24 +72,26 @@ class OrderDetailsScreen extends HookConsumerWidget {
         'details': ['Chờ khách hàng chấp nhận lịch'],
       },
       {
-        'title': 'Đang thực hiện',
+        'title': 'Đang thực hiện thanh toán',
         'details': [
-          'Nhân viên di chuyển',
-          'Nhân viên đã đến',
-          'Đang thực hiện'
+          'Đang thực hiện thanh toán',
         ],
       },
       {
         'title': 'Đã hoàn thành',
-        'details': ['Đã giao hàng', 'Hoàn thành đơn hàng'],
+        'details': ['Đã dọn nhà', 'Hoàn thành đơn hàng'],
       },
-      {
-        'title': 'Hủy/Hoàn tiền',
-        'details': ['Đã hủy', 'Đã hoàn tiền'],
-      },
+      // {
+      //   'title': 'Hủy/Hoàn tiền',
+      //   'details': ['Đã hủy', 'Đã hoàn tiền'],
+      // },
     ];
+
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
+
+    print("object: statusAsync  $statusAsync");
+    print("object: order.status  ${order.status}");
 
     final statusOrders = statusAsync.when(
       data: (status) => status,
@@ -152,6 +154,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 const SizedBox(height: 50),
                 TimelineSteps(
                   steps: steps,
+                  order: order,
                   expandedIndex: expandedIndex,
                   currentStatus: statusOrders
                       as BookingStatusType, // Thêm currentStatus vào đây
