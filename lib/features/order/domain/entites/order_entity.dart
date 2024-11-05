@@ -13,7 +13,7 @@ class OrderEntity {
   final int userId;
   final int houseTypeId;
   HouseTypeEntity? houseType;
-  final int deposit;
+  final double deposit;
   final String status;
   final String pickupAddress;
   final String pickupPoint;
@@ -22,8 +22,8 @@ class OrderEntity {
   final bool isUseBox;
   final String? boxType;
   final String estimatedDistance;
-  final int total;
-  final int totalReal;
+  final double total;
+  final double totalReal;
   final String? estimatedDeliveryTime;
   final bool isDeposited;
   final bool isBonus;
@@ -53,7 +53,7 @@ class OrderEntity {
   final bool isPorter;
   final bool isRoundTrip;
   final String? note;
-  final int totalFee;
+  final double totalFee;
   final int truckNumber;
   final String? feeInfo;
   final List<AssignmentResponseEntity> assignments;
@@ -125,7 +125,7 @@ class OrderEntity {
       id: map['id'] ?? 0,
       userId: map['userId'] ?? 0,
       houseTypeId: map['houseTypeId'] ?? 0,
-      deposit: map['deposit'] ?? 0,
+      deposit: (map['deposit'] as num?)?.toDouble() ?? 0.0,
       status: map['status'] ?? '',
       pickupAddress: map['pickupAddress'] ?? '',
       pickupPoint: map['pickupPoint'] ?? '',
@@ -134,8 +134,8 @@ class OrderEntity {
       isUseBox: map['isUseBox'] ?? false,
       boxType: map['boxType'],
       estimatedDistance: map['estimatedDistance'] ?? '',
-      total: map['total'] ?? 0,
-      totalReal: map['totalReal'] ?? 0,
+      total: (map['total'] as num?)?.toDouble() ?? 0.0,
+      totalReal: (map['totalReal'] as num?)?.toDouble() ?? 0.0,
       estimatedDeliveryTime: map['estimatedDeliveryTime'],
       isDeposited: map['isDeposited'] ?? false,
       isBonus: map['isBonus'] ?? false,
@@ -169,7 +169,7 @@ class OrderEntity {
       isPorter: map['isPorter'] ?? false,
       isRoundTrip: map['isRoundTrip'] ?? false,
       note: map['note'],
-      totalFee: map['totalFee'] ?? 0,
+      totalFee: (map['totalFee'] as num?)?.toDouble() ?? 0.0,
       truckNumber: map['truckNumber'] ?? 0,
       feeInfo: map['feeInfo'],
       assignments: (map['assignments'] as List<dynamic>?)

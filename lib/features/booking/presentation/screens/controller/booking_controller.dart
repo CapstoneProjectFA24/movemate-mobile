@@ -39,7 +39,7 @@ class BookingController extends _$BookingController {
     if (state is AsyncLoading) {
       return null;
     }
-    state = const AsyncLoading();
+    // state = const AsyncLoading();
     final bookingState = ref.read(bookingProvider);
     final bookingRequest = BookingRequest.fromBooking(bookingState);
     final bookingRepository = ref.read(serviceBookingRepositoryProvider);
@@ -165,7 +165,7 @@ class BookingController extends _$BookingController {
 
       // if (request.status.type == BookingStatusType.waiting &&
       //     order.isReviewOnline!) {
-        context.router.push(PaymentScreenRoute(id: order.id));
+      context.router.push(PaymentScreenRoute(id: order.id));
       // }
 
       // TO DO MORE

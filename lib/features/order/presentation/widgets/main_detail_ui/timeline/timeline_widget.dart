@@ -1,8 +1,8 @@
 // timeline_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movemate/features/order/presentation/widgets/details/timeline/timeline_model.dart';
-import 'package:movemate/features/order/presentation/widgets/details/timeline/timeline_state.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline/timeline_model.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline/timeline_state.dart';
 
 class AnimatedTimeline extends ConsumerStatefulWidget {
   const AnimatedTimeline({super.key});

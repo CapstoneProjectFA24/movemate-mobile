@@ -13,7 +13,7 @@ class BookingResponseEntity {
   final int id;
   final int userId;
   final int houseTypeId;
-  final int deposit;
+  final double deposit;
   final String status;
   final String pickupAddress;
   final String pickupPoint;
@@ -22,8 +22,8 @@ class BookingResponseEntity {
   final bool isUseBox;
   final String? boxType;
   final String estimatedDistance;
-  final int total;
-  final int totalReal;
+  final double total;
+  final double totalReal;
   final String? estimatedDeliveryTime;
   final bool isDeposited;
   final bool isBonus;
@@ -47,7 +47,7 @@ class BookingResponseEntity {
   final bool isPorter;
   final bool isRoundTrip;
   final String note;
-  final int totalFee;
+  final double totalFee;
   final int truckNumber;
   final String? feeInfo;
   final bool isReviewOnline;
@@ -113,7 +113,7 @@ class BookingResponseEntity {
       id: json['id'] ?? 0,
       userId: json['userId'] ?? 0,
       houseTypeId: json['houseTypeId'] ?? 0,
-      deposit: json['deposit'] ?? 0,
+      deposit: (json['deposit'] as num?)?.toDouble() ?? 0.0,
       status: json['status'] ?? '',
       pickupAddress: json['pickupAddress'] ?? '',
       pickupPoint: json['pickupPoint'] ?? '',
@@ -122,8 +122,8 @@ class BookingResponseEntity {
       isUseBox: json['isUseBox'] ?? false,
       boxType: json['boxType'],
       estimatedDistance: json['estimatedDistance'] ?? '',
-      total: json['total'] ?? 0,
-      totalReal: json['totalReal'] ?? 0,
+      total: (json['total'] as num?)?.toDouble() ?? 0.0,
+      totalReal: (json['totalReal'] as num?)?.toDouble() ?? 0.0,
       estimatedDeliveryTime: json['estimatedDeliveryTime'],
       isDeposited: json['isDeposited'] ?? false,
       isBonus: json['isBonus'] ?? false,
@@ -147,7 +147,7 @@ class BookingResponseEntity {
       isPorter: json['isPorter'] ?? false,
       isRoundTrip: json['isRoundTrip'] ?? false,
       note: json['note'] ?? '',
-      totalFee: json['totalFee'] ?? 0,
+      totalFee: (json['totalFee'] as num?)?.toDouble() ?? 0.0,
       truckNumber: json['truckNumber'] ?? 0,
       feeInfo: json['feeInfo'],
       isReviewOnline: json['isReviewOnline'] ?? false,

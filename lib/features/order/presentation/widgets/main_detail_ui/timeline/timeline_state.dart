@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movemate/features/order/presentation/widgets/details/timeline/timeline_model.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline/timeline_model.dart';
 
 class TimelineState extends StateNotifier<List<TimelineItem>> {
   TimelineState()

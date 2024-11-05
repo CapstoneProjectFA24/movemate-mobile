@@ -46,8 +46,8 @@ class SignInController extends _$SignInController {
         final user = await authRepository.signIn(request: request);
 
         // get FCM token
-        final deviceToken = await getDeviceToken();
-        print(" token fcm : $deviceToken");
+        // final deviceToken = await getDeviceToken();
+        // print(" token fcm : $deviceToken");
         final userModel = UserModel(
           id: user.payload.id,
           email: user.payload.email,
