@@ -2,7 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
@@ -26,8 +29,22 @@ class OrderItem extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
 
     // Listen to the real-time status from Firestore
+    // Hàm hỗ trợ để định dạng giá
+    String formatPrice(int price) {
+      final formatter = NumberFormat('#,###', 'vi_VN');
+      return '${formatter.format(price)} đ';
+    }
+
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
+
+    final useFetchResult = useFetchObject<HouseTypeEntity>(
+      function: (context) => ref
+          .read(servicePackageControllerProvider.notifier)
+          .getHouseTypeById(order.houseTypeId, context),
+      context: context,
+    );
+    final houseTypeData = useFetchResult.data;
 
     return GestureDetector(
       onTap: () {
@@ -74,9 +91,6 @@ class OrderItem extends HookConsumerWidget {
                   data: (status) {
                     // Calculate displayTotal based on real-time status
 
-                    String formattedTotal =
-                        NumberFormat('#,###').format(order.totalReal);
-
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -86,16 +100,17 @@ class OrderItem extends HookConsumerWidget {
                           fontWeight: FontWeight.w600,
                         ),
                         const SizedBox(height: 5),
-                        const Row(
+                        Row(
                           children: [
-                            LabelText(
+                            const LabelText(
                               content: 'Loại nhà: ',
                               size: AssetsConstants.defaultFontSize - 12.0,
                               fontWeight: FontWeight.w600,
                             ),
-                            Text(
-                              'Nhà riêng',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            LabelText(
+                              content: houseTypeData?.name ?? ' ',
+                              size: 14,
+                              fontWeight: FontWeight.w500,
                             ),
                           ],
                         ),
@@ -103,7 +118,7 @@ class OrderItem extends HookConsumerWidget {
                         Row(
                           children: [
                             Icon(
-                              order.isReviewOnline!
+                              order.isReviewOnline
                                   ? Icons.computer
                                   : Icons.home,
                               size: 16,
@@ -111,7 +126,7 @@ class OrderItem extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              order.isReviewOnline!
+                              order.isReviewOnline
                                   ? 'Đánh giá trực tuyến'
                                   : 'Đánh giá tại nhà',
                               style: const TextStyle(
@@ -134,28 +149,31 @@ class OrderItem extends HookConsumerWidget {
                               ),
                             ),
                             const SizedBox(width: 5),
-                            Text(getBookingStatusText(status).statusText),
+                            LabelText(
+                              content: getBookingStatusText(status).statusText,
+                              color: getStatusColor(status),
+                              size: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ],
                         ),
                         const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              '$formattedTotal ₫',
-                              style: const TextStyle(
-                                color: AssetsConstants.primaryMain,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            LabelText(
+                              content: formatPrice(order.totalReal.toInt()),
+                              size: 18,
+                              color: AssetsConstants.primaryMain,
+                              fontWeight: FontWeight.bold,
                             ),
                             const SizedBox(width: 10),
-                            Text(
-                              ' •  ${order.roomNumber} phòng - ${order.floorsNumber} tầng ',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Color(0xFF555555),
-                              ),
+                            LabelText(
+                              content:
+                                  ' •  ${order.roomNumber} phòng - ${order.floorsNumber} tầng ',
+                              size: 14,
+                              color: const Color(0xFF555555),
+                              fontWeight: FontWeight.w500,
                             ),
                           ],
                         ),
@@ -190,9 +208,10 @@ class OrderItem extends HookConsumerWidget {
               size: AssetsConstants.defaultFontSize - 12.0,
               fontWeight: FontWeight.w600,
             ),
-            Text(
-              'Nhà riêng',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            LabelText(
+              content: 'Nhà riêng',
+              size: 14,
+              fontWeight: FontWeight.w500,
             ),
           ],
         ),
@@ -201,19 +220,18 @@ class OrderItem extends HookConsumerWidget {
         Row(
           children: [
             Icon(
-              order.isReviewOnline! ? Icons.computer : Icons.home,
+              order.isReviewOnline ? Icons.computer : Icons.home,
               size: 16,
               color: const Color(0xFF555555),
             ),
             const SizedBox(width: 5),
-            Text(
-              order.isReviewOnline!
+            LabelText(
+              content: order.isReviewOnline
                   ? 'Đánh giá trực tuyến'
                   : 'Đánh giá tại nhà',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF555555),
-              ),
+              size: 14,
+              color: const Color(0xFF555555),
+              fontWeight: FontWeight.w600,
             ),
           ],
         ),
@@ -229,28 +247,28 @@ class OrderItem extends HookConsumerWidget {
               ),
             ),
             const SizedBox(width: 5),
-            const Text('Đang tải...'),
+            const LabelText(
+              content: 'Đang tải...',
+              size: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ],
         ),
         const SizedBox(height: 5),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text(
-              '... ₫',
-              style: TextStyle(
-                color: Color(0xFF007BFF),
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            const LabelText(
+              content: '... ₫',
+              color: Color(0xFF007BFF),
+              size: 18,
+              fontWeight: FontWeight.bold,
             ),
             const SizedBox(width: 10),
-            Text(
-              '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color(0xFF555555),
-              ),
+            LabelText(
+              content: '• ${order.roomNumber} - ${order.floorsNumber} tầng ',
+              size: 14,
+              color: const Color(0xFF555555),
             ),
           ],
         ),
@@ -286,15 +304,13 @@ class OrderItem extends HookConsumerWidget {
         Row(
           children: [
             Icon(
-              order.isReviewOnline! ? Icons.computer : Icons.home,
+              order.isReviewOnline ? Icons.computer : Icons.home,
               size: 16,
               color: const Color(0xFF555555),
             ),
             const SizedBox(width: 5),
             Text(
-              order.isReviewOnline!
-                  ? 'Đánh giá trực tuyến'
-                  : 'Đánh giá tại nhà',
+              order.isReviewOnline ? 'Đánh giá trực tuyến' : 'Đánh giá tại nhà',
               style: const TextStyle(
                 fontSize: 14,
                 color: Color(0xFF555555),

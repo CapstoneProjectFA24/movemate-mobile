@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
@@ -21,6 +22,12 @@ class PriceDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Hàm hỗ trợ để định dạng giá
+    String formatPrice(int price) {
+      final formatter = NumberFormat('#,###', 'vi_VN');
+      return '${formatter.format(price)} đ';
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -66,13 +73,13 @@ class PriceDetails extends ConsumerWidget {
           ...order.bookingDetails.map<Widget>((detail) {
             return buildPriceItem(
               detail.name ?? '',
-              detail.price.toString(),
+              formatPrice(detail.price),
             );
           }),
 
           const SizedBox(height: 16),
-          buildSummary('Tiền đặt cọc', order.deposit.toString()),
-          buildSummary('Tiền trả liền', order.totalFee.toString()),
+          buildSummary('Tiền đặt cọc', formatPrice(order.deposit.toInt())),
+          buildSummary('Tiền trả liền', formatPrice(order.totalFee.toInt())),
 
           const Divider(
             color: Colors.grey,
@@ -96,7 +103,7 @@ class PriceDetails extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: LabelText(
-                  content: '${order.totalReal} đ',
+                  content: formatPrice(order.totalReal.toInt()),
                   size: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
