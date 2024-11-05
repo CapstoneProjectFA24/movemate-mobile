@@ -11,6 +11,7 @@ class LocationSection extends StatelessWidget {
   final VoidCallback onTap;
   final bool hasError;
   final String errorMessage;
+  final Function()? onClear; // Add onClear callback
 
   const LocationSection({
     required this.title,
@@ -18,6 +19,7 @@ class LocationSection extends StatelessWidget {
     required this.onTap,
     required this.hasError,
     required this.errorMessage,
+    this.onClear,
     super.key,
   });
 
@@ -46,6 +48,7 @@ class LocationSection extends StatelessWidget {
               location: location,
               onTap: onTap,
               hasError: hasError,
+              onClear: onClear,
             ),
             if (hasError)
               Padding(

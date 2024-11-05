@@ -13,9 +13,9 @@ class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     final userData = await SharedPreferencesUtils.getInstance('user_token');
-    final deviceToken = await getDeviceToken();
+    // final deviceToken = await getDeviceToken();
     if (kDebugMode) {
-      print('device token: $deviceToken');
+      // print('device token: $deviceToken');
     }
 
     if (userData != null) {

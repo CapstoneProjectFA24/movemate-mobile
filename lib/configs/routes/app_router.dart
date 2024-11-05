@@ -44,7 +44,6 @@ import 'package:movemate/features/booking/presentation/screens/vehicles_list_pri
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/order_details_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order_screen/order_screen.dart';
 
-import 'package:movemate/features/payment/presentation/screens/payment_screen_not_use.dart';
 import 'package:movemate/features/profile/presentation/screens/wallet/wallet_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';

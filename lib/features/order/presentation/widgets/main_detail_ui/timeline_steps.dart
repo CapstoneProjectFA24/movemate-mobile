@@ -54,6 +54,7 @@ class TimelineStepsState extends ConsumerState<TimelineSteps>
     // Xác định hai bước cho animation dựa trên currentStatus
     final statusIndex =
         getStatusIndex(widget.currentStatus, widget.order.isReviewOnline);
+    print("statusIndex $statusIndex");
     final startStep = statusIndex;
     final endStep = statusIndex + 1;
 

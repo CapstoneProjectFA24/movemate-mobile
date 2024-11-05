@@ -50,17 +50,113 @@ class BookingScreen extends ConsumerWidget {
         priceLabel: "",
         isButtonEnabled: true,
         onPlacePress: () {
-          // context.router.push(const AvailableVehiclesScreenRoute());
-
-          // print("${bookingState.houseType}");
-          if (bookingState.houseType!.id != null) {
+          if (bookingState.houseType != null &&
+              bookingState.houseType?.id != null) {
             context.router.push(const AvailableVehiclesScreenRoute());
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Vui lòng chọn loại nhà phù hợp')),
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Stack(
+                  clipBehavior:
+                      Clip.none, // Cho phép widget con vượt ra ngoài Stack
+                  children: [
+                    AlertDialog(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            width: 60,
+                            height: 30,
+                            // decoration: const BoxDecoration(
+                            //   shape: BoxShape.circle,
+                            //   color: Colors.orange,
+                            // ),
+                            // child: const Center(
+                            //   child: Icon(
+                            //     Icons.home,
+                            //     color: Colors.white,
+                            //     size: 30,
+                            //   ),
+                            // ),
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Vui lòng chọn loại nhà phù hợp',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                              ),
+                              child: const Text(
+                                'Xác nhận',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    buildBadge(), // Thêm badge vào đây
+                  ],
+                );
+              },
             );
           }
         },
+      ),
+    );
+  }
+
+  Positioned buildBadge() {
+    return Positioned(
+      top: -120,
+      left: 0,
+      right: 0,
+      bottom: 55,
+      child: Center(
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.orange.shade700,
+            shape: BoxShape.circle,
+          ),
+          alignment: Alignment.center,
+          child: const Text(
+            'MoveMate',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
       ),
     );
   }

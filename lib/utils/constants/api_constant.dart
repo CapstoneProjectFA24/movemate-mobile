@@ -33,9 +33,9 @@ class APIConstants {
 //get list truck
   static const get_list_truck = '/services';
   // payments
-  static const paymentsBooking = '/payments/create-payment-url';
+  static const paymentsBooking = '/payments';
   static const paymentsDeposit = '/wallets/recharge';
-//get user 
+//get user
   static const get_user = '/users';
   // api vietmap-key
   static const apiVietMapKey =

@@ -204,6 +204,9 @@ class ServiceSelector extends HookConsumerWidget {
                 hasError:
                     showErrors.value && bookingState.pickUpLocation == null,
                 errorMessage: 'Vui lòng chọn điểm bắt đầu',
+                onClear: () {
+                  bookingNotifier.updatePickUpLocation(null);
+                },
               ),
               const SizedBox(height: 16),
               LocationSection(
@@ -216,6 +219,9 @@ class ServiceSelector extends HookConsumerWidget {
                 hasError:
                     showErrors.value && bookingState.dropOffLocation == null,
                 errorMessage: 'Vui lòng chọn điểm kết thúc',
+                onClear: () {
+                  bookingNotifier.updateDropOffLocation(null);
+                },
               ),
               const SizedBox(height: 16),
               DateTimeSection(

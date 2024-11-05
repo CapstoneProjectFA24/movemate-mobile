@@ -44,7 +44,7 @@ class _PaymentSource implements PaymentSource {
     )
             .compose(
               _dio.options,
-              '/payments/create-payment-url',
+              '/payments',
               queryParameters: queryParameters,
               data: _data,
             )

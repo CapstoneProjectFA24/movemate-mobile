@@ -143,12 +143,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    PaymentScreenNotUseRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const PaymentScreenNotUse(),
-      );
-    },
     PrivacyPolicyScreenRoute.name: (routeData) {
       final args = routeData.argsAs<PrivacyPolicyScreenRouteArgs>(
           orElse: () => const PrivacyPolicyScreenRouteArgs());
@@ -699,20 +693,6 @@ class PaymentScreenRouteArgs {
   String toString() {
     return 'PaymentScreenRouteArgs{key: $key, id: $id}';
   }
-}
-
-/// generated route for
-/// [PaymentScreenNotUse]
-class PaymentScreenNotUseRoute extends PageRouteInfo<void> {
-  const PaymentScreenNotUseRoute({List<PageRouteInfo>? children})
-      : super(
-          PaymentScreenNotUseRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'PaymentScreenNotUseRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

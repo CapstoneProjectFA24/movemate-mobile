@@ -76,6 +76,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
         'title': 'Đang thực hiện thanh toán',
         'details': [
           'Đang thực hiện thanh toán',
+          'Đã thanh toán',
         ],
       },
       {

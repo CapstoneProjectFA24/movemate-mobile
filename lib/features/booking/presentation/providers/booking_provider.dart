@@ -380,11 +380,11 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   // Location methods
-  void updatePickUpLocation(LocationModel location) {
+  void updatePickUpLocation(LocationModel? location) {
     state = state.copyWith(pickUpLocation: location);
   }
 
-  void updateDropOffLocation(LocationModel location) {
+  void updateDropOffLocation(LocationModel? location) {
     state = state.copyWith(dropOffLocation: location);
   }
 
@@ -406,6 +406,7 @@ class BookingNotifier extends StateNotifier<Booking> {
       additionalServiceQuantities: [],
     );
   }
+
 }
 
 // The global provider that can be accessed in all screens
