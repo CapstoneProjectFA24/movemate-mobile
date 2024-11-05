@@ -8,12 +8,14 @@ class DateTimeSection extends StatelessWidget {
   final bool showErrors;
   final bool isDateTimeInvalid;
   final VoidCallback onTap;
+  final FocusNode focusNode; // Thêm FocusNode
 
   const DateTimeSection({
     required this.controller,
     required this.showErrors,
     required this.isDateTimeInvalid,
     required this.onTap,
+    required this.focusNode, // Nhận FocusNode từ ServiceSelector
     super.key,
   });
 
@@ -44,6 +46,7 @@ class DateTimeSection extends StatelessWidget {
                 child: FadeInRight(
                   child: TextFormField(
                     controller: controller,
+                    focusNode: focusNode, // Sử dụng FocusNode
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: AssetsConstants.whiteColor,

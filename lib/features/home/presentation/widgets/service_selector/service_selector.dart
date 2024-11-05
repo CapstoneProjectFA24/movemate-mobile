@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'dart:async';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/balance_indicator.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/location_section.dart';
@@ -27,11 +26,13 @@ class ServiceSelector extends HookConsumerWidget {
     // State for invalid datetime error
     final isDateTimeInvalid = useState(false);
 
-    // Manage Timer using useRef
-    final errorTimer = useRef<Timer?>(null);
-
     // Controllers
     final dateController = useTextEditingController();
+
+    // FocusNodes for fields
+    final pickUpFocusNode = useFocusNode();
+    final dropOffFocusNode = useFocusNode();
+    final dateFocusNode = useFocusNode();
 
     // Helper Methods
     String formatDateTime(DateTime dateTime) {
@@ -103,11 +104,14 @@ class ServiceSelector extends HookConsumerWidget {
     }
 
     // Effects
+
+    // Validate datetime whenever bookingDate changes
     useEffect(() {
       validateDateTime();
       return null;
     }, [bookingState.bookingDate]);
 
+    // Update dateController text whenever bookingDate changes
     useEffect(() {
       if (bookingState.bookingDate != null) {
         dateController.text = formatDateTime(bookingState.bookingDate!);
@@ -117,11 +121,64 @@ class ServiceSelector extends HookConsumerWidget {
       return null;
     }, [bookingState.bookingDate]);
 
+    // Listener to hide errors when all fields are valid
     useEffect(() {
+      void listener() {
+        if (showErrors.value) {
+          final isPickUpValid = bookingState.pickUpLocation != null;
+          final isDropOffValid = bookingState.dropOffLocation != null;
+          final isDateValid =
+              bookingState.bookingDate != null && !isDateTimeInvalid.value;
+
+          if (isPickUpValid && isDropOffValid && isDateValid) {
+            showErrors.value = false;
+          }
+        }
+      }
+
+      // Add listeners to bookingState changes
+      listener();
+
+      return null;
+    }, [
+      bookingState.pickUpLocation,
+      bookingState.dropOffLocation,
+      bookingState.bookingDate,
+      isDateTimeInvalid.value
+    ]);
+
+    // Add listeners to focus nodes to hide errors when focus is lost and data is valid
+    useEffect(() {
+      void onFocusChange() {
+        if (!pickUpFocusNode.hasFocus &&
+            !dropOffFocusNode.hasFocus &&
+            !dateFocusNode.hasFocus) {
+          final isPickUpValid = bookingState.pickUpLocation != null;
+          final isDropOffValid = bookingState.dropOffLocation != null;
+          final isDateValid =
+              bookingState.bookingDate != null && !isDateTimeInvalid.value;
+
+          if (isPickUpValid && isDropOffValid && isDateValid) {
+            showErrors.value = false;
+          }
+        }
+      }
+
+      pickUpFocusNode.addListener(onFocusChange);
+      dropOffFocusNode.addListener(onFocusChange);
+      dateFocusNode.addListener(onFocusChange);
+
       return () {
-        errorTimer.value?.cancel();
+        pickUpFocusNode.removeListener(onFocusChange);
+        dropOffFocusNode.removeListener(onFocusChange);
+        dateFocusNode.removeListener(onFocusChange);
       };
-    }, []);
+    }, [
+      bookingState.pickUpLocation,
+      bookingState.dropOffLocation,
+      bookingState.bookingDate,
+      isDateTimeInvalid.value
+    ]);
 
     return Card(
       color: AssetsConstants.whiteColor,
@@ -130,77 +187,74 @@ class ServiceSelector extends HookConsumerWidget {
       margin: const EdgeInsets.only(top: 100),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const BalanceIndicator(),
-            const SizedBox(height: 16),
-            LocationSection(
-              title: 'Địa điểm bắt đầu',
-              location: bookingState.pickUpLocation,
-              onTap: () {
-                bookingNotifier.toggleSelectingPickUp(true);
-                navigateToLocationSelectionScreen();
-              },
-              hasError: showErrors.value && bookingState.pickUpLocation == null,
-              errorMessage: 'Vui lòng chọn điểm bắt đầu',
-            ),
-            const SizedBox(height: 16),
-            LocationSection(
-              title: 'Địa điểm kết thúc',
-              location: bookingState.dropOffLocation,
-              onTap: () {
-                bookingNotifier.toggleSelectingPickUp(false);
-                navigateToLocationSelectionScreen();
-              },
-              hasError:
-                  showErrors.value && bookingState.dropOffLocation == null,
-              errorMessage: 'Vui lòng chọn điểm kết thúc',
-            ),
-            const SizedBox(height: 16),
-            DateTimeSection(
-              controller: dateController,
-              showErrors: showErrors.value,
-              isDateTimeInvalid: isDateTimeInvalid.value,
-              onTap: () async {
-                final selectedDate = await selectDate(bookingState.bookingDate);
-                if (selectedDate != null) {
-                  bookingNotifier.updateBookingDate(selectedDate);
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            ConfirmationButton(
-              onPressed: () {
-                showErrors.value = true; // Show validation errors
+        child: SingleChildScrollView(
+          // Added to prevent overflow
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const BalanceIndicator(),
+              const SizedBox(height: 16),
+              LocationSection(
+                title: 'Địa điểm bắt đầu',
+                location: bookingState.pickUpLocation,
+                onTap: () {
+                  bookingNotifier.toggleSelectingPickUp(true);
+                  navigateToLocationSelectionScreen();
+                },
+                hasError:
+                    showErrors.value && bookingState.pickUpLocation == null,
+                errorMessage: 'Vui lòng chọn điểm bắt đầu',
+              ),
+              const SizedBox(height: 16),
+              LocationSection(
+                title: 'Địa điểm kết thúc',
+                location: bookingState.dropOffLocation,
+                onTap: () {
+                  bookingNotifier.toggleSelectingPickUp(false);
+                  navigateToLocationSelectionScreen();
+                },
+                hasError:
+                    showErrors.value && bookingState.dropOffLocation == null,
+                errorMessage: 'Vui lòng chọn điểm kết thúc',
+              ),
+              const SizedBox(height: 16),
+              DateTimeSection(
+                controller: dateController,
+                showErrors: showErrors.value,
+                isDateTimeInvalid: isDateTimeInvalid.value,
+                onTap: () async {
+                  final selectedDate =
+                      await selectDate(bookingState.bookingDate);
+                  if (selectedDate != null) {
+                    bookingNotifier.updateBookingDate(selectedDate);
+                  }
+                },
+                focusNode: dateFocusNode, // Pass the focus node
+              ),
+              const SizedBox(height: 16),
+              ConfirmationButton(
+                onPressed: () {
+                  showErrors.value = true; // Show validation errors
 
-                // Cancel existing timer if any
-                errorTimer.value?.cancel();
-
-                // Start a new timer to hide errors after 2 seconds
-                errorTimer.value = Timer(const Duration(seconds: 2), () {
-                  showErrors.value = false; // Hide validation errors
-                  errorTimer.value = null; // Reset timer
-                });
-
-                // Validate booking details
-                if (bookingState.pickUpLocation != null &&
-                    bookingState.dropOffLocation != null &&
-                    bookingState.bookingDate != null &&
-                    !isDateTimeInvalid.value) {
-                  context.router.push(const BookingScreenRoute());
-                  print(
-                      "Pick-up location: ${bookingState.pickUpLocation?.address} ");
-                  print(
-                      "Drop-off location: ${bookingState.dropOffLocation?.address} ");
-                  print(
-                      "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
-                  print(
-                      "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
-                }
-              },
-            ),
-          ],
+                  // Validate booking details
+                  if (bookingState.pickUpLocation != null &&
+                      bookingState.dropOffLocation != null &&
+                      bookingState.bookingDate != null &&
+                      !isDateTimeInvalid.value) {
+                    context.router.push(const BookingScreenRoute());
+                    print(
+                        "Pick-up location: ${bookingState.pickUpLocation?.address} ");
+                    print(
+                        "Drop-off location: ${bookingState.dropOffLocation?.address} ");
+                    print(
+                        "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
+                    print(
+                        "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
