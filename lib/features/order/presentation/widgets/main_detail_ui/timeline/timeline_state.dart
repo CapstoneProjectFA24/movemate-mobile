@@ -7,25 +7,21 @@ class TimelineState extends StateNotifier<List<TimelineItem>> {
           TimelineItem(
             title: 'Start Project',
             description: 'Project initialization',
-            date: DateTime(2024, 1, 1),
-            isCompleted: true,
+            isCompleted: false,
           ),
           TimelineItem(
             title: 'Development Phase',
             description: 'Main development phase',
-            date: DateTime(2024, 2, 1),
             isCompleted: true,
           ),
           TimelineItem(
             title: 'Testing Phase',
             description: 'Testing and bug fixes',
-            date: DateTime(2024, 3, 1),
             isCompleted: false,
           ),
           TimelineItem(
             title: 'Deployment',
             description: 'Project deployment',
-            date: DateTime(2024, 4, 1),
             isCompleted: false,
           ),
         ]);
@@ -37,7 +33,6 @@ class TimelineState extends StateNotifier<List<TimelineItem>> {
           return TimelineItem(
             title: entry.value.title,
             description: entry.value.description,
-            date: entry.value.date,
             isCompleted: !entry.value.isCompleted,
           );
         }

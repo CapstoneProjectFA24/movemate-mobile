@@ -79,9 +79,9 @@ class TimelineItemWidget extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTimelineColumn(context, ref),
-          Expanded(
-            child: _buildContentColumn(context),
-          ),
+          // Expanded(
+          //   child: _buildContentColumn(context),
+          // ),
         ],
       ),
     );
@@ -104,7 +104,7 @@ class TimelineItemWidget extends ConsumerWidget {
 
                 return TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0.0, end: item.isCompleted ? 1.0 : 0.0),
-                  duration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 1000),
                   builder: (context, completionValue, child) {
                     return Container(
                       width: 20,
@@ -120,7 +120,7 @@ class TimelineItemWidget extends ConsumerWidget {
                       ),
                       child: Center(
                         child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 1000),
                           opacity: item.isCompleted ? 1.0 : 0.0,
                           child: const Icon(
                             Icons.check,
@@ -151,7 +151,7 @@ class TimelineItemWidget extends ConsumerWidget {
                       color: Colors.grey,
                     ),
                     Container(
-                      width: 5,
+                      width: 2,
                       height: 50 * progress,
                       margin: const EdgeInsets.only(left: 9),
                       color: Colors.green,
@@ -160,66 +160,59 @@ class TimelineItemWidget extends ConsumerWidget {
                 );
               },
             ),
+       
         ],
       ),
     );
   }
 
-  Widget _buildContentColumn(BuildContext context) {
-    return AnimatedBuilder(
-        animation: progressAnimation,
-        builder: (context, child) {
-          final progress =
-              previousItemCompleted ? progressAnimation.value : 0.0;
+  // Widget _buildContentColumn(BuildContext context) {
+  //   return AnimatedBuilder(
+  //       animation: progressAnimation,
+  //       builder: (context, child) {
+  //         final progress =
+  //             previousItemCompleted ? progressAnimation.value : 0.0;
 
-          return Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-              border: Border.all(
-                color: Color.lerp(Colors.grey, Colors.green, progress) ??
-                    Colors.grey,
-                width: 1,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 300),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.lerp(Colors.black, Colors.green, progress),
-                  ),
-                  child: Text(item.title),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  item.description,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${item.date.day}/${item.date.month}/${item.date.year}',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
+  //         return Container(
+  //           padding: const EdgeInsets.all(16),
+  //           decoration: BoxDecoration(
+  //             color: Colors.white,
+  //             borderRadius: BorderRadius.circular(8),
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 color: Colors.black.withOpacity(0.1),
+  //                 blurRadius: 4,
+  //                 offset: const Offset(0, 2),
+  //               ),
+  //             ],
+  //             border: Border.all(
+  //               color: Color.lerp(Colors.grey, Colors.green, progress) ??
+  //                   Colors.grey,
+  //               width: 1,
+  //             ),
+  //           ),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               AnimatedDefaultTextStyle(
+  //                 duration: const Duration(milliseconds: 500),
+  //                 style: TextStyle(
+  //                   fontSize: 18,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Color.lerp(Colors.black, Colors.green, progress),
+  //                 ),
+  //                 child: Text(item.title),
+  //               ),
+  //               const SizedBox(height: 8),
+  //               Text(
+  //                 item.description,
+  //                 style: TextStyle(
+  //                   color: Colors.grey[600],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       });
+  // }
 }

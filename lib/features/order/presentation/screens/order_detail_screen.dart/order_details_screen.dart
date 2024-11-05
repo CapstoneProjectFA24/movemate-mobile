@@ -160,9 +160,9 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   currentStatus: statusOrders
                       as BookingStatusType, // Thêm currentStatus vào đây
                 ),
-                const SizedBox(height: 30),
+                // const SizedBox(height: 30),
                 // const AnimatedTimeline(),
-                const SizedBox(height: 30),
+                const SizedBox(height: 16),
                 statusOrders == BookingStatusType.pending
                     ? ServiceInfoCard(
                         statusAsync: statusAsync,

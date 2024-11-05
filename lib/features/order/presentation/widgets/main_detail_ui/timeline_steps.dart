@@ -1,5 +1,6 @@
 // timeline_steps.dart
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -24,33 +25,60 @@ class TimelineSteps extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<TimelineSteps> createState() => _TimelineStepsState();
+  ConsumerState<TimelineSteps> createState() => TimelineStepsState();
 }
 
-class _TimelineStepsState extends ConsumerState<TimelineSteps>
+class TimelineStepsState extends ConsumerState<TimelineSteps>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _progressAnimation;
+  late AnimationController animationController;
+  late Animation<double> animation;
+  int currentAnimatedStep = 0;
+  bool isForward = true;
 
   @override
   void initState() {
     super.initState();
+
     // Khởi tạo AnimationController với duration 0.5 giây
-    _animationController = AnimationController(
+    animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
 
     // Khởi tạo Animation với CurvedAnimation để tạo hiệu ứng mượt mà
-    _progressAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
+    animation = CurvedAnimation(
+      parent: animationController,
+      curve: Curves.easeInOut,
     );
 
-    // Bắt đầu animation khi widget được xây dựng
-    _animationController.forward();
+    // Xác định hai bước cho animation dựa trên currentStatus
+    final statusIndex =
+        getStatusIndex(widget.currentStatus, widget.order.isReviewOnline);
+    final startStep = statusIndex;
+    final endStep = statusIndex + 1;
+
+    // Đảm bảo endStep không vượt quá số bước
+    if (endStep >= widget.steps.length) {
+      isForward = false;
+    }
+
+    currentAnimatedStep = startStep;
+
+    // Lắng nghe khi animation hoàn thành
+    animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          // Chuyển đổi giữa hai bước
+          currentAnimatedStep = isForward ? endStep : startStep;
+          isForward = !isForward;
+        });
+        animationController.reset();
+        animationController.forward();
+      }
+    });
+
+    // Bắt đầu animation
+    animationController.forward();
   }
 
   @override
@@ -58,14 +86,35 @@ class _TimelineStepsState extends ConsumerState<TimelineSteps>
     super.didUpdateWidget(oldWidget);
     // Nếu trạng thái hiện tại thay đổi, reset và bắt đầu lại animation
     if (oldWidget.currentStatus != widget.currentStatus) {
-      _animationController.reset();
-      _animationController.forward();
+      resetAnimation();
     }
+  }
+
+  void resetAnimation() {
+    animationController.stop();
+    animationController.reset();
+
+    // Xác định lại hai bước dựa trên currentStatus mới
+    final statusIndex =
+        getStatusIndex(widget.currentStatus, widget.order.isReviewOnline);
+    final startStep = statusIndex;
+    final endStep = statusIndex + 1;
+
+    // Đảm bảo endStep không vượt quá số bước
+    isForward = true;
+    if (endStep >= widget.steps.length) {
+      isForward = false;
+    }
+
+    currentAnimatedStep = startStep;
+
+    // Bắt đầu lại animation
+    animationController.forward();
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -98,47 +147,41 @@ class _TimelineStepsState extends ConsumerState<TimelineSteps>
 
   @override
   Widget build(BuildContext context) {
-    final currentStepIndex =
-        getStatusIndex(widget.currentStatus, widget.order.isReviewOnline);
+    // Xác định bước hiện tại đang được animate
+    final currentStepIndex = currentAnimatedStep;
+    final totalSteps = widget.steps.length;
 
     return FadeInLeft(
       duration: const Duration(milliseconds: 600),
       child: Column(
         children: [
-          // Timeline header with dots
+          // Timeline header với các điểm
           SizedBox(
             height: 35,
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: AnimatedBuilder(
-                animation: _progressAnimation,
-                builder: (context, child) {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: widget.steps.length,
-                    itemBuilder: (context, index) {
-                      // Tính toán xem bước này đã hoàn thành hay chưa dựa trên animation
-                      bool isPast = index < currentStepIndex ||
-                          (index == currentStepIndex &&
-                              _progressAnimation.value >= 1.0);
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.steps.length,
+                itemBuilder: (context, index) {
+                  // Xác định xem bước này đã hoàn thành hay chưa dựa trên currentAnimatedStep
+                  bool isPast = index <= currentStepIndex;
 
-                      return SlideInRight(
-                        duration: Duration(milliseconds: 400 + (index * 100)),
-                        from: 50.0,
-                        child: MyTimelineTitle(
-                          isFirst: index == 0,
-                          isLast: index == widget.steps.length - 1,
-                          isPast: isPast,
-                        ),
-                      );
-                    },
+                  return SlideInRight(
+                    duration: Duration(milliseconds: 400 + (index * 100)),
+                    from: 50.0,
+                    child: MyTimelineTitle(
+                      isFirst: index == 0,
+                      isLast: index == widget.steps.length - 1,
+                      isPast: isPast,
+                    ),
                   );
                 },
               ),
             ),
           ),
 
-          // Timeline titles and details
+          // Timeline titles và chi tiết
           Padding(
             padding: const EdgeInsets.only(left: 2.0),
             child: Column(
@@ -148,9 +191,7 @@ class _TimelineStepsState extends ConsumerState<TimelineSteps>
                   child: Row(
                     children: List.generate(widget.steps.length, (index) {
                       final step = widget.steps[index];
-                      bool isPast = index < currentStepIndex ||
-                          (index == currentStepIndex &&
-                              _progressAnimation.value >= 1.0);
+                      bool isPast = index <= currentStepIndex;
 
                       return SlideInRight(
                         duration: Duration(milliseconds: 400 + (index * 100)),
@@ -188,13 +229,11 @@ class _TimelineStepsState extends ConsumerState<TimelineSteps>
                   ),
                 ),
 
-                // Expanded details with animation
+                // Chi tiết các bước với animation
                 ...List.generate(widget.steps.length, (index) {
                   final step = widget.steps[index];
                   bool isExpanded = widget.expandedIndex.value == index;
-                  bool isPast = index < currentStepIndex ||
-                      (index == currentStepIndex &&
-                          _progressAnimation.value >= 1.0);
+                  bool isPast = index <= currentStepIndex;
 
                   return AnimatedSize(
                     duration: const Duration(milliseconds: 300),

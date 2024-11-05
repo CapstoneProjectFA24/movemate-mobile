@@ -1,6 +1,8 @@
-import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:timeline_tile/timeline_tile.dart';
+// my_timeline_title.dart
+
 import 'package:flutter/material.dart';
+import 'package:timeline_tile/timeline_tile.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 class MyTimelineTitle extends StatelessWidget {
   final bool isFirst;
