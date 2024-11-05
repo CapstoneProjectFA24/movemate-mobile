@@ -15,6 +15,7 @@ import 'package:movemate/features/booking/presentation/screens/controller/servic
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
+import 'package:movemate/features/order/presentation/widgets/details/timeline/timeline_widget.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/map_widget.dart';
@@ -159,6 +160,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   currentStatus: statusOrders
                       as BookingStatusType, // Thêm currentStatus vào đây
                 ),
+                const SizedBox(height: 30),
+                const AnimatedTimeline(),
                 const SizedBox(height: 30),
                 statusOrders == BookingStatusType.pending
                     ? ServiceInfoCard(

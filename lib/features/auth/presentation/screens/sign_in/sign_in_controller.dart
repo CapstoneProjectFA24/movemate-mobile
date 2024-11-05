@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/utils/commons/functions/firebase_utils.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:auto_route/auto_route.dart';
@@ -45,8 +46,8 @@ class SignInController extends _$SignInController {
         final user = await authRepository.signIn(request: request);
 
         // get FCM token
-        // final deviceToken = await getDeviceToken();
-        // print(deviceToken);
+        final deviceToken = await getDeviceToken();
+        print(" token fcm : $deviceToken");
         final userModel = UserModel(
           id: user.payload.id,
           email: user.payload.email,

@@ -131,6 +131,7 @@ class ServicePackageController extends _$ServicePackageController {
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
+    // print("fcm token : ${user?.fcmToken}");
 
     state = await AsyncValue.guard(() async {
       final response = await serviceBookingRepository.getHouseTypeById(
