@@ -1,6 +1,7 @@
 // room_media_section.dart
 
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
@@ -10,25 +11,33 @@ import 'room_video.dart';
 import 'add_image_button.dart';
 import 'add_video_button.dart';
 
-class RoomMediaSection extends StatelessWidget {
+class RoomMediaSection extends ConsumerWidget {
+  // Changed to ConsumerWidget
   final String roomTitle;
   final RoomType roomType;
-  final BookingNotifier bookingNotifier;
 
   const RoomMediaSection({
     super.key,
     required this.roomTitle,
     required this.roomType,
-    required this.bookingNotifier,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingState = ref.watch(bookingProvider);
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+
     final List<ImageData> images = bookingNotifier.getImages(roomType);
     final List<VideoData> videos = bookingNotifier.getVideos(roomType);
 
     final bool canAddMoreImages = bookingNotifier.canAddImage(roomType);
     final bool canAddMoreVideos = bookingNotifier.canAddVideo(roomType);
+
+    // Retrieve the loading states
+    final bool isUploadingLivingRoomImage =
+        bookingState.isUploadingLivingRoomImage;
+    final bool isUploadingLivingRoomVideo =
+        bookingState.isUploadingLivingRoomVideo;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,69 +46,66 @@ class RoomMediaSection extends StatelessWidget {
           roomTitle,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
-        const SizedBox(height: 8), // Khoảng cách giữa tiêu đề và hình ảnh/video
+        const SizedBox(height: 8), // Space between title and media
         GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // Số cột
-            mainAxisSpacing: 8, // Khoảng cách dọc giữa các hàng
-            crossAxisSpacing: 16, // Khoảng cách ngang giữa các cột
-            childAspectRatio: 2, // Tỉ lệ chiều rộng và chiều cao của mỗi ô
+            crossAxisCount: 3, // Number of columns
+            mainAxisSpacing: 8, // Vertical spacing between rows
+            crossAxisSpacing: 16, // Horizontal spacing between columns
+            childAspectRatio: 2, // Width to height ratio of each cell
           ),
           itemCount: images.length +
               videos.length +
               (canAddMoreImages ? 1 : 0) +
-              (canAddMoreVideos
-                  ? 1
-                  : 0), // Thêm nút thêm hình ảnh và video nếu có thể
+              (canAddMoreVideos ? 1 : 0),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             int imageCount = images.length;
             int videoCount = videos.length;
 
-            // Hiển thị hình ảnh
+            // Display images
             if (index < imageCount) {
               final image = images[index];
               return RoomImage(
                 imageData: image,
                 roomType: roomType,
-                bookingNotifier: bookingNotifier,
               );
             }
 
-            // Hiển thị video
-            // if (index < imageCount + videoCount) {
-            //   final video = videos[index - imageCount];
-            //   return RoomVideo(
-            //     videoData: video,
-            //     roomType: roomType,
-            //     bookingNotifier: bookingNotifier,
-            //   );
-            // }
+            // Display videos
+            if (index < imageCount + videoCount) {
+              final video = videos[index - imageCount];
+              return RoomVideo(
+                videoData: video,
+                roomType: roomType,
+              );
+            }
 
-            // Hiển thị nút thêm hình ảnh
-            if (canAddMoreImages && index == imageCount + videoCount) {
+            // Calculate the current position for additional buttons
+            int additionalIndex = index - imageCount - videoCount;
+
+            // Display Add Image button or loader
+            if (canAddMoreImages && additionalIndex == 0) {
               return AddImageButton(
                 roomType: roomType,
-                bookingNotifier: bookingNotifier,
                 hasImages: images.isNotEmpty,
               );
             }
 
-            // Hiển thị nút thêm video
-            // if (canAddMoreVideos &&
-            //     index == imageCount + videoCount + (canAddMoreImages ? 1 : 0)) {
-            //   return AddVideoButton(
-            //     roomType: roomType,
-            //     bookingNotifier: bookingNotifier,
-            //     hasVideos: videos.isNotEmpty,
-            //   );
-            // }
+            // Display Add Video button or loader
+            if (canAddMoreVideos &&
+                (additionalIndex == (canAddMoreImages ? 1 : 0))) {
+              return AddVideoButton(
+                roomType: roomType,
+                hasVideos: videos.isNotEmpty,
+              );
+            }
 
-            return const SizedBox.shrink(); // Không hiển thị gì
+            return const SizedBox.shrink(); // Render nothing
           },
         ),
-        // Hiển thị thông báo nếu đã đạt giới hạn
+        // Display a message if the limits are reached
         if (images.length >= BookingNotifier.maxImages ||
             videos.length >= BookingNotifier.maxVideos)
           const Padding(

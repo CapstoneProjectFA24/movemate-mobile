@@ -24,6 +24,8 @@ class Booking {
   final List<Vehicle> availableVehicles;
   final double totalPrice;
   final InverseParentServiceEntity? selectedVehicle;
+  bool isUploadingLivingRoomImage = false;
+  bool isUploadingLivingRoomVideo = false;
 
   final double packagePrice;
   final bool isRoundTrip;
@@ -91,6 +93,8 @@ class Booking {
     List<ImageData>? diningRoomImages,
     List<ImageData>? officeRoomImages,
     List<ImageData>? bathroomImages,
+    this.isUploadingLivingRoomImage = false,
+    this.isUploadingLivingRoomVideo = false,
   })  : checklistValues = checklistValues ?? List.filled(10, false),
         livingRoomImages = livingRoomImages ?? [],
         bedroomImages = bedroomImages ?? [],
@@ -134,6 +138,8 @@ class Booking {
     List<ImageData>? diningRoomImages,
     List<ImageData>? officeRoomImages,
     List<ImageData>? bathroomImages,
+    bool? isUploadingLivingRoomImage,
+    bool? isUploadingLivingRoomVideo,
   }) {
     return Booking(
       houseType: houseType ?? this.houseType,
@@ -174,6 +180,10 @@ class Booking {
       diningRoomImages: diningRoomImages ?? this.diningRoomImages,
       officeRoomImages: officeRoomImages ?? this.officeRoomImages,
       bathroomImages: bathroomImages ?? this.bathroomImages,
+      isUploadingLivingRoomImage:
+          isUploadingLivingRoomImage ?? this.isUploadingLivingRoomImage,
+      isUploadingLivingRoomVideo:
+          isUploadingLivingRoomVideo ?? this.isUploadingLivingRoomVideo,
     );
   }
 }

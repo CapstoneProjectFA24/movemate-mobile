@@ -22,6 +22,8 @@ class BookingNotifier extends StateNotifier<Booking> {
       : super(Booking(
           totalPrice: 0.0,
           additionalServiceQuantities: [],
+          livingRoomImages: [],
+          livingRoomVideos: [],
         ));
 
   void updateSubServiceQuantity(SubServiceEntity subService, int newQuantity) {
@@ -186,6 +188,18 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(notes: notes);
   }
 
+  /// xử lý ảnh và video
+
+  // Method to set the loading state for uploading living room images
+  void setUploadingLivingRoomImage(bool isUploading) {
+    state = state.copyWith(isUploadingLivingRoomImage: isUploading);
+  }
+
+  // Method to set the loading state for uploading living room videos
+  void setUploadingLivingRoomVideo(bool isUploading) {
+    state = state.copyWith(isUploadingLivingRoomVideo: isUploading);
+  }
+
 // Phương thức lấy danh sách hình ảnh cho một loại phòng
   List<ImageData> getImages(RoomType roomType) {
     switch (roomType) {
@@ -223,38 +237,51 @@ class BookingNotifier extends StateNotifier<Booking> {
     return getVideos(roomType).length < maxVideos;
   }
 
-  // Method to add image to a room
-  void addImageToRoom(RoomType roomType, ImageData imageData) {
+// Modify addImageToRoom to handle loading state
+  Future<void> addImageToRoom(RoomType roomType, ImageData imageData) async {
     if (!canAddImage(roomType)) {
       // Không thêm hình ảnh nếu đã đạt giới hạn
       return;
     }
-    switch (roomType) {
-      case RoomType.livingRoom:
-        state = state.copyWith(
-          livingRoomImages: [...state.livingRoomImages, imageData],
-        );
-        break;
-      case RoomType.bedroom:
-        state = state.copyWith(
-          bedroomImages: [...state.bedroomImages, imageData],
-        );
-        break;
-      case RoomType.diningRoom:
-        state = state.copyWith(
-          diningRoomImages: [...state.diningRoomImages, imageData],
-        );
-        break;
-      case RoomType.officeRoom:
-        state = state.copyWith(
-          officeRoomImages: [...state.officeRoomImages, imageData],
-        );
-        break;
-      case RoomType.bathroom:
-        state = state.copyWith(
-          bathroomImages: [...state.bathroomImages, imageData],
-        );
-        break;
+
+    // Set loading state if roomType is livingRoom
+    if (roomType == RoomType.livingRoom) {
+      setUploadingLivingRoomImage(true);
+    }
+
+    try {
+      switch (roomType) {
+        case RoomType.livingRoom:
+          state = state.copyWith(
+            livingRoomImages: [...state.livingRoomImages, imageData],
+          );
+          break;
+        case RoomType.bedroom:
+          state = state.copyWith(
+            bedroomImages: [...state.bedroomImages, imageData],
+          );
+          break;
+        case RoomType.diningRoom:
+          state = state.copyWith(
+            diningRoomImages: [...state.diningRoomImages, imageData],
+          );
+          break;
+        case RoomType.officeRoom:
+          state = state.copyWith(
+            officeRoomImages: [...state.officeRoomImages, imageData],
+          );
+          break;
+        case RoomType.bathroom:
+          state = state.copyWith(
+            bathroomImages: [...state.bathroomImages, imageData],
+          );
+          break;
+      }
+    } finally {
+      // Reset loading state
+      if (roomType == RoomType.livingRoom) {
+        setUploadingLivingRoomImage(false);
+      }
     }
   }
 
@@ -316,26 +343,33 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   // Thêm video vào phòng với kiểm tra giới hạn và kích thước
-  void addVideoToRoom(RoomType roomType, VideoData videoData) {
+  Future<void> addVideoToRoom(RoomType roomType, VideoData videoData) async {
     if (!canAddVideo(roomType)) {
-      // Không thêm video nếu đã đạt giới hạn
+      // Do not add video if maximum limit is reached
       return;
     }
 
-    if (videoData.size > maxVideoSize) {
-      // Không thêm video nếu kích thước vượt quá giới hạn
-      return;
+    // Set loading state if roomType is livingRoom
+    if (roomType == RoomType.livingRoom) {
+      setUploadingLivingRoomVideo(true);
     }
 
-    switch (roomType) {
-      case RoomType.livingRoom:
-        state = state.copyWith(
-          livingRoomVideos: [...state.livingRoomVideos, videoData],
-        );
-        break;
-      // Nếu muốn mở rộng cho các loại phòng khác, thêm vào đây
-      default:
-        break;
+    try {
+      switch (roomType) {
+        case RoomType.livingRoom:
+          state = state.copyWith(
+            livingRoomVideos: [...state.livingRoomVideos, videoData],
+          );
+          break;
+        // If you want to support other room types for videos, add cases here
+        default:
+          break;
+      }
+    } finally {
+      // Reset loading state
+      if (roomType == RoomType.livingRoom) {
+        setUploadingLivingRoomVideo(false);
+      }
     }
   }
 

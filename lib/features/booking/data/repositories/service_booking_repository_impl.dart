@@ -30,9 +30,20 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     required PagingModel request,
     required String accessToken,
   }) async {
+    // Convert PagingModel to a Map of query parameters
+    final Map<String, dynamic> queries = {
+      'page': request.pageNumber,
+      'per_page': request.pageSize,
+      'SortColumn': request.sortColumn,
+      // Add other parameters if needed
+    };
+
     return getDataOf(
       request: () => _serviceBookingSource.getHouseTypes(
-          APIConstants.contentType, accessToken),
+        APIConstants.contentType,
+        accessToken,
+        queries, // Pass the query parameters
+      ),
     );
   }
 
@@ -97,10 +108,18 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     required PagingModel request,
     required String accessToken,
   }) async {
+    // Convert PagingModel to a Map of query parameters
+    final Map<String, dynamic> queries = {
+      'page': request.pageNumber,
+      'per_page': request.pageSize,
+      'SortColumn': request.sortColumn,
+      // Add other parameters if needed
+    };
     return getDataOf(
       request: () => _serviceBookingSource.getPackageServices(
         APIConstants.contentType,
         accessToken,
+        queries,
       ),
     );
   }

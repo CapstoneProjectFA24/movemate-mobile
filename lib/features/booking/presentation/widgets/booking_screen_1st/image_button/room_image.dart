@@ -1,30 +1,30 @@
-// room_image.dart
-
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RoomImage extends StatelessWidget {
+class RoomImage extends ConsumerWidget {
+  // Changed to ConsumerWidget
   final ImageData imageData;
   final RoomType roomType;
-  final BookingNotifier bookingNotifier;
 
   const RoomImage({
     super.key,
     required this.imageData,
     required this.roomType,
-    required this.bookingNotifier,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+
     return SizedBox(
-      width: 50, // Chiều rộng cố định
-      height: 50, // Chiều cao cố định
+      width: 50, // Fixed width
+      height: 50, // Fixed height
       child: Container(
-        width: 50, // Đảm bảo kích thước khớp với SizedBox
-        height: 50, // Đảm bảo kích thước khớp với SizedBox
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           image: DecorationImage(

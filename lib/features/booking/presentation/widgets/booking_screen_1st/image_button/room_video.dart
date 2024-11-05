@@ -1,28 +1,27 @@
 // room_video.dart
-
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RoomVideo extends StatefulWidget {
+class RoomVideo extends ConsumerStatefulWidget {
+  // Changed to ConsumerStatefulWidget
   final VideoData videoData;
   final RoomType roomType;
-  final BookingNotifier bookingNotifier;
 
   const RoomVideo({
     super.key,
     required this.videoData,
     required this.roomType,
-    required this.bookingNotifier,
   });
 
   @override
   _RoomVideoState createState() => _RoomVideoState();
 }
 
-class _RoomVideoState extends State<RoomVideo> {
+class _RoomVideoState extends ConsumerState<RoomVideo> {
   late VideoPlayerController _controller;
   bool _isInitialized = false;
 
@@ -45,15 +44,17 @@ class _RoomVideoState extends State<RoomVideo> {
 
   @override
   Widget build(BuildContext context) {
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+
     return SizedBox(
-      width: 80, // Chiều rộng cố định
-      height: 80, // Chiều cao cố định
+      width: 80, // Fixed width
+      height: 80, // Fixed height
       child: _isInitialized
           ? Stack(
               children: [
                 Container(
-                  width: 80, // Đảm bảo kích thước khớp với SizedBox
-                  height: 80, // Đảm bảo kích thước khớp với SizedBox
+                  width: 80, // Ensure size matches SizedBox
+                  height: 80, // Ensure size matches SizedBox
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.black,
@@ -66,7 +67,7 @@ class _RoomVideoState extends State<RoomVideo> {
                     ),
                   ),
                 ),
-                // Nút play/pause
+                // Play/Pause button
                 Positioned.fill(
                   child: GestureDetector(
                     onTap: () {
@@ -82,18 +83,18 @@ class _RoomVideoState extends State<RoomVideo> {
                             ? Icons.pause_circle
                             : Icons.play_circle,
                         color: Colors.white,
-                        size: 24, // Kích thước nhỏ hơn phù hợp với 80x80
+                        size: 24, // Suitable size for 80x80
                       ),
                     ),
                   ),
                 ),
-                // Nút xóa video
+                // Delete video button
                 Positioned(
                   top: 4,
                   right: 4,
                   child: GestureDetector(
                     onTap: () {
-                      widget.bookingNotifier.removeVideoFromRoom(
+                      bookingNotifier.removeVideoFromRoom(
                           widget.roomType, widget.videoData);
                     },
                     child: Container(
@@ -104,15 +105,15 @@ class _RoomVideoState extends State<RoomVideo> {
                       ),
                       child: const Icon(Icons.delete,
                           color: AssetsConstants.whiteColor,
-                          size: 12), // Kích thước nhỏ hơn
+                          size: 12), // Smaller size
                     ),
                   ),
                 ),
               ],
             )
           : Container(
-              width: 80, // Đảm bảo kích thước khớp với SizedBox
-              height: 80, // Đảm bảo kích thước khớp với SizedBox
+              width: 80, // Ensure size matches SizedBox
+              height: 80, // Ensure size matches SizedBox
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 color: Colors.grey[300],
@@ -124,3 +125,4 @@ class _RoomVideoState extends State<RoomVideo> {
     );
   }
 }
+

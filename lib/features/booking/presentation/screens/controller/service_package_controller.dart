@@ -71,8 +71,6 @@ class ServicePackageController extends _$ServicePackageController {
     return servicePackages;
   }
 
-
-
 //get house information
   Future<List<HouseTypeEntity>> getHouseTypes(
     PagingModel request,
@@ -91,7 +89,7 @@ class ServicePackageController extends _$ServicePackageController {
         request: request,
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
       );
-      print("HouseTypeEntity: $response");
+      print("HouseTypeEntity: ${response.payload.toString()}");
       houseTypeData = response.payload;
       state = AsyncData(houseTypeData);
     });

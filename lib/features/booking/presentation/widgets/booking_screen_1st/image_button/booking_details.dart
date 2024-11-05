@@ -14,15 +14,15 @@ class BookingDetails extends HookConsumerWidget {
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RoomMediaSection(
             roomTitle: 'Tải ảnh lên',
             roomType: RoomType.livingRoom,
-            bookingNotifier: bookingNotifier,
+            // bookingNotifier: bookingNotifier,
           ),
           // RoomImageSection(
           //   roomTitle: 'Phòng ngủ',

@@ -41,7 +41,7 @@ class BookingScreenService extends HookConsumerWidget {
         return result; // Ensure this returns data
       },
       initialPagingModel: PagingModel(
-        sortContent: "1",
+        sortColumn: '1',
       ),
       context: context,
     );

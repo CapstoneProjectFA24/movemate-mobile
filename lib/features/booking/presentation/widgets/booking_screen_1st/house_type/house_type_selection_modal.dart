@@ -37,9 +37,9 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
           .read(servicePackageControllerProvider.notifier)
           .getHouseTypes(model, context),
       initialPagingModel: PagingModel(
-        sortContent: "1",
-        searchContent: '1',
-      ),
+          // sortColumn: '1',
+          // searchContent: 'Công ty',
+          ),
       context: context,
     );
 

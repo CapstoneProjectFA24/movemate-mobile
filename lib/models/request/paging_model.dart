@@ -4,6 +4,7 @@ class PagingModel {
   final String? searchContent;
   final String? sortContent;
   final String? filterContent;
+  final String? sortColumn;
   final String? filterSystemContent;
   final String? searchDateFrom;
   final String? searchDateTo;
@@ -14,6 +15,7 @@ class PagingModel {
     this.pageSize = 10,
     this.searchContent,
     this.sortContent,
+    this.sortColumn,
     this.filterContent,
     this.filterSystemContent,
     this.searchDateFrom,

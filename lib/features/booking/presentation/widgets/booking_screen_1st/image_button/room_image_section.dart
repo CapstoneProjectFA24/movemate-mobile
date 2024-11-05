@@ -48,19 +48,21 @@ class RoomImageSection extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            if (canAddMore && index == images.length) {
-              return AddImageButton(
-                roomType: roomType,
-                bookingNotifier: bookingNotifier,
-                hasImages: images.isNotEmpty,
-              );
-            } else {
-              return RoomImage(
-                imageData: images[index],
-                roomType: roomType,
-                bookingNotifier: bookingNotifier,
-              );
-            }
+            return null;
+
+            // if (canAddMore && index == images.length) {
+            //   return AddImageButton(
+            //     roomType: roomType,
+            //     bookingNotifier: bookingNotifier,
+            //     hasImages: images.isNotEmpty,
+            //   );
+            // } else {
+            //   return RoomImage(
+            //     imageData: images[index],
+            //     roomType: roomType,
+            //     bookingNotifier: bookingNotifier,
+            //   );
+            // }
           },
         ),
         if (images.length >= maxImages)

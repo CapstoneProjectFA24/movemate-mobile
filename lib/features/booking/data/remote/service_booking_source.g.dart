@@ -24,9 +24,11 @@ class _ServiceBookingSource implements ServiceBookingSource {
   Future<HttpResponse<HouseTypeResponse>> getHouseTypes(
     String contentType,
     String accessToken,
+    Map<String, dynamic> queries,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queries);
     final _headers = <String, dynamic>{
       r'Content-Type': contentType,
       r'Authorization': accessToken,
@@ -207,9 +209,11 @@ class _ServiceBookingSource implements ServiceBookingSource {
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
     String contentType,
     String accessToken,
+    Map<String, dynamic> queries,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queries);
     final _headers = <String, dynamic>{
       r'Content-Type': contentType,
       r'Authorization': accessToken,

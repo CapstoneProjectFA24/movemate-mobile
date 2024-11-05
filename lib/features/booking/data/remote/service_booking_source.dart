@@ -33,6 +33,7 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<HouseTypeResponse>> getHouseTypes(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+    @Queries() Map<String, dynamic> queries,
   );
   // house types get by id
   @GET('${APIConstants.get_house_types}/{id}')
@@ -68,6 +69,7 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+        @Queries() Map<String, dynamic> queries,
   );
 //Post , put
   // Post booking service

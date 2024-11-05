@@ -36,6 +36,10 @@ class HouseTypeEntity {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return '\nHouseTypeEntity(id: $id,name: $name,description: $description) \n';
+  }
 
   factory HouseTypeEntity.fromJson(String source) =>
       HouseTypeEntity.fromMap(json.decode(source));

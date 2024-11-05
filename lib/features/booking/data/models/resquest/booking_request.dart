@@ -38,6 +38,7 @@ import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
 import 'package:movemate/features/booking/domain/entities/booking_request/service_detail.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 
 class BookingRequest {
   final String pickupAddress;
@@ -196,11 +197,20 @@ class BookingRequest {
           )));
     }
 
+    void addVideosToResourceList(List<VideoData> videos, String resourceCode) {
+      resourceList.addAll(videos.map((imageData) => Resource(
+            type: 'VIDEO',
+            resourceUrl: imageData.url,
+            resourceCode: resourceCode,
+          )));
+    }
+
     addImagesToResourceList(booking.livingRoomImages, 'living_room');
     addImagesToResourceList(booking.bedroomImages, 'bedroom');
     addImagesToResourceList(booking.diningRoomImages, 'dining_room');
     addImagesToResourceList(booking.officeRoomImages, 'office_room');
     addImagesToResourceList(booking.bathroomImages, 'bathroom');
+    addVideosToResourceList(booking.livingRoomVideos, 'living_room');
 
     // Tính toán khoảng cách ước tính (ví dụ)
     String estimatedDistance = '3'; // Có thể tính toán dựa trên tọa độ
