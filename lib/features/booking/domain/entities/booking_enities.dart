@@ -174,7 +174,7 @@ class Booking {
       isSelectingPickUp: isSelectingPickUp ?? this.isSelectingPickUp,
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
-      bookingDate: bookingDate ?? this.bookingDate,
+      bookingDate: bookingDate,
       //add image
       livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,

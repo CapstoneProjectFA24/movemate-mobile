@@ -399,7 +399,7 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(dropOffLocation: location);
   }
 
-  void updateBookingDate(DateTime date) {
+  void updateBookingDate(DateTime? date) {
     state = state.copyWith(bookingDate: date);
   }
 

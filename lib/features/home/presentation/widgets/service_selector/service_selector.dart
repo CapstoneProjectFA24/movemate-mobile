@@ -5,7 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/balance_indicator.dart';
-import 'package:movemate/features/home/presentation/widgets/service_selector/location_field.dart'; // Updated import
+import 'package:movemate/features/home/presentation/widgets/service_selector/location_field.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/date_time_section.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/confirmation_button.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
@@ -44,7 +44,8 @@ class ServiceSelector extends HookConsumerWidget {
         isDateTimeInvalid.value =
             bookingState.bookingDate!.isBefore(DateTime.now());
       } else {
-        isDateTimeInvalid.value = false;
+        isDateTimeInvalid.value =
+            true; // Đánh dấu là không hợp lệ nếu chưa chọn ngày giờ
       }
     }
 
@@ -195,7 +196,7 @@ class ServiceSelector extends HookConsumerWidget {
               const BalanceIndicator(),
               const SizedBox(height: 16),
 
-              // Updated to use LocationField
+              // LocationField for Pick-Up Location
               LocationField(
                 title: 'Địa điểm bắt đầu',
                 location: bookingState.pickUpLocation,
@@ -212,6 +213,8 @@ class ServiceSelector extends HookConsumerWidget {
                 },
               ),
               const SizedBox(height: 16),
+
+              // LocationField for Drop-Off Location
               LocationField(
                 title: 'Địa điểm kết thúc',
                 location: bookingState.dropOffLocation,
@@ -228,6 +231,8 @@ class ServiceSelector extends HookConsumerWidget {
                 },
               ),
               const SizedBox(height: 16),
+
+              // DateTimeSection for Booking Date and Time
               DateTimeSection(
                 controller: dateController,
                 showErrors: showErrors.value,
@@ -239,19 +244,35 @@ class ServiceSelector extends HookConsumerWidget {
                     bookingNotifier.updateBookingDate(selectedDate);
                   }
                 },
+                onClear: () {
+                  // Khi nhấn nút "x", đặt lại bookingDate thành null
+                  bookingNotifier.updateBookingDate(null);
+                },
                 focusNode: dateFocusNode, // Pass the focus node
               ),
               const SizedBox(height: 16),
+
+              // ConfirmationButton to proceed
               ConfirmationButton(
                 onPressed: () {
-                  showErrors.value = true; // Show validation errors
+                  showErrors.value = true; // Hiển thị các thông báo lỗi
 
-                  // Validate booking details
-                  if (bookingState.pickUpLocation != null &&
-                      bookingState.dropOffLocation != null &&
-                      bookingState.bookingDate != null &&
-                      !isDateTimeInvalid.value) {
+                  // Kiểm tra tính hợp lệ của các trường
+                  final isPickUpValid = bookingState.pickUpLocation != null;
+                  final isDropOffValid = bookingState.dropOffLocation != null;
+                  final isDateValid = bookingState.bookingDate != null &&
+                      !isDateTimeInvalid.value;
+                  final isDateSelected =
+                      dateController.text != 'Chọn ngày - giờ';
+
+                  if (isPickUpValid &&
+                      isDropOffValid &&
+                      isDateValid &&
+                      isDateSelected) {
+                    // Nếu tất cả các trường hợp lệ, chuyển trang
                     context.router.push(const BookingScreenRoute());
+
+                    // In thông tin chi tiết (tùy chọn)
                     print(
                         "Pick-up location: ${bookingState.pickUpLocation?.address} ");
                     print(
@@ -260,6 +281,12 @@ class ServiceSelector extends HookConsumerWidget {
                         "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
                     print(
                         "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
+                    print(
+                        "Booking date: ${formatDateTime(bookingState.bookingDate!)} ");
+                    print("isDateTimeInvalid: ${!isDateTimeInvalid.value} ");
+                  } else {
+                    // Nếu có trường không hợp lệ, không làm gì (thông báo lỗi đã được hiển thị)
+                    print("Vui lòng điền đầy đủ thông tin trước khi tiếp tục.");
                   }
                 },
               ),
