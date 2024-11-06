@@ -15,7 +15,6 @@ class SelectionModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
     final double maxHeight = MediaQuery.of(context).size.height * 0.8;
 
     return Dialog(
@@ -24,7 +23,6 @@ class SelectionModal extends StatelessWidget {
       ),
       child: Container(
         constraints: BoxConstraints(
-        
           maxHeight: maxHeight,
         ),
         padding: const EdgeInsets.all(16.0),
@@ -33,10 +31,8 @@ class SelectionModal extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: SingleChildScrollView(
-          
           child: Column(
-            mainAxisSize:
-                MainAxisSize.min, 
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -46,10 +42,8 @@ class SelectionModal extends StatelessWidget {
               ),
               const Divider(),
               ListView.builder(
-                shrinkWrap:
-                    true, 
-                physics:
-                    const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
                   return ListTile(

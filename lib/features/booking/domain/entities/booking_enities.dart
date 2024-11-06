@@ -24,8 +24,8 @@ class Booking {
   final List<Vehicle> availableVehicles;
   final double totalPrice;
   final InverseParentServiceEntity? selectedVehicle;
-  bool isUploadingLivingRoomImage = false;
-  bool isUploadingLivingRoomVideo = false;
+  final bool isUploadingLivingRoomImage;
+  final bool isUploadingLivingRoomVideo;
   final String? houseTypeError; // New field for error message
 
   final double packagePrice;
@@ -172,6 +172,9 @@ class Booking {
       selectedSubServices: selectedSubServices ?? this.selectedSubServices,
       // Location
       isSelectingPickUp: isSelectingPickUp ?? this.isSelectingPickUp,
+      // pickUpLocation: pickUpLocation,
+      // dropOffLocation: dropOffLocation,
+      // bookingDate: bookingDate,
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       bookingDate: bookingDate,

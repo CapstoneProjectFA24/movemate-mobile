@@ -11,6 +11,7 @@ class LocationField extends StatefulWidget {
   final bool hasError;
   final String errorMessage;
   final VoidCallback? onClear;
+  final TextEditingController locationController;
 
   const LocationField({
     required this.title,
@@ -18,6 +19,7 @@ class LocationField extends StatefulWidget {
     required this.onTap,
     required this.hasError,
     required this.errorMessage,
+    required this.locationController,
     this.onClear,
     super.key,
   });

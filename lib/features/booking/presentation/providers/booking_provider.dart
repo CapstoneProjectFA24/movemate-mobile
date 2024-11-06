@@ -391,16 +391,44 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   // Location methods
+  // void updatePickUpLocation(LocationModel? location) {
+  //   state = state.copyWith(pickUpLocation: location);
+  // }
+
+  // void updateDropOffLocation(LocationModel? location) {
+  //   state = state.copyWith(dropOffLocation: location);
+  // }
+
+  // void updateBookingDate(DateTime? date) {
+  //   state = state.copyWith(bookingDate: date);
+  // }
+
   void updatePickUpLocation(LocationModel? location) {
+    print("Updating Pick-Up Location: ${location?.address}");
     state = state.copyWith(pickUpLocation: location);
   }
 
   void updateDropOffLocation(LocationModel? location) {
+    print("Updating Drop-Off Location: ${location?.address}");
     state = state.copyWith(dropOffLocation: location);
   }
 
   void updateBookingDate(DateTime? date) {
+    print(
+        "Updating Booking Date: ${date != null ? date.toIso8601String() : 'null'}");
     state = state.copyWith(bookingDate: date);
+  }
+
+  void clearPickUpLocation() {
+    state = state.copyWith(pickUpLocation: null);
+  }
+
+  void clearDropOffLocation() {
+    state = state.copyWith(dropOffLocation: null);
+  }
+
+  void clearBookingDate() {
+    state = state.copyWith(bookingDate: null);
   }
 
   void toggleSelectingPickUp(bool isSelecting) {

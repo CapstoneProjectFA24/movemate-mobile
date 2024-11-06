@@ -28,6 +28,7 @@ class ServiceSelector extends HookConsumerWidget {
 
     // Controllers
     final dateController = useTextEditingController();
+    final locationController = useTextEditingController();
 
     // FocusNodes for fields
     final pickUpFocusNode = useFocusNode();
@@ -45,7 +46,7 @@ class ServiceSelector extends HookConsumerWidget {
             bookingState.bookingDate!.isBefore(DateTime.now());
       } else {
         isDateTimeInvalid.value =
-            true; // Đánh dấu là không hợp lệ nếu chưa chọn ngày giờ
+            true; // Mark as invalid if no date is selected
       }
     }
 
@@ -102,6 +103,8 @@ class ServiceSelector extends HookConsumerWidget {
         }
       }
       return null;
+
+      // ... (existing date picker logic)
     }
 
     // Effects
@@ -198,6 +201,7 @@ class ServiceSelector extends HookConsumerWidget {
 
               // LocationField for Pick-Up Location
               LocationField(
+                locationController: locationController,
                 title: 'Địa điểm bắt đầu',
                 location: bookingState.pickUpLocation,
                 onTap: () {
@@ -208,14 +212,14 @@ class ServiceSelector extends HookConsumerWidget {
                     showErrors.value && bookingState.pickUpLocation == null,
                 errorMessage: 'Vui lòng chọn điểm bắt đầu',
                 onClear: () {
-                  print('Clear button for Pick-Up Location tapped');
-                  bookingNotifier.updatePickUpLocation(null);
+                  bookingNotifier.clearPickUpLocation();
                 },
               ),
               const SizedBox(height: 16),
 
               // LocationField for Drop-Off Location
               LocationField(
+                locationController: locationController,
                 title: 'Địa điểm kết thúc',
                 location: bookingState.dropOffLocation,
                 onTap: () {
@@ -226,8 +230,7 @@ class ServiceSelector extends HookConsumerWidget {
                     showErrors.value && bookingState.dropOffLocation == null,
                 errorMessage: 'Vui lòng chọn điểm kết thúc',
                 onClear: () {
-                  print('Clear button for Drop-Off Location tapped');
-                  bookingNotifier.updateDropOffLocation(null);
+                  bookingNotifier.clearDropOffLocation();
                 },
               ),
               const SizedBox(height: 16),
@@ -245,34 +248,37 @@ class ServiceSelector extends HookConsumerWidget {
                   }
                 },
                 onClear: () {
-                  // Khi nhấn nút "x", đặt lại bookingDate thành null
                   bookingNotifier.updateBookingDate(null);
                 },
-                focusNode: dateFocusNode, // Pass the focus node
+                focusNode: dateFocusNode,
               ),
               const SizedBox(height: 16),
 
               // ConfirmationButton to proceed
               ConfirmationButton(
                 onPressed: () {
-                  showErrors.value = true; // Hiển thị các thông báo lỗi
+                  showErrors.value = true; // Show validation errors
 
-                  // Kiểm tra tính hợp lệ của các trường
+                  // Validate booking details
                   final isPickUpValid = bookingState.pickUpLocation != null;
                   final isDropOffValid = bookingState.dropOffLocation != null;
                   final isDateValid = bookingState.bookingDate != null &&
                       !isDateTimeInvalid.value;
+                  final isPickUpSelected =
+                      bookingState.pickUpLocation?.address != 'Chọn địa điểm';
+                  final isDropOffSelected =
+                      bookingState.dropOffLocation?.address != 'Chọn địa điểm';
                   final isDateSelected =
                       dateController.text != 'Chọn ngày - giờ';
 
                   if (isPickUpValid &&
                       isDropOffValid &&
                       isDateValid &&
+                      isPickUpSelected &&
+                      isDropOffSelected &&
                       isDateSelected) {
-                    // Nếu tất cả các trường hợp lệ, chuyển trang
                     context.router.push(const BookingScreenRoute());
-
-                    // In thông tin chi tiết (tùy chọn)
+                    // Print booking details (optional)
                     print(
                         "Pick-up location: ${bookingState.pickUpLocation?.address} ");
                     print(
@@ -285,8 +291,9 @@ class ServiceSelector extends HookConsumerWidget {
                         "Booking date: ${formatDateTime(bookingState.bookingDate!)} ");
                     print("isDateTimeInvalid: ${!isDateTimeInvalid.value} ");
                   } else {
-                    // Nếu có trường không hợp lệ, không làm gì (thông báo lỗi đã được hiển thị)
-                    print("Vui lòng điền đầy đủ thông tin trước khi tiếp tục.");
+                    // Do nothing, validation errors are already displayed
+                    print(
+                        "Please fill in all the required information before proceeding.");
                   }
                 },
               ),

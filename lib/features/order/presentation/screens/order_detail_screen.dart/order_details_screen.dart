@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
@@ -83,10 +84,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
         'title': 'Đã hoàn thành',
         'details': ['Đã dọn nhà', 'Hoàn thành đơn hàng'],
       },
-      // {
-      //   'title': 'Hủy/Hoàn tiền',
-      //   'details': ['Đã hủy', 'Đã hoàn tiền'],
-      // },
     ];
 
     final statusAsync =
@@ -119,6 +116,9 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final profileUser = useFetchResultProfile.data;
 
+    final formattedDate = DateFormat('dd-MM-yyyy')
+        .format(DateTime.parse(order.createdAt.toString()));
+
     return LoadingOverlay(
       isLoading: statusAsync is AsyncLoading || state.isLoading,
       child: Scaffold(
@@ -148,10 +148,25 @@ class OrderDetailsScreen extends HookConsumerWidget {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(left: 2.0, top: 40),
+            padding: const EdgeInsets.only(left: 2.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: LabelText(
+                      content: 'Ngày tạo: $formattedDate ',
+                      size: 16,
+                      fontFamily: 'bold',
+                      color: AssetsConstants.blackColor,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 BookingStatus(statusAsync: statusAsync, order: order),
                 const SizedBox(height: 50),
                 TimelineSteps(
@@ -161,20 +176,43 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   currentStatus: statusOrders
                       as BookingStatusType, // Thêm currentStatus vào đây
                 ),
-                // const SizedBox(height: 30),
-                // const AnimatedTimeline(),
                 const SizedBox(height: 16),
                 statusOrders == BookingStatusType.pending
-                    ? ServiceInfoCard(
-                        statusAsync: statusAsync,
-                        order: order,
-                        houseType: houseType,
-                        profileUser: profileUser,
+                    ? Column(
+                        children: [
+                          const LabelText(
+                            content: 'Thông tin đánh giá',
+                            size: 20,
+                            fontFamily: 'bold',
+                            color: AssetsConstants.blackColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          ServiceInfoCard(
+                            statusAsync: statusAsync,
+                            order: order,
+                            houseType: houseType,
+                            profileUser: profileUser,
+                          ),
+                        ],
                       )
                     : statusOrders == BookingStatusType.assigned
-                        ? const Column(
+                        ? Column(
                             children: [
-                              ProfileInfo(),
+                              const ProfileInfo(),
+                              const SizedBox(height: 20),
+                              const LabelText(
+                                content: 'Thông tin đánh giá',
+                                size: 20,
+                                fontFamily: 'bold',
+                                color: AssetsConstants.blackColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              ServiceInfoCard(
+                                statusAsync: statusAsync,
+                                order: order,
+                                houseType: houseType,
+                                profileUser: profileUser,
+                              )
                             ],
                           )
                         : const ProfileInfo(),
