@@ -27,10 +27,26 @@ class BookingSelection extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Nút chọn loại nhà ở
-        SelectionButton(
-          label: bookingState.houseType?.name ?? 'Chọn loại nhà ở',
-          icon: Icons.arrow_drop_down,
-          onTap: () => showHouseTypeModal(context, bookingNotifier),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SelectionButton(
+              label: bookingState.houseType?.name ?? 'Chọn loại nhà ở',
+              icon: Icons.arrow_drop_down,
+              onTap: () => showHouseTypeModal(context, bookingNotifier),
+            ),
+            if (bookingState.houseTypeError != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                child: Text(
+                  bookingState.houseTypeError!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
         ),
         const SizedBox(height: 16),
         // Nút chọn số phòng ngủ và số tầng

@@ -74,7 +74,7 @@ class BookingScreenService extends HookConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  SizedBox(height: size.height * 0.01),
+                  // SizedBox(height: size.height * 0.01),
                   if (state.isLoading && fetchResult.items.isEmpty)
                     const Center(
                       child: HomeShimmer(amount: 4),
@@ -90,7 +90,7 @@ class BookingScreenService extends HookConsumerWidget {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: fetchResult.items.length + 1,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AssetsConstants.defaultPadding - 10.0,
+                        horizontal: AssetsConstants.defaultPadding - 15.0,
                       ),
                       itemBuilder: (_, index) {
                         if (index == fetchResult.items.length) {
@@ -106,8 +106,6 @@ class BookingScreenService extends HookConsumerWidget {
                         // return ServicePackageList(servicePackages: servicePackages);
                       },
                     ),
-                  const SizedBox(height: 16),
-
                   const SizedBox(height: 16),
 
                   RoundTripCheckbox(

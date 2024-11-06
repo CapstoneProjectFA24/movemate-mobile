@@ -172,8 +172,19 @@ class BookingNotifier extends StateNotifier<Booking> {
     calculateAndUpdateTotalPrice();
   }
 
-  void updateHouseType(HouseTypeEntity? houseType) {
-    state = state.copyWith(houseType: houseType);
+  void updateHouseType(HouseTypeEntity houseType) {
+    state = state.copyWith(
+      houseType: houseType,
+      houseTypeError: null, // Clear error when house type is selected
+    );
+  }
+
+  void setHouseTypeError(String error) {
+    state = state.copyWith(houseTypeError: error);
+  }
+
+  void clearHouseTypeError() {
+    state = state.copyWith(houseTypeError: null);
   }
 
   void updateNumberOfRooms(int rooms) {

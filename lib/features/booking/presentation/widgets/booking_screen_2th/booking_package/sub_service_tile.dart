@@ -29,7 +29,7 @@ class SubServiceTile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.05),
+            color: Colors.grey.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 1),
@@ -43,7 +43,7 @@ class SubServiceTile extends ConsumerWidget {
           child: InkWell(
             onTap: () {},
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -96,32 +96,9 @@ class SubServiceTile extends ConsumerWidget {
                   if (subService.isQuantity && subService.quantityMax! > 0) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
                       decoration: BoxDecoration(
                         color: AssetsConstants.primaryDark.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.info_outline,
-                            size: 14,
-                            color: AssetsConstants.primaryDark,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Max: ${subService.quantityMax}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AssetsConstants.primaryDark,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ],

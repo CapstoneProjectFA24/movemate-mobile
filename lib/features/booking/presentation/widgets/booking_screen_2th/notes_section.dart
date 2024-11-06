@@ -108,6 +108,8 @@ class NotesSectionState extends ConsumerState<NotesSection> {
               child: FadeInDown(
                 child: TextField(
                   controller: textController,
+                  autofillHints:
+                      textController.text.isEmpty ? const ['Ghi chú'] : null,
                   focusNode: focusNode,
                   maxLines: 3,
                   onChanged: (value) {
@@ -115,7 +117,7 @@ class NotesSectionState extends ConsumerState<NotesSection> {
                     onTextChanged(value);
                   },
                   decoration: InputDecoration(
-                    hintText: isSaved ? 'Đã lưu ghi chú' : 'Nhập ghi chú...',
+                    hintText: isSaved ? '' : 'Nhập ghi chú...',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(
@@ -134,8 +136,8 @@ class NotesSectionState extends ConsumerState<NotesSection> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15.0),
                 child: Text(
-                  'Ghi chú đã được lưu.',
-                  style: TextStyle(color: Colors.green),
+                  '',
+                  style: TextStyle(color: AssetsConstants.primaryMain),
                 ),
               ),
           ],

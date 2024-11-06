@@ -15,16 +15,10 @@ class ChecklistSection extends HookConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     final List<String> checklistOptions = [
-      'Đóng gói đồ đạc cẩn thận',
-      'Tháo rời các thiết bị điện tử',
-      'Chuẩn bị giấy tờ cần thiết',
-      'Liên hệ trước với dịch vụ chuyển nhà',
-      'Dọn dẹp nhà cũ',
-      'Kiểm tra lại đồ đạc trước khi chuyển',
-      'Thông báo cho hàng xóm',
-      'Sắp xếp lịch trình hợp lý',
-      'Chuẩn bị đồ ăn nhẹ cho ngày chuyển nhà',
-      'Kiểm tra thời tiết trước ngày chuyển',
+      'Hàng dễ vỡ',
+      'Cần nhiệt độ thích hợp',
+      'Giữ khô ráo',
+      'Hàng kích thước lớn',
     ];
 
     return Column(

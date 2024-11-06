@@ -20,13 +20,13 @@ class ServicePackageTile extends StatefulWidget {
 }
 
 class _ServicePackageTileState extends State<ServicePackageTile> {
-  bool _isExpanded = false;
+  bool _isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
     if (widget.servicePackage.inverseParentService.isNotEmpty) {
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
+        margin: const EdgeInsets.symmetric(vertical: 16),
         decoration: _isExpanded
             ? null
             : BoxDecoration(
@@ -73,10 +73,11 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             //   maxLines: 1,
             //   overflow: TextOverflow.ellipsis,
             // ),
-            tilePadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            childrenPadding:
-                const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+            tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+            childrenPadding: const EdgeInsets.only(
+              left: 16,
+              right: 16,
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
