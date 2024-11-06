@@ -1,5 +1,4 @@
 // checklist_section.dart
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,7 +14,6 @@ class ChecklistSection extends HookConsumerWidget {
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
-    // Define your checklist options here
     final List<String> checklistOptions = [
       'Đóng gói đồ đạc cẩn thận',
       'Tháo rời các thiết bị điện tử',
@@ -37,8 +35,8 @@ class ChecklistSection extends HookConsumerWidget {
           child: FadeInUp(
             child: const LabelText(
               content: 'Hướng dẫn chuyển nhà',
-              size: AssetsConstants.labelFontSize + 6.0,
-              fontWeight: FontWeight.bold,
+              size: AssetsConstants.labelFontSize + 4.0,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),

@@ -10,7 +10,7 @@ class TruckCategoriesEntity {
   final String estimatedWidth;
   final String estimatedHeight;
   final String summarize;
-  final int price;
+  final double price;
   final int totalTrips;
 
   TruckCategoriesEntity({
@@ -38,7 +38,7 @@ class TruckCategoriesEntity {
       estimatedWidth: map['estimatedWidth'] ?? '',
       estimatedHeight: map['estimatedHeight'] ?? '',
       summarize: map['summarize'] ?? '',
-      price: map['price'] ?? 0,
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
       totalTrips: map['totalTrips'] ?? 0,
     );
   }

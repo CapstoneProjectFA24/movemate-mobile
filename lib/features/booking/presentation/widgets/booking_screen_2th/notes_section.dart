@@ -98,7 +98,7 @@ class NotesSectionState extends ConsumerState<NotesSection> {
             FadeInUp(
               child: const LabelText(
                 content: 'Ghi chú cho nhân viên',
-                size: AssetsConstants.labelFontSize + 6.0,
+                size: AssetsConstants.labelFontSize + 4.0,
                 fontWeight: FontWeight.bold,
               ),
             ),

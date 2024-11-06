@@ -15,7 +15,7 @@ class LocationSection extends StatelessWidget {
 
   const LocationSection({
     required this.title,
-    required this.location,
+    required this.location, 
     required this.onTap,
     required this.hasError,
     required this.errorMessage,

@@ -7,7 +7,7 @@ class BookingDetailResponseEntity {
   final int serviceId;
   final int bookingId;
   final int quantity;
-  final int price;
+  final double price;
   final String status;
   final String type;
   final String name;
@@ -31,7 +31,7 @@ class BookingDetailResponseEntity {
       serviceId: json['serviceId'] ?? 0,
       bookingId: json['bookingId'] ?? 0,
       quantity: json['quantity'] ?? 0,
-      price: json['price'] ?? 0,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
       status: json['status'] ?? '',
       type: json['type'] ?? '',
       name: json['name'] ?? '',

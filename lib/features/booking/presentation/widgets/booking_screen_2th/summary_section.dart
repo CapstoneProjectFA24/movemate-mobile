@@ -1,6 +1,8 @@
 // summary_section.dart
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'price_detail_modal.dart'; // Import your modal component
 
@@ -28,6 +30,12 @@ class SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Hàm hỗ trợ để định dạng giá
+    String formatPrice(int price) {
+      final formatter = NumberFormat('#,###', 'vi_VN');
+      return '${formatter.format(price)} đ';
+    }
+
     return Container(
       color: AssetsConstants.whiteColor,
       padding: const EdgeInsets.all(16.0),
@@ -58,13 +66,11 @@ class SummarySection extends StatelessWidget {
                   ],
                 ),
                 if (priceLabel != '')
-                  Text(
-                    '${totalPrice.toStringAsFixed(0)}₫',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AssetsConstants.primaryDark,
-                    ),
+                  LabelText(
+                    content: '  ${formatPrice(totalPrice.toInt())}',
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AssetsConstants.primaryDark,
                   ),
               ],
             ),

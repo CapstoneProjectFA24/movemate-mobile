@@ -9,7 +9,7 @@ class TruckCategoryEntity {
   final String? estimatedLength;
   final String estimatedWidth;
   final String estimatedHeight;
-  final int price;
+  final double price;
   final int totalTrips;
 
   TruckCategoryEntity({
@@ -35,7 +35,8 @@ class TruckCategoryEntity {
       estimatedLength: map['estimatedLength'],
       estimatedWidth: map['estimatedWidth'] ?? '',
       estimatedHeight: map['estimatedHeight'] ?? '',
-      price: map['price'] ?? 0,
+      // price: map['price'] ?? 0,
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
       totalTrips: map['totalTrips'] ?? 0,
     );
   }

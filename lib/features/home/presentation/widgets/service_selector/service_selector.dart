@@ -5,7 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/balance_indicator.dart';
-import 'package:movemate/features/home/presentation/widgets/service_selector/location_section.dart';
+import 'package:movemate/features/home/presentation/widgets/service_selector/location_field.dart'; // Updated import
 import 'package:movemate/features/home/presentation/widgets/service_selector/date_time_section.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/confirmation_button.dart';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
@@ -188,13 +188,15 @@ class ServiceSelector extends HookConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          // Added to prevent overflow
+          // Prevent overflow
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BalanceIndicator(),
               const SizedBox(height: 16),
-              LocationSection(
+
+              // Updated to use LocationField
+              LocationField(
                 title: 'Địa điểm bắt đầu',
                 location: bookingState.pickUpLocation,
                 onTap: () {
@@ -205,11 +207,12 @@ class ServiceSelector extends HookConsumerWidget {
                     showErrors.value && bookingState.pickUpLocation == null,
                 errorMessage: 'Vui lòng chọn điểm bắt đầu',
                 onClear: () {
+                  print('Clear button for Pick-Up Location tapped');
                   bookingNotifier.updatePickUpLocation(null);
                 },
               ),
               const SizedBox(height: 16),
-              LocationSection(
+              LocationField(
                 title: 'Địa điểm kết thúc',
                 location: bookingState.dropOffLocation,
                 onTap: () {
@@ -220,6 +223,7 @@ class ServiceSelector extends HookConsumerWidget {
                     showErrors.value && bookingState.dropOffLocation == null,
                 errorMessage: 'Vui lòng chọn điểm kết thúc',
                 onClear: () {
+                  print('Clear button for Drop-Off Location tapped');
                   bookingNotifier.updateDropOffLocation(null);
                 },
               ),

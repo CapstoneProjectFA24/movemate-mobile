@@ -142,7 +142,7 @@ class BookingNotifier extends StateNotifier<Booking> {
 
     // Thêm giá của phương tiện đã chọn
     if (state.selectedVehicle != null) {
-      total += state.selectedVehicle!.amount;
+      total += state.selectedVehicle!.truckCategory!.price;
     }
 
     // Các tính toán khác (ví dụ: chuyến đi khứ hồi)
@@ -406,7 +406,6 @@ class BookingNotifier extends StateNotifier<Booking> {
       additionalServiceQuantities: [],
     );
   }
-
 }
 
 // The global provider that can be accessed in all screens

@@ -16,6 +16,27 @@ class ServiceItem {
     required this.quantity,
     required this.totalPrice,
   });
+
+  // Thêm phương thức sao chép để dễ dàng cập nhật giá trị
+  ServiceItem copyWith({
+    String? title,
+    double? unitPrice,
+    int? quantity,
+    double? totalPrice,
+  }) {
+    return ServiceItem(
+      title: title ?? this.title,
+      unitPrice: unitPrice ?? this.unitPrice,
+      quantity: quantity ?? this.quantity,
+      totalPrice: totalPrice ?? this.totalPrice,
+    );
+  }
+}
+
+// Hàm hỗ trợ để định dạng giá
+String formatPrice(double price) {
+  final formatter = NumberFormat('#,###', 'vi_VN');
+  return '${formatter.format(price)} đ';
 }
 
 class PriceDetailModal extends ConsumerWidget {
@@ -28,36 +49,39 @@ class PriceDetailModal extends ConsumerWidget {
     final bookingState = ref.watch(bookingProvider);
     final priceFormat = NumberFormat('#,###', 'vi_VN');
 
-    // Lấy danh sách các dịch vụ đã chọn
-    final selectedSubServices = bookingState.selectedSubServices;
-    final servicesFeeList = bookingState.servicesFeeList;
-
-    // Kết hợp chúng vào một danh sách duy nhất
-    final List<ServiceItem> allSelectedServices = [
-      ...selectedSubServices.map((subService) => ServiceItem(
+    // Tạo danh sách các dịch vụ đã chọn
+    List<ServiceItem> allSelectedServices = [
+      ...bookingState.selectedSubServices.map((subService) => ServiceItem(
             title: subService.name,
-            unitPrice: subService.amount,
+            unitPrice: subService.discountRate,
             quantity: subService.quantity ?? 1,
             totalPrice: subService.amount * (subService.quantity ?? 1),
           )),
-      ...servicesFeeList.map((fee) => ServiceItem(
+      ...bookingState.servicesFeeList.map((fee) => ServiceItem(
             title: fee.name,
             unitPrice: fee.amount.toDouble(),
             quantity: fee.quantity ?? 1,
             totalPrice: (fee.amount * (fee.quantity ?? 1)).toDouble(),
           )),
+      // Thêm giá của phí khác nếu có
+      if (bookingState.selectedPackages.any((e) => e.amount > 0))
+        ...bookingState.selectedPackages
+            .where((e) => e.amount > 0)
+            .map((package) => ServiceItem(
+                  title: package.name,
+                  unitPrice: package.amount,
+                  quantity: package.quantity ?? 1,
+                  totalPrice: package.amount * (package.quantity ?? 1),
+                )),
+      // Thêm giá của phương tiện nếu có
+      if (bookingState.selectedVehicle != null)
+        ServiceItem(
+          title: bookingState.selectedVehicle!.name,
+          unitPrice: bookingState.selectedVehicle!.truckCategory!.price,
+          quantity: 1,
+          totalPrice: bookingState.selectedVehicle!.truckCategory!.price,
+        ),
     ];
-
-    // Thêm giá của phương tiện nếu có
-    if (bookingState.selectedVehicle != null) {
-      final vehicle = bookingState.selectedVehicle!;
-      allSelectedServices.add(ServiceItem(
-        title: vehicle.name,
-        unitPrice: vehicle.amount,
-        quantity: 1,
-        totalPrice: vehicle.amount,
-      ));
-    }
 
     // Tính tổng giá trước thuế (subtotal)
     double subtotal = allSelectedServices.fold(
@@ -67,14 +91,10 @@ class PriceDetailModal extends ConsumerWidget {
     if (bookingState.isRoundTrip == true) {
       subtotal *= 2;
       // Cập nhật lại totalPrice của các dịch vụ cho phù hợp
-      for (var i = 0; i < allSelectedServices.length; i++) {
-        allSelectedServices[i] = ServiceItem(
-          title: allSelectedServices[i].title,
-          unitPrice: allSelectedServices[i].unitPrice,
-          quantity: allSelectedServices[i].quantity,
-          totalPrice: allSelectedServices[i].totalPrice * 2,
-        );
-      }
+      allSelectedServices = allSelectedServices
+          .map(
+              (service) => service.copyWith(totalPrice: service.totalPrice * 2))
+          .toList();
     }
 
     // Tính thuế GTGT (8% của subtotal)
@@ -90,6 +110,7 @@ class PriceDetailModal extends ConsumerWidget {
 
     // Tính tổng giá sau thuế
     double totalPrice = subtotal + vat;
+
     return Container(
       color: AssetsConstants.whiteColor,
       padding: const EdgeInsets.all(16.0),
@@ -106,14 +127,14 @@ class PriceDetailModal extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 2),
-            // Display list of services
+            // Hiển thị danh sách các dịch vụ
             ...allSelectedServices.map((service) => buildPriceDetailRow(
                   service.title,
                   service.totalPrice,
                   service.quantity,
                 )),
             const SizedBox(height: 4),
-            // Display total price
+            // Hiển thị tổng giá
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -125,11 +146,11 @@ class PriceDetailModal extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  '${priceFormat.format(bookingState.totalPrice)} đ',
+                  formatPrice(totalPrice),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: AssetsConstants.blackColor,
+                    color: AssetsConstants.primaryDark,
                   ),
                 ),
               ],
@@ -138,9 +159,10 @@ class PriceDetailModal extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: onConfirm ?? () {
-                  Navigator.pop(context); // Default action
-                },
+                onPressed: onConfirm ??
+                    () {
+                      Navigator.pop(context); // Default action
+                    },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AssetsConstants.primaryDark,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -164,7 +186,7 @@ class PriceDetailModal extends ConsumerWidget {
     );
   }
 
-  // Helper to display each price detail row
+  // Helper để hiển thị mỗi hàng chi tiết giá
   Widget buildPriceDetailRow(String title, double price, int quantity) {
     final priceFormat = NumberFormat('#,###', 'vi_VN');
     return Padding(
@@ -175,12 +197,12 @@ class PriceDetailModal extends ConsumerWidget {
           Expanded(
             child: Text(
               quantity > 1 ? '$title x$quantity' : title,
-              style: const TextStyle(fontSize: 12),
+              style: const TextStyle(
+                  fontSize: 14), // Tăng kích thước font cho dễ đọc
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
           ),
-          const SizedBox(width: 28),
           Text(
             '${priceFormat.format(price)} đ',
             style: const TextStyle(fontSize: 14),

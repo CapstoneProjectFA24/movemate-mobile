@@ -65,6 +65,7 @@ class BookingScreenService extends HookConsumerWidget {
         title: 'Chọn các dịch vụ',
         backgroundColor: AssetsConstants.primaryMain,
         backButtonColor: AssetsConstants.whiteColor,
+        centerTitle: true,
       ),
       body: Column(
         children: [

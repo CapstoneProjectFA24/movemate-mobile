@@ -7,7 +7,7 @@ class AssignmentResponseEntity {
   final int userId;
   final int bookingId;
   final String status;
-  final int price;
+  final double price;
   final String staffType;
   final bool isResponsible;
 

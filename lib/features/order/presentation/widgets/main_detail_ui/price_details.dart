@@ -73,7 +73,7 @@ class PriceDetails extends ConsumerWidget {
           ...order.bookingDetails.map<Widget>((detail) {
             return buildPriceItem(
               detail.name ?? '',
-              formatPrice(detail.price),
+              formatPrice(detail.price.toInt()),
             );
           }),
 

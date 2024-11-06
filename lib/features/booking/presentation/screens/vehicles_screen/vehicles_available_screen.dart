@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
@@ -50,6 +51,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       context: context,
     );
 
+ 
     // useEffect(() {
     //   scrollController.onScrollEndsListener(fetchResult.loadMore);
     //   return () {
@@ -81,7 +83,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         buttonText: "Bước tiếp theo",
         priceLabel: 'Giá',
         buttonIcon: false,
-        totalPrice: bookingState.totalPrice ?? 0.0,
+        totalPrice:  (bookingState.selectedVehicle?.truckCategory?.price ?? 0.0),
         isButtonEnabled: bookingState.selectedVehicle != null,
         onPlacePress: () async {
           if (bookingState.selectedVehicle != null &&
