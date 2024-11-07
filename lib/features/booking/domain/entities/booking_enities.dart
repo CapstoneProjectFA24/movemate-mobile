@@ -27,6 +27,7 @@ class Booking {
   final bool isUploadingLivingRoomImage;
   final bool isUploadingLivingRoomVideo;
   final String? houseTypeError; // New field for error message
+  final String? vehicleError; // New field for error message
 
   final double packagePrice;
   final bool isRoundTrip;
@@ -82,6 +83,7 @@ class Booking {
     this.selectedSubServices = const [],
     this.selectedPackagesWithQuantity = const [],
     this.houseTypeError, // Default to no error
+    this.vehicleError, // Default to no error
     // Location
     this.isSelectingPickUp = false,
     this.pickUpLocation,
@@ -119,6 +121,7 @@ class Booking {
     String? notes,
     List<ServicesFeeSystemEntity>? servicesFeeList,
     String? houseTypeError,
+    String? vehicleError,
     // Booking select package
     InverseParentServiceEntity? selectedVehicle,
     int? selectedPackageIndex,
@@ -161,6 +164,7 @@ class Booking {
       // Booking select package
       selectedVehicle: selectedVehicle ?? this.selectedVehicle,
       houseTypeError: houseTypeError,
+      vehicleError: vehicleError,
       selectedPackageIndex: selectedPackageIndex ?? this.selectedPackageIndex,
       additionalServiceQuantities:
           additionalServiceQuantities ?? this.additionalServiceQuantities,
@@ -177,7 +181,7 @@ class Booking {
       // bookingDate: bookingDate,
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
-      bookingDate: bookingDate,
+      bookingDate: bookingDate ?? this.bookingDate,
       //add image
       livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,

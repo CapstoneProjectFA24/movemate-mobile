@@ -28,40 +28,49 @@ class VehicleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (fetchResult.isFetchingData && fetchResult.items.isEmpty) {
-      return const Center(child: HomeShimmer(amount: 4));
-    }
-    if (fetchResult.items.isEmpty) {
-      return const Align(
-        alignment: Alignment.topCenter,
-        child: EmptyBox(title: 'Các phương tiện đều bận'),
+      return const SizedBox(
+        height: 400,
+        child: Center(child: HomeShimmer(amount: 4)),
       );
     }
-    return ListView.builder(
-      itemCount: fetchResult.items.length + 1,
-      physics: const AlwaysScrollableScrollPhysics(),
-      controller: scrollController,
-      itemBuilder: (context, index) {
-        if (index == fetchResult.items.length) {
-          if (fetchResult.isFetchingData) {
-            return const CustomCircular();
-          }
-          return fetchResult.isLastPage ? const NoMoreContent() : Container();
-        }
-        final service = fetchResult.items[index];
 
-        return GestureDetector(
-          onTap: () {
-            print("Xe được chọn là: ${service.name}");
-            print("Xe được chọn là: ${service.parentServiceId}");
-            // Update the selected vehicle
-            bookingNotifier.updateSelectedVehicle(service);
-          },
-          child: VehicleCard(
-            service: service,
-            isSelected: bookingState.selectedVehicle?.id == service.id,
+    if (fetchResult.items.isEmpty) {
+      return const SizedBox(
+        height: 200,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: EmptyBox(title: 'Các phương tiện đều bận'),
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ...fetchResult.items.map((service) => GestureDetector(
+              onTap: () {
+                debugPrint("Xe được chọn là: ${service.name}");
+                debugPrint("Xe được chọn là: ${service.parentServiceId}");
+                bookingNotifier.updateSelectedVehicle(service);
+              },
+              child: VehicleCard(
+                service: service,
+                isSelected: bookingState.selectedVehicle?.id == service.id,
+              ),
+            )),
+
+        // Loading or No More Content indicator
+        SizedBox(
+          height: 60,
+          child: Center(
+            child: fetchResult.isFetchingData
+                ? const CustomCircular()
+                : fetchResult.isLastPage
+                    ? const NoMoreContent()
+                    : const SizedBox.shrink(),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

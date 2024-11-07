@@ -17,7 +17,6 @@ class OrderScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
     final state = ref.watch(orderControllerProvider);
@@ -50,13 +49,13 @@ class OrderScreen extends HookConsumerWidget {
     }, const []);
 
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Danh sách đặt dịch vụ',
-        iconFirst: Icons.refresh_rounded,
-
+        // iconFirst: Icons.refresh_rounded,
+        centerTitle: true,
         backgroundColor: AssetsConstants.primaryMain,
-        iconSecond: Icons.filter_list_alt,
-        onCallBackFirst: fetchReslut.refresh,
+        // iconSecond: Icons.filter_list_alt,
+        // onCallBackFirst: fetchReslut.refresh,
         // onCallBackSecond: () => {
         //   //show filter bottom or tom
         // },

@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
+import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 import 'room_image.dart';
 import 'room_video.dart';
@@ -42,9 +44,10 @@ class RoomMediaSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          roomTitle,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        LabelText(
+          content: roomTitle,
+          size: AssetsConstants.buttonFontSize + 1,
+          fontWeight: FontWeight.w600,
         ),
         const SizedBox(height: 8), // Space between title and media
         GridView.builder(

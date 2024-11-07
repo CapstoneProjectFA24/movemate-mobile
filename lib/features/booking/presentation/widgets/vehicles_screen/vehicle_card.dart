@@ -31,27 +31,27 @@ class VehicleCard extends StatelessWidget {
               : AssetsConstants.greyColor.shade300,
           width: 2,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AssetsConstants.greyColor.shade200,
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: AssetsConstants.greyColor.shade200,
+        //     spreadRadius: 2,
+        //     blurRadius: 5,
+        //     offset: const Offset(0, 3),
+        //   ),
+        // ],
       ),
       height: 140,
       width: double.infinity,
       child: Row(
         children: [
           // Vehicle Image
-          Container(
+          SizedBox(
             width: 60,
             height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: AssetsConstants.greyColor.shade100,
-            ),
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(8),
+            //   color: AssetsConstants.greyColor.shade100,
+            // ),
             child: Image.network(
               service.imageUrl,
               fit: BoxFit.contain,
