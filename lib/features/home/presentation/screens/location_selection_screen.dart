@@ -51,7 +51,6 @@ class LocationSelectionScreenState
     }
   }
 
-  // todo draw -- notwork
   Future<void> drawRouteBetweenLocations(Booking bookingState) async {
     if (mapController == null ||
         bookingState.pickUpLocation == null ||
@@ -59,10 +58,8 @@ class LocationSelectionScreenState
       return;
     }
 
-    // Xóa route cũ nếu có
     await clearCurrentRoute();
 
-    // Vẽ route mới
     currentRoute = await MapService.drawRoute(
       controller: mapController!,
       origin: LatLng(
@@ -81,7 +78,6 @@ class LocationSelectionScreenState
   Future<void> initializeLocationGPS() async {
     if (await LocationService.checkLocationPermission()) {
       if (await LocationService.isLocationServiceEnabled()) {
-        print("oke gps ");
         startLocationTracking();
       } else {
         LocationService.showEnableLocationDialog(context);
@@ -198,7 +194,6 @@ class LocationSelectionScreenState
                         mapController = controller;
                         if (locations.isNotEmpty) {
                           MapService.focusOnAllMarkers(controller, locations);
-                          // Vẽ route khi khởi tạo map nếu có đủ điểm
                           if (locations.length == 2) {
                             drawRouteBetweenLocations(bookingState);
                           }
@@ -240,6 +235,16 @@ class LocationSelectionScreenState
                       onDrawRoutePressed: locations.length == 2
                           ? () => drawRouteBetweenLocations(bookingState)
                           : null,
+                    ),
+                  ),
+                  Positioned(
+                    left: 16,
+                    top: 16,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.black),
+                      onPressed: () {
+                        context.router.pop();
+                      },
                     ),
                   ),
                 ],

@@ -109,9 +109,10 @@ class RoomMediaSection extends ConsumerWidget {
         if (images.length >= BookingNotifier.maxImages ||
             videos.length >= BookingNotifier.maxVideos)
           const Padding(
-            padding: EdgeInsets.only(top: 8.0),
+            padding: EdgeInsets.only(top: 0),
             child: Text(
-              'Bạn đã đạt giới hạn tối đa là ${BookingNotifier.maxImages} hình ảnh và ${BookingNotifier.maxVideos} video.',
+              // 'Bạn đã đạt giới hạn tối đa là ${BookingNotifier.maxImages} hình ảnh và ${BookingNotifier.maxVideos} video.',
+              '',
               style: TextStyle(color: Colors.red, fontSize: 14),
             ),
           ),
