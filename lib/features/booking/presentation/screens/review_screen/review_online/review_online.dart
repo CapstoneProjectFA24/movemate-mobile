@@ -58,7 +58,7 @@ class ReviewOnline extends ConsumerWidget {
                   final reviewerStatusRequest = ReviewerStatusRequest(
                     status: BookingStatusType.depositing,
                   );
-
+print('order: ${reviewerStatusRequest}');
                   await ref
                       .read(bookingControllerProvider.notifier)
                       .confirmReviewBooking(

@@ -1,5 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/home/presentation/screens/voucher/voucher_screen.dart';
+import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 
 class PromotionSection extends StatelessWidget {
   const PromotionSection({super.key});
@@ -36,12 +39,12 @@ class PromotionSection extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   // Chuyển hướng đến VoucherScreenRoute khi nhấn vào "Xem tất cả"
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const VoucherScreen(),
-                    ),
-                  );
+                  // context.router.pushAndPopUntil(
+                  //   const TabViewScreenRoute(children: [
+                  //     PromotionScreenRoute(),
+                  //   ]),
+                  //   predicate: (route) => false,
+                  // );
                 },
                 child: const Text(
                   'Xem tất cả',
@@ -65,7 +68,6 @@ class PromotionSection extends StatelessWidget {
                 discount: '80%',
                 description: 'On local events',
                 buttonText: 'LOOK EVENTS',
-                imagePath: 'assets/images/home/image13.png',
                 backgroundColor: Colors.teal,
               ),
               const SizedBox(width: 8),
@@ -74,7 +76,6 @@ class PromotionSection extends StatelessWidget {
                 discount: '50% Off',
                 description: 'On domestic flights',
                 buttonText: 'BOOK NOW',
-                imagePath: 'assets/images/home/image13.png',
                 backgroundColor: Colors.pinkAccent,
               ),
             ],
@@ -89,7 +90,6 @@ class PromotionSection extends StatelessWidget {
     required String discount,
     required String description,
     required String buttonText,
-    required String imagePath,
     required Color backgroundColor,
   }) {
     return Stack(
@@ -159,21 +159,6 @@ class PromotionSection extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 4, // Position the image to overlap the top of the card
-          right: 4,
-          child: ClipRRect(
-            borderRadius:
-                BorderRadius.circular(12), // Adjust the radius as needed
-            child: Image.asset(
-              imagePath,
-              height: 100, // Adjusted image size
-              width: 100, // Adjusted image size
-              fit: BoxFit
-                  .cover, // This will make sure the image covers the area fully
             ),
           ),
         ),

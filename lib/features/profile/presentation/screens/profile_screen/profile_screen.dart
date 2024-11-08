@@ -72,6 +72,7 @@ class ProfileScreen extends HookConsumerWidget {
         backgroundColor: AssetsConstants.primaryMain,
         title: "Hồ sơ",
         iconSecond: Icons.home_outlined,
+        centerTitle: true,
         onCallBackSecond: () {
           final tabsRouter = context.router.root
               .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);

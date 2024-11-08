@@ -81,14 +81,31 @@ class PromotionCard extends StatelessWidget {
             right: 0,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(12),
-                bottomRight: Radius.circular(12),
+                topLeft: Radius.circular(70),
+                bottomLeft: Radius.circular(70),
               ),
-              child: Image.asset(
+              child: Image.network(
                 promotion.imagePath,
                 width: 160,
                 height: 160,
-                fit: BoxFit.fill,
+                fit: BoxFit.fill, // Bạn có thể thay đổi tùy theo nhu cầu
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              (loadingProgress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  );
+                },
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Icon(Icons
+                      .error); // Hiển thị biểu tượng lỗi nếu tải hình ảnh thất bại
+                },
               ),
             ),
           ),

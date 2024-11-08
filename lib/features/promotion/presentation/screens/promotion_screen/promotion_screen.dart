@@ -16,60 +16,69 @@ class PromotionScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tabController = useTabController(initialLength: 4);
+    final tabController = useTabController(initialLength: 3);
 
     final List<PromotionModel> fakePromotions = [
       PromotionModel(
-        title: 'Up to',
-        discount: '50% Off',
-        description: 'On domestic flights',
-        code: 'DOMESTIC50',
-        imagePath: 'assets/images/promotion/Ellipse171.png',
+        title: 'Giảm tới',
+        discount: '50%',
+        description: 'Dịch vụ dọn nhà nội thành',
+        code: 'DONNAI50',
+        imagePath:
+            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
         bgcolor: Colors.deepOrangeAccent,
-        propromoPeriod: "123",
-        minTransaction: "123",
-        type: "123",
-        destination: "123",
+        propromoPeriod: "01/05/2024 - 31/05/2024",
+        minTransaction: "500,000 VND",
+        type: "Nội thành",
+        destination: "Hà Nội",
       ),
       PromotionModel(
-        title: 'Up to',
-        discount: '37% Off',
-        description: 'On international flights',
-        code: 'INTERNATIONAL37',
-        imagePath: 'assets/images/promotion/Ellipse171.png',
+        title: 'Giảm tới',
+        discount: '37%',
+        description: 'Dịch vụ dọn nhà ngoại thành',
+        code: 'DONNGOAI37',
+        imagePath:
+            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
         bgcolor: Colors.tealAccent,
-        propromoPeriod: "123",
-        minTransaction: "123",
-        type: "123",
-        destination: "123",
+        propromoPeriod: "01/06/2024 - 30/06/2024",
+        minTransaction: "1,000,000 VND",
+        type: "Ngoại thành",
+        destination: "Hồ Chí Minh",
       ),
       PromotionModel(
-        title: 'Up to',
-        discount: '30% Off',
-        description: 'On train tickets',
-        code: 'TRAIN30',
-        imagePath: 'assets/images/promotion/Ellipse171.png',
+        title: 'Giảm tới',
+        discount: '30%',
+        description: 'Dọn dẹp văn phòng',
+        code: 'VANPHONG30',
+        imagePath:
+            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
         bgcolor: Colors.deepPurple,
-        propromoPeriod: "123",
-        minTransaction: "123",
-        type: "123",
-        destination: "123",
+        propromoPeriod: "01/07/2024 - 31/07/2024",
+        minTransaction: "2,000,000 VND",
+        type: "Văn phòng",
+        destination: "Đà Nẵng",
       ),
       PromotionModel(
-        title: 'Up to',
-        discount: '25% Off',
-        description: 'On hotel bookings',
-        code: 'HOTEL25',
-        imagePath: 'assets/images/promotion/Ellipse171.png',
+        title: 'Giảm tới',
+        discount: '25%',
+        description: 'Dọn dẹp sau xây dựng',
+        code: 'XAYDUNG25',
+        imagePath:
+            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
         bgcolor: Colors.lightGreenAccent,
-        propromoPeriod: "123",
-        minTransaction: "123",
-        type: "123",
-        destination: "123",
+        propromoPeriod: "01/08/2024 - 31/08/2024",
+        minTransaction: "3,000,000 VND",
+        type: "Sau xây dựng",
+        destination: "Cần Thơ",
       ),
     ];
 
-    List<String> tabs = ["Tất cả", "Sale 1", "Sale 2", "Sale 3"];
+    List<String> tabs = [
+      "Tất cả",
+      "Khuyến mãi 1",
+      "Khuyến mãi 2",
+      // "Khuyến mãi 3"
+    ];
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -83,6 +92,7 @@ class PromotionScreen extends HookConsumerWidget {
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
         title: "Khuyến mãi",
+        centerTitle: true,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(
@@ -103,12 +113,13 @@ class PromotionScreen extends HookConsumerWidget {
         children: [
           PromotionList(promotions: fakePromotions),
           PromotionList(
-            promotions: fakePromotions
-                .where((p) => p.code.contains('DOMESTIC'))
-                .toList(),
+            promotions:
+                fakePromotions.where((p) => p.discount.contains('50')).toList(),
           ),
-          const _TabContent(content: 'Trains Deals'),
-          const _TabContent(content: 'Hotels Deals'),
+          PromotionList(
+            promotions:
+                fakePromotions.where((p) => p.discount.contains('25')).toList(),
+          ),
         ],
       ),
     );

@@ -65,13 +65,13 @@ class CustomBottomBar extends HookWidget {
                   ? AssetsConstants.primaryLight
                   : AssetsConstants.whiteColor,
             ),
-            child:  Icon(
-                Icons.airport_shuttle_rounded,
-                color: tabsRouter.activeIndex == 1
-                    ? Colors.white // Change icon to white when selected
-                    : AssetsConstants.primaryDark,
-                size: AssetsConstants.defaultFontSize - 6.0,
-              ),
+            child: Icon(
+              Icons.airport_shuttle_rounded,
+              color: tabsRouter.activeIndex == 1
+                  ? Colors.white // Change icon to white when selected
+                  : AssetsConstants.primaryDark,
+              size: AssetsConstants.defaultFontSize - 6.0,
+            ),
           ),
           label: 'Đặt xe của tôi', // Text label
         ),
@@ -92,7 +92,7 @@ class CustomBottomBar extends HookWidget {
             ),
             child: Center(
               child: Icon(
-                Icons.discount,
+                Icons.percent_sharp,
                 color: tabsRouter.activeIndex == 2
                     ? Colors.white // Change icon to white when selected
                     : AssetsConstants.primaryDark,
@@ -100,7 +100,7 @@ class CustomBottomBar extends HookWidget {
               ),
             ),
           ),
-          label: 'Gói dịch vụ', // Text label
+          label: 'Khuyến mãi', // Text label
         ),
         BottomNavigationBarItem(
           icon: Container(
