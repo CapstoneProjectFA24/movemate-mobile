@@ -1,6 +1,5 @@
 // timeline_steps.dart
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -42,7 +41,7 @@ class TimelineStepsState extends ConsumerState<TimelineSteps>
     // Khởi tạo AnimationController với duration 0.5 giây
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 00),
     );
 
     // Khởi tạo Animation với CurvedAnimation để tạo hiệu ứng mượt mà
@@ -148,181 +147,173 @@ class TimelineStepsState extends ConsumerState<TimelineSteps>
 
   @override
   Widget build(BuildContext context) {
-    // Xác định bước hiện tại đang được animate
     final currentStepIndex = currentAnimatedStep;
-    final totalSteps = widget.steps.length;
 
     return FadeInLeft(
       duration: const Duration(milliseconds: 600),
       child: Column(
         children: [
-          // Timeline header với các điểm
+          // Gộp Timeline header và titles thành một hàng
           SizedBox(
-            height: 35,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.steps.length,
-                itemBuilder: (context, index) {
-                  // Xác định xem bước này đã hoàn thành hay chưa dựa trên currentAnimatedStep
-                  bool isPast = index <= currentStepIndex;
+            height: 80, // Chiều cao cố định cho container
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: widget.steps.length,
+              itemBuilder: (context, index) {
+                bool isPast = index <= currentStepIndex;
+                final step = widget.steps[index];
 
-                  return SlideInRight(
+                return SizedBox(
+                  width: 100, // Chiều rộng cố định cho mỗi item
+                  child: SlideInRight(
                     duration: Duration(milliseconds: 400 + (index * 100)),
                     from: 50.0,
-                    child: MyTimelineTitle(
-                      isFirst: index == 0,
-                      isLast: index == widget.steps.length - 1,
-                      isPast: isPast,
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-
-          // Timeline titles và chi tiết
-          Padding(
-            padding: const EdgeInsets.only(left: 2.0),
-            child: Column(
-              children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(widget.steps.length, (index) {
-                      final step = widget.steps[index];
-                      bool isPast = index <= currentStepIndex;
-
-                      return SlideInRight(
-                        duration: Duration(milliseconds: 400 + (index * 100)),
-                        from: 30.0,
-                        child: GestureDetector(
-                          onTap: () {
-                            widget.expandedIndex.value =
-                                widget.expandedIndex.value == index
-                                    ? -1
-                                    : index;
-                          },
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: AnimatedDefaultTextStyle(
-                              duration: const Duration(milliseconds: 300),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: isPast
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: isPast
-                                    ? AssetsConstants.primaryMain
-                                    : Colors.grey,
-                              ),
-                              child: Text(
-                                step['title'],
-                                textAlign: TextAlign.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min, // Quan trọng
+                      children: [
+                        SizedBox(
+                          height: 35, // Chiều cao cố định cho MyTimelineTitle
+                          child: MyTimelineTitle(
+                            isFirst: index == 0,
+                            isLast: index == widget.steps.length - 1,
+                            isPast: isPast,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              widget.expandedIndex.value =
+                                  widget.expandedIndex.value == index
+                                      ? -1
+                                      : index;
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: AnimatedDefaultTextStyle(
+                                duration: const Duration(milliseconds: 300),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: isPast
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: isPast
+                                      ? AssetsConstants.primaryMain
+                                      : Colors.grey,
+                                ),
+                                child: Text(
+                                  step['title'],
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      );
-                    }),
+                      ],
+                    ),
                   ),
-                ),
+                );
+              },
+            ),
+          ),
 
-                // Chi tiết các bước với animation
-                ...List.generate(widget.steps.length, (index) {
-                  final step = widget.steps[index];
-                  bool isExpanded = widget.expandedIndex.value == index;
-                  bool isPast = index <= currentStepIndex;
+          // Phần còn lại của widget giữ nguyên
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0),
+            child: Column(
+              children: List.generate(widget.steps.length, (index) {
+                final step = widget.steps[index];
+                bool isExpanded = widget.expandedIndex.value == index;
+                bool isPast = index <= currentStepIndex;
 
-                  return AnimatedSize(
+                return AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: isExpanded
-                          ? FadeInUp(
-                              duration: const Duration(milliseconds: 400),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                margin: const EdgeInsets.only(top: 20.0),
-                                padding: const EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: List.generate(
-                                    step['details'].length,
-                                    (detailIndex) {
-                                      // Xác định xem chi tiết này đã hoàn thành hay chưa
-                                      bool isDetailPast = index <
-                                              currentStepIndex ||
-                                          (index == currentStepIndex &&
-                                              detailIndex <
-                                                  (step['details'].length / 2)
-                                                      .ceil());
+                    child: isExpanded
+                        ? FadeInUp(
+                            duration: const Duration(milliseconds: 400),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              margin: const EdgeInsets.only(top: 20.0),
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: List.generate(
+                                  step['details'].length,
+                                  (detailIndex) {
+                                    bool isDetailPast =
+                                        index < currentStepIndex ||
+                                            (index == currentStepIndex &&
+                                                detailIndex <
+                                                    (step['details'].length / 2)
+                                                        .ceil());
 
-                                      return FadeInLeft(
-                                        delay: Duration(
-                                            milliseconds: detailIndex * 100),
-                                        child: TimelineTile(
-                                          alignment: TimelineAlign.start,
-                                          isFirst: detailIndex == 0,
-                                          isLast: detailIndex ==
-                                              step['details'].length - 1,
-                                          indicatorStyle: IndicatorStyle(
-                                            color: isDetailPast
-                                                ? AssetsConstants.primaryMain
-                                                : Colors.grey,
-                                            iconStyle: IconStyle(
-                                              color: Colors.white,
-                                              iconData: isDetailPast
-                                                  ? Icons.check
-                                                  : Icons.circle,
-                                            ),
-                                          ),
-                                          endChild: Container(
-                                            margin:
-                                                const EdgeInsets.only(left: 8),
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 16),
-                                            child: Text(
-                                              step['details'][detailIndex],
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: isDetailPast
-                                                    ? Colors.black
-                                                    : Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          beforeLineStyle: LineStyle(
-                                            color: isDetailPast
-                                                ? AssetsConstants.primaryMain
-                                                : Colors.grey,
-                                            thickness: 4,
+                                    return FadeInLeft(
+                                      delay: Duration(
+                                          milliseconds: detailIndex * 100),
+                                      child: TimelineTile(
+                                        alignment: TimelineAlign.start,
+                                        isFirst: detailIndex == 0,
+                                        isLast: detailIndex ==
+                                            step['details'].length - 1,
+                                        indicatorStyle: IndicatorStyle(
+                                          color: isDetailPast
+                                              ? AssetsConstants.primaryMain
+                                              : Colors.grey,
+                                          iconStyle: IconStyle(
+                                            color: Colors.white,
+                                            iconData: isDetailPast
+                                                ? Icons.check
+                                                : Icons.circle,
                                           ),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                        endChild: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 8),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 16),
+                                          child: Text(
+                                            step['details'][detailIndex],
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: isDetailPast
+                                                  ? Colors.black
+                                                  : Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                        beforeLineStyle: LineStyle(
+                                          color: isDetailPast
+                                              ? AssetsConstants.primaryMain
+                                              : Colors.grey,
+                                          thickness: 4,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  );
-                }),
-              ],
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                );
+              }),
             ),
           ),
         ],

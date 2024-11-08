@@ -24,6 +24,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
 
   @override
   Widget build(BuildContext context) {
+    //phần dịch vụ lớn => có dịch vụ con
     if (widget.servicePackage.inverseParentService.isNotEmpty) {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 16),
@@ -81,24 +82,24 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (widget.servicePackage.discountRate > 0)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      '-${widget.servicePackage.discountRate}%',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                const SizedBox(width: 12),
+                // if (widget.servicePackage.discountRate > 0)
+                //   Container(
+                //     padding:
+                //         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                //     decoration: BoxDecoration(
+                //       color: Colors.redAccent,
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //     child: Text(
+                //       '-${widget.servicePackage.discountRate}%',
+                //       style: const TextStyle(
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.bold,
+                //         fontSize: 13,
+                //       ),
+                //     ),
+                //   ),
+                // const SizedBox(width: 12),
                 AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0.0,
                   duration: const Duration(milliseconds: 300),
@@ -122,7 +123,9 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
           ),
         ),
       );
-    } else {
+    }
+// phần dịch vụ nhỏ => không có dịch vụ con
+    else {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
@@ -134,9 +137,9 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
               offset: const Offset(0, 1),
             ),
           ],
-          border: const Border(
-            bottom: BorderSide(color: AssetsConstants.primaryLighter, width: 1),
-          ),
+          // border: const Border(
+          //   bottom: BorderSide(color: AssetsConstants.primaryLighter, width: 1),
+          // ),
         ),
         child: Consumer(builder: (context, ref, _) {
           final bookingNotifier = ref.read(bookingProvider.notifier);

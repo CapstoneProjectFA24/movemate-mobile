@@ -119,43 +119,43 @@ class _LocationFieldState extends State<LocationField> {
               ),
 
               // Clear (X) Button Positioned on Top
-              if (_showClearButton && widget.location != null)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Center(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          // Prevent the onTap of the parent GestureDetector from triggering
-                          if (widget.onClear != null) {
-                            widget.onClear!();
-                            setState(() {
-                              _showClearButton = false;
-                            });
-                          }
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Semantics(
-                            label: 'Clear location',
-                            button: true,
-                            child: Icon(
-                              Icons.close,
-                              size: 18,
-                              color: widget.hasError
-                                  ? Colors.red
-                                  : AssetsConstants.blackColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              // if (_showClearButton && widget.location != null)
+              //   Positioned(
+              //     top: 0,
+              //     right: 0,
+              //     bottom: 0,
+              //     child: Center(
+              //       child: Material(
+              //         color: Colors.transparent,
+              //         child: InkWell(
+              //           onTap: () {
+              //             // Prevent the onTap of the parent GestureDetector from triggering
+              //             if (widget.onClear != null) {
+              //               widget.onClear!();
+              //               setState(() {
+              //                 _showClearButton = false;
+              //               });
+              //             }
+              //           },
+              //           borderRadius: BorderRadius.circular(12),
+              //           child: Padding(
+              //             padding: const EdgeInsets.all(8.0),
+              //             child: Semantics(
+              //               label: 'Clear location',
+              //               button: true,
+              //               child: Icon(
+              //                 Icons.close,
+              //                 size: 18,
+              //                 color: widget.hasError
+              //                     ? Colors.red
+              //                     : AssetsConstants.blackColor,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   ),
             ],
           ),
         ),

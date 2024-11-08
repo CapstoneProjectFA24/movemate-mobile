@@ -4,8 +4,6 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 // Import ImageData class
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 
-import 'room_image.dart';
-import 'add_image_button.dart';
 
 class RoomImageSection extends StatelessWidget {
   final String roomTitle;

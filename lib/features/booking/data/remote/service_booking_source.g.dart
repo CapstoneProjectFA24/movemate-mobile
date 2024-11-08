@@ -257,7 +257,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(request?.toMap() ?? <String, dynamic>{});
+    _data.addAll(request.toMap() ?? <String, dynamic>{});
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<BookingResponse>>(Options(
       method: 'POST',
@@ -332,7 +332,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(request?.toMap() ?? <String, dynamic>{});
+    _data.addAll(request.toMap() ?? <String, dynamic>{});
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<BookingResponse>>(Options(
       method: 'POST',
@@ -371,7 +371,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(request?.toMap() ?? <String, dynamic>{});
+    _data.addAll(request.toMap() ?? <String, dynamic>{});
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<SuccessModel>>(Options(
       method: 'PUT',

@@ -8,6 +8,7 @@ import 'package:movemate/features/home/presentation/widgets/map_widget/location_
 import 'package:movemate/features/home/presentation/widgets/map_widget/location_info_card.dart';
 import 'package:movemate/services/map_services/location_service.dart';
 import 'package:movemate/services/map_services/map_service.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:vietmap_flutter_gl/vietmap_flutter_gl.dart';
@@ -171,6 +172,11 @@ class LocationSelectionScreenState
     });
 
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: 'Chọn Địa Điểm',
+        backgroundColor: AssetsConstants.primaryDark,
+        backButtonColor: AssetsConstants.whiteColor,
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -235,16 +241,6 @@ class LocationSelectionScreenState
                       onDrawRoutePressed: locations.length == 2
                           ? () => drawRouteBetweenLocations(bookingState)
                           : null,
-                    ),
-                  ),
-                  Positioned(
-                    left: 16,
-                    top: 16,
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () {
-                        context.router.pop();
-                      },
                     ),
                   ),
                 ],

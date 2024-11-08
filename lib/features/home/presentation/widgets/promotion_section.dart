@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/features/home/presentation/screens/voucher/voucher_screen.dart';
 
 class PromotionSection extends StatelessWidget {
   const PromotionSection({super.key});
@@ -8,12 +9,12 @@ class PromotionSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(4.0),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Row(
                 children: [
                   Text(
                     'Khuyến mãi',
@@ -31,12 +32,24 @@ class PromotionSection extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                'Xem tất cả',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
+              // Thay thế Text bằng TextButton để làm cho "Xem tất cả" tương tác
+              TextButton(
+                onPressed: () {
+                  // Chuyển hướng đến VoucherScreenRoute khi nhấn vào "Xem tất cả"
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const VoucherScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Xem tất cả',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

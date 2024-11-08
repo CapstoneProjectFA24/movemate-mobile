@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 

@@ -122,4 +122,5 @@ class RoomMediaSection extends ConsumerWidget {
       ],
     );
   }
+
 }

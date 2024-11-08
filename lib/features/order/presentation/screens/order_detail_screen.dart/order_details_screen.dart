@@ -5,18 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
-import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
-import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
-import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline/timeline_widget.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/map_widget.dart';
@@ -29,14 +23,11 @@ import 'package:movemate/features/profile/presentation/controllers/profile_contr
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
-import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
-import 'package:movemate/utils/commons/functions/string_utils.dart';
 // Hooks
 import 'package:movemate/hooks/use_fetch.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
@@ -81,8 +72,25 @@ class OrderDetailsScreen extends HookConsumerWidget {
         ],
       },
       {
-        'title': 'Đã hoàn thành',
-        'details': ['Đã dọn nhà', 'Hoàn thành đơn hàng'],
+        'title': 'Chờ người đáng giá',
+        'details': [
+          'Chờ người đánh gá',
+          'Người đánh giá đang đến',
+          'Người đánh giá đã đến',
+          'Đang thực hiện dịch vụ'
+        ],
+      },
+      {
+        'title': 'đang chờ tài xế',
+        'details': ['Tài xế đang đến', 'Tài xế đã đến'],
+      },
+      {
+        'title': 'Đang thực hiện dịch vụ',
+        'details': ['Đang dọn nhà', 'Đang di chuyển', 'đang trả hàng'],
+      },
+      {
+        'title': 'Hoàn thành',
+        'details': ['Xác nhận', 'Hoàn thành'],
       },
     ];
 
@@ -116,11 +124,19 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final profileUser = useFetchResultProfile.data;
 
-    final formattedDate = DateFormat('dd-MM-yyyy')
-        .format(DateTime.parse(order.createdAt.toString()));
 
+    final fetchReslut = useFetch<OrderEntity>(
+      function: (model, context) => ref
+          .read(orderControllerProvider.notifier)
+          .getBookings(model, context),
+      initialPagingModel: PagingModel(
+        pageSize: 50,
+        pageNumber: 1,
+      ),
+      context: context,
+    );
     return LoadingOverlay(
-      isLoading: statusAsync is AsyncLoading || state.isLoading,
+      isLoading: state.isLoading,
       child: Scaffold(
         appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
@@ -152,40 +168,35 @@ class OrderDetailsScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: LabelText(
-                      content: 'Ngày tạo: $formattedDate ',
-                      size: 16,
-                      fontFamily: 'bold',
-                      color: AssetsConstants.blackColor,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
+            
                 BookingStatus(statusAsync: statusAsync, order: order),
+                // BookingHeaderStatusSection(
+                //   isReviewOnline: order.isReviewOnline,
+                //   order: order,
+                //   fetchResult: fetchReslut,
+                // ),
                 const SizedBox(height: 50),
                 TimelineSteps(
                   steps: steps,
                   order: order,
                   expandedIndex: expandedIndex,
-                  currentStatus: statusOrders
-                      as BookingStatusType, // Thêm currentStatus vào đây
+                  currentStatus: statusAsync.when(
+                    data: (status) => status,
+                    loading: () => BookingStatusType.pending,
+                    error: (error, stackTrace) => BookingStatusType
+                        .cancelled, // or any other appropriate constant
+                  ),
                 ),
                 const SizedBox(height: 16),
                 statusOrders == BookingStatusType.pending
                     ? Column(
                         children: [
                           const LabelText(
-                            content: 'Thông tin đánh giá',
+                            content: 'Thông tin khách hàng',
                             size: 20,
                             fontFamily: 'bold',
                             color: AssetsConstants.blackColor,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                           ),
                           ServiceInfoCard(
                             statusAsync: statusAsync,
@@ -215,7 +226,25 @@ class OrderDetailsScreen extends HookConsumerWidget {
                               )
                             ],
                           )
-                        : const ProfileInfo(),
+                        : Column(
+                            children: [
+                              const ProfileInfo(),
+                              const SizedBox(height: 20),
+                              const LabelText(
+                                content: 'Thông tin đánh giá',
+                                size: 20,
+                                fontFamily: 'bold',
+                                color: AssetsConstants.blackColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              ServiceInfoCard(
+                                statusAsync: statusAsync,
+                                order: order,
+                                houseType: houseType,
+                                profileUser: profileUser,
+                              )
+                            ],
+                          ),
                 const SizedBox(height: 20),
                 (statusOrders == BookingStatusType.assigned &&
                             order.isReviewOnline == false) ||

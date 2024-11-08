@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
@@ -436,6 +435,7 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   void clearDropOffLocation() {
+    print(" Clearing Drop-Off Location");
     state = state.copyWith(dropOffLocation: null);
   }
 
@@ -451,10 +451,28 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(isReviewOnline: isReviewOnline);
   }
 
+  void resetHouseTypeInfo(HouseTypeEntity? houseType) {
+    print("Resetting house type info");
+    state = state.copyWith(
+      houseType: HouseTypeEntity(name: 'Chọn loại nhà ở', description: ''),
+      houseTypeError: null,
+      numberOfRooms: null,
+      numberOfFloors: null,
+    );
+  }
+
   void reset() {
     state = Booking(
       totalPrice: 0.0,
       additionalServiceQuantities: [],
+      livingRoomImages: [],
+      livingRoomVideos: [],
+      checklistValues: List.filled(10, false),
+      bookingDate: null,
+      isSelectingPickUp: false,
+      isReviewOnline: false,
+      houseType: null,
+      isRoundTrip: false,
     );
   }
 }

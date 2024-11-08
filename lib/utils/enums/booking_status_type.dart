@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-
-import '../constants/asset_constant.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 enum BookingStatusType {
   pending('PENDING'),
@@ -22,6 +20,22 @@ enum BookingStatusType {
   const BookingStatusType(this.type);
 }
 
+enum AssignmentsStatusType {
+  assigned('ASSIGNED'),
+  enroute('ENROUTE'),
+  arrived('ARRIVED'),
+  reviewing('REVIEWING'),
+  suggested('SUGGESTED'),
+  reviewed('REVIEWED'),
+  inProgress('IN_PROGRESS'),
+  inTransit('IN_TRANSIT'),
+  delivered('DELIVERED'),
+  completed('COMPLETED');
+
+  final String type;
+  const AssignmentsStatusType(this.type);
+}
+
 extension ConvertOrderPartnerStatus on String {
   BookingStatusType toBookingTypeEnum() {
     switch (toUpperCase()) {
@@ -31,13 +45,13 @@ extension ConvertOrderPartnerStatus on String {
         return BookingStatusType.depositing;
       case 'ASSIGNED':
         return BookingStatusType.assigned;
+      case 'REVIEWED':
+        return BookingStatusType.reviewed;
       case 'APPROVED':
         return BookingStatusType.approved;
       case 'REVIEWING':
         return BookingStatusType.reviewing;
-      case 'REVIEWED':
-        return BookingStatusType.reviewed;
-      case 'COMMING':
+      case 'COMING':
         return BookingStatusType.coming;
       case 'WAITING':
         return BookingStatusType.waiting;
@@ -51,6 +65,33 @@ extension ConvertOrderPartnerStatus on String {
         return BookingStatusType.refunded;
       default:
         return BookingStatusType.pending;
+    }
+  }
+
+  AssignmentsStatusType toAssignmentsTypeEnum() {
+    switch (toUpperCase()) {
+      case 'ASSIGNED':
+        return AssignmentsStatusType.assigned;
+      case 'ENROUTE':
+        return AssignmentsStatusType.enroute;
+      case 'ARRIVED':
+        return AssignmentsStatusType.arrived;
+      case 'REVIEWING':
+        return AssignmentsStatusType.reviewing;
+      case 'SUGGESTED':
+        return AssignmentsStatusType.suggested;
+      case 'REVIEWED':
+        return AssignmentsStatusType.reviewed;
+      case 'IN_PROGRESS':
+        return AssignmentsStatusType.inProgress;
+      case 'IN_TRANSIT':
+        return AssignmentsStatusType.inTransit;
+      case 'DELIVERED':
+        return AssignmentsStatusType.delivered;
+      case 'COMPLETED':
+        return AssignmentsStatusType.completed;
+      default:
+        return AssignmentsStatusType.enroute;
     }
   }
 }

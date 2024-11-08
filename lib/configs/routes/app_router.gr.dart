@@ -287,6 +287,7 @@ abstract class _$AppRouter extends RootStackRouter {
           orElse: () => TransactionResultScreenRouteArgs(
                 isSuccess: pathParams.getBool('isSuccess'),
                 bookingId: pathParams.getString('bookingId'),
+                allUri: pathParams.getString(''),
               ));
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -294,6 +295,7 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           isSuccess: args.isSuccess,
           bookingId: args.bookingId,
+          allUri: args.allUri,
         ),
       );
     },
@@ -301,6 +303,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const VehiclePriceListScreen(),
+      );
+    },
+    VoucherScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const VoucherScreen(),
       );
     },
     WalletScreenRoute.name: (routeData) {
@@ -1128,6 +1136,7 @@ class TransactionResultScreenRoute
     Key? key,
     required bool isSuccess,
     required String bookingId,
+    required String allUri,
     List<PageRouteInfo>? children,
   }) : super(
           TransactionResultScreenRoute.name,
@@ -1135,10 +1144,12 @@ class TransactionResultScreenRoute
             key: key,
             isSuccess: isSuccess,
             bookingId: bookingId,
+            allUri: allUri,
           ),
           rawPathParams: {
             'isSuccess': isSuccess,
             'bookingId': bookingId,
+            '': allUri,
           },
           initialChildren: children,
         );
@@ -1154,6 +1165,7 @@ class TransactionResultScreenRouteArgs {
     this.key,
     required this.isSuccess,
     required this.bookingId,
+    required this.allUri,
   });
 
   final Key? key;
@@ -1162,9 +1174,11 @@ class TransactionResultScreenRouteArgs {
 
   final String bookingId;
 
+  final String allUri;
+
   @override
   String toString() {
-    return 'TransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId}';
+    return 'TransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId, allUri: $allUri}';
   }
 }
 
@@ -1178,6 +1192,20 @@ class VehiclePriceListScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'VehiclePriceListScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [VoucherScreen]
+class VoucherScreenRoute extends PageRouteInfo<void> {
+  const VoucherScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          VoucherScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'VoucherScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

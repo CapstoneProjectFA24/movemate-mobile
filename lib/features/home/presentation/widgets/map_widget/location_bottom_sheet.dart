@@ -28,104 +28,61 @@ class LocationBottomSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.98,
-      minChildSize: 0.9,
-      maxChildSize: 0.98,
-      builder: (_, controller) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 20),
+          const Text(
+            'Chọn địa chỉ',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
                 children: [
-                  const Text(
-                    'Chọn địa chỉ',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  TabBar(
+                    labelColor: AssetsConstants.primaryDark,
+                    unselectedLabelColor: Colors.grey,
+                    indicatorColor: AssetsConstants.primaryDark,
+                    tabs: const [
+                      Tab(text: 'Điểm đi'),
+                      Tab(text: 'Điểm đến'),
+                    ],
+                    onTap: (index) {
+                      if (index == 0) {
+                        ref
+                            .read(pickupAutocompleteResultsProvider.notifier)
+                            .state = [];
+                      } else {
+                        ref
+                            .read(dropoffAutocompleteResultsProvider.notifier)
+                            .state = [];
+                      }
+                    },
                   ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.close, color: Colors.grey),
-                    onPressed: () => context.router.pop(),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        LocationTab(context, ref, true),
+                        LocationTab(context, ref, false),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            Expanded(
-              child: DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    // CHANGE 4: Enhanced TabBar styling
-                    Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      // Added bottom border for tab bar
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom:
-                              BorderSide(color: Colors.grey[200]!, width: 1),
-                        ),
-                      ),
-                      child: TabBar(
-                        // CHANGE 5: Improved tab styling
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.grey,
-                        labelStyle: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        indicatorWeight: 2,
-                        tabs: const [
-                          Tab(text: 'Điểm đi'),
-                          Tab(text: 'Điểm đến'),
-                        ],
-                        onTap: (index) {
-                          if (index == 0) {
-                            ref
-                                .read(
-                                    pickupAutocompleteResultsProvider.notifier)
-                                .state = [];
-                          } else {
-                            ref
-                                .read(
-                                    dropoffAutocompleteResultsProvider.notifier)
-                                .state = [];
-                          }
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          LocationTab(context, ref, true),
-                          LocationTab(context, ref, false),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

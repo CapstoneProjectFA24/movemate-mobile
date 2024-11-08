@@ -8,7 +8,6 @@ import 'package:movemate/features/home/presentation/widgets/service_selector/bal
 import 'package:movemate/features/home/presentation/widgets/service_selector/location_field.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/date_time_section.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/confirmation_button.dart';
-import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -211,9 +210,9 @@ class ServiceSelector extends HookConsumerWidget {
                 hasError:
                     showErrors.value && bookingState.pickUpLocation == null,
                 errorMessage: 'Vui lòng chọn điểm bắt đầu',
-                onClear: () {
-                  bookingNotifier.clearPickUpLocation();
-                },
+                // onClear: () {
+                //   bookingNotifier.clearPickUpLocation();
+                // },
               ),
               const SizedBox(height: 16),
 
@@ -229,9 +228,9 @@ class ServiceSelector extends HookConsumerWidget {
                 hasError:
                     showErrors.value && bookingState.dropOffLocation == null,
                 errorMessage: 'Vui lòng chọn điểm kết thúc',
-                onClear: () {
-                  bookingNotifier.clearDropOffLocation();
-                },
+                // onClear: () {
+                //   bookingNotifier.clearDropOffLocation();
+                // },
               ),
               const SizedBox(height: 16),
 
@@ -248,7 +247,8 @@ class ServiceSelector extends HookConsumerWidget {
                   }
                 },
                 onClear: () {
-                  bookingNotifier.updateBookingDate(null);
+                  bookingNotifier.clearBookingDate();
+                  print("tuan onClear: ${bookingState.bookingDate} ");
                 },
                 focusNode: dateFocusNode,
               ),
@@ -270,7 +270,16 @@ class ServiceSelector extends HookConsumerWidget {
                       bookingState.dropOffLocation?.address != 'Chọn địa điểm';
                   final isDateSelected =
                       dateController.text != 'Chọn ngày - giờ';
-
+                  print(
+                      " tuan Pick-up location: ${bookingState.pickUpLocation!.address} ");
+                  print(
+                      " tuan Drop-off location: ${bookingState.dropOffLocation!.address} ");
+                  print(
+                      " tuan Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
+                  print(
+                      " tuan Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
+                  print(
+                      "tuan Booking date: ${formatDateTime(bookingState.bookingDate!)} ");
                   if (isPickUpValid &&
                       isDropOffValid &&
                       isDateValid &&
@@ -280,9 +289,9 @@ class ServiceSelector extends HookConsumerWidget {
                     context.router.push(const BookingScreenRoute());
                     // Print booking details (optional)
                     print(
-                        "Pick-up location: ${bookingState.pickUpLocation?.address} ");
+                        "Pick-up location: ${bookingState.pickUpLocation!.address} ");
                     print(
-                        "Drop-off location: ${bookingState.dropOffLocation?.address} ");
+                        "Drop-off location: ${bookingState.dropOffLocation!.address} ");
                     print(
                         "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
                     print(

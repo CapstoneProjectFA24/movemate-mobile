@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movemate/utils/commons/functions/firebase_utils.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import '../../../utils/providers/common_provider.dart';
 import '../app_router.dart';

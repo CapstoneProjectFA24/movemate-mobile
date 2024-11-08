@@ -27,7 +27,7 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
       width: 100, // Fixed width
       height: 50, // Fixed height
       child: isUploadingLivingRoomImage && roomType == RoomType.livingRoom
-          ? Center(
+          ? const Center(
               child: SizedBox(
                 width: 24,
                 height: 24,

@@ -8,16 +8,21 @@ import 'package:movemate/features/booking/presentation/screens/controller/bookin
 class TransactionResultScreen extends ConsumerWidget {
   final String bookingId;
   final bool isSuccess;
+  final String allUri;
   const TransactionResultScreen({
     super.key,
     @PathParam('isSuccess') required this.isSuccess,
     @PathParam('bookingId') required this.bookingId,
+    @PathParam('') required this.allUri,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
     double containerHeight = MediaQuery.of(context).size.height * 0.5;
+    print('allUri: $allUri');
+
+    //{isSuccess: true, amount: 312000, payDate: 11/07/2024 23:36:49, bookingId: 426-a66aec19-e687-427b-a836-ee65150cbc1b, transactionCode: 4223169412, userId: 3, paymentMethod: Momo}
 
     return Scaffold(
       body: Container(

@@ -62,13 +62,14 @@ void handleDeepLink(String link, WidgetRef ref) {
     final uri = Uri.parse(link);
     final isSuccess = uri.queryParameters['isSuccess'] == 'true';
     final bookingId = uri.queryParameters['bookingId'];
-
+    final allUri = uri.queryParameters;
     ref.read(paymentResultProvider.notifier).state = isSuccess;
 
     // Điều hướng tới TransactionResultScreen và truyền bookingId
     ref.read(appRouterProvider).push(TransactionResultScreenRoute(
           isSuccess: isSuccess,
           bookingId: bookingId ?? '',
+          allUri: allUri.toString(),
         ));
   }
 }

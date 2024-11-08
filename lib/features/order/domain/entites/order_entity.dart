@@ -33,6 +33,7 @@ class OrderEntity {
   final DateTime createdAt;
   final String? createdBy;
   final DateTime updatedAt;
+  final DateTime reviewAt;
   final String? updatedBy;
   final String? review;
   final bool isReviewOnline;
@@ -87,6 +88,7 @@ class OrderEntity {
     required this.createdAt,
     required this.createdBy,
     required this.updatedAt,
+    required this.reviewAt,
     required this.updatedBy,
     required this.review,
     required this.isReviewOnline,
@@ -148,6 +150,9 @@ class OrderEntity {
       createdBy: map['createdBy'],
       updatedAt: map['updatedAt'] != null
           ? dateFormat.parse(map['updatedAt'])
+          : DateTime.now(),
+      reviewAt: map['reviewAt'] != null
+          ? dateFormat.parse(map['reviewAt'])
           : DateTime.now(),
       updatedBy: map['updatedBy'],
       review: map['review'],
@@ -220,6 +225,7 @@ class OrderEntity {
       'createdAt': createdAt.toIso8601String(),
       'createdBy': createdBy,
       'updatedAt': updatedAt.toIso8601String(),
+      'reviewAt': reviewAt.toIso8601String(),
       'updatedBy': updatedBy,
       'review': review,
       'isReviewOnline': isReviewOnline,
@@ -295,6 +301,7 @@ class OrderEntity {
       createdAt: parseDate(response.createdAt),
       createdBy: response.createdBy,
       updatedAt: parseDate(response.updatedAt),
+      reviewAt: parseDate(response.reviewAt),
       updatedBy: response.updatedBy,
       review: response.review,
       isReviewOnline: response.isReviewOnline,

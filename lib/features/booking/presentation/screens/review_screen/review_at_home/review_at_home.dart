@@ -6,17 +6,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 //widgets
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
 class ReviewAtHome extends ConsumerWidget {
-  final OrderEntity order;
   const ReviewAtHome({super.key, required this.order});
+  final OrderEntity order;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,18 +48,20 @@ class ReviewAtHome extends ConsumerWidget {
                   ),
                 ],
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize
                     .min, // Đảm bảo Column chiếm không gian tối thiểu
                 children: [
-                  SizedBox(height: 10),
-                  AppointmentTime(),
-                  SizedBox(height: 10),
-                  Description(),
-                  SizedBox(height: 20),
-                  ContactSection(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  AppointmentTime(
+                    order: order,
+                  ),
+                  const SizedBox(height: 10),
+                  Description(order: order),
+                  const SizedBox(height: 20),
+                  ContactSection(order: order),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -133,14 +138,21 @@ class Buttons extends ConsumerWidget {
 }
 
 class AppointmentTime extends StatelessWidget {
-  const AppointmentTime({super.key});
+  final OrderEntity order;
+  const AppointmentTime({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    print("order updatedAt ${order.updatedAt}");
+    print("order reviewAt ${order.reviewAt}");
+
+    final formattedDateReviewAt = DateFormat('dd-MM-yyyy')
+        .format(DateTime.parse(order.reviewAt.toString()));
+
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           'Lịch hẹn với người đánh giá',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -149,14 +161,12 @@ class AppointmentTime extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 5),
-        Text(
-          '8:00am',
-          style: TextStyle(
-            color: Color(0xFFFF6600),
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+        const SizedBox(height: 5),
+        LabelText(
+          content: '$formattedDateReviewAt ',
+          size: 18,
+          color: AssetsConstants.primaryMain,
+          fontWeight: FontWeight.bold,
         ),
       ],
     );
@@ -164,14 +174,17 @@ class AppointmentTime extends StatelessWidget {
 }
 
 class Description extends StatelessWidget {
-  const Description({super.key});
-
+  const Description({super.key, required this.order});
+  final OrderEntity order;
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Nhằm nâng cao tính chính xác của dịch vụ chúng tôi đề cử nhân viên đến xem xét',
+    final formattedTimeReviewAt =
+        DateFormat('hh:mm').format(DateTime.parse(order.reviewAt.toString()));
+
+    return Text(
+      'Nhằm nâng cao tính chính xác của dịch vụ chúng tôi đề cử nhân viên đến xem xét vào lúc $formattedTimeReviewAt',
       textAlign: TextAlign.center,
-      style: TextStyle(
+      style: const TextStyle(
         color: Color(0xFF666666),
         fontSize: 14,
       ),
@@ -180,31 +193,35 @@ class Description extends StatelessWidget {
 }
 
 class ContactSection extends StatelessWidget {
-  const ContactSection({super.key});
+  final OrderEntity order;
+  const ContactSection({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        Text(
+        const Text(
           'Liên hệ với nhân viên',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 10),
-        ContactInfo(),
+        const SizedBox(height: 10),
+        ContactInfo(
+          order: order,
+        ),
       ],
     );
   }
 }
 
 class ContactInfo extends StatelessWidget {
-  const ContactInfo({super.key});
-
+  const ContactInfo({super.key, required this.order});
+  final OrderEntity order;
   @override
   Widget build(BuildContext context) {
+    print('contact info ${order.assignments.length}');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

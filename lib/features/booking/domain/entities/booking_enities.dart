@@ -3,7 +3,6 @@
 import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 
 import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
@@ -178,10 +177,10 @@ class Booking {
       isSelectingPickUp: isSelectingPickUp ?? this.isSelectingPickUp,
       // pickUpLocation: pickUpLocation,
       // dropOffLocation: dropOffLocation,
-      // bookingDate: bookingDate,
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       bookingDate: bookingDate ?? this.bookingDate,
+      // bookingDate: bookingDate ?? this.bookingDate,
       //add image
       livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,

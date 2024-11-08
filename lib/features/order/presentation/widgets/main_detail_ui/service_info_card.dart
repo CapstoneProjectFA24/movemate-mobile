@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
 import 'package:movemate/features/order/presentation/widgets/details/address.dart';
 import 'package:movemate/features/order/presentation/widgets/details/column.dart';
@@ -96,6 +98,10 @@ class ServiceInfoCard extends StatelessWidget {
   }
 
   Widget buildAddressInformation() {
+    final formattedDate = DateFormat('dd-MM-yyyy')
+        .format(DateTime.parse(order.createdAt.toString()));
+    final formattedTime =
+        DateFormat('hh:mm').format(DateTime.parse(order.createdAt.toString()));
     return Column(
       children: [
         buildAddressRow(
@@ -107,6 +113,33 @@ class ServiceInfoCard extends StatelessWidget {
           Icons.location_searching,
           'Đến : ${order.pickupAddress}',
         ),
+        const SizedBox(height: 4),
+        Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const LabelText(
+                  content: 'Ngày tạo:',
+                  size: 13,
+                  fontFamily: 'bold',
+                  color: AssetsConstants.blackColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                const SizedBox(width: 4),
+                LabelText(
+                  content: "$formattedDate  $formattedTime",
+                  size: 13,
+                  color: AssetsConstants.blackColor,
+                  fontWeight: FontWeight.w400,
+                )
+              ],
+            ),
+          ),
+        ),
+        // const SizedBox(height: 10),
       ],
     );
   }
