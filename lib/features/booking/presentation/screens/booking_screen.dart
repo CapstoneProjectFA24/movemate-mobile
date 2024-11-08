@@ -172,12 +172,12 @@ class BookingScreen extends HookConsumerWidget {
         centerTitle: true,
         backButtonColor: AssetsConstants.whiteColor,
         showBackButton: true,
-        iconFirst: Icons.arrow_back_ios,
+        // iconFirst: Icons.arrow_back_ios,
         onCallBackFirst: () {
           // context.router.pop();
           bookingNotifier.resetHouseTypeInfo(null);
+          bookingNotifier.resetVehiclesSelected(null);
         },
-      
       ),
       body: SafeArea(
         child: Column(
@@ -247,8 +247,10 @@ class BookingScreen extends HookConsumerWidget {
               ),
             ),
             if (!(fetchResultVehicles.isFetchingData &&
-                    fetchResultVehicles.items.isEmpty) &&
-                bookingState.selectedVehicle != null)
+                    fetchResultVehicles.items.isEmpty)
+                //      &&
+                // bookingState.selectedVehicle != null
+                )
               Consumer(
                 builder: (context, ref, child) {
                   final bookingState = ref.watch(bookingProvider);
@@ -261,11 +263,14 @@ class BookingScreen extends HookConsumerWidget {
                     totalPrice:
                         (bookingState.selectedVehicle?.truckCategory?.price ??
                             0.0),
-                    isButtonEnabled: true,
+                    isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {
+                      print("object chon xe ${bookingState.selectedVehicle}");
                       if (bookingState.houseType != null &&
                           bookingState.houseType?.id != null &&
-                          bookingState.selectedVehicle != null) {
+                          bookingState.selectedVehicle != null &&
+                          bookingState.selectedVehicle?.name !=
+                              'not selected') {
                         context.router.push(const BookingScreenServiceRoute());
                       } else {
                         if (bookingState.houseType == null ||
@@ -273,7 +278,9 @@ class BookingScreen extends HookConsumerWidget {
                           bookingNotifier.setHouseTypeError(
                               "Vui lòng chọn loại nhà phù hợp");
                         }
-                        if (bookingState.selectedVehicle == null) {
+                        if (bookingState.selectedVehicle == null ||
+                            bookingState.selectedVehicle?.name ==
+                                'not selected') {
                           bookingNotifier
                               .setVehicleError("Vui lòng chọn loại xe phù hợp");
                         }

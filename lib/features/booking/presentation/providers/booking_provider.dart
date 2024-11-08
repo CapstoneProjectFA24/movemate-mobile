@@ -461,6 +461,25 @@ class BookingNotifier extends StateNotifier<Booking> {
     );
   }
 
+  void resetVehiclesSelected(InverseParentServiceEntity? selectedVehicle) {
+    print("Resetting house type info");
+    state = state.copyWith(
+      selectedVehicle: InverseParentServiceEntity(
+        id: 0,
+        name: 'not selected',
+        description: '',
+        isActived: true,
+        tier: 1,
+        imageUrl: 'default_url',
+        type: 'default_type',
+        discountRate: 0.0,
+        amount: 0.0,
+        isQuantity: true,
+      ),
+      vehicleError: null,
+    );
+  }
+
   void reset() {
     state = Booking(
       totalPrice: 0.0,
