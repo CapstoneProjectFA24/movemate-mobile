@@ -57,7 +57,7 @@ class Booking {
   final LocationModel? pickUpLocation;
   final LocationModel? dropOffLocation;
   final DateTime? bookingDate;
-
+  final String? selectorHasError;
   Booking({
     this.houseType,
     this.reviewType,
@@ -97,6 +97,7 @@ class Booking {
     List<ImageData>? bathroomImages,
     this.isUploadingLivingRoomImage = false,
     this.isUploadingLivingRoomVideo = false,
+    this.selectorHasError, // Default to no error
   })  : checklistValues = checklistValues ?? List.filled(10, false),
         livingRoomImages = livingRoomImages ?? [],
         bedroomImages = bedroomImages ?? [],
@@ -135,6 +136,7 @@ class Booking {
     LocationModel? pickUpLocation,
     LocationModel? dropOffLocation,
     DateTime? bookingDate,
+    String? selectorHasError,
     //add image
     List<VideoData>? livingRoomVideos,
     List<ImageData>? livingRoomImages,
@@ -164,6 +166,7 @@ class Booking {
       selectedVehicle: selectedVehicle ?? this.selectedVehicle,
       houseTypeError: houseTypeError,
       vehicleError: vehicleError,
+      selectorHasError: selectorHasError,
       selectedPackageIndex: selectedPackageIndex ?? this.selectedPackageIndex,
       additionalServiceQuantities:
           additionalServiceQuantities ?? this.additionalServiceQuantities,
@@ -180,7 +183,7 @@ class Booking {
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       bookingDate: bookingDate ?? this.bookingDate,
-      // bookingDate: bookingDate ?? this.bookingDate,
+      // bookingDate: bookingDate,
       //add image
       livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,

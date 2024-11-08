@@ -26,7 +26,6 @@ class DateTimeSection extends StatefulWidget {
 }
 
 class _DateTimeSectionState extends State<DateTimeSection> {
-  // Không cần _showClearButton vì nút "x" dựa vào điều kiện controller.text
   @override
   Widget build(BuildContext context) {
     return Column(

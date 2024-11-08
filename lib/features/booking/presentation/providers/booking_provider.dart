@@ -1,6 +1,7 @@
 // booking_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
@@ -16,7 +17,14 @@ class BookingNotifier extends StateNotifier<Booking> {
   static const int maxImages = 5; // Giới hạn hình ảnh tối đa
   static const int maxVideos = 2; // Giới hạn video tối đa
   static const int maxVideoSize = 25 * 1024 * 1024; // 25 MB tính bằng bytes
-
+  final defaultBookingDate = DateTime.parse('2023-01-01 00:00:00');
+  final emptyLocationModel = LocationModel(
+    label: 'Chọn địa điểm',
+    address: 'Chọn địa điểm',
+    latitude: 0.0,
+    longitude: 0.0,
+    distance: 'Chọn địa điểm',
+  );
   BookingNotifier()
       : super(Booking(
           totalPrice: 0.0,
@@ -414,34 +422,62 @@ class BookingNotifier extends StateNotifier<Booking> {
   //   state = state.copyWith(bookingDate: date);
   // }
 
+  void setSelectorHasError(String error) {
+    state = state.copyWith(selectorHasError: error);
+  }
+
+  void clearSelectorHasError() {
+    state = state.copyWith(selectorHasError: null);
+  }
+
   void updatePickUpLocation(LocationModel? location) {
     print("Updating Pick-Up Location: ${location?.address}");
-    state = state.copyWith(pickUpLocation: location);
+    state = state.copyWith(
+      pickUpLocation: location,
+      selectorHasError: null,
+    );
   }
 
   void updateDropOffLocation(LocationModel? location) {
     print("Updating Drop-Off Location: ${location?.address}");
-    state = state.copyWith(dropOffLocation: location);
+    state = state.copyWith(
+      dropOffLocation: location,
+      selectorHasError: null,
+    );
   }
 
   void updateBookingDate(DateTime? date) {
     print(
         "Updating Booking Date: ${date != null ? date.toIso8601String() : 'null'}");
-    state = state.copyWith(bookingDate: date);
+    state = state.copyWith(
+      bookingDate: date,
+      selectorHasError: null,
+    );
   }
 
   void clearPickUpLocation() {
-    state = state.copyWith(pickUpLocation: null);
+    state = state.copyWith(pickUpLocation: emptyLocationModel);
+    print(
+        " Clearing pick-up Location ${emptyLocationModel.address.toString()}");
   }
 
   void clearDropOffLocation() {
-    print(" Clearing Drop-Off Location");
-    state = state.copyWith(dropOffLocation: null);
+    state = state.copyWith(dropOffLocation: emptyLocationModel);
+    print(" Clearing Drop-Off Location ${state.dropOffLocation?.address}");
   }
 
   void clearBookingDate() {
     state = state.copyWith(bookingDate: null);
+    print("Clearing Booking Date");
   }
+  // void clearBookingDate(DateTime? date) {
+  //   String bookingDateLabel =
+  //       date != null ? date.toIso8601String() : 'Chọn ngày - giờ';
+  //   state = state.copyWith(
+  //     bookingDate: date.toIso8601String('Chọn ngày - giờ'),
+  //   );
+  //   print("Clearing Booking Date");
+  // }
 
   void toggleSelectingPickUp(bool isSelecting) {
     state = state.copyWith(isSelectingPickUp: isSelecting);
@@ -451,13 +487,20 @@ class BookingNotifier extends StateNotifier<Booking> {
     state = state.copyWith(isReviewOnline: isReviewOnline);
   }
 
-  void resetHouseTypeInfo(HouseTypeEntity? houseType) {
+  void resetHouseTypeInfo(
+    HouseTypeEntity? houseType,
+  ) {
     print("Resetting house type info");
     state = state.copyWith(
       houseType: HouseTypeEntity(name: 'Chọn loại nhà ở', description: ''),
       houseTypeError: null,
-      numberOfRooms: null,
-      numberOfFloors: null,
+      numberOfRooms: 1,
+      numberOfFloors: 1,
+      selectedVehicleIndex: 0,
+      vehiclePrice: 0.0,
+      selectedPackageIndex: 0,
+      packagePrice: 0.0,
+      servicesFeeList: [],
     );
   }
 

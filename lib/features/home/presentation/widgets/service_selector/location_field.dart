@@ -51,6 +51,10 @@ class _LocationFieldState extends State<LocationField> {
 
   @override
   Widget build(BuildContext context) {
+    // Determine if a location is selected
+    final bool isLocationSelected =
+        widget.location != null && widget.location!.address != 'Chọn địa điểm';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -90,13 +94,13 @@ class _LocationFieldState extends State<LocationField> {
                   padding: const EdgeInsets.all(12),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.add_location_outlined,
-                        color: widget.hasError
-                            ? Colors.red
-                            : AssetsConstants.primaryMain,
-                        size: 20,
-                      ),
+                      // Icon(
+                      //   Icons.add_location_outlined,
+                      //   color: widget.hasError
+                      //       ? Colors.red
+                      //       : AssetsConstants.primaryMain,
+                      //   size: 20,
+                      // ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -111,51 +115,54 @@ class _LocationFieldState extends State<LocationField> {
                           maxLines: 1,
                         ),
                       ),
-                      // Spacer for the Clear (X) button
-                      if (widget.location != null) const SizedBox(width: 26),
+                      // Spacer for the suffix icon
+                      const SizedBox(width: 8),
                     ],
                   ),
                 ),
               ),
 
-              // Clear (X) Button Positioned on Top
-              // if (_showClearButton && widget.location != null)
-              //   Positioned(
-              //     top: 0,
-              //     right: 0,
-              //     bottom: 0,
-              //     child: Center(
-              //       child: Material(
-              //         color: Colors.transparent,
-              //         child: InkWell(
-              //           onTap: () {
-              //             // Prevent the onTap of the parent GestureDetector from triggering
-              //             if (widget.onClear != null) {
-              //               widget.onClear!();
-              //               setState(() {
-              //                 _showClearButton = false;
-              //               });
-              //             }
-              //           },
-              //           borderRadius: BorderRadius.circular(12),
-              //           child: Padding(
-              //             padding: const EdgeInsets.all(8.0),
-              //             child: Semantics(
-              //               label: 'Clear location',
-              //               button: true,
-              //               child: Icon(
-              //                 Icons.close,
-              //                 size: 18,
-              //                 color: widget.hasError
-              //                     ? Colors.red
-              //                     : AssetsConstants.blackColor,
-              //               ),
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
+              // Suffix Icon Positioned on Top
+              Positioned(
+                top: 0,
+                right: 0,
+                bottom: 0,
+                child: Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        // If a location is selected, clear it
+                        if (isLocationSelected && widget.onClear != null) {
+                          widget.onClear!();
+                        } else {
+                          // If no location is selected, trigger the onTap callback to select location
+                          widget.onTap();
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Semantics(
+                          label: isLocationSelected
+                              ? 'Clear location'
+                              : 'Select location',
+                          button: true,
+                          child: Icon(
+                            isLocationSelected
+                                ? Icons.close
+                                : Icons.location_on,
+                            size: 18,
+                            color: widget.hasError
+                                ? Colors.red
+                                : AssetsConstants.primaryMain,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

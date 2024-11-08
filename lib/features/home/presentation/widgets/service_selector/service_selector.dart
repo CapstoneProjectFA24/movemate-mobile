@@ -25,9 +25,12 @@ class ServiceSelector extends HookConsumerWidget {
     // State for invalid datetime error
     final isDateTimeInvalid = useState(false);
 
-    // Controllers
-    final dateController = useTextEditingController();
-    final locationController = useTextEditingController();
+    // Controllers for pick-up and drop-off locations
+    final pickUpController = useTextEditingController(text: 'Chọn địa điểm');
+    final dropOffController = useTextEditingController(text: 'Chọn địa điểm');
+
+    // Controller for date and time
+    final dateController = useTextEditingController(text: 'Chọn ngày - giờ');
 
     // FocusNodes for fields
     final pickUpFocusNode = useFocusNode();
@@ -102,8 +105,6 @@ class ServiceSelector extends HookConsumerWidget {
         }
       }
       return null;
-
-      // ... (existing date picker logic)
     }
 
     // Effects
@@ -124,12 +125,36 @@ class ServiceSelector extends HookConsumerWidget {
       return null;
     }, [bookingState.bookingDate]);
 
+    // Update pickUpController text whenever pickUpLocation changes
+    useEffect(() {
+      if (bookingState.pickUpLocation != null &&
+          bookingState.pickUpLocation!.address != 'Chọn địa điểm') {
+        pickUpController.text = bookingState.pickUpLocation!.address;
+      } else {
+        pickUpController.text = 'Chọn địa điểm';
+      }
+      return null;
+    }, [bookingState.pickUpLocation]);
+
+    // Update dropOffController text whenever dropOffLocation changes
+    useEffect(() {
+      if (bookingState.dropOffLocation != null &&
+          bookingState.dropOffLocation!.address != 'Chọn địa điểm') {
+        dropOffController.text = bookingState.dropOffLocation!.address;
+      } else {
+        dropOffController.text = 'Chọn địa điểm';
+      }
+      return null;
+    }, [bookingState.dropOffLocation]);
+
     // Listener to hide errors when all fields are valid
     useEffect(() {
       void listener() {
         if (showErrors.value) {
-          final isPickUpValid = bookingState.pickUpLocation != null;
-          final isDropOffValid = bookingState.dropOffLocation != null;
+          final isPickUpValid = bookingState.pickUpLocation != null &&
+              bookingState.pickUpLocation!.address != 'Chọn địa điểm';
+          final isDropOffValid = bookingState.dropOffLocation != null &&
+              bookingState.dropOffLocation!.address != 'Chọn địa điểm';
           final isDateValid =
               bookingState.bookingDate != null && !isDateTimeInvalid.value;
 
@@ -156,8 +181,10 @@ class ServiceSelector extends HookConsumerWidget {
         if (!pickUpFocusNode.hasFocus &&
             !dropOffFocusNode.hasFocus &&
             !dateFocusNode.hasFocus) {
-          final isPickUpValid = bookingState.pickUpLocation != null;
-          final isDropOffValid = bookingState.dropOffLocation != null;
+          final isPickUpValid = bookingState.pickUpLocation != null &&
+              bookingState.pickUpLocation!.address != 'Chọn địa điểm';
+          final isDropOffValid = bookingState.dropOffLocation != null &&
+              bookingState.dropOffLocation!.address != 'Chọn địa điểm';
           final isDateValid =
               bookingState.bookingDate != null && !isDateTimeInvalid.value;
 
@@ -200,37 +227,43 @@ class ServiceSelector extends HookConsumerWidget {
 
               // LocationField for Pick-Up Location
               LocationField(
-                locationController: locationController,
+                locationController: pickUpController,
                 title: 'Địa điểm bắt đầu',
                 location: bookingState.pickUpLocation,
                 onTap: () {
                   bookingNotifier.toggleSelectingPickUp(true);
                   navigateToLocationSelectionScreen();
                 },
-                hasError:
-                    showErrors.value && bookingState.pickUpLocation == null,
+                hasError: showErrors.value &&
+                    (bookingState.pickUpLocation == null ||
+                        bookingState.pickUpLocation!.address ==
+                            'Chọn địa điểm'),
                 errorMessage: 'Vui lòng chọn điểm bắt đầu',
-                // onClear: () {
-                //   bookingNotifier.clearPickUpLocation();
-                // },
+                onClear: () {
+                  bookingNotifier.clearPickUpLocation();
+                  // The controller text will be updated via useEffect
+                },
               ),
               const SizedBox(height: 16),
 
               // LocationField for Drop-Off Location
               LocationField(
-                locationController: locationController,
+                locationController: dropOffController,
                 title: 'Địa điểm kết thúc',
                 location: bookingState.dropOffLocation,
                 onTap: () {
                   bookingNotifier.toggleSelectingPickUp(false);
                   navigateToLocationSelectionScreen();
                 },
-                hasError:
-                    showErrors.value && bookingState.dropOffLocation == null,
+                hasError: showErrors.value &&
+                    (bookingState.dropOffLocation == null ||
+                        bookingState.dropOffLocation!.address ==
+                            'Chọn địa điểm'),
                 errorMessage: 'Vui lòng chọn điểm kết thúc',
-                // onClear: () {
-                //   bookingNotifier.clearDropOffLocation();
-                // },
+                onClear: () {
+                  bookingNotifier.clearDropOffLocation();
+                  // The controller text will be updated via useEffect
+                },
               ),
               const SizedBox(height: 16),
 
@@ -248,7 +281,7 @@ class ServiceSelector extends HookConsumerWidget {
                 },
                 onClear: () {
                   bookingNotifier.clearBookingDate();
-                  print("tuan onClear: ${bookingState.bookingDate} ");
+                  // The controller text will be updated via useEffect
                 },
                 focusNode: dateFocusNode,
               ),
@@ -260,26 +293,34 @@ class ServiceSelector extends HookConsumerWidget {
                   showErrors.value = true; // Show validation errors
 
                   // Validate booking details
-                  final isPickUpValid = bookingState.pickUpLocation != null;
-                  final isDropOffValid = bookingState.dropOffLocation != null;
+                  final isPickUpValid = bookingState.pickUpLocation != null &&
+                      bookingState.pickUpLocation!.address != 'Chọn địa điểm';
+                  final isDropOffValid = bookingState.dropOffLocation != null &&
+                      bookingState.dropOffLocation!.address != 'Chọn địa điểm';
                   final isDateValid = bookingState.bookingDate != null &&
                       !isDateTimeInvalid.value;
+
                   final isPickUpSelected =
                       bookingState.pickUpLocation?.address != 'Chọn địa điểm';
                   final isDropOffSelected =
                       bookingState.dropOffLocation?.address != 'Chọn địa điểm';
                   final isDateSelected =
                       dateController.text != 'Chọn ngày - giờ';
+
                   print(
-                      " tuan Pick-up location: ${bookingState.pickUpLocation!.address} ");
+                      "Pick-up location: ${bookingState.pickUpLocation?.address ?? 'Not selected'}");
                   print(
-                      " tuan Drop-off location: ${bookingState.dropOffLocation!.address} ");
+                      "Drop-off location: ${bookingState.dropOffLocation?.address ?? 'Not selected'}");
                   print(
-                      " tuan Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
+                      "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude}");
                   print(
-                      " tuan Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
-                  print(
-                      "tuan Booking date: ${formatDateTime(bookingState.bookingDate!)} ");
+                      "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude}");
+                  if (bookingState.bookingDate != null) {
+                    print(
+                        "Booking date: ${formatDateTime(bookingState.bookingDate!)}");
+                  }
+                  print("isDateTimeInvalid: ${!isDateTimeInvalid.value}");
+
                   if (isPickUpValid &&
                       isDropOffValid &&
                       isDateValid &&
@@ -289,16 +330,16 @@ class ServiceSelector extends HookConsumerWidget {
                     context.router.push(const BookingScreenRoute());
                     // Print booking details (optional)
                     print(
-                        "Pick-up location: ${bookingState.pickUpLocation!.address} ");
+                        "Pick-up location: ${bookingState.pickUpLocation!.address}");
                     print(
-                        "Drop-off location: ${bookingState.dropOffLocation!.address} ");
+                        "Drop-off location: ${bookingState.dropOffLocation!.address}");
                     print(
-                        "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude} ");
+                        "Drop-off location latitude: ${bookingState.dropOffLocation?.latitude}");
                     print(
-                        "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude} ");
+                        "Drop-off location longitude: ${bookingState.dropOffLocation?.longitude}");
                     print(
-                        "Booking date: ${formatDateTime(bookingState.bookingDate!)} ");
-                    print("isDateTimeInvalid: ${!isDateTimeInvalid.value} ");
+                        "Booking date: ${formatDateTime(bookingState.bookingDate!)}");
+                    print("isDateTimeInvalid: ${!isDateTimeInvalid.value}");
                   } else {
                     // Do nothing, validation errors are already displayed
                     print(
