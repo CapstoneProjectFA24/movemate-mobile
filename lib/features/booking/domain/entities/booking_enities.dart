@@ -136,6 +136,7 @@ class Booking {
     LocationModel? pickUpLocation,
     LocationModel? dropOffLocation,
     DateTime? bookingDate,
+    bool setBookingDateToNull = false,
     String? selectorHasError,
     //add image
     List<VideoData>? livingRoomVideos,
@@ -147,6 +148,9 @@ class Booking {
     bool? isUploadingLivingRoomImage,
     bool? isUploadingLivingRoomVideo,
   }) {
+    final newBookingDate =
+        setBookingDateToNull ? null : (bookingDate ?? this.bookingDate);
+    // print("Setting bookingDate to: $newBookingDate");
     return Booking(
       houseType: houseType ?? this.houseType,
       reviewType: reviewType ?? this.reviewType,
@@ -178,12 +182,11 @@ class Booking {
       selectedSubServices: selectedSubServices ?? this.selectedSubServices,
       // Location
       isSelectingPickUp: isSelectingPickUp ?? this.isSelectingPickUp,
-      // pickUpLocation: pickUpLocation,
-      // dropOffLocation: dropOffLocation,
       pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
-      bookingDate: bookingDate ?? this.bookingDate,
-      // bookingDate: bookingDate,
+      // bookingDate: bookingDate ?? this.bookingDate,
+      bookingDate: newBookingDate,
+
       //add image
       livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,
       livingRoomImages: livingRoomImages ?? this.livingRoomImages,

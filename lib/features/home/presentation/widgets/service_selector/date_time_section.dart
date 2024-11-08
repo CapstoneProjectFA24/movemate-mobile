@@ -1,3 +1,5 @@
+// date_time_section.dart
+
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
@@ -8,7 +10,7 @@ class DateTimeSection extends StatefulWidget {
   final bool showErrors;
   final bool isDateTimeInvalid;
   final VoidCallback onTap;
-  final VoidCallback onClear; // Thêm callback onClear
+  final VoidCallback onClear; // Callback to clear the date
   final FocusNode focusNode;
 
   const DateTimeSection({
@@ -16,7 +18,7 @@ class DateTimeSection extends StatefulWidget {
     required this.showErrors,
     required this.isDateTimeInvalid,
     required this.onTap,
-    required this.onClear, // Thêm vào constructor
+    required this.onClear, // Added to constructor
     required this.focusNode,
     super.key,
   });
@@ -31,6 +33,7 @@ class _DateTimeSectionState extends State<DateTimeSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Title Label
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: FadeInUp(
@@ -44,11 +47,13 @@ class _DateTimeSectionState extends State<DateTimeSection> {
           ),
         ),
         const SizedBox(height: 4),
+
+        // Date and Time Text Field
         TextFormField(
           controller: widget.controller,
           focusNode: widget.focusNode,
-          readOnly: true, // Ngăn người dùng nhập liệu trực tiếp
-          onTap: widget.onTap, // Gọi hàm chọn ngày giờ khi nhấn vào trường
+          readOnly: true, // Prevent direct input
+          onTap: widget.onTap, // Trigger date and time selection
           decoration: InputDecoration(
             filled: true,
             fillColor: AssetsConstants.whiteColor,
@@ -58,7 +63,7 @@ class _DateTimeSectionState extends State<DateTimeSection> {
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: widget.showErrors &&
-                        (widget.controller.text == 'Chọn ngày - giờ' ||
+                        (widget.controller.text == 'Chọn ngày và giờ' ||
                             widget.isDateTimeInvalid)
                     ? Colors.red
                     : AssetsConstants.primaryMain,
@@ -68,22 +73,20 @@ class _DateTimeSectionState extends State<DateTimeSection> {
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
                 color: widget.showErrors &&
-                        (widget.controller.text == 'Chọn ngày - giờ' ||
+                        (widget.controller.text == 'Chọn ngày và giờ' ||
                             widget.isDateTimeInvalid)
                     ? Colors.red
                     : AssetsConstants.primaryMain,
               ),
             ),
-            suffixIcon: widget.controller.text != 'Chọn ngày - giờ'
+            suffixIcon: widget.controller.text != 'Chọn ngày và giờ'
                 ? IconButton(
                     icon: const Icon(
                       Icons.close,
                       size: 20,
                       color: AssetsConstants.greyColor,
                     ),
-                    onPressed: () {
-                      widget.onClear(); // Gọi callback onClear
-                    },
+                    onPressed: widget.onClear, // Invoke the clear callback
                   )
                 : const Icon(
                     Icons.calendar_today,
@@ -92,8 +95,10 @@ class _DateTimeSectionState extends State<DateTimeSection> {
           ),
           style: const TextStyle(color: AssetsConstants.blackColor),
         ),
+
+        // Error Message
         if (widget.showErrors &&
-            (widget.controller.text == 'Chọn ngày - giờ' ||
+            (widget.controller.text == 'Chọn ngày và giờ' ||
                 widget.isDateTimeInvalid))
           Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 4.0),

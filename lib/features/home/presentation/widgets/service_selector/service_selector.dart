@@ -1,3 +1,5 @@
+// service_selector.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,7 +32,7 @@ class ServiceSelector extends HookConsumerWidget {
     final dropOffController = useTextEditingController(text: 'Chọn địa điểm');
 
     // Controller for date and time
-    final dateController = useTextEditingController(text: 'Chọn ngày - giờ');
+    final dateController = useTextEditingController(text: 'Chọn ngày và giờ');
 
     // FocusNodes for fields
     final pickUpFocusNode = useFocusNode();
@@ -120,8 +122,9 @@ class ServiceSelector extends HookConsumerWidget {
       if (bookingState.bookingDate != null) {
         dateController.text = formatDateTime(bookingState.bookingDate!);
       } else {
-        dateController.text = 'Chọn ngày - giờ';
+        dateController.text = 'Chọn ngày và giờ';
       }
+      print("DateController updated to: ${dateController.text}"); // Debug print
       return null;
     }, [bookingState.bookingDate]);
 
@@ -133,6 +136,8 @@ class ServiceSelector extends HookConsumerWidget {
       } else {
         pickUpController.text = 'Chọn địa điểm';
       }
+      print(
+          "PickUpController updated to: ${pickUpController.text}"); // Debug print
       return null;
     }, [bookingState.pickUpLocation]);
 
@@ -144,6 +149,8 @@ class ServiceSelector extends HookConsumerWidget {
       } else {
         dropOffController.text = 'Chọn địa điểm';
       }
+      print(
+          "DropOffController updated to: ${dropOffController.text}"); // Debug print
       return null;
     }, [bookingState.dropOffLocation]);
 
@@ -305,7 +312,7 @@ class ServiceSelector extends HookConsumerWidget {
                   final isDropOffSelected =
                       bookingState.dropOffLocation?.address != 'Chọn địa điểm';
                   final isDateSelected =
-                      dateController.text != 'Chọn ngày - giờ';
+                      dateController.text != 'Chọn ngày và giờ';
 
                   print(
                       "Pick-up location: ${bookingState.pickUpLocation?.address ?? 'Not selected'}");

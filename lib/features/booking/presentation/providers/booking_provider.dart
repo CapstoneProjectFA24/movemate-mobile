@@ -17,7 +17,6 @@ class BookingNotifier extends StateNotifier<Booking> {
   static const int maxImages = 5; // Giới hạn hình ảnh tối đa
   static const int maxVideos = 2; // Giới hạn video tối đa
   static const int maxVideoSize = 25 * 1024 * 1024; // 25 MB tính bằng bytes
-  final defaultBookingDate = DateTime.parse('2023-01-01 00:00:00');
   final emptyLocationModel = LocationModel(
     label: 'Chọn địa điểm',
     address: 'Chọn địa điểm',
@@ -446,13 +445,9 @@ class BookingNotifier extends StateNotifier<Booking> {
     );
   }
 
-  void updateBookingDate(DateTime? date) {
-    print(
-        "Updating Booking Date: ${date != null ? date.toIso8601String() : 'null'}");
-    state = state.copyWith(
-      bookingDate: date,
-      selectorHasError: null,
-    );
+  void updateBookingDate(DateTime date) {
+    state = state.copyWith(bookingDate: date);
+    print("Updating Booking Date to ${state.bookingDate}");
   }
 
   void clearPickUpLocation() {
@@ -467,17 +462,9 @@ class BookingNotifier extends StateNotifier<Booking> {
   }
 
   void clearBookingDate() {
-    state = state.copyWith(bookingDate: null);
-    print("Clearing Booking Date");
+    state = state.copyWith(setBookingDateToNull: true);
+    print("Clearing Booking Date ${state.bookingDate}");
   }
-  // void clearBookingDate(DateTime? date) {
-  //   String bookingDateLabel =
-  //       date != null ? date.toIso8601String() : 'Chọn ngày - giờ';
-  //   state = state.copyWith(
-  //     bookingDate: date.toIso8601String('Chọn ngày - giờ'),
-  //   );
-  //   print("Clearing Booking Date");
-  // }
 
   void toggleSelectingPickUp(bool isSelecting) {
     state = state.copyWith(isSelectingPickUp: isSelecting);
