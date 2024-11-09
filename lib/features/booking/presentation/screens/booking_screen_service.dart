@@ -28,6 +28,7 @@ class BookingScreenService extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
     final bookingState = ref.watch(bookingProvider);
+    final bookingStatePrice = ref.watch(bookingResponseProviderPrice);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     final state = ref.watch(servicePackageControllerProvider);
@@ -133,7 +134,7 @@ class BookingScreenService extends HookConsumerWidget {
       ),
       bottomNavigationBar: SummarySection(
         buttonIcon: true,
-        totalPrice: price ?? 0.0,
+        totalPrice: bookingStatePrice?.total ?? 0,
         isButtonEnabled: true,
         onPlacePress: () {
           showConfirmationDialog();

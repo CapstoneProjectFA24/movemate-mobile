@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 //screen widget
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/room_media_section.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/export_booking_screen_2th.dart';
@@ -152,6 +153,7 @@ class BookingScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(bookingProvider);
+    final bookingStatePrice = ref.watch(bookingResponseProviderPrice);
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final scrollController = useScrollController();
     final controller = ref.read(serviceControllerProvider.notifier);
@@ -261,7 +263,7 @@ class BookingScreen extends HookConsumerWidget {
                     // totalPrice:
                     //     (bookingState.selectedVehicle?.truckCategory?.price ??
                     //         0),
-                    totalPrice: (bookingState.totalPrice ?? 0.0),
+                    totalPrice: (bookingStatePrice?.total ?? 0.0),
                     isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {
                       // print(
