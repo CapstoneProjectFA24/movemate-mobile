@@ -153,8 +153,6 @@ class LocationBottomSheet extends HookConsumerWidget {
       }
     }
 
-//hàm lấy khoảng cách của 2 điểm
-
     // Cấu trúc widget với nút xác nhận nằm ngoài Expanded
     return Column(
       mainAxisSize: MainAxisSize.max,

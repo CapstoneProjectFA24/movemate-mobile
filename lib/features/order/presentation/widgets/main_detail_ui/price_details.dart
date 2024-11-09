@@ -79,7 +79,13 @@ class PriceDetails extends ConsumerWidget {
 
           const SizedBox(height: 16),
           buildSummary('Tiền đặt cọc', formatPrice(order.deposit.toInt())),
-          buildSummary('Tiền trả liền', formatPrice(order.totalFee.toInt())),
+          // Hiển thị các fee từ feeDetails
+          ...order.feeDetails.map((fee) {
+            return buildSummary(
+              fee.name,
+              formatPrice(fee.amount.toInt()),
+            );
+          }),
 
           const Divider(
             color: Colors.grey,
@@ -94,7 +100,7 @@ class PriceDetails extends ConsumerWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: LabelText(
-                  content: 'Đặt cọc',
+                  content: 'Tổng giá',
                   size: 16,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,

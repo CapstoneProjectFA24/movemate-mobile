@@ -435,7 +435,13 @@ class BookingNotifier extends StateNotifier<Booking> {
   void updatePickUpLocation(LocationModel? location) {
     print("Updating Pick-Up Location: ${location?.address}");
     state = state.copyWith(
-      pickUpLocation: location,
+      // pickUpLocation: location,
+      pickUpLocation: LocationModel(
+          label: 'label',
+          address: 'Nhà Văn Hoá Sinh Viên, university, Dĩ An, Vietnam',
+          latitude: 10.8753395,
+          longitude: 106.8000331,
+          distance: "43"),
       selectorHasError: null,
     );
   }
@@ -451,7 +457,14 @@ class BookingNotifier extends StateNotifier<Booking> {
   void updateDropOffLocation(LocationModel? location) {
     print("Updating Drop-Off Location: ${location?.address}");
     state = state.copyWith(
-      dropOffLocation: location,
+      // dropOffLocation: location,
+      dropOffLocation: LocationModel(
+          label: 'label',
+          address:
+              'FPT University - HCMC Campus, university, Ho Chi Minh City, Vietnam',
+          latitude: 10.841416800000001,
+          longitude: 106.81007447258705,
+          distance: '2'),
       selectorHasError: null,
     );
   }
