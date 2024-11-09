@@ -1,14 +1,18 @@
 // service_package_controller.dart
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
+import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
@@ -170,7 +174,6 @@ class ServicePackageController extends _$ServicePackageController {
   //----------------------------------------------------------------
 
   Future<BookingResponseEntity?> postValuationBooking({
-    required BookingRequest bookingRequest,
     required BuildContext context,
   }) async {
     // Kiểm tra nếu đã đang xử lý thì không làm gì cả
@@ -178,16 +181,21 @@ class ServicePackageController extends _$ServicePackageController {
       return null;
     }
     // state = const AsyncLoading();
-
+    final bookingState = ref.read(bookingProvider);
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-
+    final bookingValuationRequest =
+        BookingValuationRequest.fromBooking(bookingState);
     BookingResponseEntity? responsePayload;
+
+    // Debugging
+    print(
+        '  tuan Booking Request: ${jsonEncode(bookingValuationRequest.toMap())}');
 
     state = await AsyncValue.guard(() async {
       final response = await serviceBookingRepository.postValuationBooking(
-        request: bookingRequest,
+        request: bookingValuationRequest,
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
       );
       // Không thiết lập lại state ở đây

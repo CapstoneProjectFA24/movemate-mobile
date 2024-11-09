@@ -163,9 +163,11 @@ class PriceDetails extends ConsumerWidget {
                       ? () {
                           if (status == BookingStatusType.depositing) {
                             context.pushRoute(PaymentScreenRoute(id: order.id));
-                          } else if (status == BookingStatusType.reviewed) {
+                          } else if (status == BookingStatusType.reviewed &&
+                              order.isReviewOnline == true) {
                             context.pushRoute(ReviewOnlineRoute(order: order));
-                          } else {
+                          } else if (status == BookingStatusType.reviewed &&
+                              order.isReviewOnline == false) {
                             context.pushRoute(ReviewAtHomeRoute(order: order));
                           }
                         }

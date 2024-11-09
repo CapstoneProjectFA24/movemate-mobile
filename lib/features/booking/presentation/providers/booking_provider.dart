@@ -169,19 +169,22 @@ class BookingNotifier extends StateNotifier<Booking> {
     }
 
     // Tính thuế GTGT
-    double vat = total * 0.08;
+    // double vat = total * 0.08;
 
     // Cập nhật tổng giá bao gồm thuế GTGT
-    total += vat;
+    // total += vat;
     // Cập nhật tổng giá
     state = state.copyWith(totalPrice: total);
   }
 
   void updateBookingResponse(BookingResponseEntity response) {
+    print(
+        "tuan Updating booking response for first ${response.bookingDetails}");
     state = state.copyWith(
       totalPrice: response.total.toDouble(),
       // Bạn có thể cập nhật thêm các trường khác nếu cần
     );
+    print("tuan Updated booking response for last ${response.bookingDetails}");
   }
 
   // Replaced updateRoundTrip method
@@ -508,6 +511,18 @@ class BookingNotifier extends StateNotifier<Booking> {
       ),
       vehicleError: null,
     );
+  }
+
+  void resetAllQuantities() {
+    print("Resetting all quantities to 0");
+
+    List<ServicesPackageEntity> updatedPackages =
+        state.selectedPackages.map((package) {
+      return package.copyWith(quantity: package.quantity ?? 0);
+    }).toList();
+
+    state = state.copyWith(selectedPackages: updatedPackages);
+    print(" Resetting All service package quantities set to 0.");
   }
 
   void reset() {

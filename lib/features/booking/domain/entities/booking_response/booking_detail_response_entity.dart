@@ -54,6 +54,20 @@ class BookingDetailResponseEntity {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return 'BookingDetailResponseEntity('
+        'id: $id, '
+        'serviceId: $serviceId, '
+        'bookingId: $bookingId, '
+        'quantity: $quantity, '
+        'price: $price, '
+        'status: $status, '
+        'type: $type, '
+        'name: $name, '
+        'description: $description'
+        ')';
+  }
 
   factory BookingDetailResponseEntity.fromJson(String source) =>
       BookingDetailResponseEntity.fromMap(json.decode(source));

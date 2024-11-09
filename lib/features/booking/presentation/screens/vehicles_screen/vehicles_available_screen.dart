@@ -46,7 +46,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
       context: context,
     );
 
- 
     // useEffect(() {
     //   scrollController.onScrollEndsListener(fetchResult.loadMore);
     //   return () {
@@ -68,8 +67,6 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
             child: VehicleList(
               fetchResult: fetchResult,
               scrollController: scrollController,
-              bookingNotifier: bookingNotifier,
-              bookingState: bookingState,
             ),
           ),
         ],
@@ -78,7 +75,7 @@ class AvailableVehiclesScreen extends HookConsumerWidget {
         buttonText: "Bước tiếp theo",
         priceLabel: 'Giá',
         buttonIcon: false,
-        totalPrice:  (bookingState.selectedVehicle?.truckCategory?.price ?? 0.0),
+        totalPrice: (bookingState.selectedVehicle?.truckCategory?.price ?? 0.0),
         isButtonEnabled: bookingState.selectedVehicle != null,
         onPlacePress: () async {
           if (bookingState.selectedVehicle != null &&

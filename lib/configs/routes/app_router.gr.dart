@@ -33,6 +33,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreenService(),
       );
     },
+    CleaningServiceScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CleaningServiceScreen(),
+      );
+    },
     ConfirmServiceBookingScreenRoute.name: (routeData) {
       final args = routeData.argsAs<ConfirmServiceBookingScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -358,6 +364,20 @@ class BookingScreenServiceRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BookingScreenServiceRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CleaningServiceScreen]
+class CleaningServiceScreenRoute extends PageRouteInfo<void> {
+  const CleaningServiceScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          CleaningServiceScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CleaningServiceScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

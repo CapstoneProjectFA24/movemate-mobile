@@ -98,18 +98,18 @@ class PriceDetailModal extends ConsumerWidget {
     }
 
     // Tính thuế GTGT (8% của subtotal)
-    double vat = subtotal * 0.08;
+    // double vat = subtotal * 0.08;
 
     // Thêm dịch vụ "Thuế GTGT" vào danh sách dịch vụ
-    allSelectedServices.add(ServiceItem(
-      title: 'Thuế GTGT',
-      unitPrice: vat,
-      quantity: 1,
-      totalPrice: vat,
-    ));
+    // allSelectedServices.add(ServiceItem(
+    //   title: 'Thuế GTGT',
+    //   unitPrice: vat,
+    //   quantity: 1,
+    //   totalPrice: vat,
+    // ));
 
     // Tính tổng giá sau thuế
-    double totalPrice = subtotal + vat;
+    double totalPrice = subtotal;
 
     return Container(
       color: AssetsConstants.whiteColor,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/sub_service_tile.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -180,10 +181,47 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             trailing: ServiceTrailingWidget(
               quantity: quantity,
               addService: true,
-              onQuantityChanged: (newQuantity) {
+              onQuantityChanged: (newQuantity) async {
                 bookingNotifier.updateServicePackageQuantity(
                     widget.servicePackage, newQuantity);
                 bookingNotifier.calculateAndUpdateTotalPrice();
+
+                final bookingResponse = await ref
+                    .read(servicePackageControllerProvider.notifier)
+                    .postValuationBooking(
+                      context: context,
+                    );
+
+                // bookingNotifier.calculateAndUpdateTotalPrice();
+                if (bookingResponse != null) {
+                  try {
+                    // Chuyển đổi BookingResponseEntity thành Booking
+                    final bookingtotal = bookingResponse.total;
+                    final bookingdeposit = bookingResponse.deposit;
+                    bookingNotifier.updateBookingResponse(bookingResponse);
+                    print('tuan bookingEntity  total : $bookingtotal');
+                    print('tuan bookingEntity  deposit : $bookingdeposit');
+                    print(
+                        'tuan bookingResponse: ${bookingResponse.bookingDetails.toString()}');
+                    print(
+                        'tuan bookingResponse: ${bookingResponse.feeDetails.toString()}');
+
+                    // Xóa bookingState sau khi đã đăng ký thành công
+                    // bookingNotifier.reset();
+                  } catch (e) {
+                    // Xử lý ngoại lệ nếu chuyển đổi thất bại
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+                    );
+                  }
+                } else {
+                  // Xử lý khi bookingResponse là null
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Đặt hàng thất bại. Vui lòng thử lại.')),
+                  );
+                }
               },
             ),
           );

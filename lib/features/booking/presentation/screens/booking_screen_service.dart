@@ -31,7 +31,7 @@ class BookingScreenService extends HookConsumerWidget {
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
     final state = ref.watch(servicePackageControllerProvider);
-    final double price = bookingState.totalPrice;
+    final double? price = bookingState.totalPrice;
 
     final fetchResult = useFetch<ServicesPackageEntity>(
       function: (model, context) async {
@@ -61,11 +61,16 @@ class BookingScreenService extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Chọn các dịch vụ',
         backgroundColor: AssetsConstants.primaryMain,
         backButtonColor: AssetsConstants.whiteColor,
         centerTitle: true,
+        showBackButton: true,
+        onCallBackFirst: () {
+          // context.router.pop();
+          bookingNotifier.resetAllQuantities();
+        },
       ),
       body: Column(
         children: [

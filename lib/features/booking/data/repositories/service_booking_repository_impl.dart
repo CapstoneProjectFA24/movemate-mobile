@@ -9,6 +9,7 @@ import 'package:movemate/features/booking/data/models/response/services_fee_syst
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
@@ -148,7 +149,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
 
   @override
   Future<BookingResponse> postValuationBooking({
-    required BookingRequest request,
+    required BookingValuationRequest request,
     required String accessToken,
   }) {
     return getDataOf(

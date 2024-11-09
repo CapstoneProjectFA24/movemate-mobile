@@ -5,6 +5,7 @@ import 'package:movemate/features/booking/data/models/response/booking_response.
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
@@ -68,7 +69,13 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<ServicesPackageResponse>> getPackageServices(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
-        @Queries() Map<String, dynamic> queries,
+    @Queries() Map<String, dynamic> queries,
+  );
+  @GET('${APIConstants.bookings}/{id}')
+  Future<HttpResponse<BookingResponse>> getBookingDetails(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
   );
 //Post , put
   // Post booking service
@@ -78,16 +85,10 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );
-  @GET('${APIConstants.bookings}/{id}')
-  Future<HttpResponse<BookingResponse>> getBookingDetails(
-    @Header(APIConstants.contentHeader) String contentType,
-    @Header(APIConstants.authHeader) String accessToken,
-    @Path('id') int id,
-  );
   // Post valuation booking service
   @POST(APIConstants.post_valuation_booking_service)
   Future<HttpResponse<BookingResponse>> postValuationBooking(
-    @Body() BookingRequest request,
+    @Body() BookingValuationRequest request,
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );

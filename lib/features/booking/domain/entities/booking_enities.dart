@@ -21,7 +21,7 @@ class Booking {
   final int? selectedVehicleIndex;
   final double vehiclePrice;
   final List<Vehicle> availableVehicles;
-  final double totalPrice;
+  final double? totalPrice;
   final InverseParentServiceEntity? selectedVehicle;
   final bool isUploadingLivingRoomImage;
   final bool isUploadingLivingRoomVideo;
@@ -147,10 +147,14 @@ class Booking {
     List<ImageData>? bathroomImages,
     bool? isUploadingLivingRoomImage,
     bool? isUploadingLivingRoomVideo,
+
+    ///
+    // double? totalPriceResponse,
   }) {
     final newBookingDate =
         setBookingDateToNull ? null : (bookingDate ?? this.bookingDate);
     // print("Setting bookingDate to: $newBookingDate");
+    // final newTotalPrice = totalPriceResponse ?? totalPrice;
     return Booking(
       houseType: houseType ?? this.houseType,
       reviewType: reviewType ?? this.reviewType,

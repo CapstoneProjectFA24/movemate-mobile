@@ -124,7 +124,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final profileUser = useFetchResultProfile.data;
 
-
     final fetchReslut = useFetch<OrderEntity>(
       function: (model, context) => ref
           .read(orderControllerProvider.notifier)
@@ -135,6 +134,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
       ),
       context: context,
     );
+    print("tuan object: status  ${order.status}");
+    print("tuan object: isReviewOnline  ${order.isReviewOnline}");
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Scaffold(
@@ -168,7 +169,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            
                 BookingStatus(statusAsync: statusAsync, order: order),
                 // BookingHeaderStatusSection(
                 //   isReviewOnline: order.isReviewOnline,

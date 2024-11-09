@@ -228,6 +228,58 @@ class BookingResponseEntity {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return 'BookingResponseEntity('
+        'id: $id, '
+        'userId: $userId, '
+        'houseTypeId: $houseTypeId, '
+        'deposit: $deposit, '
+        'status: $status, '
+        'pickupAddress: $pickupAddress, '
+        'pickupPoint: $pickupPoint, '
+        'deliveryAddress: $deliveryAddress, '
+        'deliveryPoint: $deliveryPoint, '
+        'isUseBox: $isUseBox, '
+        'boxType: $boxType, '
+        'estimatedDistance: $estimatedDistance, '
+        'total: $total, '
+        'totalReal: $totalReal, '
+        'estimatedDeliveryTime: $estimatedDeliveryTime, '
+        'isDeposited: $isDeposited, '
+        'isBonus: $isBonus, '
+        'isReported: $isReported, '
+        'reportedReason: $reportedReason, '
+        'isDeleted: $isDeleted, '
+        'createdAt: $createdAt, '
+        'bookingAt: $bookingAt, '
+        'createdBy: $createdBy, '
+        'updatedAt: $updatedAt, '
+        'updatedBy: $updatedBy, '
+        'review: $review, '
+        'bonus: $bonus, '
+        'typeBooking: $typeBooking, '
+        'estimatedAcreage: $estimatedAcreage, '
+        'roomNumber: $roomNumber, '
+        'floorsNumber: $floorsNumber, '
+        'isManyItems: $isManyItems, '
+        'isCancel: $isCancel, '
+        'cancelReason: $cancelReason, '
+        'isPorter: $isPorter, '
+        'isRoundTrip: $isRoundTrip, '
+        'note: $note, '
+        'totalFee: $totalFee, '
+        'truckNumber: $truckNumber, '
+        'feeInfo: $feeInfo, '
+        'isReviewOnline: $isReviewOnline, '
+        'reviewAt: $reviewAt, '
+        'assignments: $assignments, '
+        'bookingTrackers: $bookingTrackers, '
+        'bookingDetails: $bookingDetails, '
+        'feeDetails: $feeDetails, '
+        'vouchers: $vouchers'
+        ')';
+  }
 
   factory BookingResponseEntity.fromJson(String source) =>
       BookingResponseEntity.fromMap(json.decode(source));

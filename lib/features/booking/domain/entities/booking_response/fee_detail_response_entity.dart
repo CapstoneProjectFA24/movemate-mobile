@@ -47,6 +47,19 @@ class FeeDetailResponseEntity {
 
   String toJson() => json.encode(toMap());
 
+  @override
+  String toString() {
+    return 'FeeDetailResponseEntity('
+        'id: $id, '
+        'bookingId: $bookingId, '
+        'feeSettingId: $feeSettingId, '
+        'name: $name, '
+        'description: $description, '
+        'amount: $amount, '
+        'quantity: $quantity'
+        ')';
+  }
+
   factory FeeDetailResponseEntity.fromJson(String source) =>
       FeeDetailResponseEntity.fromMap(json.decode(source));
 }

@@ -237,8 +237,6 @@ class BookingScreen extends HookConsumerWidget {
                           VehicleList(
                             fetchResult: fetchResultVehicles,
                             scrollController: scrollController,
-                            bookingNotifier: bookingNotifier,
-                            bookingState: bookingState,
                           ),
                         ]),
                       ),
@@ -247,10 +245,7 @@ class BookingScreen extends HookConsumerWidget {
               ),
             ),
             if (!(fetchResultVehicles.isFetchingData &&
-                    fetchResultVehicles.items.isEmpty)
-                //      &&
-                // bookingState.selectedVehicle != null
-                )
+                fetchResultVehicles.items.isEmpty))
               Consumer(
                 builder: (context, ref, child) {
                   final bookingState = ref.watch(bookingProvider);
@@ -258,14 +253,19 @@ class BookingScreen extends HookConsumerWidget {
 
                   return SummarySection(
                     buttonText: "Bước tiếp theo",
-                    priceLabel: "Giá",
+                    priceLabel:
+                        bookingState.selectedVehicle?.name == 'not selected'
+                            ? ""
+                            : "Giá",
                     buttonIcon: false,
-                    totalPrice:
-                        (bookingState.selectedVehicle?.truckCategory?.price ??
-                            0.0),
+                    // totalPrice:
+                    //     (bookingState.selectedVehicle?.truckCategory?.price ??
+                    //         0),
+                    totalPrice: (bookingState.totalPrice ?? 0.0),
                     isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {
-                      print("object chon xe ${bookingState.selectedVehicle}");
+                      // print(
+                      //     " tuan object chon xe ${bookingState.selectedVehicle}");
                       if (bookingState.houseType != null &&
                           bookingState.houseType?.id != null &&
                           bookingState.selectedVehicle != null &&
