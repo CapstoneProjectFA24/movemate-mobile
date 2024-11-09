@@ -87,9 +87,9 @@ class OrderItem extends HookConsumerWidget {
                 padding: const EdgeInsets.only(top: 18.0),
                 child: bookingAsync.when(
                   data: (data) {
-                    // Calculate displayTotal based on real-time status
                     final bookingStatus = useBookingStatus(
                         bookingAsync.value, order.isReviewOnline);
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

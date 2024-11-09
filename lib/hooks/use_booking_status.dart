@@ -50,6 +50,8 @@ BookingStatusResult useBookingStatus(
     bool hasAssignmentWithStatus(
         String staffType, AssignmentsStatusType status) {
       return assignments.any((a) {
+        print(
+            'Current assignment - staffType: ${a.staffType}, status: ${a.status}');
         return a.staffType == staffType.toString() &&
             a.status.toAssignmentsTypeEnum() == status;
       });
@@ -64,7 +66,7 @@ BookingStatusResult useBookingStatus(
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.arrived);
     final isSuggestionReady =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.suggested);
-    print(isSuggestionReady);
+
     // => phân rõ là trong quá trình đó user có action hay ko
     // => case: 1 có action thì tạo trạng thái action
     // => case: 2 ko action thì chỉ tạo trạng chờ để seen
@@ -85,10 +87,15 @@ BookingStatusResult useBookingStatus(
       canReviewSuggestion = status == BookingStatusType.reviewed;
       canConfirmCompletion = status == BookingStatusType.completed;
     }
-    // trạng thái đợi lịch status assige + review offline
+
     return BookingStatusResult(
-      statusMessage: determineStatusMessage(status, isReviewOnline,
-          isReviewerAssessing, isSuggestionReady, isReviewerMoving),
+      statusMessage: determineStatusMessage(
+        status,
+        isReviewOnline,
+        isReviewerMoving,
+        isReviewerAssessing,
+        isSuggestionReady,
+      ),
       canAcceptSchedule: canAcceptSchedule,
       canMakePayment: canMakePayment,
       canReviewSuggestion: canReviewSuggestion,
@@ -96,8 +103,7 @@ BookingStatusResult useBookingStatus(
       isWaitingSchedule:
           status == BookingStatusType.assigned && !isReviewOnline,
       isReviewerAssessing: isReviewerAssessing,
-      isReviewerMoving:
-          status == BookingStatusType.reviewing && isReviewerMoving,
+      isReviewerMoving: isReviewerMoving,
       isServicesUpdating:
           status == BookingStatusType.reviewing && !isSuggestionReady,
       isSuggestionReady: isSuggestionReady,
@@ -110,8 +116,8 @@ BookingStatusResult useBookingStatus(
 String determineStatusMessage(
   BookingStatusType status,
   bool isReviewOnline,
-  bool isReviewerAssessing,
   bool isReviewerMoving,
+  bool isReviewerAssessing,
   bool isSuggestionReady,
 ) {
   if (isReviewOnline) {
@@ -149,8 +155,8 @@ String determineStatusMessage(
       case BookingStatusType.depositing:
         return "Vui lòng thanh toán đặt cọc";
       case BookingStatusType.reviewing:
-        if (isReviewerAssessing) return "Nhân viên đang khảo sát nhà của bạn";
         if (isReviewerMoving) return "Nhân viên đang trong quá trình di chuyển";
+        if (isReviewerAssessing) return "Nhân viên đang khảo sát nhà của bạn";
         if (isSuggestionReady) return "Đã có đề xuất dịch vụ mới";
         return "Chờ nhân viên tới khảo sát";
       case BookingStatusType.reviewed:
