@@ -1,4 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/location_bottom_sheet.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
 
@@ -14,6 +15,7 @@ class BookingStatusResult {
   // Status indicators
   final bool isWaitingSchedule;
   final bool isReviewerAssessing;
+  final bool isReviewerMoving;
   final bool isServicesUpdating;
   final bool isSuggestionReady;
   final bool isMovingInProgress;
@@ -26,6 +28,7 @@ class BookingStatusResult {
     this.canConfirmCompletion = false,
     this.isWaitingSchedule = false,
     this.isReviewerAssessing = false,
+    this.isReviewerMoving = false,
     this.isServicesUpdating = false,
     this.isSuggestionReady = false,
     this.isMovingInProgress = false,
@@ -53,11 +56,18 @@ BookingStatusResult useBookingStatus(
     }
 
     // Check reviewer states
+
+    final isReviewerMoving =
+        hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.incoming);
+
     final isReviewerAssessing =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.arrived);
     final isSuggestionReady =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.suggested);
-
+    print(isSuggestionReady);
+    // => phân rõ là trong quá trình đó user có action hay ko
+    // => case: 1 có action thì tạo trạng thái action
+    // => case: 2 ko action thì chỉ tạo trạng chờ để seen
     // Determine customer actions based on review type
     bool canAcceptSchedule = false;
     bool canMakePayment = false;
@@ -75,10 +85,10 @@ BookingStatusResult useBookingStatus(
       canReviewSuggestion = status == BookingStatusType.reviewed;
       canConfirmCompletion = status == BookingStatusType.completed;
     }
-
+    // trạng thái đợi lịch status assige + review offline
     return BookingStatusResult(
-      statusMessage: determineStatusMessage(
-          status, isReviewOnline, isReviewerAssessing, isSuggestionReady),
+      statusMessage: determineStatusMessage(status, isReviewOnline,
+          isReviewerAssessing, isSuggestionReady, isReviewerMoving),
       canAcceptSchedule: canAcceptSchedule,
       canMakePayment: canMakePayment,
       canReviewSuggestion: canReviewSuggestion,
@@ -86,6 +96,8 @@ BookingStatusResult useBookingStatus(
       isWaitingSchedule:
           status == BookingStatusType.assigned && !isReviewOnline,
       isReviewerAssessing: isReviewerAssessing,
+      isReviewerMoving:
+          status == BookingStatusType.reviewing && isReviewerMoving,
       isServicesUpdating:
           status == BookingStatusType.reviewing && !isSuggestionReady,
       isSuggestionReady: isSuggestionReady,
@@ -99,6 +111,7 @@ String determineStatusMessage(
   BookingStatusType status,
   bool isReviewOnline,
   bool isReviewerAssessing,
+  bool isReviewerMoving,
   bool isSuggestionReady,
 ) {
   if (isReviewOnline) {
@@ -137,8 +150,9 @@ String determineStatusMessage(
         return "Vui lòng thanh toán đặt cọc";
       case BookingStatusType.reviewing:
         if (isReviewerAssessing) return "Nhân viên đang khảo sát nhà của bạn";
+        if (isReviewerMoving) return "Nhân viên đang trong quá trình di chuyển";
         if (isSuggestionReady) return "Đã có đề xuất dịch vụ mới";
-        return "Đang trong quá trình khảo sát";
+        return "Chờ nhân viên tới khảo sát";
       case BookingStatusType.reviewed:
         return "Vui lòng xem xét đề xuất dịch vụ";
       case BookingStatusType.coming:
@@ -152,7 +166,7 @@ String determineStatusMessage(
       case BookingStatusType.refunded:
         return "Đã hoàn tiền";
       case BookingStatusType.pending:
-        return "Đang xử lý";
+        return "Đang xử lý yêu cầu";
       default:
         return "Không xác định";
     }
