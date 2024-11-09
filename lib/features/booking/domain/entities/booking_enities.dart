@@ -58,6 +58,7 @@ class Booking {
   final LocationModel? dropOffLocation;
   final DateTime? bookingDate;
   final String? selectorHasError;
+  final String? estimatedDistance;
   Booking({
     this.houseType,
     this.reviewType,
@@ -88,6 +89,7 @@ class Booking {
     this.pickUpLocation,
     this.dropOffLocation,
     this.bookingDate,
+    this.estimatedDistance,
     // Initialize image lists (empty by default)
     this.livingRoomVideos = const [],
     List<ImageData>? livingRoomImages,
@@ -138,6 +140,8 @@ class Booking {
     DateTime? bookingDate,
     bool setBookingDateToNull = false,
     String? selectorHasError,
+    String? estimatedDistance,
+    // Initialize image lists (empty by default)
     //add image
     List<VideoData>? livingRoomVideos,
     List<ImageData>? livingRoomImages,
@@ -190,6 +194,7 @@ class Booking {
       dropOffLocation: dropOffLocation ?? this.dropOffLocation,
       // bookingDate: bookingDate ?? this.bookingDate,
       bookingDate: newBookingDate,
+      estimatedDistance: estimatedDistance ?? this.estimatedDistance,
 
       //add image
       livingRoomVideos: livingRoomVideos ?? this.livingRoomVideos,

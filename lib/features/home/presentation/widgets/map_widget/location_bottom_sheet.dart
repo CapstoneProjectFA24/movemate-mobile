@@ -152,6 +152,8 @@ class LocationBottomSheet extends HookConsumerWidget {
       }
     }
 
+//hàm lấy khoảng cách của 2 điểm
+
     // Cấu trúc widget với nút xác nhận nằm ngoài Expanded
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -280,5 +282,39 @@ class LocationBottomSheet extends HookConsumerWidget {
           ),
       ],
     );
+  }
+
+  Future<double> calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) async {
+    const apiKey = APIConstants.apiVietMapKey;
+    final url = Uri.parse(
+      'https://maps.vietmap.vn/api/matrix?api-version=1.1&'
+      'apikey=$apiKey&'
+      'point=$lat1,$lon1&'
+      'point=$lat2,$lon2&'
+      'points_encoded=false&'
+      'vehicle=car&'
+      'sources=0&'
+      'destinations=1&'
+      'annotation=distance',
+    );
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final distance =
+            data['durations'][0][0] / 1000; // Khoảng cách tính bằng km
+        return distance;
+      } else {
+        throw Exception('Failed to fetch distance: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

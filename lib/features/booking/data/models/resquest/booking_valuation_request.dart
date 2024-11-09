@@ -140,7 +140,8 @@ class BookingValuationRequest {
     }).toList());
 
     // Tính toán khoảng cách ước tính (ví dụ)
-    String estimatedDistance = '3'; // Có thể tính toán dựa trên tọa độ
+    String estimatedDistance =
+        booking.estimatedDistance ?? '10'; // Có thể tính toán dựa trên tọa độ
 
     // Tính toán thời gian giao hàng ước tính (ví dụ)
     // String estimatedDeliveryTime =

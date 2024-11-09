@@ -8,6 +8,7 @@ import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_cont
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -65,7 +66,7 @@ class BookingController extends _$BookingController {
           bookingResponse.payload;
 
       // Reset booking provider state
-      // ref.read(bookingProvider.notifier).reset();
+      ref.read(bookingResponseProviderPrice.notifier).state = null;
       print("booking Response: ${jsonEncode(bookingResponse.payload)}");
     });
 

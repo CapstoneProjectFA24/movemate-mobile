@@ -168,6 +168,8 @@ class BookingScreen extends HookConsumerWidget {
       context: context,
     );
 
+    print(
+        " tuan bookingState selectedVehicle ${bookingState.selectedVehicle?.name}");
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Chọn loại nhà ',
@@ -256,9 +258,14 @@ class BookingScreen extends HookConsumerWidget {
                   return SummarySection(
                     buttonText: "Bước tiếp theo",
                     priceLabel:
-                        bookingState.selectedVehicle?.name == 'not selected'
-                            ? ""
+                        (bookingState.selectedVehicle?.name == 'not selected' ||
+                                bookingState.selectedVehicle?.name == null)
+                            ? ''
                             : "Giá",
+                    // priceLabel:
+                    //     bookingState.selectedVehicle?.name == 'not selected'
+                    //         ? ""
+                    //         : "Giá",
                     buttonIcon: false,
                     // totalPrice:
                     //     (bookingState.selectedVehicle?.truckCategory?.price ??

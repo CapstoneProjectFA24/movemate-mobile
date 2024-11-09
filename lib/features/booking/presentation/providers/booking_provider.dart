@@ -563,6 +563,8 @@ class BookingNotifier extends StateNotifier<Booking> {
       isRoundTrip: false,
     );
   }
+
+  
 }
 
 // The global provider that can be accessed in all screens
