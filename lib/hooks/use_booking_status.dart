@@ -1,49 +1,34 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:movemate/services/map_services/booking_realtime_entity/booking_realtime_entity.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
 
 class BookingStatusResult {
   final String statusMessage;
 
-  // Reviewer states
-  final bool canReviewOffline;
-  final bool canReviewOnline;
-  final bool canCreateSchedule;
-  final bool canConfirmReview;
-  final bool canUpdateServices;
-  final bool canConfirmArrival;
-  final bool canConfirmMoving;
-  final bool canConfirmSuggestion;
+  // Customer action states
+  final bool canAcceptSchedule;
+  final bool canMakePayment;
+  final bool canReviewSuggestion;
+  final bool canConfirmCompletion;
 
   // Status indicators
-  final bool isWaitingCustomer;
-  final bool isWaitingPayment;
-  final bool isStaffEnroute;
-  final bool isStaffArrived;
-  final bool isSuggested;
-  final bool isReviewed;
-
-  // Driver/Porter states
-  final bool isInProgress;
+  final bool isWaitingSchedule;
+  final bool isReviewerAssessing;
+  final bool isServicesUpdating;
+  final bool isSuggestionReady;
+  final bool isMovingInProgress;
   final bool isCompleted;
-
   BookingStatusResult({
     required this.statusMessage,
-    this.canReviewOffline = false,
-    this.canReviewOnline = false,
-    this.canCreateSchedule = false,
-    this.canConfirmReview = false,
-    this.canUpdateServices = false,
-    this.canConfirmArrival = false,
-    this.canConfirmMoving = false,
-    this.canConfirmSuggestion = false,
-    this.isWaitingCustomer = false,
-    this.isWaitingPayment = false,
-    this.isStaffEnroute = false,
-    this.isStaffArrived = false,
-    this.isSuggested = false,
-    this.isReviewed = false,
-    this.isInProgress = false,
+    this.canAcceptSchedule = false,
+    this.canMakePayment = false,
+    this.canReviewSuggestion = false,
+    this.canConfirmCompletion = false,
+    this.isWaitingSchedule = false,
+    this.isReviewerAssessing = false,
+    this.isServicesUpdating = false,
+    this.isSuggestionReady = false,
+    this.isMovingInProgress = false,
     this.isCompleted = false,
   });
 }
@@ -67,90 +52,44 @@ BookingStatusResult useBookingStatus(
       });
     }
 
-    // Xác định reviewer assignment
-    final hasReviewerAssignment =
-        hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.assigned);
-
-    // Trạng thái của assignments
-    final isStaffEnroute =
-        hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.enroute);
-
-    final isStaffArrived =
+    // Check reviewer states
+    final isReviewerAssessing =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.arrived);
-
-    final isSuggested =
+    final isSuggestionReady =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.suggested);
 
-    // Logic cho Reviewer Offline
-    bool canReviewOffline = false;
-    bool canCreateSchedule = false;
-    bool canConfirmMoving = false;
-    bool canConfirmArrival = false;
-    bool canUpdateServices = false;
-    bool canConfirmSuggestion = false;
-
-    if (!isReviewOnline) {
-      switch (status) {
-        case BookingStatusType.assigned:
-          canCreateSchedule = true;
-          break;
-        case BookingStatusType.reviewing:
-          if (!isStaffEnroute && !isStaffArrived && !isSuggested) {
-            canConfirmMoving = true;
-          } else if (isStaffEnroute && !isStaffArrived && !isSuggested) {
-            canConfirmArrival = true;
-          } else if (isStaffArrived && !isSuggested) {
-            canUpdateServices = true;
-          } else if (isSuggested) {
-            canConfirmSuggestion = true;
-          }
-          break;
-        default:
-          break;
-      }
-    }
-
-    // Logic cho Reviewer Online
-    bool canReviewOnline = false;
-    bool canConfirmReview = false;
-
+    // Determine customer actions based on review type
+    bool canAcceptSchedule = false;
+    bool canMakePayment = false;
+    bool canReviewSuggestion = false;
+    bool canConfirmCompletion = false;
     if (isReviewOnline) {
-      switch (status) {
-        case BookingStatusType.assigned:
-          if (hasReviewerAssignment) {
-            canConfirmReview = true;
-          }
-          break;
-        case BookingStatusType.reviewing:
-          if (!isSuggested) {
-            canUpdateServices = true;
-          } else if (isSuggested) {
-            canConfirmSuggestion = true;
-          }
-          break;
-        default:
-          break;
-      }
+      // Online review flow
+      canMakePayment = status == BookingStatusType.reviewed;
+      canReviewSuggestion = isSuggestionReady;
+      canConfirmCompletion = status == BookingStatusType.completed;
+    } else {
+      // Offline review flow
+      canAcceptSchedule = status == BookingStatusType.waiting;
+      canMakePayment = status == BookingStatusType.depositing;
+      canReviewSuggestion = status == BookingStatusType.reviewed;
+      canConfirmCompletion = status == BookingStatusType.completed;
     }
 
     return BookingStatusResult(
-      statusMessage: determineStatusMessage(status, isReviewOnline,
-          isStaffEnroute, isStaffArrived, canCreateSchedule),
-      canReviewOffline: canReviewOffline,
-      canReviewOnline: canReviewOnline,
-      canCreateSchedule: canCreateSchedule,
-      canConfirmReview: canConfirmReview,
-      canUpdateServices: canUpdateServices,
-      canConfirmArrival: canConfirmArrival,
-      canConfirmMoving: canConfirmMoving,
-      canConfirmSuggestion: canConfirmSuggestion,
-      isWaitingCustomer: status == BookingStatusType.waiting,
-      isWaitingPayment: status == BookingStatusType.depositing,
-      isStaffEnroute: isStaffEnroute,
-      isStaffArrived: isStaffArrived,
-      isSuggested: isSuggested,
-      isReviewed: status == BookingStatusType.reviewed,
-      isInProgress: status == BookingStatusType.inProgress,
+      statusMessage: determineStatusMessage(
+          status, isReviewOnline, isReviewerAssessing, isSuggestionReady),
+      canAcceptSchedule: canAcceptSchedule,
+      canMakePayment: canMakePayment,
+      canReviewSuggestion: canReviewSuggestion,
+      canConfirmCompletion: canConfirmCompletion,
+      isWaitingSchedule:
+          status == BookingStatusType.assigned && !isReviewOnline,
+      isReviewerAssessing: isReviewerAssessing,
+      isServicesUpdating:
+          status == BookingStatusType.reviewing && !isSuggestionReady,
+      isSuggestionReady: isSuggestionReady,
+      isMovingInProgress: status == BookingStatusType.inProgress,
       isCompleted: status == BookingStatusType.completed,
     );
   }, [booking, isReviewOnline]);
@@ -159,66 +98,61 @@ BookingStatusResult useBookingStatus(
 String determineStatusMessage(
   BookingStatusType status,
   bool isReviewOnline,
-  bool isStaffEnroute,
-  bool isStaffArrived,
-  bool canCreateSchedule,
+  bool isReviewerAssessing,
+  bool isSuggestionReady,
 ) {
   if (isReviewOnline) {
     switch (status) {
       case BookingStatusType.assigned:
-        return "Đã được phân công";
+        return "Nhân viên đang xem xét yêu cầu của bạn";
       case BookingStatusType.reviewing:
-        if (isStaffArrived) return "Bạn đang đánh giá tình trạng của nhà";
-        return "Đang đợi bạn đánh giá";
+        if (isSuggestionReady) return "Đã có đề xuất dịch vụ mới";
+        return "Đang trong quá trình đánh giá trực tuyến";
       case BookingStatusType.reviewed:
-        return "Đã đánh giá xong";
+        return "Vui lòng thanh toán để tiến hành dịch vụ";
       case BookingStatusType.depositing:
-        return "Chờ thanh toán";
+        return "Đang xử lý thanh toán";
       case BookingStatusType.coming:
-        return "Đang đến";
+        return "Đội ngũ vận chuyển đang trên đường đến";
       case BookingStatusType.inProgress:
-        return "Đang thực hiện";
+        return "Đang thực hiện vận chuyển";
       case BookingStatusType.completed:
-        return "Hoàn thành";
+        return "Dịch vụ đã hoàn thành";
       case BookingStatusType.cancelled:
-        return "Đã hủy";
+        return "Đơn hàng đã bị hủy";
       case BookingStatusType.refunded:
         return "Đã hoàn tiền";
       case BookingStatusType.pending:
-        return "Chờ xác nhận";
+        return "Đang xử lý yêu cầu";
       default:
         return "Không xác định";
     }
   } else {
     switch (status) {
       case BookingStatusType.assigned:
-        return canCreateSchedule
-            ? "Chờ bạn xếp lịch với khách hàng"
-            : "Đã được phân công";
+        return "Đang chờ lịch khảo sát";
       case BookingStatusType.waiting:
-        return "Đang chờ khách hàng chấp nhận lịch";
+        return "Vui lòng xác nhận lịch khảo sát";
       case BookingStatusType.depositing:
-        return "Chờ thanh toán";
+        return "Vui lòng thanh toán đặt cọc";
       case BookingStatusType.reviewing:
-        if (isStaffEnroute) return "Xác nhận để di chuyển";
-        if (isStaffArrived) {
-          return "Bạn đã đến vui lòng đánh giá tình trạng của nhà";
-        }
-        return "Đang đợi bạn đánh giá";
+        if (isReviewerAssessing) return "Nhân viên đang khảo sát nhà của bạn";
+        if (isSuggestionReady) return "Đã có đề xuất dịch vụ mới";
+        return "Đang trong quá trình khảo sát";
       case BookingStatusType.reviewed:
-        return "Đã đánh giá xong";
+        return "Vui lòng xem xét đề xuất dịch vụ";
       case BookingStatusType.coming:
-        return "Đang đến";
+        return "Đội ngũ vận chuyển đang trên đường đến";
       case BookingStatusType.inProgress:
-        return "Đang thực hiện";
+        return "Đang thực hiện vận chuyển";
       case BookingStatusType.completed:
-        return "Hoàn thành";
+        return "Dịch vụ đã hoàn thành";
       case BookingStatusType.cancelled:
-        return "Đã hủy";
+        return "Đơn hàng đã bị hủy";
       case BookingStatusType.refunded:
         return "Đã hoàn tiền";
       case BookingStatusType.pending:
-        return "Chờ xác nhận";
+        return "Đang xử lý";
       default:
         return "Không xác định";
     }

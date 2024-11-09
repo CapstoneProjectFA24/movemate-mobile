@@ -31,6 +31,7 @@ class OrderRepositoryImpl extends RemoteBaseRepository
       UserId: userId,
     );
 
+    print("vinh log order : ${orderQueryRequest.toJson()}");
     return getDataOf(
       request: () => _orderSource.getBookings(
         APIConstants.contentType,
