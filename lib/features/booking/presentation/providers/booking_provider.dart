@@ -513,16 +513,40 @@ class BookingNotifier extends StateNotifier<Booking> {
     );
   }
 
+  // Hàm resetAllQuantities để đặt lại tất cả các gói dịch vụ
   void resetAllQuantities() {
-    print("Resetting all quantities to 0");
+    print("Resetting all quantities to 0 for all packages.");
 
     List<ServicesPackageEntity> updatedPackages =
         state.selectedPackages.map((package) {
-      return package.copyWith(quantity: package.quantity ?? 0);
+      ServicesPackageEntity updatedPackage = package.copyWith(quantity: 0);
+
+      if (package.type != 'SYSTEM') {
+        List<SubServiceEntity> updatedSubServices =
+            package.inverseParentService.map((subService) {
+          return subService.copyWith(quantity: 0);
+        }).toList();
+
+        updatedPackage =
+            updatedPackage.copyWith(inverseParentService: updatedSubServices);
+        print(
+            "Sub-services quantities reset to 0 for package ID: ${package.id}");
+      }
+
+      return updatedPackage;
     }).toList();
 
     state = state.copyWith(selectedPackages: updatedPackages);
-    print(" Resetting All service package quantities set to 0.");
+    print("All service package quantities set to 0.");
+
+    // Kiểm tra trạng thái mới
+    for (var pkg in state.selectedPackages) {
+      print(
+          'Package ID: ${pkg.id}, Quantity: ${pkg.quantity}, Type: ${pkg.type}');
+      for (var sub in pkg.inverseParentService) {
+        print('  SubService ID: ${sub.id}, Quantity: ${sub.quantity}');
+      }
+    }
   }
 
   void reset() {

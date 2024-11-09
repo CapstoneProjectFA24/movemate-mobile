@@ -66,15 +66,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
               maxLines: 2,
               overflow: TextOverflow.visible,
             ),
-            // subtitle: Text(
-            //   widget.servicePackage.description,
-            //   style: TextStyle(
-            //     fontSize: 14,
-            //     color: Colors.grey[600],
-            //   ),
-            //   maxLines: 1,
-            //   overflow: TextOverflow.ellipsis,
-            // ),
+     
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
             childrenPadding: const EdgeInsets.only(
               left: 16,
@@ -83,24 +75,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // if (widget.servicePackage.discountRate > 0)
-                //   Container(
-                //     padding:
-                //         const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                //     decoration: BoxDecoration(
-                //       color: Colors.redAccent,
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //     child: Text(
-                //       '-${widget.servicePackage.discountRate}%',
-                //       style: const TextStyle(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.bold,
-                //         fontSize: 13,
-                //       ),
-                //     ),
-                //   ),
-                // const SizedBox(width: 12),
+       
                 AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0.0,
                   duration: const Duration(milliseconds: 300),
