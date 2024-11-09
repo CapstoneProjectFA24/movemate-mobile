@@ -47,53 +47,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final state = ref.watch(orderControllerProvider);
 
-    final List<Map<String, dynamic>> steps = [
-      {
-        'title': 'Đã tạo',
-        'details': ['Đơn hàng được tạo', 'Xác nhận thông tin'],
-      },
-      {
-        'title': 'Chờ xếp người đánh giá',
-        'details': ['Đang chờ xếp người đánh giá'],
-      },
-      {
-        'title': 'Đã xếp người đánh giá',
-        'details': ['Đã xếp người đánh giá', 'Chờ người đánh giá xử lý'],
-      },
-      {
-        'title': 'Chờ xác nhận',
-        'details': ['Chờ khách hàng chấp nhận lịch'],
-      },
-      {
-        'title': 'Đang thực hiện thanh toán',
-        'details': [
-          'Đang thực hiện thanh toán',
-          'Đã thanh toán',
-        ],
-      },
-      {
-        'title': 'Chờ người đáng giá',
-        'details': [
-          'Chờ người đánh gá',
-          'Người đánh giá đang đến',
-          'Người đánh giá đã đến',
-          'Đang thực hiện dịch vụ'
-        ],
-      },
-      {
-        'title': 'Đang chờ tài xế',
-        'details': ['Tài xế đang đến', 'Tài xế đã đến'],
-      },
-      {
-        'title': 'Đang thực hiện dịch vụ',
-        'details': ['Đang dọn nhà', 'Đang di chuyển', 'đang trả hàng'],
-      },
-      {
-        'title': 'Hoàn thành',
-        'details': ['Xác nhận', 'Hoàn thành'],
-      },
-    ];
-
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -134,8 +87,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
       ),
       context: context,
     );
-    print("tuan object: status  ${order.status}");
-    print("tuan object: isReviewOnline  ${order.isReviewOnline}");
+
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Scaffold(
@@ -169,23 +121,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BookingStatus(statusAsync: statusAsync, order: order),
-                // BookingHeaderStatusSection(
-                //   isReviewOnline: order.isReviewOnline,
-                //   order: order,
-                //   fetchResult: fetchReslut,
-                // ),
+                BookingStatus(order: order),
                 const SizedBox(height: 50),
                 TimelineSteps(
-                  steps: steps,
                   order: order,
                   expandedIndex: expandedIndex,
-                  currentStatus: statusAsync.when(
-                    data: (status) => status,
-                    loading: () => BookingStatusType.pending,
-                    error: (error, stackTrace) => BookingStatusType
-                        .cancelled, // or any other appropriate constant
-                  ),
                 ),
                 const SizedBox(height: 16),
                 statusOrders == BookingStatusType.pending

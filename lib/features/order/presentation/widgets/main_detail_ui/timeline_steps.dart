@@ -1,181 +1,202 @@
-// timeline_steps.dart
-
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:animate_do/animate_do.dart';
 
-class TimelineSteps extends ConsumerStatefulWidget {
-  final List<Map<String, dynamic>> steps;
+class TimelineSteps extends HookConsumerWidget {
   final ValueNotifier<int> expandedIndex;
-  final BookingStatusType currentStatus;
   final OrderEntity order;
 
   const TimelineSteps({
     super.key,
-    required this.steps,
     required this.expandedIndex,
-    required this.currentStatus,
     required this.order,
   });
-
-  @override
-  ConsumerState<TimelineSteps> createState() => TimelineStepsState();
-}
-
-class TimelineStepsState extends ConsumerState<TimelineSteps>
-    with SingleTickerProviderStateMixin {
-  late AnimationController animationController;
-  late Animation<double> animation;
-  int currentAnimatedStep = 0;
-  bool isForward = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Khởi tạo AnimationController với duration 0.5 giây
-    animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 00),
-    );
-
-    // Khởi tạo Animation với CurvedAnimation để tạo hiệu ứng mượt mà
-    animation = CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOut,
-    );
-
-    // Xác định hai bước cho animation dựa trên currentStatus
-    final statusIndex =
-        getStatusIndex(widget.currentStatus, widget.order.isReviewOnline);
-    print("statusIndex $statusIndex");
-    final startStep = statusIndex;
-    final endStep = statusIndex + 1;
-
-    // Đảm bảo endStep không vượt quá số bước
-    if (endStep >= widget.steps.length) {
-      isForward = false;
-    }
-
-    currentAnimatedStep = startStep;
-
-    // Lắng nghe khi animation hoàn thành
-    animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        setState(() {
-          // Chuyển đổi giữa hai bước
-          currentAnimatedStep = isForward ? endStep : startStep;
-          isForward = !isForward;
-        });
-        animationController.reset();
-        animationController.forward();
-      }
-    });
-
-    // Bắt đầu animation
-    animationController.forward();
-  }
-
-  @override
-  void didUpdateWidget(covariant TimelineSteps oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Nếu trạng thái hiện tại thay đổi, reset và bắt đầu lại animation
-    if (oldWidget.currentStatus != widget.currentStatus) {
-      resetAnimation();
-    }
-  }
-
-  void resetAnimation() {
-    animationController.stop();
-    animationController.reset();
-
-    // Xác định lại hai bước dựa trên currentStatus mới
-    final statusIndex =
-        getStatusIndex(widget.currentStatus, widget.order.isReviewOnline);
-    final startStep = statusIndex;
-    final endStep = statusIndex + 1;
-
-    // Đảm bảo endStep không vượt quá số bước
-    isForward = true;
-    if (endStep >= widget.steps.length) {
-      isForward = false;
-    }
-
-    currentAnimatedStep = startStep;
-
-    // Bắt đầu lại animation
-    animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
-
-  // Hàm xác định chỉ số bước hiện tại dựa trên trạng thái đơn hàng
-  int getStatusIndex(BookingStatusType status, bool isReviewOnline) {
-    if (status == BookingStatusType.pending) {
-      return 0;
-    } else if (status == BookingStatusType.assigned) {
-      return 1;
-    } else if (status == BookingStatusType.reviewing && isReviewOnline) {
-      return 2;
-    } else if (status == BookingStatusType.reviewed) {
-      return 3;
-    } else if (status == BookingStatusType.depositing) {
-      return 4;
-    } else if (status == BookingStatusType.coming) {
-      return 5;
-    } else if (status == BookingStatusType.waiting && !isReviewOnline) {
-      return 3;
-    } else if (status == BookingStatusType.reviewing && !isReviewOnline) {
-      return 5;
-    } else if (status == BookingStatusType.reviewed && !isReviewOnline) {
-      return 6;
-    } else if (status == BookingStatusType.coming && !isReviewOnline) {
-      return 7;
+  List<Map<String, dynamic>> _buildStepsFromStatus(
+      BookingStatusResult status, bool isReviewOnline) {
+    if (isReviewOnline) {
+      return [
+        {
+          'title': 'Xử lý yêu cầu',
+          'isActive': true,
+          'details': ['Hệ thống đang xử lý yêu cầu của bạn']
+        },
+        {
+          'title': 'Đánh giá online',
+          'isActive': status.isReviewerAssessing,
+          'details': [
+            'Nhân viên đang xem xét yêu cầu',
+            'Đánh giá chi tiết dịch vụ'
+          ]
+        },
+        {
+          'title': 'Đề xuất',
+          'isActive': status.isSuggestionReady,
+          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất']
+        },
+        {
+          'title': 'Thanh toán',
+          'isActive': status.canMakePayment,
+          'details': ['Vui lòng thanh toán để tiến hành dịch vụ']
+        },
+        {
+          'title': 'Vận chuyển',
+          'isActive': status.isMovingInProgress,
+          'details': [
+            'Đội ngũ vận chuyển đang làm việc',
+            'Theo dõi quá trình vận chuyển'
+          ]
+        }
+      ];
     } else {
-      return -1;
+      return [
+        {
+          'title': 'Xử lý yêu cầu',
+          'isActive': true,
+          'details': ['Hệ thống đang xử lý yêu cầu của bạn']
+        },
+        {
+          'title': 'Lịch khảo sát',
+          'isActive': status.isWaitingSchedule || status.canAcceptSchedule,
+          'details': ['Đang chờ lịch khảo sát', 'Vui lòng xác nhận lịch']
+        },
+        {
+          'title': 'Khảo sát',
+          'isActive': status.isReviewerMoving || status.isReviewerAssessing,
+          'details': ['Nhân viên đang di chuyển', 'Đang khảo sát tại nhà']
+        },
+        {
+          'title': 'Đề xuất',
+          'isActive': status.isSuggestionReady || status.canReviewSuggestion,
+          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất']
+        },
+        {
+          'title': 'Thanh toán',
+          'isActive': status.canMakePayment,
+          'details': ['Vui lòng thanh toán đặt cọc']
+        },
+        {
+          'title': 'Vận chuyển',
+          'isActive': status.isMovingInProgress,
+          'details': [
+            'Đội ngũ vận chuyển đang làm việc',
+            'Theo dõi quá trình vận chuyển'
+          ]
+        }
+      ];
+    }
+  }
+
+  // Helper function to get status index
+  int _getCurrentStepIndex(BookingStatusResult status, bool isReviewOnline) {
+    print("vinh log status : ${status.canMakePayment}");
+    if (isReviewOnline) {
+      if (status.isMovingInProgress) return 4;
+      if (status.canMakePayment) return 3;
+      if (status.isSuggestionReady) return 2;
+      if (status.isReviewerAssessing) return 1;
+      return 0;
+    } else {
+      if (status.isMovingInProgress) return 5;
+      if (status.canMakePayment) return 4;
+      if (status.isSuggestionReady || status.canReviewSuggestion) return 3;
+      if (status.isReviewerMoving || status.isReviewerAssessing) return 2;
+      if (status.isWaitingSchedule || status.canAcceptSchedule) return 1;
+      return 0;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final currentStepIndex = currentAnimatedStep;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
+    final steps = _buildStepsFromStatus(bookingStatus, order.isReviewOnline);
+    final currentStepIndex =
+        _getCurrentStepIndex(bookingStatus, order.isReviewOnline);
+
+    // Convert animation controller to hooks
+    final animationController = useAnimationController(
+      duration: const Duration(milliseconds: 500),
+    );
+
+    // Create animation using hooks
+    final animation = useAnimation(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // State management using hooks
+    final currentAnimatedStep = useState(currentStepIndex);
+    final isForward = useState(true);
+
+    // Effect to handle animation status
+    useEffect(() {
+      final startStep = currentStepIndex;
+      final endStep = currentStepIndex + 1;
+
+      if (endStep >= steps.length) {
+        isForward.value = false;
+      }
+
+      currentAnimatedStep.value = startStep;
+
+      void handleAnimationStatus(AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          currentAnimatedStep.value = isForward.value ? endStep : startStep;
+          isForward.value = !isForward.value;
+          animationController
+            ..reset()
+            ..forward();
+        }
+      }
+
+      animationController.addStatusListener(handleAnimationStatus);
+      animationController.forward();
+
+      return () {
+        animationController.removeStatusListener(handleAnimationStatus);
+      };
+    }, [currentStepIndex]);
 
     return FadeInLeft(
       duration: const Duration(milliseconds: 600),
       child: Column(
         children: [
-          // Gộp Timeline header và titles thành một hàng
           SizedBox(
-            height: 80, // Chiều cao cố định cho container
+            height: 80,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: widget.steps.length,
+              itemCount: steps.length,
               itemBuilder: (context, index) {
-                bool isPast = index <= currentStepIndex;
-                final step = widget.steps[index];
+                final step = steps[index];
+                final isPast =
+                    step['isActive'] || index <= currentAnimatedStep.value;
 
                 return SizedBox(
-                  width: 100, // Chiều rộng cố định cho mỗi item
+                  width: 100,
                   child: SlideInRight(
                     duration: Duration(milliseconds: 400 + (index * 100)),
                     from: 50.0,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min, // Quan trọng
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         SizedBox(
-                          height: 35, // Chiều cao cố định cho MyTimelineTitle
+                          height: 35,
                           child: MyTimelineTitle(
                             isFirst: index == 0,
-                            isLast: index == widget.steps.length - 1,
+                            isLast: index == steps.length - 1,
                             isPast: isPast,
                           ),
                         ),
@@ -183,10 +204,8 @@ class TimelineStepsState extends ConsumerState<TimelineSteps>
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              widget.expandedIndex.value =
-                                  widget.expandedIndex.value == index
-                                      ? -1
-                                      : index;
+                              expandedIndex.value =
+                                  expandedIndex.value == index ? -1 : index;
                             },
                             child: Padding(
                               padding:
@@ -219,15 +238,14 @@ class TimelineStepsState extends ConsumerState<TimelineSteps>
               },
             ),
           ),
-
-          // Phần còn lại của widget giữ nguyên
           Padding(
             padding: const EdgeInsets.only(left: 2.0),
             child: Column(
-              children: List.generate(widget.steps.length, (index) {
-                final step = widget.steps[index];
-                bool isExpanded = widget.expandedIndex.value == index;
-                bool isPast = index <= currentStepIndex;
+              children: List.generate(steps.length, (index) {
+                final step = steps[index];
+                bool isExpanded = expandedIndex.value == index;
+                final isPast =
+                    step['isActive'] || index <= currentAnimatedStep.value;
 
                 return AnimatedSize(
                   duration: const Duration(milliseconds: 300),

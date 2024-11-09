@@ -77,7 +77,7 @@ BookingStatusResult useBookingStatus(
     bool canConfirmCompletion = false;
     if (isReviewOnline) {
       // Online review flow
-      canMakePayment = status == BookingStatusType.reviewed;
+      canMakePayment = status == BookingStatusType.depositing;
       canReviewSuggestion = isSuggestionReady;
       canConfirmCompletion = status == BookingStatusType.completed;
     } else {
@@ -107,7 +107,7 @@ BookingStatusResult useBookingStatus(
       isServicesUpdating:
           status == BookingStatusType.reviewing && !isSuggestionReady,
       isSuggestionReady: isSuggestionReady,
-      isMovingInProgress: status == BookingStatusType.inProgress,
+      isMovingInProgress: status == BookingStatusType.coming,
       isCompleted: status == BookingStatusType.completed,
     );
   }, [booking, isReviewOnline]);
@@ -130,7 +130,7 @@ String determineStatusMessage(
       case BookingStatusType.reviewed:
         return "Vui lòng thanh toán để tiến hành dịch vụ";
       case BookingStatusType.depositing:
-        return "Đang xử lý thanh toán";
+        return "Đang chờ bạn thanh toán";
       case BookingStatusType.coming:
         return "Đội ngũ vận chuyển đang trên đường đến";
       case BookingStatusType.inProgress:
