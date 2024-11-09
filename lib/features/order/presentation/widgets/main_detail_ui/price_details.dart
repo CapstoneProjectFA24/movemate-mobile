@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
@@ -38,7 +39,11 @@ class PriceDetails extends HookConsumerWidget {
       if (bookingStatus.canMakePayment) {
         context.pushRoute(PaymentScreenRoute(id: order.id));
       } else if (bookingStatus.canReviewSuggestion) {
-        // todo
+        showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              ReviewedToComingModal(order: order),
+        );
       } else if (bookingStatus.canAcceptSchedule) {
         if (order.isReviewOnline) {
           context.pushRoute(ReviewOnlineRoute(order: order));
@@ -61,7 +66,7 @@ class PriceDetails extends HookConsumerWidget {
       } else if (bookingStatus.canConfirmCompletion) {
         return 'Xác nhận hoàn thành';
       }
-      return 'Không có hành động';
+      return '';
     }
 
     bool isActionEnabled() {
@@ -126,10 +131,10 @@ class PriceDetails extends HookConsumerWidget {
 
           const Divider(
             color: Colors.grey,
-            thickness: 1.5, // Increased thickness
-            height: 32, // Added height for better spacing
+            thickness: 1.5,
+            height: 32,
           ),
-// Status message
+
           if (bookingStatus.statusMessage.isNotEmpty)
             Container(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -168,7 +173,6 @@ class PriceDetails extends HookConsumerWidget {
 
           const SizedBox(height: 20),
 
-          // Note section
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -200,7 +204,7 @@ class PriceDetails extends HookConsumerWidget {
           const SizedBox(height: 24),
 
           // Status button
-          if (bookingAsync.hasValue)
+          if (bookingAsync.hasValue && isActionEnabled())
             SizedBox(
               width: double.infinity,
               height: 54,

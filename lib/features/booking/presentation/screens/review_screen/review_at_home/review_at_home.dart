@@ -30,6 +30,7 @@ class ReviewAtHome extends ConsumerWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         appBar: const CustomAppBar(
+          backButtonColor: AssetsConstants.whiteColor,
           title: 'Gợi ý dịch vụ',
           centerTitle: true,
         ),
