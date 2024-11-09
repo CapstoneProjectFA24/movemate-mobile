@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -10,7 +12,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/presentation/widgets/details/item.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 
-class PriceDetails extends ConsumerWidget {
+class PriceDetails extends HookConsumerWidget {
   final OrderEntity order;
   final AsyncValue<BookingStatusType> statusAsync;
 
@@ -22,10 +24,51 @@ class PriceDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
     // Hàm hỗ trợ để định dạng giá
     String formatPrice(int price) {
       final formatter = NumberFormat('#,###', 'vi_VN');
       return '${formatter.format(price)} đ';
+    }
+
+    void handleActionPress() {
+      if (bookingStatus.canMakePayment) {
+        context.pushRoute(PaymentScreenRoute(id: order.id));
+      } else if (bookingStatus.canReviewSuggestion) {
+        // todo
+      } else if (bookingStatus.canAcceptSchedule) {
+        if (order.isReviewOnline) {
+          context.pushRoute(ReviewOnlineRoute(order: order));
+        } else {
+          context.pushRoute(ReviewAtHomeRoute(order: order));
+        }
+      } else if (bookingStatus.canConfirmCompletion) {
+        // Add route for completion confirmation
+        // context.pushRoute(CompletionConfirmationRoute(order: order));
+      }
+    }
+
+    String getActionButtonText() {
+      if (bookingStatus.canMakePayment) {
+        return 'Thanh toán ngay';
+      } else if (bookingStatus.canReviewSuggestion) {
+        return 'Xem xét đề xuất';
+      } else if (bookingStatus.canAcceptSchedule) {
+        return 'Xác nhận lịch';
+      } else if (bookingStatus.canConfirmCompletion) {
+        return 'Xác nhận hoàn thành';
+      }
+      return 'Không có hành động';
+    }
+
+    bool isActionEnabled() {
+      return bookingStatus.canMakePayment ||
+          bookingStatus.canReviewSuggestion ||
+          bookingStatus.canAcceptSchedule ||
+          bookingStatus.canConfirmCompletion;
     }
 
     return Container(
@@ -86,6 +129,17 @@ class PriceDetails extends ConsumerWidget {
             thickness: 1.5, // Increased thickness
             height: 32, // Added height for better spacing
           ),
+// Status message
+          if (bookingStatus.statusMessage.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: LabelText(
+                content: bookingStatus.statusMessage,
+                size: 14,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
 
           // Total amount
           Row(
@@ -146,61 +200,57 @@ class PriceDetails extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Status button
-          statusAsync.when(
-            data: (status) {
-              final isButtonEnabled = status == BookingStatusType.waiting ||
-                  status == BookingStatusType.depositing ||
-                  status == BookingStatusType.reviewed ||
-                  status == BookingStatusType.coming;
-
-              String buttonText = getBookingStatusText(status).nextStep;
-
-              return SizedBox(
-                width: double.infinity,
-                height: 54, // Increased height
-                child: ElevatedButton(
-                  onPressed: isButtonEnabled
-                      ? () {
-                          if (status == BookingStatusType.depositing) {
-                            context.pushRoute(PaymentScreenRoute(id: order.id));
-                          } else if (status == BookingStatusType.reviewed &&
-                              order.isReviewOnline == true) {
-                            context.pushRoute(ReviewOnlineRoute(order: order));
-                          } else if (status == BookingStatusType.reviewed &&
-                              order.isReviewOnline == false) {
-                            context.pushRoute(ReviewAtHomeRoute(order: order));
-                          }
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isButtonEnabled
-                        ? const Color(0xFFFF9900)
-                        : Colors.grey[300],
-                    elevation: isButtonEnabled ? 2 : 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: LabelText(
-                    content: buttonText,
-                    size: 16,
-                    color: isButtonEnabled ? Colors.white : Colors.grey[600],
-                    fontWeight: FontWeight.bold,
+          if (bookingAsync.hasValue)
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton(
+                onPressed: isActionEnabled() ? handleActionPress : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isActionEnabled()
+                      ? const Color(0xFFFF9900)
+                      : Colors.grey[300],
+                  elevation: isActionEnabled() ? 2 : 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-              );
-            },
-            loading: () => const Center(
+                child: LabelText(
+                  content: getActionButtonText(),
+                  size: 16,
+                  color: isActionEnabled() ? Colors.white : Colors.grey[600],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          else if (bookingAsync.isLoading)
+            const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
               ),
+            )
+          else if (bookingAsync.hasError)
+            const Center(
+              child: LabelText(
+                content: 'Đã có lỗi xảy ra',
+                size: 14,
+                color: Colors.red,
+              ),
             ),
-            error: (err, stack) => LabelText(
-              content: 'Error: $err',
-              size: 14,
-              color: Colors.red,
+
+          // Show progress indicators if needed
+          if (bookingStatus.isReviewerMoving ||
+              bookingStatus.isReviewerAssessing ||
+              bookingStatus.isServicesUpdating ||
+              bookingStatus.isMovingInProgress)
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: LinearProgressIndicator(
+                backgroundColor: Colors.grey[200],
+                valueColor:
+                    const AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
+              ),
             ),
-          ),
         ],
       ),
     );
