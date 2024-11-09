@@ -20,6 +20,11 @@ class BookingStatusResult {
   final bool isSuggestionReady;
   final bool isMovingInProgress;
   final bool isCompleted;
+  final bool initialState;
+
+  // status indicators onl
+  final bool isWaitingReviewed;
+
   BookingStatusResult({
     required this.statusMessage,
     this.canAcceptSchedule = false,
@@ -33,6 +38,8 @@ class BookingStatusResult {
     this.isSuggestionReady = false,
     this.isMovingInProgress = false,
     this.isCompleted = false,
+    this.isWaitingReviewed = false,
+    this.initialState = false,
   });
 }
 
@@ -78,7 +85,7 @@ BookingStatusResult useBookingStatus(
     if (isReviewOnline) {
       // Online review flow
       canMakePayment = status == BookingStatusType.depositing;
-      canReviewSuggestion = isSuggestionReady;
+      canReviewSuggestion = status == BookingStatusType.reviewed;
       canConfirmCompletion = status == BookingStatusType.completed;
     } else {
       // Offline review flow
@@ -89,27 +96,30 @@ BookingStatusResult useBookingStatus(
     }
 
     return BookingStatusResult(
-      statusMessage: determineStatusMessage(
-        status,
-        isReviewOnline,
-        isReviewerMoving,
-        isReviewerAssessing,
-        isSuggestionReady,
-      ),
-      canAcceptSchedule: canAcceptSchedule,
-      canMakePayment: canMakePayment,
-      canReviewSuggestion: canReviewSuggestion,
-      canConfirmCompletion: canConfirmCompletion,
-      isWaitingSchedule:
-          status == BookingStatusType.assigned && !isReviewOnline,
-      isReviewerAssessing: isReviewerAssessing,
-      isReviewerMoving: isReviewerMoving,
-      isServicesUpdating:
-          status == BookingStatusType.reviewing && !isSuggestionReady,
-      isSuggestionReady: isSuggestionReady,
-      isMovingInProgress: status == BookingStatusType.coming,
-      isCompleted: status == BookingStatusType.completed,
-    );
+        statusMessage: determineStatusMessage(
+          status,
+          isReviewOnline,
+          isReviewerMoving,
+          isReviewerAssessing,
+          isSuggestionReady,
+        ),
+        canAcceptSchedule: canAcceptSchedule,
+        canMakePayment: canMakePayment,
+        canReviewSuggestion: canReviewSuggestion,
+        canConfirmCompletion: canConfirmCompletion,
+        isWaitingSchedule:
+            status == BookingStatusType.assigned && !isReviewOnline,
+        isReviewerAssessing: isReviewerAssessing,
+        isReviewerMoving: isReviewerMoving,
+        isServicesUpdating:
+            status == BookingStatusType.reviewing && !isSuggestionReady,
+        isSuggestionReady:
+            isSuggestionReady && status == BookingStatusType.reviewed,
+        isMovingInProgress: status == BookingStatusType.coming,
+        isCompleted: status == BookingStatusType.completed,
+        isWaitingReviewed: status == BookingStatusType.assigned ||
+            status == BookingStatusType.reviewing,
+        initialState: status == BookingStatusType.pending);
   }, [booking, isReviewOnline]);
 }
 
