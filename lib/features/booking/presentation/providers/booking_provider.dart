@@ -165,7 +165,7 @@ class BookingNotifier extends StateNotifier<Booking> {
 
     // Các tính toán khác (ví dụ: chuyến đi khứ hồi)
     if (state.isRoundTrip == true) {
-      total *= 2;
+      total = (0.7 * total);
     }
 
     // Tính thuế GTGT

@@ -116,9 +116,44 @@ class BookingScreenService extends HookConsumerWidget {
 
                   RoundTripCheckbox(
                     isRoundTrip: bookingState.isRoundTrip,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       bookingNotifier.updateRoundTrip(value ?? false);
-                      bookingNotifier.calculateAndUpdateTotalPrice();
+                      // bookingNotifier.calculateAndUpdateTotalPrice();
+                      final bookingResponse = await ref
+                          .read(servicePackageControllerProvider.notifier)
+                          .postValuationBooking(
+                            context: context,
+                          );
+
+                      if (bookingResponse != null) {
+                        try {
+                          // Chuyển đổi BookingResponseEntity thành Booking
+                          final bookingtotal = bookingResponse.total;
+                          final bookingdeposit = bookingResponse.deposit;
+                          bookingNotifier
+                              .updateBookingResponse(bookingResponse);
+                          bookingNotifier.calculateAndUpdateTotalPrice();
+                          print(
+                              'tuan bookingEntity  total rouchip : $bookingtotal');
+                          print(
+                              'tuan bookingEntity  deposit : $bookingdeposit');
+                          print(
+                              'tuan bookingResponse: ${bookingResponse.bookingDetails.toString()}');
+                          print(
+                              'tuan bookingResponse: ${bookingResponse.feeDetails.toString()}');
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+                          );
+                        }
+                      } else {
+                        // Xử lý khi bookingResponse là null
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content:
+                                  Text('Đặt hàng thất bại. Vui lòng thử lại.')),
+                        );
+                      }
                     },
                   ),
                   const SizedBox(height: 16),

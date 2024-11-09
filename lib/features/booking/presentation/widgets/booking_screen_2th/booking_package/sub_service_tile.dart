@@ -87,14 +87,17 @@ class SubServiceTile extends ConsumerWidget {
                         addService: !subService.isQuantity,
                         quantityMax: subService.quantityMax,
                         onQuantityChanged: (newQuantity) async {
+                          bookingNotifier.updateSubServiceQuantity(
+                              subService, newQuantity);
+                          bookingNotifier.calculateAndUpdateTotalPrice();
+
                           // Gọi submitBooking và lấy kết quả
                           final bookingResponse = await ref
                               .read(servicePackageControllerProvider.notifier)
                               .postValuationBooking(
                                 context: context,
                               );
-                          bookingNotifier.updateSubServiceQuantity(
-                              subService, newQuantity);
+
                           // bookingNotifier.calculateAndUpdateTotalPrice();
                           if (bookingResponse != null) {
                             try {

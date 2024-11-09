@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart'; // Import Riverpod
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart'; // Import booking_provider
+import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ServiceItem {
@@ -47,6 +48,7 @@ class PriceDetailModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingState = ref.watch(bookingProvider);
+    final bookingStateResponse = ref.watch(bookingResponseProviderPrice);
     final priceFormat = NumberFormat('#,###', 'vi_VN');
 
     // Tạo danh sách các dịch vụ đã chọn

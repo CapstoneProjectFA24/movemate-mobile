@@ -81,7 +81,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
         ],
       },
       {
-        'title': 'đang chờ tài xế',
+        'title': 'Đang chờ tài xế',
         'details': ['Tài xế đang đến', 'Tài xế đã đến'],
       },
       {
