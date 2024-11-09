@@ -10,6 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
+import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
@@ -17,16 +20,16 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
-class ReviewAtHome extends ConsumerWidget {
+class ReviewAtHome extends HookConsumerWidget {
   const ReviewAtHome({super.key, required this.order});
   final OrderEntity order;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookingControllerState = ref.watch(bookingControllerProvider);
+    final state = ref.watch(bookingControllerProvider);
 
     return LoadingOverlay(
-      isLoading: bookingControllerState.isLoading,
+      isLoading: state.isLoading,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         appBar: const CustomAppBar(
@@ -79,7 +82,7 @@ class ReviewAtHome extends ConsumerWidget {
   }
 }
 
-class Buttons extends ConsumerWidget {
+class Buttons extends HookConsumerWidget {
   final OrderEntity order;
   const Buttons({super.key, required this.order});
 
@@ -103,13 +106,6 @@ class Buttons extends ConsumerWidget {
           color: const Color(0xFFFF6600),
           textColor: Colors.white,
           onPressed: () async {
-            // await ref.read(bookingControllerProvider.notifier).submitBooking(
-            //       context: context,
-            //     );
-
-            // to do to fix
-            final bookingStatus = order.status.toBookingTypeEnum();
-
             final reviewerStatusRequest = ReviewerStatusRequest(
               status: BookingStatusType.depositing,
             );
@@ -193,12 +189,12 @@ class Description extends StatelessWidget {
   }
 }
 
-class ContactSection extends StatelessWidget {
+class ContactSection extends HookConsumerWidget {
   final OrderEntity order;
   const ContactSection({super.key, required this.order});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const Text(
@@ -217,61 +213,80 @@ class ContactSection extends StatelessWidget {
   }
 }
 
-class ContactInfo extends StatelessWidget {
+class ContactInfo extends HookConsumerWidget {
   const ContactInfo({super.key, required this.order});
   final OrderEntity order;
   @override
-  Widget build(BuildContext context) {
-    print('contact info ${order.assignments.length}');
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const CircleAvatar(
-          radius: 20,
-          backgroundImage: NetworkImage(
-            'https://storage.googleapis.com/a1aa/image/p5OKRdzupwITHJRADxe2zVw1ETxmkRfWfQZKa5mhRMjVmAMnA.jpg',
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(profileControllerProvider);
+    final reviewrInAssigmentId =
+        order.assignments.firstWhere((e) => e.staffType == "REVIEWER").userId;
+
+    final useFetchUserInfo = useFetchObject<ProfileEntity>(
+      function: (context) async {
+        return ref
+            .read(profileControllerProvider.notifier)
+            .getProfileInforById(reviewrInAssigmentId, context);
+      },
+      context: context,
+    );
+    final profileStaffReviewer = useFetchUserInfo.data;
+
+    return LoadingOverlay(
+      isLoading: state.isLoading,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(
+              profileStaffReviewer?.avatarUrl ??
+                  'https://via.placeholder.com/150',
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hoàng Văn Huy',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
-              children: [
-                Icon(FontAwesomeIcons.solidStar, color: Colors.amber, size: 12),
-                SizedBox(width: 5),
-                Text(
-                  '5.0 • 61-N1 162.32',
-                  style: TextStyle(fontSize: 12, color: Color(0xFF666666)),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                profileStaffReviewer?.name ?? 'No Name',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(width: 10),
-        IconButton(
-          icon: const Icon(FontAwesomeIcons.phone,
-              size: 18, color: Color(0xFF666666)),
-          onPressed: () {
-            // Xử lý sự kiện khi nhấn vào biểu tượng điện thoại
-          },
-        ),
-        const SizedBox(width: 10),
-        IconButton(
-          icon: const Icon(FontAwesomeIcons.comment,
-              size: 18, color: Color(0xFF666666)),
-          onPressed: () {
-            // Xử lý sự kiện khi nhấn vào biểu tượng tin nhắn
-          },
-        ),
-      ],
+              ),
+              Row(
+                children: [
+                  const Icon(FontAwesomeIcons.solidStar,
+                      color: Colors.amber, size: 12),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${profileStaffReviewer?.phone}',
+                    style:
+                        const TextStyle(fontSize: 12, color: Color(0xFF666666)),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(width: 10),
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.phone,
+                size: 18, color: Color(0xFF666666)),
+            onPressed: () {
+              // Xử lý sự kiện khi nhấn vào biểu tượng điện thoại
+            },
+          ),
+          const SizedBox(width: 10),
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.comment,
+                size: 18, color: Color(0xFF666666)),
+            onPressed: () {
+              // Xử lý sự kiện khi nhấn vào biểu tượng tin nhắn
+            },
+          ),
+        ],
+      ),
     );
   }
 }
