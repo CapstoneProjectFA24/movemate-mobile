@@ -22,7 +22,7 @@ enum BookingStatusType {
 
 enum AssignmentsStatusType {
   assigned('ASSIGNED'),
-  enroute('ENROUTE'),
+  incoming('INCOMING'),
   arrived('ARRIVED'),
   reviewing('REVIEWING'),
   suggested('SUGGESTED'),
@@ -72,8 +72,8 @@ extension ConvertOrderPartnerStatus on String {
     switch (toUpperCase()) {
       case 'ASSIGNED':
         return AssignmentsStatusType.assigned;
-      case 'ENROUTE':
-        return AssignmentsStatusType.enroute;
+      case 'INCOMING':
+        return AssignmentsStatusType.incoming;
       case 'ARRIVED':
         return AssignmentsStatusType.arrived;
       case 'REVIEWING':
@@ -91,7 +91,7 @@ extension ConvertOrderPartnerStatus on String {
       case 'COMPLETED':
         return AssignmentsStatusType.completed;
       default:
-        return AssignmentsStatusType.enroute;
+        return AssignmentsStatusType.incoming;
     }
   }
 }

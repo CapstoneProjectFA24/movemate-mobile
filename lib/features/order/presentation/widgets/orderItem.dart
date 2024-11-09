@@ -5,13 +5,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
-import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
-import 'package:movemate/utils/enums/booking_status_type.dart';
-import 'package:movemate/utils/commons/functions/string_utils.dart';
 
 //
 class OrderItem extends HookConsumerWidget {
@@ -35,8 +34,7 @@ class OrderItem extends HookConsumerWidget {
       return '${formatter.format(price)} đ';
     }
 
-    final statusAsync =
-        ref.watch(orderStatusStreamProvider(order.id.toString()));
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
     final useFetchResult = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
@@ -87,10 +85,11 @@ class OrderItem extends HookConsumerWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 18.0),
-                child: statusAsync.when(
-                  data: (status) {
+                child: bookingAsync.when(
+                  data: (data) {
                     // Calculate displayTotal based on real-time status
-
+                    final bookingStatus = useBookingStatus(
+                        bookingAsync.value, order.isReviewOnline);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -144,14 +143,15 @@ class OrderItem extends HookConsumerWidget {
                               height: 10,
                               width: 10,
                               decoration: BoxDecoration(
-                                color: getStatusColor(status),
+                                color: getStatusColor(bookingStatus),
                                 shape: BoxShape.circle,
                               ),
                             ),
                             const SizedBox(width: 5),
                             LabelText(
-                              content: getBookingStatusText(status).statusText,
-                              color: getStatusColor(status),
+                              // content: getBookingStatusText(status).statusText,
+                              content: bookingStatus.statusMessage,
+                              color: getStatusColor(bookingStatus),
                               size: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -359,4 +359,59 @@ class OrderItem extends HookConsumerWidget {
       ],
     );
   }
+}
+
+Color getStatusColor(BookingStatusResult status) {
+  // Các trạng thái chờ xác nhận từ khách hàng (Màu xanh dương)
+  if (status.canAcceptSchedule) {
+    return const Color(0xFF2196F3); // Xanh dương đậm
+  }
+
+  // Trạng thái thanh toán (Màu tím)
+  if (status.canMakePayment) {
+    return const Color(0xFF9C27B0); // Tím
+  }
+
+  // Trạng thái xem xét đề xuất (Màu xanh lá)
+  if (status.canReviewSuggestion) {
+    return const Color(0xFF4CAF50); // Xanh lá
+  }
+
+  // Trạng thái chờ xác nhận hoàn thành (Màu xanh lam)
+  if (status.canConfirmCompletion) {
+    return const Color(0xFF00BCD4); // Xanh lam
+  }
+
+  // Trạng thái đang chờ lịch (Màu cam nhạt)
+  if (status.isWaitingSchedule) {
+    return const Color(0xFFFF9800); // Cam
+  }
+
+  // Trạng thái nhân viên đang đánh giá (Màu vàng)
+  if (status.isReviewerAssessing) {
+    return const Color(0xFFFFC107); // Vàng
+  }
+
+  // Trạng thái đang cập nhật dịch vụ (Màu xám xanh)
+  if (status.isServicesUpdating) {
+    return const Color(0xFF607D8B); // Xám xanh
+  }
+
+  // Trạng thái có đề xuất mới (Màu xanh lục)
+  if (status.isSuggestionReady) {
+    return const Color(0xFF8BC34A); // Xanh lục
+  }
+
+  // Trạng thái đang vận chuyển (Màu cam đậm)
+  if (status.isMovingInProgress) {
+    return const Color(0xFFFF5722); // Cam đậm
+  }
+
+  // Trạng thái hoàn thành (Màu tím đậm)
+  if (status.isCompleted) {
+    return const Color(0xFF673AB7); // Tím đậm
+  }
+
+  // Màu mặc định cho các trạng thái khác (Xám)
+  return const Color(0xFF9E9E9E); // Xám
 }
