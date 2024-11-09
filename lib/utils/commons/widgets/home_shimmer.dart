@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../constants/asset_constant.dart';
 
-List<Widget> _generateWidget(int amount, Size size) {
+List<Widget> _generateWidget(double amount, Size size) {
   // <<<<< Note this change for the return type
   List<Widget> listings = [];
   int i = 0;
@@ -34,7 +34,7 @@ class HomeShimmer extends StatelessWidget {
     super.key,
     required this.amount,
   });
-  final int amount;
+  final double amount;
 
   @override
   Widget build(BuildContext context) {

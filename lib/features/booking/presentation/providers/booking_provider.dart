@@ -440,6 +440,14 @@ class BookingNotifier extends StateNotifier<Booking> {
     );
   }
 
+  void updateDistance(LocationModel? location) {
+    print("Updating distance Location: ${location?.distance}");
+    state = state.copyWith(
+      estimatedDistance: location?.distance,
+      // selectorHasError: null,
+    );
+  }
+
   void updateDropOffLocation(LocationModel? location) {
     print("Updating Drop-Off Location: ${location?.address}");
     state = state.copyWith(
@@ -563,8 +571,6 @@ class BookingNotifier extends StateNotifier<Booking> {
       isRoundTrip: false,
     );
   }
-
-  
 }
 
 // The global provider that can be accessed in all screens

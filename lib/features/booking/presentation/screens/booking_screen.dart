@@ -257,15 +257,13 @@ class BookingScreen extends HookConsumerWidget {
 
                   return SummarySection(
                     buttonText: "Bước tiếp theo",
-                    priceLabel:
-                        (bookingState.selectedVehicle?.name == 'not selected' ||
-                                bookingState.selectedVehicle?.name == null)
-                            ? ''
-                            : "Giá",
-                    // priceLabel:
-                    //     bookingState.selectedVehicle?.name == 'not selected'
-                    //         ? ""
-                    //         : "Giá",
+                    priceLabel: (bookingState.selectedVehicle?.name ==
+                                'not selected' ||
+                            bookingState.selectedVehicle?.name == null ||
+                            bookingState.houseType?.name == 'Chọn loại nhà ở')
+                        ? ''
+                        : "Giá",
+
                     buttonIcon: false,
                     // totalPrice:
                     //     (bookingState.selectedVehicle?.truckCategory?.price ??
@@ -276,6 +274,7 @@ class BookingScreen extends HookConsumerWidget {
                       // print(
                       //     " tuan object chon xe ${bookingState.selectedVehicle}");
                       if (bookingState.houseType != null &&
+                          bookingState.houseType?.id != 0 &&
                           bookingState.houseType?.id != null &&
                           bookingState.selectedVehicle != null &&
                           bookingState.selectedVehicle?.name !=

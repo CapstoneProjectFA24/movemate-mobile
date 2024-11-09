@@ -22,6 +22,7 @@ final dropoffSelectedLocationProvider =
 
 final uiUpdateTriggerProvider = StateProvider<bool>((ref) => false);
 final selectedRefIdProvider = StateProvider<String?>((ref) => null);
+final distanceProvider = StateProvider<String?>((ref) => null);
 
 class LocationBottomSheet extends HookConsumerWidget {
   const LocationBottomSheet({super.key});
@@ -245,7 +246,7 @@ class LocationBottomSheet extends HookConsumerWidget {
               buttonText: 'Xác nhận',
               buttonColor: AssetsConstants.primaryDark,
               isButtonEnabled: true,
-              onButtonPressed: () {
+              onButtonPressed: () async {
                 final location = LocationModel(
                   label: selectedLocation['name'],
                   address: selectedLocation['display'],
@@ -276,6 +277,28 @@ class LocationBottomSheet extends HookConsumerWidget {
                 } else {
                   final tabController = DefaultTabController.of(context);
                   tabController.animateTo(isPickUp ? 1 : 0);
+                }
+
+                if (pickUpLocation != null && dropOffLocation != null) {
+                  final distance = await calculateDistance(
+                    pickUpLocation['lat'],
+                    pickUpLocation['lng'],
+                    dropOffLocation['lat'],
+                    dropOffLocation['lng'],
+                  );
+                  bookingNotifier.updateDistance(
+                    LocationModel(
+                      label: selectedLocation['name'],
+                      address: selectedLocation['display'],
+                      latitude: selectedLocation['lat'],
+                      longitude: selectedLocation['lng'],
+                      distance: distance.toString(),
+                    ),
+                  );
+                  // print('Khoảng cách distance: $distance km');
+                  // print('Khoảng cách address: ${location.address} km');
+                  // print('Khoảng cách dropOffLocation: $dropOffLocation km');
+                  // print('Khoảng cách pickUpLocation: $pickUpLocation km');
                 }
               },
             ),
@@ -308,7 +331,9 @@ class LocationBottomSheet extends HookConsumerWidget {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final distance =
-            data['durations'][0][0] / 1000; // Khoảng cách tính bằng km
+            data['distances'][0][0] / 1000; // Khoảng cách tính bằng km
+        print('Khoảng cách distance: $distance km');
+        print('Khoảng cách data: $data km');
         return distance;
       } else {
         throw Exception('Failed to fetch distance: ${response.statusCode}');

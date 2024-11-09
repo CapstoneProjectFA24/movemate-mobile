@@ -4,7 +4,7 @@ class ServicesFeeSystemEntity {
   final int id;
   final String name;
   final String? description;
-  final int amount;
+  final double amount;
   final int? quantity;
 
   ServicesFeeSystemEntity({
@@ -21,7 +21,8 @@ class ServicesFeeSystemEntity {
       id: map['id'] ?? 0,
       name: map['name'] ?? '',
       description: map['description'], // Nullable field
-      amount: map['amount'] ?? 0,
+      // amount: map['amount'] ?? 0,
+      amount: (map['amount'] as num).toDouble(),
     );
   }
 
@@ -39,7 +40,7 @@ class ServicesFeeSystemEntity {
     int? id,
     String? name,
     String? description,
-    int? amount,
+    double? amount,
     int? quantity,
   }) {
     return ServicesFeeSystemEntity(
