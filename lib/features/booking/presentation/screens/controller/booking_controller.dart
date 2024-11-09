@@ -11,7 +11,9 @@ import 'package:movemate/features/booking/domain/repositories/service_booking_re
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -170,6 +172,50 @@ class BookingController extends _$BookingController {
       // }
 
       // TO DO MORE
+    });
+
+    if (state.hasError) {
+      final statusCode = (state.error as DioException).onStatusDio();
+
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: state.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (state.hasError) {
+        await ref.read(signInControllerProvider.notifier).signOut(context);
+      }
+    }
+  }
+
+  Future<void> confirmReviewedToComingBooking({
+    required ReviewerStatusRequest request,
+    required OrderEntity order,
+    required BuildContext context,
+  }) async {
+    state = const AsyncLoading();
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(serviceBookingRepositoryProvider).confirmReviewBooking(
+            accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+            request: request,
+            id: order.id,
+          );
+
+         showSnackBar(
+          context: context,
+          content: "Bạn đã xác nhận đánh giá thành công",
+          icon: AssetsConstants.iconSuccess,
+          backgroundColor: Colors.green,
+          textColor: AssetsConstants.whiteColor,
+        );   
     });
 
     if (state.hasError) {

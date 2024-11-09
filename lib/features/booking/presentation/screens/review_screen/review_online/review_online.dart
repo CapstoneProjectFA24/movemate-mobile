@@ -5,6 +5,7 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
@@ -18,6 +19,7 @@ class ReviewOnline extends ConsumerWidget {
       backgroundColor: Colors.white,
       appBar: const CustomAppBar(
         title: 'Gợi ý dịch vụ',
+        backButtonColor: AssetsConstants.whiteColor,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -58,7 +60,7 @@ class ReviewOnline extends ConsumerWidget {
                   final reviewerStatusRequest = ReviewerStatusRequest(
                     status: BookingStatusType.depositing,
                   );
-print('order: ${reviewerStatusRequest}');
+                  print('order: $reviewerStatusRequest');
                   await ref
                       .read(bookingControllerProvider.notifier)
                       .confirmReviewBooking(
