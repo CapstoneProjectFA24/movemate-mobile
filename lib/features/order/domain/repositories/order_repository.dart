@@ -1,5 +1,6 @@
 // local
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
+import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
@@ -16,6 +17,11 @@ abstract class OrderRepository {
     required PagingModel request,
     required String accessToken,
     required int userId,
+  });
+  Future<ServiceResponse> getAllService({
+    required PagingModel request,
+    required String accessToken,
+    // required int userId,
   });
 
   // Truck list Methods

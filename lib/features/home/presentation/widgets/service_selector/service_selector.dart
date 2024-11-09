@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/balance_indicator.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/location_field.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/date_time_section.dart';
@@ -299,6 +300,20 @@ class ServiceSelector extends HookConsumerWidget {
                 onPressed: () {
                   showErrors.value = true; // Show validation errors
 
+                  bookingNotifier.updatePickUpLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          'Nhà Văn Hoá Sinh Viên, university, Dĩ An, Vietnam',
+                      latitude: 10.8753395,
+                      longitude: 106.8000331,
+                      distance: "43"));
+                  bookingNotifier.updateDropOffLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          'FPT University - HCMC Campus, university, Ho Chi Minh City, Vietnam',
+                      latitude: 10.841416800000001,
+                      longitude: 106.81007447258705,
+                      distance: '2'));
                   // Validate booking details
                   final isPickUpValid = bookingState.pickUpLocation != null &&
                       bookingState.pickUpLocation!.address != 'Chọn địa điểm';

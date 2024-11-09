@@ -66,7 +66,6 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
               maxLines: 2,
               overflow: TextOverflow.visible,
             ),
-     
             tilePadding: const EdgeInsets.symmetric(horizontal: 16),
             childrenPadding: const EdgeInsets.only(
               left: 16,
@@ -75,7 +74,6 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-       
                 AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0.0,
                   duration: const Duration(milliseconds: 300),
@@ -166,35 +164,33 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
                     .postValuationBooking(
                       context: context,
                     );
-
+                // print('tuan bookingResponse: ${bookingResponse.toString()}');
+                print(
+                    'tuan bookingResponse: ${bookingResponse!.feeDetails.map((e) => e.name).toString()}');
+                print(
+                    'tuan bookingResponse: ${bookingResponse.feeDetails.map((e) => e.quantity).toString()}');
+                print(
+                    'tuan bookingResponse: ${bookingResponse.feeDetails.map((e) => e.amount).toString()}');
                 // bookingNotifier.calculateAndUpdateTotalPrice();
-                if (bookingResponse != null) {
-                  try {
-                    // Chuyển đổi BookingResponseEntity thành Booking
-                    final bookingtotal = bookingResponse.total;
-                    final bookingdeposit = bookingResponse.deposit;
-                    bookingNotifier.updateBookingResponse(bookingResponse);
-                    print('tuan bookingEntity  total : $bookingtotal');
-                    print('tuan bookingEntity  deposit : $bookingdeposit');
-                    print(
-                        'tuan bookingResponse: ${bookingResponse.bookingDetails.toString()}');
-                    print(
-                        'tuan bookingResponse: ${bookingResponse.feeDetails.toString()}');
+                try {
+                  // Chuyển đổi BookingResponseEntity thành Booking
+                  final bookingtotal = bookingResponse.total;
+                  final bookingdeposit = bookingResponse.deposit;
+                  bookingNotifier.updateBookingResponse(bookingResponse);
+                  // print('tuan bookingEntity  total : $bookingtotal');
+                  // print('tuan bookingEntity  deposit : $bookingdeposit');
+                  // print(
+                  //     'tuan bookingResponse: ${bookingResponse.bookingDetails.toString()}');
+                  // print(
+                  //     'tuan bookingResponse: ${bookingResponse.feeDetails.toString()}');
 
-                    // Xóa bookingState sau khi đã đăng ký thành công
-                    // bookingNotifier.reset();
-                  } catch (e) {
-                    // Xử lý ngoại lệ nếu chuyển đổi thất bại
+                  // Xóa bookingState sau khi đã đăng ký thành công
+                  // bookingNotifier.reset();
+                } catch (e) {
+                  // Xử lý ngoại lệ nếu chuyển đổi thất bại
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Đã xảy ra lỗi: $e')),
-                    );
-                  }
-                } else {
-                  // Xử lý khi bookingResponse là null
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Đặt hàng thất bại. Vui lòng thử lại.')),
+                    SnackBar(content: Text('Đã xảy ra lỗi: $e')),
                   );
                 }
               },

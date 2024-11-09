@@ -1,6 +1,8 @@
 // import local
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
+import 'package:movemate/features/order/data/models/request/service_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
+import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
@@ -37,6 +39,30 @@ class OrderRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
         orderQueryRequest,
+      ),
+    );
+  }
+
+  @override
+  Future<ServiceResponse> getAllService({
+    required PagingModel request,
+    required String accessToken,
+    // required int userId,
+  }) async {
+    final serviceQueryRequest = ServiceQueryRequest(
+      search: request.searchContent,
+      type: 'TRUCK',
+      page: request.pageNumber,
+      perPage: request.pageSize,
+      // UserId: userId,
+    );
+
+    print("tuan log order : ${serviceQueryRequest.toJson()}");
+    return getDataOf(
+      request: () => _orderSource.getAllService(
+        APIConstants.contentType,
+        accessToken,
+        serviceQueryRequest,
       ),
     );
   }

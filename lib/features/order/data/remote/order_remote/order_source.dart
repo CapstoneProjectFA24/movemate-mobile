@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
+import 'package:movemate/features/order/data/models/request/service_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
+import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:retrofit/retrofit.dart';
@@ -22,6 +24,12 @@ abstract class OrderSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Queries() OrderQueryRequest request,
+  );
+  @GET(APIConstants.get_all_package_services)
+  Future<HttpResponse<ServiceResponse>> getAllService(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Queries() ServiceQueryRequest request,
   );
   //get list truck
   @GET(APIConstants.get_list_truck)

@@ -29,7 +29,10 @@ class FeeDetailResponseEntity {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       amount: (json['amount'] as num).toDouble(),
-      quantity: json['quantity'] ?? 0,
+      // quantity: json['quantity'] ?? 0,
+      quantity: json['quantity'] != null
+          ? json['quantity'] as int
+          : 1, // Set quantity to 1 if null
     );
   }
 

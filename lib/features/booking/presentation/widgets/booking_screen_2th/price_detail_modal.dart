@@ -7,13 +7,13 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ServiceItem {
   final String title;
-  final double unitPrice;
+  // final double unitPrice;
   final int quantity;
   final double totalPrice;
 
   ServiceItem({
     required this.title,
-    required this.unitPrice,
+    // required this.unitPrice,
     required this.quantity,
     required this.totalPrice,
   });
@@ -27,7 +27,7 @@ class ServiceItem {
   }) {
     return ServiceItem(
       title: title ?? this.title,
-      unitPrice: unitPrice ?? this.unitPrice,
+      // unitPrice: unitPrice ?? this.unitPrice,
       quantity: quantity ?? this.quantity,
       totalPrice: totalPrice ?? this.totalPrice,
     );
@@ -47,71 +47,22 @@ class PriceDetailModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bookingState = ref.watch(bookingProvider);
     final bookingStateResponse = ref.watch(bookingResponseProviderPrice);
-    final priceFormat = NumberFormat('#,###', 'vi_VN');
-
     // Tạo danh sách các dịch vụ đã chọn
     List<ServiceItem> allSelectedServices = [
-      ...bookingState.selectedSubServices.map((subService) => ServiceItem(
-            title: subService.name,
-            unitPrice: subService.discountRate,
-            quantity: subService.quantity ?? 1,
-            totalPrice: subService.amount * (subService.quantity ?? 1),
-          )),
-      ...bookingState.servicesFeeList.map((fee) => ServiceItem(
+      // ...bookingStateResponse!.bookingDetails.map((subService) => ServiceItem(
+      //       title: subService.name,
+      //       // unitPrice: subService.price,
+      //       quantity: subService.quantity,
+      //       totalPrice: subService.price,
+      //     )),
+      ...bookingStateResponse!.feeDetails.map((fee) => ServiceItem(
             title: fee.name,
-            unitPrice: fee.amount.toDouble(),
+            // unitPrice: fee.amount.toDouble(),
             quantity: fee.quantity ?? 1,
-            totalPrice: (fee.amount * (fee.quantity ?? 1)).toDouble(),
+            totalPrice: fee.amount,
           )),
-      // Thêm giá của phí khác nếu có
-      if (bookingState.selectedPackages.any((e) => e.amount > 0))
-        ...bookingState.selectedPackages
-            .where((e) => e.amount > 0)
-            .map((package) => ServiceItem(
-                  title: package.name,
-                  unitPrice: package.amount,
-                  quantity: package.quantity ?? 1,
-                  totalPrice: package.amount * (package.quantity ?? 1),
-                )),
-      // Thêm giá của phương tiện nếu có
-      if (bookingState.selectedVehicle != null)
-        ServiceItem(
-          title: bookingState.selectedVehicle!.name,
-          unitPrice: bookingState.selectedVehicle!.truckCategory!.price,
-          quantity: 1,
-          totalPrice: bookingState.selectedVehicle!.truckCategory!.price,
-        ),
     ];
-
-    // Tính tổng giá trước thuế (subtotal)
-    double subtotal = allSelectedServices.fold(
-        0.0, (sum, service) => sum + service.totalPrice);
-
-    // Xử lý nếu là chuyến đi khứ hồi
-    if (bookingState.isRoundTrip == true) {
-      subtotal *= 2;
-      // Cập nhật lại totalPrice của các dịch vụ cho phù hợp
-      allSelectedServices = allSelectedServices
-          .map(
-              (service) => service.copyWith(totalPrice: service.totalPrice * 2))
-          .toList();
-    }
-
-    // Tính thuế GTGT (8% của subtotal)
-    // double vat = subtotal * 0.08;
-
-    // Thêm dịch vụ "Thuế GTGT" vào danh sách dịch vụ
-    // allSelectedServices.add(ServiceItem(
-    //   title: 'Thuế GTGT',
-    //   unitPrice: vat,
-    //   quantity: 1,
-    //   totalPrice: vat,
-    // ));
-
-    // Tính tổng giá sau thuế
-    double totalPrice = subtotal;
 
     return Container(
       color: AssetsConstants.whiteColor,
@@ -148,7 +99,7 @@ class PriceDetailModal extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  formatPrice(totalPrice),
+                  formatPrice(bookingStateResponse.total),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -186,31 +137,53 @@ class PriceDetailModal extends ConsumerWidget {
         ),
       ),
     );
+  
   }
 
   // Helper để hiển thị mỗi hàng chi tiết giá
   Widget buildPriceDetailRow(String title, double price, int quantity) {
-    final priceFormat = NumberFormat('#,###', 'vi_VN');
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Cột Title
           Expanded(
+            flex: 4, // Tỷ lệ không gian dành cho cột Title
             child: Text(
-              quantity > 1 ? '$title x$quantity' : title,
+              title,
               style: const TextStyle(
-                  fontSize: 14), // Tăng kích thước font cho dễ đọc
+                fontSize: 14,
+              ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
           ),
-          Text(
-            '${priceFormat.format(price)} đ',
-            style: const TextStyle(fontSize: 14),
+          // Cột Quantity
+          Expanded(
+            flex: 1, // Tỷ lệ không gian dành cho cột Quantity
+            child: Text(
+              quantity.toString(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
+          ),
+          // Cột Price
+          Expanded(
+            flex: 3, // Tỷ lệ không gian dành cho cột Price
+            child: Text(
+              // '${priceFormat.format(price)} đ',
+              formatPrice(price),
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
+
 }

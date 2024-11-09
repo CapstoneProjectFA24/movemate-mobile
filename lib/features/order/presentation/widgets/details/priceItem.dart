@@ -1,6 +1,7 @@
 // lib/widgets/address_row.dart
 
 import 'package:flutter/material.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 Widget buildPriceItem(String description, String price) {
   return Container(
@@ -26,9 +27,9 @@ Widget buildPriceItem(String description, String price) {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black,
             ),
           ),
         ),
@@ -38,19 +39,19 @@ Widget buildPriceItem(String description, String price) {
             Text(
               price,
               style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
                 color: Colors.black,
               ),
             ),
             const SizedBox(width: 12),
-            IconButton(
-              icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
-              onPressed: () {
-                // Xử lý sự kiện khi nhấp vào biểu tượng 3 chấm
-              },
-              tooltip: 'More options',
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
+            //   onPressed: () {
+            //     // Xử lý sự kiện khi nhấp vào biểu tượng 3 chấm
+            //   },
+            //   tooltip: 'More options',
+            // ),
           ],
         ),
       ],
@@ -62,7 +63,7 @@ Widget buildSummary(String label, String value) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(label, style: TextStyle(color: Colors.grey.shade800)),
+      Text(label, style: const TextStyle(color: AssetsConstants.blackColor)),
       Text(value, style: const TextStyle(color: Colors.black)),
     ],
   );

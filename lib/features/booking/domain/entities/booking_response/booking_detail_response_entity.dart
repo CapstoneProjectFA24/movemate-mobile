@@ -12,6 +12,7 @@ class BookingDetailResponseEntity {
   final String type;
   final String name;
   final String description;
+  final String imageUrl;
 
   BookingDetailResponseEntity({
     required this.id,
@@ -23,6 +24,7 @@ class BookingDetailResponseEntity {
     required this.type,
     required this.name,
     required this.description,
+    required this.imageUrl,
   });
 
   factory BookingDetailResponseEntity.fromMap(Map<String, dynamic> json) {
@@ -36,6 +38,7 @@ class BookingDetailResponseEntity {
       type: json['type'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
     );
   }
 
@@ -50,6 +53,7 @@ class BookingDetailResponseEntity {
       'type': type,
       'name': name,
       'description': description,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -66,6 +70,7 @@ class BookingDetailResponseEntity {
         'type: $type, '
         'name: $name, '
         'description: $description'
+        'imageUrl: $imageUrl'
         ')';
   }
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/functions/string_utils.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
@@ -13,10 +16,12 @@ import 'package:movemate/features/order/presentation/widgets/details/priceItem.d
 class PriceDetails extends ConsumerWidget {
   final OrderEntity order;
   final AsyncValue<BookingStatusType> statusAsync;
-
+  final List<ServicesPackageEntity> serviceAll;
   const PriceDetails({
     super.key,
     required this.order,
+    required this.serviceAll, // thêm dữ liệu serviceAll vào để lấy thông tin service tương ứng
+
     required this.statusAsync,
   });
 
@@ -28,6 +33,41 @@ class PriceDetails extends ConsumerWidget {
       return '${formatter.format(price)} đ';
     }
 
+    // Lấy danh sách inverseParentService từ serviceAll
+    final List<SubServiceEntity> inverseParentServiceList =
+        serviceAll.expand((service) => service.inverseParentService).toList();
+
+    // Lấy danh sách serviceId từ bookingDetails
+    final List<int> getServices = order.bookingDetails
+        .where((detail) => detail.type == "TRUCK")
+        .map((truckDetail) => truckDetail.serviceId)
+        .whereType<int>()
+        .toList();
+
+    // Hàm tìm imageUrl từ truckCategory dựa trên serviceId
+    String? findImageUrl(int serviceId) {
+      final matchingService = inverseParentServiceList.firstWhere(
+        (subService) => subService.id == serviceId,
+        orElse: () => SubServiceEntity(
+          id: -1,
+          name: 'Unknown',
+          truckCategory: null,
+          isQuantity: false,
+          amount: 0,
+          description: '',
+          discountRate: 0,
+          imageUrl: '',
+          isActived: false,
+          quantityMax: 0,
+          tier: 0,
+          type: '',
+        ),
+      );
+
+      return matchingService.truckCategory?.imageUrl;
+    }
+
+    print("tìm ảnh  ${findImageUrl(getServices.first)}");
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -62,12 +102,17 @@ class PriceDetails extends ConsumerWidget {
           // Truck details
           ...order.bookingDetails
               .where((detail) => detail.type == "TRUCK")
-              .map((truckDetail) => buildItem(
-                    imageUrl:
-                        'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg',
-                    title: truckDetail.name ?? 'Xe Tải',
-                    description: truckDetail.description ?? 'Không có mô tả',
-                  )),
+              .map((truckDetail) {
+            // Tìm imageUrl cho truckDetail này
+            String imageUrl = findImageUrl(truckDetail.serviceId) ??
+                'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg';
+
+            return buildItem(
+              imageUrl: imageUrl,
+              title: truckDetail.name ?? 'Xe Tải',
+              description: truckDetail.description ?? 'Không có mô tả',
+            );
+          }),
 
           // Price details
           ...order.bookingDetails.map<Widget>((detail) {

@@ -103,6 +103,10 @@ class SubServiceEntity {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return 'SubServiceEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, type: $type, discountRate: $discountRate, amount: $amount, truckCategory: $truckCategory, quantity: $quantity, isQuantity: $isQuantity, quantityMax: $quantityMax)';
+  }
 
   factory SubServiceEntity.fromJson(String source) =>
       SubServiceEntity.fromMap(json.decode(source));

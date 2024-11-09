@@ -8,6 +8,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
@@ -87,6 +89,19 @@ class OrderDetailsScreen extends HookConsumerWidget {
       ),
       context: context,
     );
+
+    final fetchReslutService = useFetch<ServicesPackageEntity>(
+      function: (model, context) => ref
+          .read(orderControllerProvider.notifier)
+          .getAllService(model, context),
+      initialPagingModel: PagingModel(
+        type: 'TRUCK',
+        pageSize: 50,
+        pageNumber: 1,
+      ),
+      context: context,
+    );
+    final serviceAll = fetchReslutService.items;
 
     return LoadingOverlay(
       isLoading: state.isLoading,
@@ -217,6 +232,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 const SizedBox(height: 20),
                 PriceDetails(
                   order: order,
+                  serviceAll: serviceAll,
                   statusAsync: statusAsync,
                 ),
               ],

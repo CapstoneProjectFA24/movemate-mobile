@@ -69,7 +69,7 @@ BookingStatusInfo getBookingStatusText(BookingStatusType status) {
       return BookingStatusInfo(
         statusText: 'Đang chờ bạn xác nhận',
         description: 'Lịch đánh giá đã được xác nhận',
-        nextStep: 'Vui lòng xác nhận đánh giá online',
+        nextStep: 'Xác nhận đánh giá online',
       );
     case BookingStatusType.coming:
       return BookingStatusInfo(

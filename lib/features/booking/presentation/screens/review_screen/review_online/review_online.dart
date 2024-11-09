@@ -36,9 +36,9 @@ class ReviewOnline extends ConsumerWidget {
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               const SizedBox(height: 16),
-              buildServiceCard(),
+              buildServiceCard(order: order),
               const SizedBox(height: 16),
-              buildContactCard(),
+              buildContactCard(order: order),
               const SizedBox(height: 24),
             ],
           ),
@@ -58,7 +58,7 @@ class ReviewOnline extends ConsumerWidget {
                   final reviewerStatusRequest = ReviewerStatusRequest(
                     status: BookingStatusType.depositing,
                   );
-print('order: ${reviewerStatusRequest}');
+                  print('order: $reviewerStatusRequest');
                   await ref
                       .read(bookingControllerProvider.notifier)
                       .confirmReviewBooking(
@@ -83,7 +83,7 @@ print('order: ${reviewerStatusRequest}');
     );
   }
 
-  Widget buildServiceCard() {
+  Widget buildServiceCard({required OrderEntity order}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -135,7 +135,7 @@ print('order: ${reviewerStatusRequest}');
     );
   }
 
-  Widget buildContactCard() {
+  Widget buildContactCard({required OrderEntity order}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
