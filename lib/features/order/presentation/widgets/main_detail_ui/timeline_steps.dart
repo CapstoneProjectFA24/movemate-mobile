@@ -20,6 +20,7 @@ class TimelineSteps extends HookConsumerWidget {
     required this.expandedIndex,
     required this.order,
   });
+
   List<Map<String, dynamic>> _buildStepsFromStatus(
       BookingStatusResult status, bool isReviewOnline) {
     if (isReviewOnline) {
@@ -27,25 +28,32 @@ class TimelineSteps extends HookConsumerWidget {
         {
           'title': 'Xử lý yêu cầu',
           'isActive': true,
-          'details': ['Hệ thống đang xử lý yêu cầu của bạn']
+          'details': ['Hệ thống đang xử lý yêu cầu của bạn'],
+          'detailsStatus': [true]
         },
         {
           'title': 'Đánh giá online',
-          'isActive': status.isReviewerAssessing,
+          'isActive': status.isWaitingReviewed,
           'details': [
             'Nhân viên đang xem xét yêu cầu',
             'Đánh giá chi tiết dịch vụ'
-          ]
+          ],
+          'detailsStatus': [status.isWaitingReviewed, status.isServicesUpdating]
         },
         {
           'title': 'Đề xuất',
           'isActive': status.isSuggestionReady,
-          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất']
+          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất'],
+          'detailsStatus': [
+            status.isSuggestionReady,
+            status.canReviewSuggestion
+          ]
         },
         {
           'title': 'Thanh toán',
           'isActive': status.canMakePayment,
-          'details': ['Vui lòng thanh toán để tiến hành dịch vụ']
+          'details': ['Vui lòng thanh toán để tiến hành dịch vụ'],
+          'detailsStatus': [status.canMakePayment]
         },
         {
           'title': 'Vận chuyển',
@@ -53,6 +61,10 @@ class TimelineSteps extends HookConsumerWidget {
           'details': [
             'Đội ngũ vận chuyển đang làm việc',
             'Theo dõi quá trình vận chuyển'
+          ],
+          'detailsStatus': [
+            status.isMovingInProgress,
+            status.isMovingInProgress
           ]
         }
       ];
@@ -61,27 +73,35 @@ class TimelineSteps extends HookConsumerWidget {
         {
           'title': 'Xử lý yêu cầu',
           'isActive': true,
-          'details': ['Hệ thống đang xử lý yêu cầu của bạn']
+          'details': ['Hệ thống đang xử lý yêu cầu của bạn'],
+          'detailsStatus': [true]
         },
         {
           'title': 'Lịch khảo sát',
           'isActive': status.isWaitingSchedule || status.canAcceptSchedule,
-          'details': ['Đang chờ lịch khảo sát', 'Vui lòng xác nhận lịch']
+          'details': ['Đang chờ lịch khảo sát', 'Vui lòng xác nhận lịch'],
+          'detailsStatus': [status.isWaitingSchedule, status.canAcceptSchedule]
         },
         {
           'title': 'Khảo sát',
           'isActive': status.isReviewerMoving || status.isReviewerAssessing,
-          'details': ['Nhân viên đang di chuyển', 'Đang khảo sát tại nhà']
+          'details': ['Nhân viên đang di chuyển', 'Đang khảo sát tại nhà'],
+          'detailsStatus': [status.isReviewerMoving, status.isReviewerAssessing]
         },
         {
           'title': 'Đề xuất',
           'isActive': status.isSuggestionReady || status.canReviewSuggestion,
-          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất']
+          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất'],
+          'detailsStatus': [
+            status.isSuggestionReady,
+            status.canReviewSuggestion
+          ]
         },
         {
           'title': 'Thanh toán',
           'isActive': status.canMakePayment,
-          'details': ['Vui lòng thanh toán đặt cọc']
+          'details': ['Vui lòng thanh toán đặt cọc'],
+          'detailsStatus': [status.canMakePayment]
         },
         {
           'title': 'Vận chuyển',
@@ -89,20 +109,22 @@ class TimelineSteps extends HookConsumerWidget {
           'details': [
             'Đội ngũ vận chuyển đang làm việc',
             'Theo dõi quá trình vận chuyển'
+          ],
+          'detailsStatus': [
+            status.isMovingInProgress,
+            status.isMovingInProgress
           ]
         }
       ];
     }
   }
 
-  // Helper function to get status index
   int _getCurrentStepIndex(BookingStatusResult status, bool isReviewOnline) {
-    print("vinh log status : ${status.canMakePayment}");
     if (isReviewOnline) {
       if (status.isMovingInProgress) return 4;
       if (status.canMakePayment) return 3;
       if (status.isSuggestionReady) return 2;
-      if (status.isReviewerAssessing) return 1;
+      if (status.isWaitingReviewed) return 1;
       return 0;
     } else {
       if (status.isMovingInProgress) return 5;
@@ -126,7 +148,7 @@ class TimelineSteps extends HookConsumerWidget {
 
     // Convert animation controller to hooks
     final animationController = useAnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 800),
     );
 
     // Create animation using hooks
@@ -272,14 +294,12 @@ class TimelineSteps extends HookConsumerWidget {
                               ),
                               child: Column(
                                 children: List.generate(
-                                  step['details'].length,
+                                  (step['details'] as List).length,
                                   (detailIndex) {
-                                    bool isDetailPast =
-                                        index < currentStepIndex ||
-                                            (index == currentStepIndex &&
-                                                detailIndex <
-                                                    (step['details'].length / 2)
-                                                        .ceil());
+                                    final isDetailActive =
+                                        step['detailsStatus'][detailIndex];
+                                    final detailText =
+                                        step['details'][detailIndex];
 
                                     return FadeInLeft(
                                       delay: Duration(
@@ -288,14 +308,15 @@ class TimelineSteps extends HookConsumerWidget {
                                         alignment: TimelineAlign.start,
                                         isFirst: detailIndex == 0,
                                         isLast: detailIndex ==
-                                            step['details'].length - 1,
+                                            (step['details'] as List).length -
+                                                1,
                                         indicatorStyle: IndicatorStyle(
-                                          color: isDetailPast
+                                          color: isDetailActive
                                               ? AssetsConstants.primaryMain
                                               : Colors.grey,
                                           iconStyle: IconStyle(
                                             color: Colors.white,
-                                            iconData: isDetailPast
+                                            iconData: isDetailActive
                                                 ? Icons.check
                                                 : Icons.circle,
                                           ),
@@ -306,17 +327,17 @@ class TimelineSteps extends HookConsumerWidget {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 16),
                                           child: Text(
-                                            step['details'][detailIndex],
+                                            detailText,
                                             style: TextStyle(
                                               fontSize: 18,
-                                              color: isDetailPast
+                                              color: isDetailActive
                                                   ? Colors.black
                                                   : Colors.grey,
                                             ),
                                           ),
                                         ),
                                         beforeLineStyle: LineStyle(
-                                          color: isDetailPast
+                                          color: isDetailActive
                                               ? AssetsConstants.primaryMain
                                               : Colors.grey,
                                           thickness: 4,
