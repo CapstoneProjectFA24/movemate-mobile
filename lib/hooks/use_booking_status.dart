@@ -20,7 +20,6 @@ class BookingStatusResult {
   final bool isSuggestionReady;
   final bool isMovingInProgress;
   final bool isCompleted;
-  final bool initialState;
 
   // status indicators onl
   final bool isWaitingReviewed;
@@ -39,7 +38,6 @@ class BookingStatusResult {
     this.isMovingInProgress = false,
     this.isCompleted = false,
     this.isWaitingReviewed = false,
-    this.initialState = false,
   });
 }
 
@@ -96,30 +94,30 @@ BookingStatusResult useBookingStatus(
     }
 
     return BookingStatusResult(
-        statusMessage: determineStatusMessage(
-          status,
-          isReviewOnline,
-          isReviewerMoving,
-          isReviewerAssessing,
-          isSuggestionReady,
-        ),
-        canAcceptSchedule: canAcceptSchedule,
-        canMakePayment: canMakePayment,
-        canReviewSuggestion: canReviewSuggestion,
-        canConfirmCompletion: canConfirmCompletion,
-        isWaitingSchedule:
-            status == BookingStatusType.assigned && !isReviewOnline,
-        isReviewerAssessing: isReviewerAssessing,
-        isReviewerMoving: isReviewerMoving,
-        isServicesUpdating:
-            status == BookingStatusType.reviewing && !isSuggestionReady,
-        isSuggestionReady:
-            isSuggestionReady && status == BookingStatusType.reviewed,
-        isMovingInProgress: status == BookingStatusType.coming,
-        isCompleted: status == BookingStatusType.completed,
-        isWaitingReviewed: status == BookingStatusType.assigned ||
-            status == BookingStatusType.reviewing,
-        initialState: status == BookingStatusType.pending);
+      statusMessage: determineStatusMessage(
+        status,
+        isReviewOnline,
+        isReviewerMoving,
+        isReviewerAssessing,
+        isSuggestionReady,
+      ),
+      canAcceptSchedule: canAcceptSchedule,
+      canMakePayment: canMakePayment,
+      canReviewSuggestion: canReviewSuggestion,
+      canConfirmCompletion: canConfirmCompletion,
+      isWaitingSchedule:
+          status == BookingStatusType.assigned && !isReviewOnline,
+      isReviewerAssessing: isReviewerAssessing,
+      isReviewerMoving: isReviewerMoving,
+      isServicesUpdating:
+          status == BookingStatusType.reviewing && !isSuggestionReady,
+      isSuggestionReady:
+          isSuggestionReady && status == BookingStatusType.reviewed,
+      isMovingInProgress: status == BookingStatusType.coming,
+      isCompleted: status == BookingStatusType.completed,
+      isWaitingReviewed: status == BookingStatusType.assigned ||
+          status == BookingStatusType.reviewing,
+    );
   }, [booking, isReviewOnline]);
 }
 
