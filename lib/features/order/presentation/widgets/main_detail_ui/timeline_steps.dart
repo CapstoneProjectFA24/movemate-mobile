@@ -133,12 +133,12 @@ class TimelineSteps extends HookConsumerWidget {
         {
           'title': 'Xác nhận đề xuất',
           'isActive': status.canReviewSuggestion
-          // || hasPassedSuggestion
+          || hasPassedSuggestion
           ,
           'details': ['Vui lòng xác nhận đề xuất dịch vụ'],
           'detailsStatus': [
             status.canReviewSuggestion
-            // || hasPassedSuggestion
+            || hasPassedSuggestion
           ]
         },
         {
