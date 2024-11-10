@@ -87,18 +87,16 @@ class VuochersCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Card Content
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 34), // Space for badge
-                // Card Header
+                const SizedBox(height: 34),
                 Row(
                   children: [
                     Image.network(
-                      'https://storage.googleapis.com/a1aa/image/Tiqo3ijopRbIOtB8zXlgFCnSIOx6x2wmQoPPIYcq9ebeS8uTA.jpg',
-                      width: 13,
-                      height: 13,
+                      'https://inkythuatso.com/uploads/images/2021/09/logo-techcombank-inkythuatso-10-15-11-46.jpg',
+                      width: 20,
+                      height: 20,
                     ),
                     const SizedBox(width: 10),
                     const Expanded(
