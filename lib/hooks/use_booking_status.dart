@@ -7,39 +7,39 @@ class BookingStatusResult {
   final String statusMessage;
 
   // Customer action states
-  final bool canAcceptSchedule;
-  final bool canMakePayment;
-  final bool canReviewSuggestion;
-  final bool canConfirmCompletion;
+  final bool canAcceptSchedule; // Xác nhận lịch khảo sát (offline only)
+  final bool canMakePayment; // Thanh toán
+  final bool canReviewSuggestion; // Xác nhận đánh giá của reviewer
 
-  // Status indicators
-  final bool isWaitingSchedule;
-  final bool isReviewerAssessing;
-  final bool isReviewerMoving;
-  final bool isServicesUpdating;
-  final bool isSuggestionReady;
-  final bool isMovingInProgress;
-  final bool isCompleted;
-  final bool initialState;
+  // Status indicators - Offline Flow
+  final bool isWaitingStaffSchedule; // Đợi staff xếp lịch (assigned + REVIEWER/assigned)
+  final bool isReviewerMoving; // Reviewer đang di chuyển (reviewing + REVIEWER/incoming)
+  final bool isReviewerAssessing; // Reviewer đang khảo sát (reviewing + REVIEWER/arrived)
+  final bool isSuggestionReady; // Có đề xuất mới (reviewing + REVIEWER/suggested)
 
-  // status indicators onl
-  final bool isWaitingReviewed;
+  // Status indicators - Online Flow
+  final bool isProcessingRequest; // Xử lý yêu cầu (assigned + REVIEWER/assigned)
+  final bool isOnlineReviewing; // Đang đánh giá online (reviewing + REVIEWER/assigned)
+  final bool isOnlineSuggestionReady; // Có đề xuất mới online (reviewing + REVIEWER/suggested)
+
+  // Common indicators
+  final bool isMovingInProgress; // Đang vận chuyển (coming)
+  final bool isCompleted; // Hoàn thành
 
   BookingStatusResult({
     required this.statusMessage,
     this.canAcceptSchedule = false,
     this.canMakePayment = false,
     this.canReviewSuggestion = false,
-    this.canConfirmCompletion = false,
-    this.isWaitingSchedule = false,
-    this.isReviewerAssessing = false,
+    this.isWaitingStaffSchedule = false,
     this.isReviewerMoving = false,
-    this.isServicesUpdating = false,
+    this.isReviewerAssessing = false,
     this.isSuggestionReady = false,
+    this.isProcessingRequest = false,
+    this.isOnlineReviewing = false,
+    this.isOnlineSuggestionReady = false,
     this.isMovingInProgress = false,
     this.isCompleted = false,
-    this.isWaitingReviewed = false,
-    this.initialState = false,
   });
 }
 
@@ -53,73 +53,117 @@ BookingStatusResult useBookingStatus(
     final status = booking.status.toBookingTypeEnum();
     final assignments = booking.assignments ?? [];
 
-    // Helper functions
+    // Helper function to check assignment status
     bool hasAssignmentWithStatus(
-        String staffType, AssignmentsStatusType status) {
-      return assignments.any((a) {
-        print(
-            'Current assignment - staffType: ${a.staffType}, status: ${a.status}');
-        return a.staffType == staffType.toString() &&
-            a.status.toAssignmentsTypeEnum() == status;
-      });
+        String staffType, AssignmentsStatusType subStatus) {
+      return assignments.any((a) =>
+          a.staffType == staffType &&
+          a.status.toAssignmentsTypeEnum() == subStatus);
     }
 
     // Check reviewer states
-
+    final hasReviewerAssigned =
+        hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.assigned);
     final isReviewerMoving =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.incoming);
-
     final isReviewerAssessing =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.arrived);
     final isSuggestionReady =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.suggested);
 
-    // => phân rõ là trong quá trình đó user có action hay ko
-    // => case: 1 có action thì tạo trạng thái action
-    // => case: 2 ko action thì chỉ tạo trạng chờ để seen
-    // Determine customer actions based on review type
+    // Initialize action and state flags
     bool canAcceptSchedule = false;
     bool canMakePayment = false;
     bool canReviewSuggestion = false;
-    bool canConfirmCompletion = false;
+    bool isWaitingStaffSchedule = false;
+    bool isProcessingRequest = false;
+    bool isOnlineReviewing = false;
+    bool isOnlineSuggestionReady = false;
+
     if (isReviewOnline) {
-      // Online review flow
-      canMakePayment = status == BookingStatusType.depositing;
-      canReviewSuggestion = status == BookingStatusType.reviewed;
-      canConfirmCompletion = status == BookingStatusType.completed;
+      // Online flow
+      switch (status) {
+        case BookingStatusType.assigned:
+          if (hasReviewerAssigned) {
+            isProcessingRequest = true;
+          }
+          break;
+        case BookingStatusType.reviewing:
+          if (hasReviewerAssigned) {
+            isOnlineReviewing = true;
+          }
+          if (isSuggestionReady) {
+            isOnlineSuggestionReady = true;
+          }
+          break;
+        case BookingStatusType.reviewed:
+          canReviewSuggestion = true;
+          break;
+        case BookingStatusType.depositing:
+          canMakePayment = true;
+          break;
+        default:
+          break;
+      }
     } else {
-      // Offline review flow
-      canAcceptSchedule = status == BookingStatusType.waiting;
-      canMakePayment = status == BookingStatusType.depositing;
-      canReviewSuggestion = status == BookingStatusType.reviewed;
-      canConfirmCompletion = status == BookingStatusType.completed;
+      // Offline flow
+      switch (status) {
+        case BookingStatusType.assigned:
+          if (hasReviewerAssigned) {
+            isWaitingStaffSchedule = true;
+          }
+          break;
+        case BookingStatusType.waiting:
+          canAcceptSchedule = true;
+          break;
+        case BookingStatusType.depositing:
+          canMakePayment = true;
+          break;
+        case BookingStatusType.reviewing:
+          if (isReviewerMoving) {
+            // Reviewer đang di chuyển
+          } else if (isReviewerAssessing) {
+            // Reviewer đang khảo sát
+          } else if (isSuggestionReady) {
+            // Có đề xuất mới
+          }
+          break;
+        case BookingStatusType.reviewed:
+          canReviewSuggestion = true;
+          break;
+        default:
+          break;
+      }
     }
 
     return BookingStatusResult(
-        statusMessage: determineStatusMessage(
-          status,
-          isReviewOnline,
-          isReviewerMoving,
-          isReviewerAssessing,
-          isSuggestionReady,
-        ),
-        canAcceptSchedule: canAcceptSchedule,
-        canMakePayment: canMakePayment,
-        canReviewSuggestion: canReviewSuggestion,
-        canConfirmCompletion: canConfirmCompletion,
-        isWaitingSchedule:
-            status == BookingStatusType.assigned && !isReviewOnline,
-        isReviewerAssessing: isReviewerAssessing,
-        isReviewerMoving: isReviewerMoving,
-        isServicesUpdating:
-            status == BookingStatusType.reviewing && !isSuggestionReady,
-        isSuggestionReady:
-            isSuggestionReady && status == BookingStatusType.reviewed,
-        isMovingInProgress: status == BookingStatusType.coming,
-        isCompleted: status == BookingStatusType.completed,
-        isWaitingReviewed: status == BookingStatusType.assigned ||
-            status == BookingStatusType.reviewing,
-        initialState: status == BookingStatusType.pending);
+      statusMessage: determineStatusMessage(
+        status,
+        isReviewOnline,
+        isReviewerMoving,
+        isReviewerAssessing,
+        isSuggestionReady,
+      ),
+      // Customer actions
+      canAcceptSchedule: canAcceptSchedule,
+      canMakePayment: canMakePayment,
+      canReviewSuggestion: canReviewSuggestion,
+      
+      // Offline flow states
+      isWaitingStaffSchedule: isWaitingStaffSchedule,
+      isReviewerMoving: isReviewerMoving,
+      isReviewerAssessing: isReviewerAssessing,
+      isSuggestionReady: isSuggestionReady,
+      
+      // Online flow states
+      isProcessingRequest: isProcessingRequest,
+      isOnlineReviewing: isOnlineReviewing,
+      isOnlineSuggestionReady: isOnlineSuggestionReady,
+      
+      // Common states
+      isMovingInProgress: status == BookingStatusType.coming,
+      isCompleted: status == BookingStatusType.completed,
+    );
   }, [booking, isReviewOnline]);
 }
 
@@ -138,28 +182,18 @@ String determineStatusMessage(
         if (isSuggestionReady) return "Đã có đề xuất dịch vụ mới";
         return "Đang trong quá trình đánh giá trực tuyến";
       case BookingStatusType.reviewed:
-        return "Vui lòng thanh toán để tiến hành dịch vụ";
+        return "Vui lòng xác nhận đề xuất dịch vụ";
       case BookingStatusType.depositing:
-        return "Đang chờ bạn thanh toán";
+        return "Vui lòng thanh toán để tiến hành dịch vụ";
       case BookingStatusType.coming:
         return "Đội ngũ vận chuyển đang trên đường đến";
-      case BookingStatusType.inProgress:
-        return "Đang thực hiện vận chuyển";
-      case BookingStatusType.completed:
-        return "Dịch vụ đã hoàn thành";
-      case BookingStatusType.cancelled:
-        return "Đơn hàng đã bị hủy";
-      case BookingStatusType.refunded:
-        return "Đã hoàn tiền";
-      case BookingStatusType.pending:
-        return "Đang xử lý yêu cầu";
       default:
-        return "Không xác định";
+        return _getDefaultStatusMessage(status);
     }
   } else {
     switch (status) {
       case BookingStatusType.assigned:
-        return "Đang chờ lịch khảo sát";
+        return "Đang chờ nhân viên xếp lịch khảo sát";
       case BookingStatusType.waiting:
         return "Vui lòng xác nhận lịch khảo sát";
       case BookingStatusType.depositing:
@@ -170,21 +204,28 @@ String determineStatusMessage(
         if (isSuggestionReady) return "Đã có đề xuất dịch vụ mới";
         return "Chờ nhân viên tới khảo sát";
       case BookingStatusType.reviewed:
-        return "Vui lòng xem xét đề xuất dịch vụ";
+        return "Vui lòng xác nhận đề xuất dịch vụ";
       case BookingStatusType.coming:
         return "Đội ngũ vận chuyển đang trên đường đến";
-      case BookingStatusType.inProgress:
-        return "Đang thực hiện vận chuyển";
-      case BookingStatusType.completed:
-        return "Dịch vụ đã hoàn thành";
-      case BookingStatusType.cancelled:
-        return "Đơn hàng đã bị hủy";
-      case BookingStatusType.refunded:
-        return "Đã hoàn tiền";
-      case BookingStatusType.pending:
-        return "Đang xử lý yêu cầu";
       default:
-        return "Không xác định";
+        return _getDefaultStatusMessage(status);
     }
+  }
+}
+
+String _getDefaultStatusMessage(BookingStatusType status) {
+  switch (status) {
+    case BookingStatusType.inProgress:
+      return "Đang thực hiện vận chuyển";
+    case BookingStatusType.completed:
+      return "Dịch vụ đã hoàn thành";
+    case BookingStatusType.cancelled:
+      return "Đơn hàng đã bị hủy";
+    case BookingStatusType.refunded:
+      return "Đã hoàn tiền";
+    case BookingStatusType.pending:
+      return "Đang xử lý yêu cầu";
+    default:
+      return "Không xác định";
   }
 }

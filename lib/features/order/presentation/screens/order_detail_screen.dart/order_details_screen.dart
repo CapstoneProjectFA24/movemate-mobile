@@ -22,6 +22,7 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/serv
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -51,9 +52,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
-
-    print("object: statusAsync  $statusAsync");
-    print("object: order.status  ${order.status}");
 
     final statusOrders = statusAsync.when(
       data: (status) => status,
