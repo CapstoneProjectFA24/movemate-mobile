@@ -29,42 +29,73 @@ class PriceDetails extends HookConsumerWidget {
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
 
-    // Hàm hỗ trợ để định dạng giá
     String formatPrice(int price) {
       final formatter = NumberFormat('#,###', 'vi_VN');
       return '${formatter.format(price)} đ';
     }
 
+    // void handleActionPress() {
+    //   if (bookingStatus.canMakePayment) {
+    //     context.pushRoute(PaymentScreenRoute(id: order.id));
+    //   } else if (bookingStatus.canReviewSuggestion) {
+    //     showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) =>
+    //           ReviewedToComingModal(order: order),
+    //     );
+    //   } else if (bookingStatus.canAcceptSchedule) {
+    //     if (order.isReviewOnline) {
+    //       context.pushRoute(ReviewOnlineRoute(order: order));
+    //     } else {
+    //       context.pushRoute(ReviewAtHomeRoute(order: order));
+    //     }
+    //   }
+
+    // }
+
     void handleActionPress() {
-      if (bookingStatus.canMakePayment) {
-        context.pushRoute(PaymentScreenRoute(id: order.id));
-      } else if (bookingStatus.canReviewSuggestion) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              ReviewedToComingModal(order: order),
-        );
-      } else if (bookingStatus.canAcceptSchedule) {
-        if (order.isReviewOnline) {
+      if (order.isReviewOnline) {
+        // Online Flow: Review -> Payment
+        if (bookingStatus.canReviewSuggestion ||
+            bookingStatus.isOnlineReviewing ||
+            bookingStatus.isOnlineSuggestionReady) {
           context.pushRoute(ReviewOnlineRoute(order: order));
-        } else {
-          context.pushRoute(ReviewAtHomeRoute(order: order));
+        } else if (bookingStatus.canMakePayment) {
+          context.pushRoute(PaymentScreenRoute(id: order.id));
         }
-      } else if (bookingStatus.canConfirmCompletion) {
-        // Add route for completion confirmation
-        // context.pushRoute(CompletionConfirmationRoute(order: order));
+      } else {
+        // Offline Flow: Schedule -> Payment -> Review
+        if (bookingStatus.canAcceptSchedule) {
+          context.pushRoute(ReviewAtHomeRoute(order: order));
+        } else if (bookingStatus.canReviewSuggestion) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                ReviewedToComingModal(order: order),
+          );
+        } else if (bookingStatus.canMakePayment) {
+          context.pushRoute(PaymentScreenRoute(id: order.id));
+        }
       }
     }
 
     String getActionButtonText() {
-      if (bookingStatus.canMakePayment) {
-        return 'Thanh toán ngay';
-      } else if (bookingStatus.canReviewSuggestion) {
-        return 'Xem xét đề xuất';
-      } else if (bookingStatus.canAcceptSchedule) {
-        return 'Xác nhận lịch';
-      } else if (bookingStatus.canConfirmCompletion) {
-        return 'Xác nhận hoàn thành';
+      if (order.isReviewOnline) {
+        // Online Flow
+        if (bookingStatus.canReviewSuggestion) {
+          return 'Xác nhận đánh giá';
+        } else if (bookingStatus.canMakePayment) {
+          return 'Thanh toán ngay';
+        }
+      } else {
+        // Offline Flow
+        if (bookingStatus.canAcceptSchedule) {
+          return 'Xác nhận lịch khảo sát';
+        } else if (bookingStatus.canReviewSuggestion) {
+          return 'Xem xét đề xuất';
+        } else if (bookingStatus.canMakePayment) {
+          return 'Thanh toán ngay';
+        }
       }
       return '';
     }
@@ -73,7 +104,9 @@ class PriceDetails extends HookConsumerWidget {
       return bookingStatus.canMakePayment ||
           bookingStatus.canReviewSuggestion ||
           bookingStatus.canAcceptSchedule ||
-          bookingStatus.canConfirmCompletion;
+          bookingStatus.isOnlineReviewing ||
+          bookingStatus.isOnlineSuggestionReady;
+      // bookingStatus.canConfirmCompletion;
     }
 
     return Container(
@@ -245,7 +278,7 @@ class PriceDetails extends HookConsumerWidget {
           // Show progress indicators if needed
           if (bookingStatus.isReviewerMoving ||
               bookingStatus.isReviewerAssessing ||
-              bookingStatus.isServicesUpdating ||
+              bookingStatus.isSuggestionReady ||
               bookingStatus.isMovingInProgress)
             Padding(
               padding: const EdgeInsets.only(top: 16),

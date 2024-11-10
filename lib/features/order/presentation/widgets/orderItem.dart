@@ -378,12 +378,12 @@ Color getStatusColor(BookingStatusResult status) {
   }
 
   // Trạng thái chờ xác nhận hoàn thành (Màu xanh lam)
-  if (status.canConfirmCompletion) {
+  if (status.isCompleted) {
     return const Color(0xFF00BCD4); // Xanh lam
   }
 
   // Trạng thái đang chờ lịch (Màu cam nhạt)
-  if (status.isWaitingSchedule) {
+  if (status.isWaitingStaffSchedule) {
     return const Color(0xFFFF9800); // Cam
   }
 
@@ -393,7 +393,7 @@ Color getStatusColor(BookingStatusResult status) {
   }
 
   // Trạng thái đang cập nhật dịch vụ (Màu xám xanh)
-  if (status.isServicesUpdating) {
+  if (status.isReviewerAssessing) {
     return const Color(0xFF607D8B); // Xám xanh
   }
 
