@@ -13,6 +13,8 @@ import 'package:movemate/utils/commons/widgets/home_shimmer.dart';
 import 'package:movemate/utils/commons/widgets/no_more_content.dart';
 
 // vehicle_list.dart
+const checkhousetype = 'Chọn loại nhà ở';
+
 class VehicleList extends ConsumerWidget {
   final FetchResult<InverseParentServiceEntity> fetchResult;
   final ScrollController scrollController;
@@ -94,8 +96,12 @@ class VehicleList extends ConsumerWidget {
                 // );
                 // bookingNotifier
                 //     .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
+                if (bookingState.houseType?.name == checkhousetype) {
+                  bookingNotifier
+                      .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
+                }
               }
-              if (bookingState.houseType?.name == 'Chọn loại nhà ở') {
+              if (bookingState.houseType?.name == checkhousetype) {
                 bookingNotifier
                     .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
               }

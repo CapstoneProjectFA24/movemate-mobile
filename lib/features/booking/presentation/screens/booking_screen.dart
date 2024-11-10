@@ -145,6 +145,7 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 //     );
 //   }
 // }
+const checkhousetype = 'Chọn loại nhà ở';
 
 @RoutePage()
 class BookingScreen extends HookConsumerWidget {
@@ -257,12 +258,12 @@ class BookingScreen extends HookConsumerWidget {
 
                   return SummarySection(
                     buttonText: "Bước tiếp theo",
-                    priceLabel: (bookingState.selectedVehicle?.name ==
-                                'not selected' ||
-                            bookingState.selectedVehicle?.name == null ||
-                            bookingState.houseType?.name == 'Chọn loại nhà ở')
-                        ? ''
-                        : "Giá",
+                    priceLabel:
+                        (bookingState.selectedVehicle?.name == 'not selected' ||
+                                bookingState.selectedVehicle?.name == null ||
+                                bookingState.houseType?.name == checkhousetype)
+                            ? ''
+                            : "Giá",
 
                     buttonIcon: false,
                     // totalPrice:

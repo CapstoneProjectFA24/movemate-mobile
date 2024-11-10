@@ -35,7 +35,7 @@ class ServiceItem {
 }
 
 // Hàm hỗ trợ để định dạng giá
-String formatPrice(double price) {
+String formatPrice(int price) {
   final formatter = NumberFormat('#,###', 'vi_VN');
   return '${formatter.format(price)} đ';
 }
@@ -99,7 +99,7 @@ class PriceDetailModal extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  formatPrice(bookingStateResponse.total),
+                  formatPrice(bookingStateResponse.total.toInt()),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -137,7 +137,6 @@ class PriceDetailModal extends ConsumerWidget {
         ),
       ),
     );
-  
   }
 
   // Helper để hiển thị mỗi hàng chi tiết giá
@@ -174,7 +173,7 @@ class PriceDetailModal extends ConsumerWidget {
             flex: 3, // Tỷ lệ không gian dành cho cột Price
             child: Text(
               // '${priceFormat.format(price)} đ',
-              formatPrice(price),
+              formatPrice(price.toInt()),
               textAlign: TextAlign.right,
               style: const TextStyle(
                 fontSize: 14,
@@ -185,5 +184,4 @@ class PriceDetailModal extends ConsumerWidget {
       ),
     );
   }
-
 }
