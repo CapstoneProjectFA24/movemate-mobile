@@ -103,9 +103,9 @@ class _DateTimeSectionState extends State<DateTimeSection> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 4.0),
             child: LabelText(
-              content: widget.isDateTimeInvalid
-                  ? 'Không được là thời gian trong quá khứ'
-                  : 'Vui lòng chọn thời gian thích hợp',
+              content: widget.controller.text == 'Chọn ngày và giờ'
+                  ? 'Vui lòng chọn thời gian thích hợp'
+                  : 'Không được là thời gian trong quá khứ',
               size: 12,
               color: Colors.red,
               fontWeight: FontWeight.w400,

@@ -107,24 +107,24 @@ class PaymentScreen extends HookConsumerWidget {
                         // Details
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Xe tải nhỏ',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black87),
-                              ),
-                              const Text(
-                                'số lượng 1',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black87),
-                              ),
                               Text(
-                                bookingResponse.status ?? "",
-                                style: const TextStyle(
+                                'Thông tin đơn hàng',
+                                style: TextStyle(
                                     fontSize: 16, color: Colors.black87),
                               ),
+                              // const Text(
+                              //   'số lượng 1',
+                              //   style: TextStyle(
+                              //       fontSize: 16, color: Colors.black87),
+                              // ),
+                              // Text(
+                              //   bookingResponse.status ?? "",
+                              //   style: const TextStyle(
+                              //       fontSize: 16, color: Colors.black87),
+                              // ),
                             ],
                           ),
                         ),
@@ -140,30 +140,29 @@ class PaymentScreen extends HookConsumerWidget {
                         ),
 
                         // Payment Method Section
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               'Phương thức thanh toán',
                               style: TextStyle(
                                   fontSize: 16, color: Colors.black87),
                             ),
-                            TextButton(
-                              onPressed: () {
-                                // Handle 'View All' action
-                              },
-                              child: const Text(
-                                'Xem tất cả',
-                                style: TextStyle(
-                                  color: Color(0xFFFF7F00),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
+                            // TextButton(
+                            //   onPressed: () {
+                            //     // Handle 'View All' action
+                            //   },
+                            //   child: const Text(
+                            //     'Xem tất cả',
+                            //     style: TextStyle(
+                            //       color: Color(0xFFFF7F00),
+                            //       fontSize: 14,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
 
-                        // Dynamically Generated Payment Options
                         Column(
                           children: paymentList.map((method) {
                             return Container(
@@ -206,46 +205,46 @@ class PaymentScreen extends HookConsumerWidget {
                         ),
 
                         // Coupon Section
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: 'Bạn có 7 mã coupons',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 10,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            OutlinedButton(
-                              onPressed: () {},
-                              style: OutlinedButton.styleFrom(
-                                side:
-                                    const BorderSide(color: Color(0xFFFF7F00)),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
-                              ),
-                              child: const Text(
-                                'Thêm',
-                                style: TextStyle(color: Color(0xFFFF7F00)),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: TextField(
+                        //         decoration: InputDecoration(
+                        //           hintText: 'Bạn có 7 mã coupons',
+                        //           border: OutlineInputBorder(
+                        //             borderRadius: BorderRadius.circular(5),
+                        //           ),
+                        //           contentPadding: const EdgeInsets.symmetric(
+                        //             horizontal: 10,
+                        //             vertical: 10,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     const SizedBox(width: 10),
+                        //     OutlinedButton(
+                        //       onPressed: () {},
+                        //       style: OutlinedButton.styleFrom(
+                        //         side:
+                        //             const BorderSide(color: Color(0xFFFF7F00)),
+                        //         padding: const EdgeInsets.symmetric(
+                        //           horizontal: 20,
+                        //           vertical: 10,
+                        //         ),
+                        //       ),
+                        //       child: const Text(
+                        //         'Thêm',
+                        //         style: TextStyle(color: Color(0xFFFF7F00)),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
 
                         // Note
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           child: const Text(
-                            'Để đảm bảo quá trình chuyển nhà được thực hiện, chúng tôi sẽ lấy phí đặt cọc dựa trên xe mà bạn chọn để sắp xếp xe đúng lịch hẹn và người review sẽ đến',
+                            'Để đảm bảo quá trình chuyển nhà được thực hiện, chúng tôi sẽ thu trước một phần phí đặt cọc dựa trên tổng giá trị đơn hàng của bạn.',
                             style:
                                 TextStyle(fontSize: 14, color: Colors.black87),
                           ),
@@ -310,23 +309,25 @@ class PaymentScreen extends HookConsumerWidget {
                       margin: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 10),
                       child: ElevatedButton(
-                        onPressed: handlePayment,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF7F00),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                          onPressed: handlePayment,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF7F00),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          'Hoàn tất thanh toán bằng ${selectedMethod.displayName}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(
+                              'Hoàn tất thanh toán bằng ${selectedMethod.displayName}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )),
                     ),
                   ],
                 ),

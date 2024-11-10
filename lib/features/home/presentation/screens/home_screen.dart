@@ -32,7 +32,6 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         ServiceSelector(),
                         SizedBox(height: 16),
-                        // Add other widgets if needed
                       ],
                     ),
                   ),
@@ -42,11 +41,19 @@ class HomeScreen extends StatelessWidget {
                   child: FadeInRight(
                     child: const Padding(
                       padding: EdgeInsets.all(0.0),
+                      child: VehicleCarousel(), // Move VehicleCarousel here
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16), // Optional: Add spacing if needed
+                Center(
+                  child: FadeInRight(
+                    child: const Padding(
+                      padding: EdgeInsets.all(0.0),
                       child: DiscountCodesWidget(),
                     ),
                   ),
                 ),
-                FadeInDown(child: const VehicleCarousel()),
               ],
             ),
           ],

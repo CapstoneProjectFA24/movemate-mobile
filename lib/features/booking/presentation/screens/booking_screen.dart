@@ -1,5 +1,3 @@
-// booking_screen.dart
-//route
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
@@ -27,124 +25,6 @@ import 'package:movemate/features/booking/domain/entities/service_truck/inverse_
 //controllers and providers
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
-
-// @RoutePage()
-// class BookingScreen extends HookConsumerWidget {
-//   const BookingScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final bookingState = ref.watch(bookingProvider);
-//     final bookingNotifier = ref.read(bookingProvider.notifier);
-//     final scrollController = useScrollController();
-//     final controller = ref.read(serviceControllerProvider.notifier);
-
-//     final fetchResultVehicles = useFetch<InverseParentServiceEntity>(
-//       function: (model, context) async {
-//         return await controller.getServicesTruck(model, context);
-//       },
-//       initialPagingModel: PagingModel(
-//         type: 'TRUCK',
-//       ),
-//       context: context,
-//     );
-
-//     return Scaffold(
-//       appBar: const CustomAppBar(
-//         title: 'Chọn loại nhà ',
-//         centerTitle: true,
-//         backButtonColor: AssetsConstants.whiteColor,
-//       ),
-//       body: SafeArea(
-//         child: Column(
-//           children: [
-//             Expanded(
-//               child: CustomScrollView(
-//                 controller: scrollController,
-//                 slivers: [
-//                   if (fetchResultVehicles.isFetchingData &&
-//                       fetchResultVehicles.items.isEmpty)
-//                     const SliverToBoxAdapter(
-//                       child: SizedBox(
-//                         height: 400,
-//                         child: Center(child: HomeShimmer(amount: 1)),
-//                       ),
-//                     )
-//                   else
-//                     SliverPadding(
-//                       padding: const EdgeInsets.all(16.0),
-//                       sliver: SliverList(
-//                         delegate: SliverChildListDelegate([
-//                           const BookingSelection(),
-//                           const SizedBox(height: 16),
-//                           const RoomMediaSection(
-//                             roomTitle: 'Tải ảnh lên',
-//                             roomType: RoomType.livingRoom,
-//                           ),
-//                           const SizedBox(height: 16),
-//                           Row(
-//                             children: [
-//                               const LabelText(
-//                                 content: "Phương tiện có sẵn",
-//                                 size: AssetsConstants.buttonFontSize + 1,
-//                                 fontWeight: FontWeight.w600,
-//                               ),
-//                               if (bookingState.vehicleError != null)
-//                                 Padding(
-//                                   padding: const EdgeInsets.only(
-//                                       top: 4.0, left: 8.0),
-//                                   child: Text(
-//                                     bookingState.vehicleError!,
-//                                     style: const TextStyle(
-//                                       color: Colors.red,
-//                                       fontSize: 12,
-//                                     ),
-//                                   ),
-//                                 ),
-//                             ],
-//                           ),
-//                           VehicleList(
-//                             fetchResult: fetchResultVehicles,
-//                             scrollController: scrollController,
-//                             bookingNotifier: bookingNotifier,
-//                             bookingState: bookingState,
-//                           ),
-//                         ]),
-//                       ),
-//                     ),
-//                 ],
-//               ),
-//             ),
-//             if (!(fetchResultVehicles.isFetchingData &&
-//                     fetchResultVehicles.items.isEmpty) &&
-//                 bookingState.houseType != null &&
-//                 bookingState.houseType?.id != null &&
-//                 bookingState.selectedVehicle != null)
-//               Consumer(
-//                 builder: (context, ref, child) {
-//                   final bookingState = ref.watch(bookingProvider);
-//                   final bookingNotifier = ref.read(bookingProvider.notifier);
-
-//                   return SummarySection(
-//                     buttonText: "Bước tiếp theo",
-//                     priceLabel: "Giá",
-//                     buttonIcon: false,
-//                     totalPrice:
-//                         (bookingState.selectedVehicle?.truckCategory?.price ??
-//                             0.0),
-//                     isButtonEnabled: true,
-//                     onPlacePress: () async {
-//                       context.router.push(const BookingScreenServiceRoute());
-//                     },
-//                   );
-//                 },
-//               ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 @RoutePage()
 class BookingScreen extends HookConsumerWidget {
@@ -176,9 +56,7 @@ class BookingScreen extends HookConsumerWidget {
         centerTitle: true,
         backButtonColor: AssetsConstants.whiteColor,
         showBackButton: true,
-        // iconFirst: Icons.arrow_back_ios,
         onCallBackFirst: () {
-          // context.router.pop();
           bookingNotifier.resetHouseTypeInfo(null);
           bookingNotifier.resetVehiclesSelected(null);
         },
@@ -263,16 +141,10 @@ class BookingScreen extends HookConsumerWidget {
                             bookingState.houseType?.name == 'Chọn loại nhà ở')
                         ? ''
                         : "Giá",
-
                     buttonIcon: false,
-                    // totalPrice:
-                    //     (bookingState.selectedVehicle?.truckCategory?.price ??
-                    //         0),
                     totalPrice: (bookingStatePrice?.total ?? 0.0),
                     isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {
-                      // print(
-                      //     " tuan object chon xe ${bookingState.selectedVehicle}");
                       if (bookingState.houseType != null &&
                           bookingState.houseType?.id != 0 &&
                           bookingState.houseType?.id != null &&
