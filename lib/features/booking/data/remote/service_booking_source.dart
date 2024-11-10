@@ -3,6 +3,7 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
+import 'package:movemate/features/booking/data/models/response/service_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
@@ -48,6 +49,13 @@ abstract class ServiceBookingSource {
   Future<HttpResponse<ServicesResponse>> getServices(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+  );
+  // Services  by id
+  @GET('${APIConstants.get_list_truck}/{id}')
+  Future<HttpResponse<ServiceObjResponse>> getServicesById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
   );
   // get all Services truck
   @GET(APIConstants.get_list_truck)

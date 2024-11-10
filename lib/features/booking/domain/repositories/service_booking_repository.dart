@@ -3,6 +3,7 @@
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_response.dart';
+import 'package:movemate/features/booking/data/models/response/service_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
@@ -40,6 +41,11 @@ abstract class ServiceBookingRepository {
   Future<ServicesResponse> getServices({
     required PagingModel request,
     required String accessToken,
+  });
+  // Services Methods by id 
+  Future<ServiceObjResponse> getServicesById({
+    required String accessToken,
+    required int id,
   });
 
   // Services Fee System Methods

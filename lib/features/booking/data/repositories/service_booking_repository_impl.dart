@@ -4,6 +4,7 @@ import 'package:movemate/features/booking/data/models/queries/truck_queries.dart
 import 'package:movemate/features/booking/data/models/response/booking_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/house_type_response.dart';
+import 'package:movemate/features/booking/data/models/response/service_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
@@ -71,6 +72,21 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     return getDataOf(
       request: () => _serviceBookingSource.getServices(
           APIConstants.contentType, accessToken),
+    );
+  }
+
+  //get service by id
+  @override
+  Future<ServiceObjResponse> getServicesById({
+    required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _serviceBookingSource.getServicesById(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
     );
   }
 

@@ -65,7 +65,9 @@ class VehicleList extends ConsumerWidget {
                     context: context,
                   );
 
-              print('tuan bookingEntity  bookingResponse : $bookingResponse');
+              print('tuan bookingEntity  bookingResponse :$bookingResponse');
+              print(
+                  'tuan bookingEntity  bookingState.houseType?.name : ${bookingState.houseType?.name}');
               if (bookingResponse != null) {
                 try {
                   // Chuyển đổi BookingResponseEntity thành Booking
@@ -96,10 +98,10 @@ class VehicleList extends ConsumerWidget {
                 // );
                 // bookingNotifier
                 //     .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
-                if (bookingState.houseType?.name == checkhousetype) {
-                  bookingNotifier
-                      .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
-                }
+                // if (bookingState.houseType?.name == checkhousetype) {
+                //   bookingNotifier
+                //       .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
+                // }
               }
               if (bookingState.houseType?.name == checkhousetype) {
                 bookingNotifier

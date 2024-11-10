@@ -300,20 +300,23 @@ class ServiceSelector extends HookConsumerWidget {
                 onPressed: () {
                   showErrors.value = true; // Show validation errors
 
-                  // bookingNotifier.updatePickUpLocation(LocationModel(
-                  //     label: 'label',
-                  //     address:
-                  //         'Nhà Văn Hoá Sinh Viên, university, Dĩ An, Vietnam',
-                  //     latitude: 10.8753395,
-                  //     longitude: 106.8000331,
-                  //     distance: "43"));
-                  // bookingNotifier.updateDropOffLocation(LocationModel(
-                  //     label: 'label',
-                  //     address:
-                  //         'FPT University - HCMC Campus, university, Ho Chi Minh City, Vietnam',
-                  //     latitude: 10.841416800000001,
-                  //     longitude: 106.81007447258705,
-                  //     distance: '2'));
+                  bookingNotifier.updatePickUpLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          'Nhà Văn Hoá Sinh Viên, university, Dĩ An, Vietnam',
+                      latitude: 10.8753395,
+                      longitude: 106.8000331,
+                      distance: "43"));
+                  bookingNotifier.updateDropOffLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          'FPT University - HCMC Campus, university, Ho Chi Minh City, Vietnam',
+                      latitude: 10.841416800000001,
+                      longitude: 106.81007447258705,
+                      distance: '2'));
+
+                  bookingNotifier.updateBookingDate(
+                      DateTime.now().add(const Duration(days: 1)));
                   // Validate booking details
                   final isPickUpValid = bookingState.pickUpLocation != null &&
                       bookingState.pickUpLocation!.address != 'Chọn địa điểm';

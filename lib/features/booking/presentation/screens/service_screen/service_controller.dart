@@ -5,6 +5,7 @@ import 'package:movemate/features/auth/domain/repositories/auth_repository.dart'
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
+import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/api_utils.dart';
@@ -62,6 +63,50 @@ class ServiceController extends _$ServiceController {
       });
     }
     return serviceCateData;
+  }
+  
+  Future<ServicesPackageEntity?> getServicesById(
+  int id, 
+   BuildContext context,
+  ) async {
+    ServicesPackageEntity? serviceCateDataById ;
+    // state = const AsyncLoading();
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      final response = await serviceBookingRepository.getServicesById(
+        id: id,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        
+      );
+
+      serviceCateDataById = response.payload;
+    });
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+
+        await getServicesById(id, context);
+      });
+    }
+    return serviceCateDataById;
   }
 
   // Truck services
