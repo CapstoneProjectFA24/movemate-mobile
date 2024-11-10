@@ -103,9 +103,9 @@ class PriceDetails extends HookConsumerWidget {
     bool isActionEnabled() {
       return bookingStatus.canMakePayment ||
           bookingStatus.canReviewSuggestion ||
-          bookingStatus.canAcceptSchedule ||
-          bookingStatus.isOnlineReviewing ||
-          bookingStatus.isOnlineSuggestionReady;
+          bookingStatus.canAcceptSchedule;
+      // bookingStatus.isOnlineReviewing ||
+      // bookingStatus.isOnlineSuggestionReady;
       // bookingStatus.canConfirmCompletion;
     }
 

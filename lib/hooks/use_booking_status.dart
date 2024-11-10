@@ -12,15 +12,22 @@ class BookingStatusResult {
   final bool canReviewSuggestion; // Xác nhận đánh giá của reviewer
 
   // Status indicators - Offline Flow
-  final bool isWaitingStaffSchedule; // Đợi staff xếp lịch (assigned + REVIEWER/assigned)
-  final bool isReviewerMoving; // Reviewer đang di chuyển (reviewing + REVIEWER/incoming)
-  final bool isReviewerAssessing; // Reviewer đang khảo sát (reviewing + REVIEWER/arrived)
-  final bool isSuggestionReady; // Có đề xuất mới (reviewing + REVIEWER/suggested)
+  final bool
+      isWaitingStaffSchedule; // Đợi staff xếp lịch (assigned + REVIEWER/assigned)
+  final bool
+      isReviewerMoving; // Reviewer đang di chuyển (reviewing + REVIEWER/incoming)
+  final bool
+      isReviewerAssessing; // Reviewer đang khảo sát (reviewing + REVIEWER/arrived)
+  final bool
+      isSuggestionReady; // Có đề xuất mới (reviewing + REVIEWER/suggested)
 
   // Status indicators - Online Flow
-  final bool isProcessingRequest; // Xử lý yêu cầu (assigned + REVIEWER/assigned)
-  final bool isOnlineReviewing; // Đang đánh giá online (reviewing + REVIEWER/assigned)
-  final bool isOnlineSuggestionReady; // Có đề xuất mới online (reviewing + REVIEWER/suggested)
+  final bool
+      isProcessingRequest; // Xử lý yêu cầu (assigned + REVIEWER/assigned)
+  final bool
+      isOnlineReviewing; // Đang đánh giá online (reviewing + REVIEWER/assigned)
+  final bool
+      isOnlineSuggestionReady; // Có đề xuất mới online (reviewing + REVIEWER/suggested)
 
   // Common indicators
   final bool isMovingInProgress; // Đang vận chuyển (coming)
@@ -148,18 +155,18 @@ BookingStatusResult useBookingStatus(
       canAcceptSchedule: canAcceptSchedule,
       canMakePayment: canMakePayment,
       canReviewSuggestion: canReviewSuggestion,
-      
+
       // Offline flow states
       isWaitingStaffSchedule: isWaitingStaffSchedule,
       isReviewerMoving: isReviewerMoving,
       isReviewerAssessing: isReviewerAssessing,
       isSuggestionReady: isSuggestionReady,
-      
+
       // Online flow states
       isProcessingRequest: isProcessingRequest,
       isOnlineReviewing: isOnlineReviewing,
       isOnlineSuggestionReady: isOnlineSuggestionReady,
-      
+
       // Common states
       isMovingInProgress: status == BookingStatusType.coming,
       isCompleted: status == BookingStatusType.completed,
