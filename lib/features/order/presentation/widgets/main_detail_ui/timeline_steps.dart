@@ -20,40 +20,50 @@ class TimelineSteps extends HookConsumerWidget {
     required this.expandedIndex,
     required this.order,
   });
-
   List<Map<String, dynamic>> _buildStepsFromStatus(
       BookingStatusResult status, bool isReviewOnline) {
     if (isReviewOnline) {
+      // Define completed states for online flow
+      final hasPassedProcess = !status.isProcessingRequest;
+      final hasPassedReview = hasPassedProcess &&
+          !status.isOnlineReviewing &&
+          !status.isOnlineSuggestionReady;
+      final hasPassedSuggestion =
+          hasPassedReview && !status.canReviewSuggestion;
+      final hasPassedPayment = hasPassedSuggestion && !status.canMakePayment;
+
       return [
         {
           'title': 'Xử lý yêu cầu',
-          'isActive': true,
-          'details': ['Hệ thống đang xử lý yêu cầu của bạn'],
-          'detailsStatus': [true]
+          'isActive': status.isProcessingRequest || hasPassedProcess,
+          'details': ['Nhân viên đang xem xét yêu cầu của bạn'],
+          'detailsStatus': [status.isProcessingRequest || hasPassedProcess]
         },
         {
           'title': 'Đánh giá online',
-          'isActive': status.isWaitingReviewed,
+          'isActive':
+              (status.isOnlineReviewing || status.isOnlineSuggestionReady) ||
+                  hasPassedReview,
           'details': [
-            'Nhân viên đang xem xét yêu cầu',
-            'Đánh giá chi tiết dịch vụ'
+            'Đang trong quá trình đánh giá trực tuyến',
+            'Đã có đề xuất dịch vụ mới'
           ],
-          'detailsStatus': [status.isWaitingReviewed, status.isServicesUpdating]
-        },
-        {
-          'title': 'Đề xuất',
-          'isActive': status.isSuggestionReady,
-          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất'],
           'detailsStatus': [
-            status.isSuggestionReady,
-            status.canReviewSuggestion
+            status.isOnlineReviewing || hasPassedReview,
+            status.isOnlineSuggestionReady || hasPassedReview
           ]
         },
         {
+          'title': 'Xác nhận đề xuất',
+          'isActive': status.canReviewSuggestion || hasPassedSuggestion,
+          'details': ['Vui lòng xác nhận đề xuất dịch vụ'],
+          'detailsStatus': [status.canReviewSuggestion || hasPassedSuggestion]
+        },
+        {
           'title': 'Thanh toán',
-          'isActive': status.canMakePayment,
+          'isActive': status.canMakePayment || hasPassedPayment,
           'details': ['Vui lòng thanh toán để tiến hành dịch vụ'],
-          'detailsStatus': [status.canMakePayment]
+          'detailsStatus': [status.canMakePayment || hasPassedPayment]
         },
         {
           'title': 'Vận chuyển',
@@ -69,39 +79,67 @@ class TimelineSteps extends HookConsumerWidget {
         }
       ];
     } else {
+      // Define completed states for offline flow
+      final hasPassedSchedule = !status.isWaitingStaffSchedule;
+      final hasPassedScheduleConfirm =
+          hasPassedSchedule && !status.canAcceptSchedule;
+      final hasPassedDeposit =
+          hasPassedScheduleConfirm && !status.canMakePayment;
+      final hasPassedReview = hasPassedDeposit &&
+          !status.isReviewerMoving &&
+          !status.isReviewerAssessing &&
+          !status.isSuggestionReady;
+      final hasPassedSuggestion =
+          hasPassedReview && !status.canReviewSuggestion;
+
       return [
         {
           'title': 'Xử lý yêu cầu',
-          'isActive': true,
-          'details': ['Hệ thống đang xử lý yêu cầu của bạn'],
-          'detailsStatus': [true]
+          'isActive': status.isWaitingStaffSchedule || hasPassedSchedule,
+          'details': ['Đang chờ nhân viên xếp lịch khảo sát'],
+          'detailsStatus': [status.isWaitingStaffSchedule || hasPassedSchedule]
         },
         {
           'title': 'Lịch khảo sát',
-          'isActive': status.isWaitingSchedule || status.canAcceptSchedule,
-          'details': ['Đang chờ lịch khảo sát', 'Vui lòng xác nhận lịch'],
-          'detailsStatus': [status.isWaitingSchedule, status.canAcceptSchedule]
-        },
-        {
-          'title': 'Khảo sát',
-          'isActive': status.isReviewerMoving || status.isReviewerAssessing,
-          'details': ['Nhân viên đang di chuyển', 'Đang khảo sát tại nhà'],
-          'detailsStatus': [status.isReviewerMoving, status.isReviewerAssessing]
-        },
-        {
-          'title': 'Đề xuất',
-          'isActive': status.isSuggestionReady || status.canReviewSuggestion,
-          'details': ['Đã có đề xuất dịch vụ mới', 'Vui lòng xem xét đề xuất'],
+          'isActive': status.canAcceptSchedule || hasPassedScheduleConfirm,
+          'details': ['Vui lòng xác nhận lịch khảo sát'],
           'detailsStatus': [
-            status.isSuggestionReady,
-            status.canReviewSuggestion
+            status.canAcceptSchedule || hasPassedScheduleConfirm
           ]
         },
         {
           'title': 'Thanh toán',
-          'isActive': status.canMakePayment,
+          'isActive': status.canMakePayment || hasPassedDeposit,
           'details': ['Vui lòng thanh toán đặt cọc'],
-          'detailsStatus': [status.canMakePayment]
+          'detailsStatus': [status.canMakePayment || hasPassedDeposit]
+        },
+        {
+          'title': 'Khảo sát',
+          'isActive': (status.isReviewerMoving ||
+                  status.isReviewerAssessing ||
+                  status.isSuggestionReady) ||
+              hasPassedReview,
+          'details': [
+            'Nhân viên đang di chuyển',
+            'Đang khảo sát tại nhà',
+            'Đã có đề xuất dịch vụ mới'
+          ],
+          'detailsStatus': [
+            status.isReviewerMoving || hasPassedReview,
+            status.isReviewerAssessing || hasPassedReview,
+            status.isSuggestionReady || hasPassedReview
+          ]
+        },
+        {
+          'title': 'Xác nhận đề xuất',
+          'isActive': status.canReviewSuggestion
+          || hasPassedSuggestion
+          ,
+          'details': ['Vui lòng xác nhận đề xuất dịch vụ'],
+          'detailsStatus': [
+            status.canReviewSuggestion
+            || hasPassedSuggestion
+          ]
         },
         {
           'title': 'Vận chuyển',
@@ -123,15 +161,19 @@ class TimelineSteps extends HookConsumerWidget {
     if (isReviewOnline) {
       if (status.isMovingInProgress) return 4;
       if (status.canMakePayment) return 3;
-      if (status.isSuggestionReady) return 2;
-      if (status.isWaitingReviewed) return 1;
+      if (status.canReviewSuggestion) return 2;
+      if (status.isOnlineReviewing || status.isOnlineSuggestionReady) return 1;
+      if (status.isProcessingRequest) return 0;
       return 0;
     } else {
       if (status.isMovingInProgress) return 5;
-      if (status.canMakePayment) return 4;
-      if (status.isSuggestionReady || status.canReviewSuggestion) return 3;
-      if (status.isReviewerMoving || status.isReviewerAssessing) return 2;
-      if (status.isWaitingSchedule || status.canAcceptSchedule) return 1;
+      if (status.canReviewSuggestion) return 4;
+      if (status.isReviewerMoving ||
+          status.isReviewerAssessing ||
+          status.isSuggestionReady) return 3;
+      if (status.canMakePayment) return 2;
+      if (status.canAcceptSchedule) return 1;
+      if (status.isWaitingStaffSchedule) return 0;
       return 0;
     }
   }
@@ -165,8 +207,8 @@ class TimelineSteps extends HookConsumerWidget {
 
     // Effect to handle animation status
     useEffect(() {
-      final startStep = currentStepIndex;
-      final endStep = currentStepIndex + 1;
+      final startStep = currentStepIndex + 1;
+      final endStep = currentStepIndex;
 
       if (endStep >= steps.length) {
         isForward.value = false;
