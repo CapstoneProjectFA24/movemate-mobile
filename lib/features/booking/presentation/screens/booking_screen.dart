@@ -1,5 +1,3 @@
-// booking_screen.dart
-//route
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
@@ -181,9 +179,7 @@ class BookingScreen extends HookConsumerWidget {
         centerTitle: true,
         backButtonColor: AssetsConstants.whiteColor,
         showBackButton: true,
-        // iconFirst: Icons.arrow_back_ios,
         onCallBackFirst: () {
-          // context.router.pop();
           bookingNotifier.resetHouseTypeInfo(null);
           bookingNotifier.resetVehiclesSelected(null);
         },
@@ -269,11 +265,7 @@ class BookingScreen extends HookConsumerWidget {
                             bookingState.houseType?.name == null)
                         ? ''
                         : "Giá",
-
                     buttonIcon: false,
-                    // totalPrice:
-                    //     (bookingState.selectedVehicle?.truckCategory?.price ??
-                    //         0),
                     totalPrice: (bookingStatePrice?.total ?? 0.0),
                     isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {

@@ -94,13 +94,13 @@ class CustomBottomBar extends HookWidget {
               child: Icon(
                 Icons.percent_sharp,
                 color: tabsRouter.activeIndex == 2
-                    ? Colors.white // Change icon to white when selected
+                    ? Colors.white
                     : AssetsConstants.primaryDark,
                 size: AssetsConstants.defaultFontSize - 6.0,
               ),
             ),
           ),
-          label: 'Khuyến mãi', // Text label
+          label: 'Khuyến mãi',
         ),
         BottomNavigationBarItem(
           icon: Container(

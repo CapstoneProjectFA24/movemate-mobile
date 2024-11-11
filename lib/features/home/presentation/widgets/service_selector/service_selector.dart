@@ -22,25 +22,19 @@ class ServiceSelector extends HookConsumerWidget {
     final bookingState = ref.watch(bookingProvider);
     final bookingNotifier = ref.read(bookingProvider.notifier);
 
-    // State for showing validation errors
     final showErrors = useState(false);
 
-    // State for invalid datetime error
     final isDateTimeInvalid = useState(false);
 
-    // Controllers for pick-up and drop-off locations
     final pickUpController = useTextEditingController(text: 'Chọn địa điểm');
     final dropOffController = useTextEditingController(text: 'Chọn địa điểm');
 
-    // Controller for date and time
     final dateController = useTextEditingController(text: 'Chọn ngày và giờ');
 
-    // FocusNodes for fields
     final pickUpFocusNode = useFocusNode();
     final dropOffFocusNode = useFocusNode();
     final dateFocusNode = useFocusNode();
 
-    // Helper Methods
     String formatDateTime(DateTime dateTime) {
       return '${dateTime.year}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.day.toString().padLeft(2, '0')} - ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
     }
@@ -50,8 +44,7 @@ class ServiceSelector extends HookConsumerWidget {
         isDateTimeInvalid.value =
             bookingState.bookingDate!.isBefore(DateTime.now());
       } else {
-        isDateTimeInvalid.value =
-            true; // Mark as invalid if no date is selected
+        isDateTimeInvalid.value = true;
       }
     }
 
@@ -67,27 +60,21 @@ class ServiceSelector extends HookConsumerWidget {
     Future<DateTime?> selectDate(DateTime? initialDate) async {
       final now = DateTime.now();
 
-      // Default time is current time + 1 hour
-      final defaultTime = TimeOfDay(
-          hour: (now.hour + 1) % 24, // Ensure hour does not exceed 24
-          minute: now.minute);
+      final defaultTime =
+          TimeOfDay(hour: (now.hour + 1) % 24, minute: now.minute);
 
-      // Last selectable date is 30 days from now
       final lastDate = now.add(const Duration(days: 30));
 
-      // Show date picker with a 30-day range
       final selectedDate = await showDatePicker(
         context: context,
         initialDate: initialDate ?? now,
         firstDate: now,
         lastDate: lastDate,
         selectableDayPredicate: (DateTime date) {
-          // Allow selection within 30 days
           return date.difference(now).inDays <= 30;
         },
       );
       if (selectedDate != null) {
-        // Show time picker with default time
         final selectedTime = await showTimePicker(
           context: context,
           initialTime: initialDate != null
@@ -110,26 +97,21 @@ class ServiceSelector extends HookConsumerWidget {
       return null;
     }
 
-    // Effects
-
-    // Validate datetime whenever bookingDate changes
     useEffect(() {
       validateDateTime();
       return null;
     }, [bookingState.bookingDate]);
 
-    // Update dateController text whenever bookingDate changes
     useEffect(() {
       if (bookingState.bookingDate != null) {
         dateController.text = formatDateTime(bookingState.bookingDate!);
       } else {
         dateController.text = 'Chọn ngày và giờ';
       }
-      print("DateController updated to: ${dateController.text}"); // Debug print
+      print("DateController updated to: ${dateController.text}");
       return null;
     }, [bookingState.bookingDate]);
 
-    // Update pickUpController text whenever pickUpLocation changes
     useEffect(() {
       if (bookingState.pickUpLocation != null &&
           bookingState.pickUpLocation!.address != 'Chọn địa điểm') {
@@ -137,12 +119,10 @@ class ServiceSelector extends HookConsumerWidget {
       } else {
         pickUpController.text = 'Chọn địa điểm';
       }
-      print(
-          "PickUpController updated to: ${pickUpController.text}"); // Debug print
+      print("PickUpController updated to: ${pickUpController.text}");
       return null;
     }, [bookingState.pickUpLocation]);
 
-    // Update dropOffController text whenever dropOffLocation changes
     useEffect(() {
       if (bookingState.dropOffLocation != null &&
           bookingState.dropOffLocation!.address != 'Chọn địa điểm') {
@@ -150,12 +130,10 @@ class ServiceSelector extends HookConsumerWidget {
       } else {
         dropOffController.text = 'Chọn địa điểm';
       }
-      print(
-          "DropOffController updated to: ${dropOffController.text}"); // Debug print
+      print("DropOffController updated to: ${dropOffController.text}");
       return null;
     }, [bookingState.dropOffLocation]);
 
-    // Listener to hide errors when all fields are valid
     useEffect(() {
       void listener() {
         if (showErrors.value) {
@@ -172,7 +150,6 @@ class ServiceSelector extends HookConsumerWidget {
         }
       }
 
-      // Add listeners to bookingState changes
       listener();
 
       return null;
@@ -183,7 +160,6 @@ class ServiceSelector extends HookConsumerWidget {
       isDateTimeInvalid.value
     ]);
 
-    // Add listeners to focus nodes to hide errors when focus is lost and data is valid
     useEffect(() {
       void onFocusChange() {
         if (!pickUpFocusNode.hasFocus &&
