@@ -23,7 +23,7 @@ class NotesSectionState extends ConsumerState<NotesSection> {
   Color borderColor = Colors.orange;
 
   // Giá trị mặc định khi không có ghi chú
-  final String defaultNote = 'Không có ghi chú';
+  // final String defaultNote = 'Không có ghi chú';
 
   @override
   void initState() {
@@ -57,13 +57,13 @@ class NotesSectionState extends ConsumerState<NotesSection> {
       String currentText = textController.text.trim();
 
       // Kiểm tra nếu ghi chú trống, gán giá trị mặc định
-      if (currentText.isEmpty) {
-        currentText = defaultNote;
-        textController.text = defaultNote;
+      // if (currentText.isEmpty) {
+      //   currentText = defaultNote;
+      //   textController.text = defaultNote;
 
-        // Cập nhật bookingProvider với giá trị mặc định
-        ref.read(bookingProvider.notifier).updateNotes(currentText);
-      }
+      //   // Cập nhật bookingProvider với giá trị mặc định
+      //   ref.read(bookingProvider.notifier).updateNotes(currentText);
+      // }
 
       setState(() {
         isSaved = true;
@@ -109,7 +109,7 @@ class NotesSectionState extends ConsumerState<NotesSection> {
                 child: TextField(
                   controller: textController,
                   autofillHints:
-                      textController.text.isEmpty ? const ['Ghi chú'] : null,
+                      textController.text.isEmpty ? const [''] : null,
                   focusNode: focusNode,
                   maxLines: 3,
                   onChanged: (value) {

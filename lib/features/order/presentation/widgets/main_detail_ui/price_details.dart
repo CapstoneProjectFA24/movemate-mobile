@@ -212,24 +212,24 @@ class PriceDetails extends HookConsumerWidget {
               color: Colors.grey[50],
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const LabelText(
+                LabelText(
                   content: 'Ghi chú',
                   size: 14,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(height: 8),
-                LabelText(
-                  content:
-                      "${order.note!.isEmpty ? 'Không có ghi chú' : order.note}",
-                  size: 15,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w400,
-                  maxLine: 3,
-                ),
+                SizedBox(height: 8),
+                // LabelText(
+                //   content:
+                //       "${order.note!.isEmpty ? 'Không có ghi chú' : order.note}",
+                //   size: 15,
+                //   color: Colors.black87,
+                //   fontWeight: FontWeight.w400,
+                //   maxLine: 3,
+                // ),
               ],
             ),
           ),
