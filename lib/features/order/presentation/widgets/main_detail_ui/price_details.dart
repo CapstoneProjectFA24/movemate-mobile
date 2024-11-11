@@ -277,8 +277,9 @@ class PriceDetails extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 LabelText(
-                  content:
-                      "${order.note!.isEmpty ? 'Không có ghi chú' : order.note}",
+                  content: (order.note?.isEmpty ?? true)
+                      ? 'Không có ghi chú'
+                      : order.note!,
                   size: 15,
                   color: Colors.black87,
                   fontWeight: FontWeight.w400,

@@ -64,12 +64,12 @@ class ServiceController extends _$ServiceController {
     }
     return serviceCateData;
   }
-  
+
   Future<ServicesPackageEntity?> getServicesById(
-  int id, 
-   BuildContext context,
+    int id,
+    BuildContext context,
   ) async {
-    ServicesPackageEntity? serviceCateDataById ;
+    ServicesPackageEntity? serviceCateDataById;
     // state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
@@ -79,9 +79,8 @@ class ServiceController extends _$ServiceController {
       final response = await serviceBookingRepository.getServicesById(
         id: id,
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        
       );
-
+      print("check controller $response");
       serviceCateDataById = response.payload;
     });
     if (state.hasError) {

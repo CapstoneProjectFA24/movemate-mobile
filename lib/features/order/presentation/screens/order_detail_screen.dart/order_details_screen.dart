@@ -53,6 +53,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final state = ref.watch(orderControllerProvider);
     final stateProfile = ref.watch(profileControllerProvider);
+    final stateService = ref.watch(serviceControllerProvider);
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -137,6 +138,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
           ),
         )
         .serviceId;
+    print("serviceId: $getServiceId ");
 
     final useFetchResultProfileAssign = useFetchObject<ProfileEntity>(
       function: (context) async {
@@ -157,11 +159,12 @@ class OrderDetailsScreen extends HookConsumerWidget {
       context: context,
     );
     final serviceData = useFetchResultService.data;
+    print("servicedata $serviceData");
+    print("servicedata $serviceData");
 
     return LoadingOverlay(
-      isLoading: state.isLoading ||
-          useFetchResultService.isFetchingData ||
-          stateProfile.isLoading,
+      isLoading:
+          state.isLoading || stateService.isLoading || stateProfile.isLoading,
       child: Scaffold(
         appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
@@ -224,7 +227,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                               ProfileInfo(profileAssign: ProfileAssign),
                               const SizedBox(height: 20),
                               const LabelText(
-                                content: 'Thông tin đánh giá',
+                                content: 'Thông tin khách hàng',
                                 size: 20,
                                 fontFamily: 'bold',
                                 color: AssetsConstants.blackColor,
@@ -243,7 +246,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                               ProfileInfo(profileAssign: ProfileAssign),
                               const SizedBox(height: 20),
                               const LabelText(
-                                content: 'Thông tin đánh giá',
+                                content: 'Thông tin khách hàng',
                                 size: 20,
                                 fontFamily: 'bold',
                                 color: AssetsConstants.blackColor,

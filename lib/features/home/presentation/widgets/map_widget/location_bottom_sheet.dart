@@ -297,7 +297,7 @@ class LocationBottomSheet extends HookConsumerWidget {
                       distance: distance.toString(),
                     ),
                   );
-                  // print('Khoảng cách distance: $distance km');
+                  print('Khoảng cách distance: $distance km');
                   // print('Khoảng cách address: ${location.address} km');
                   // print('Khoảng cách dropOffLocation: $dropOffLocation km');
                   // print('Khoảng cách pickUpLocation: $pickUpLocation km');

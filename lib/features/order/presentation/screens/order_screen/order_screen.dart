@@ -48,56 +48,59 @@ class OrderScreen extends HookConsumerWidget {
       return scrollController.dispose;
     }, const []);
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Danh sách đặt dịch vụ',
-        centerTitle: true,
-        backgroundColor: AssetsConstants.primaryMain,
-        // iconSecond: Icons.filter_list_alt,
-        iconFirst: Icons.refresh_rounded,
-        onCallBackFirst: fetchReslut.refresh,
-        // onCallBackSecond: () => {
-        //   //show filter bottom or tom
-        // },
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: size.height * 0.02),
-          (state.isLoading && fetchReslut.items.isEmpty)
-              ? const Center(
-                  child: HomeShimmer(amount: 4),
-                )
-              : fetchReslut.items.isEmpty
-                  ? const Align(
-                      alignment: Alignment.topCenter,
-                      child: EmptyBox(title: ''),
-                    )
-                  : Expanded(
-                      child: ListView.builder(
-                        itemCount: fetchReslut.items.length + 1,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        controller: scrollController,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AssetsConstants.defaultPadding - 10.0,
-                        ),
-                        itemBuilder: (_, index) {
-                          if (index == fetchReslut.items.length) {
-                            if (fetchReslut.isFetchingData) {
-                              return const CustomCircular();
+    return LoadingOverlay(
+      isLoading: state.isLoading,
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: 'Danh sách đặt dịch vụ',
+          centerTitle: true,
+          backgroundColor: AssetsConstants.primaryMain,
+          // iconSecond: Icons.filter_list_alt,
+          iconFirst: Icons.refresh_rounded,
+          onCallBackFirst: fetchReslut.refresh,
+          // onCallBackSecond: () => {
+          //   //show filter bottom or tom
+          // },
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: size.height * 0.02),
+            (state.isLoading && fetchReslut.items.isEmpty)
+                ? const Center(
+                    child: HomeShimmer(amount: 4),
+                  )
+                : fetchReslut.items.isEmpty
+                    ? const Align(
+                        alignment: Alignment.topCenter,
+                        child: EmptyBox(title: ''),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: fetchReslut.items.length + 1,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          controller: scrollController,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AssetsConstants.defaultPadding - 10.0,
+                          ),
+                          itemBuilder: (_, index) {
+                            if (index == fetchReslut.items.length) {
+                              if (fetchReslut.isFetchingData) {
+                                return const CustomCircular();
+                              }
+                              return fetchReslut.isLastPage
+                                  ? const NoMoreContent()
+                                  : Container();
                             }
-                            return fetchReslut.isLastPage
-                                ? const NoMoreContent()
-                                : Container();
-                          }
-                          return OrderItem(
-                            order: fetchReslut.items[index],
-                            onCallback: fetchReslut.refresh,
-                          );
-                        },
+                            return OrderItem(
+                              order: fetchReslut.items[index],
+                              onCallback: fetchReslut.refresh,
+                            );
+                          },
+                        ),
                       ),
-                    ),
-        ],
+          ],
+        ),
       ),
     );
   }

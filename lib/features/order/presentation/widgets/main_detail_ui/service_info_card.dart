@@ -111,7 +111,7 @@ class ServiceInfoCard extends StatelessWidget {
         const Divider(height: 12, color: Colors.grey, thickness: 1),
         buildAddressRow(
           Icons.location_searching,
-          'Đến : ${order.pickupAddress}',
+          'Đến : ${order.deliveryAddress}',
         ),
         const SizedBox(height: 4),
         Align(
