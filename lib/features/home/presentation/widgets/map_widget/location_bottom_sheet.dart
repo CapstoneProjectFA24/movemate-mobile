@@ -24,9 +24,13 @@ final uiUpdateTriggerProvider = StateProvider<bool>((ref) => false);
 final selectedRefIdProvider = StateProvider<String?>((ref) => null);
 final distanceProvider = StateProvider<String?>((ref) => null);
 
+const circle_center = "10.841416800000001, 106.81007447258705";
+const circle_radius = 80000;
+
+// circle_center=10.841416800000001,106.81007447258705
+// circle_radius=80000
 class LocationBottomSheet extends HookConsumerWidget {
   const LocationBottomSheet({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
@@ -113,7 +117,7 @@ class LocationBottomSheet extends HookConsumerWidget {
     void fetchAutocompleteResults(
         String query, WidgetRef ref, bool isPickUp) async {
       final url = Uri.parse(
-          'https://maps.vietmap.vn/api/autocomplete/v3?apikey=$apiKey&text=$query');
+          'https://maps.vietmap.vn/api/autocomplete/v3?apikey=$apiKey&text=$query&circle_center=$circle_center&circle_radius=$circle_radius');
 
       try {
         final response = await http.get(url);
