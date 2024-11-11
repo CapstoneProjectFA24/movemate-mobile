@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 //entity
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
@@ -70,8 +71,10 @@ class BookingScreenService extends HookConsumerWidget {
         centerTitle: true,
         showBackButton: true,
         onCallBackFirst: () {
-          // context.router.pop();
+          context.router.pop();
           bookingNotifier.resetAllQuantities();
+          // context.router.pushAndPopUntil(const BookingScreenRoute(),
+          //     predicate: (Route<dynamic> route) => false);
         },
       ),
       body: Column(

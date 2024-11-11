@@ -426,6 +426,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
         Expanded(
           child: ElevatedButton(
             onPressed: () {
+              Navigator.of(context).pop();
               Navigator.of(context).pop(); // Pop lại trang trước
             },
             style: ElevatedButton.styleFrom(

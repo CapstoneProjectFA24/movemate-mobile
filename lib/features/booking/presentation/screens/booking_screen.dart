@@ -280,6 +280,8 @@ class BookingScreen extends HookConsumerWidget {
 
                       if (checkConditionOnline) {
                         bookingNotifier.updateIsReviewOnline(true);
+                      } else {
+                        bookingNotifier.updateIsReviewOnline(false);
                       }
                       if (bookingState.houseType != null &&
                           bookingState.houseType?.id != 0 &&
