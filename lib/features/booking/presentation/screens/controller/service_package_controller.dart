@@ -12,6 +12,7 @@ import 'package:movemate/features/booking/data/models/resquest/booking_valuation
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -175,6 +176,54 @@ class ServicePackageController extends _$ServicePackageController {
     return houseType;
   }
 
+  //get truck cate detail by id
+  Future<TruckCategoryEntity?> getTruckDetailById(
+    int id,
+    BuildContext context,
+  ) async {
+    TruckCategoryEntity? truckCateDetails;
+
+    // state = const AsyncLoading();
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    // print("fcm token : ${user?.fcmToken}");
+
+    state = await AsyncValue.guard(() async {
+      final response = await serviceBookingRepository.getTruckDetailById(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+
+      truckCateDetails = response.payload;
+      print('check xe log ${truckCateDetails?.toJson()}');
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+        await getTruckDetailById(id, context);
+      });
+    }
+
+    return truckCateDetails;
+  }
+
   //----------------------------------------------------------------
 
   Future<BookingResponseEntity?> postValuationBooking({
@@ -204,8 +253,7 @@ class ServicePackageController extends _$ServicePackageController {
       );
       // Không thiết lập lại state ở đây
       responsePayload = response.payload;
-         ref.read(bookingResponseProviderPrice.notifier).state =
-   responsePayload;
+      ref.read(bookingResponseProviderPrice.notifier).state = responsePayload;
       // return responsePayload;
     });
 

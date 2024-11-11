@@ -5,6 +5,7 @@ import 'package:movemate/features/booking/data/models/response/booking_response.
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
+import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
@@ -50,9 +51,16 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );
-  // Services  by id
+  // truck  by id
   @GET('${APIConstants.get_list_truck}/{id}')
   Future<HttpResponse<ServiceObjResponse>> getServicesById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
+  );
+  // truckCate detail  by id
+  @GET('${APIConstants.get_truck_category}/{id}')
+  Future<HttpResponse<TruckCateResponse>> getTruckDetailById(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,

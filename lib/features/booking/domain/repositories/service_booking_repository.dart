@@ -8,6 +8,7 @@ import 'package:movemate/features/booking/data/models/response/service_truck_res
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
+import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
@@ -44,6 +45,11 @@ abstract class ServiceBookingRepository {
   });
   // Services Methods by id 
   Future<ServiceObjResponse> getServicesById({
+    required String accessToken,
+    required int id,
+  });
+  // Services Methods by id 
+  Future<TruckCateResponse> getTruckDetailById({
     required String accessToken,
     required int id,
   });

@@ -116,7 +116,7 @@ class VehicleCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${truckCategory.estimatedLength ?? ''} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
+                        '${truckCategory.estimatedLenght ?? ''} x ${truckCategory.estimatedWidth} x ${truckCategory.estimatedHeight} x ${truckCategory.maxLoad}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AssetsConstants.blackColor,

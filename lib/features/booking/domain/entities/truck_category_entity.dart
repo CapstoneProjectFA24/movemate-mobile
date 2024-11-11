@@ -6,7 +6,7 @@ class TruckCategoryEntity {
   final int maxLoad;
   final String description;
   final String imageUrl;
-  final String? estimatedLength;
+  final String? estimatedLenght;
   final String estimatedWidth;
   final String estimatedHeight;
   final double price;
@@ -18,7 +18,7 @@ class TruckCategoryEntity {
     required this.maxLoad,
     required this.description,
     required this.imageUrl,
-    this.estimatedLength,
+    this.estimatedLenght,
     required this.estimatedWidth,
     required this.estimatedHeight,
     required this.price,
@@ -32,7 +32,7 @@ class TruckCategoryEntity {
       maxLoad: map['maxLoad'] ?? 0,
       description: map['description'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
-      estimatedLength: map['estimatedLength'],
+      estimatedLenght: map['estimatedLenght'],
       estimatedWidth: map['estimatedWidth'] ?? '',
       estimatedHeight: map['estimatedHeight'] ?? '',
       // price: map['price'] ?? 0,
@@ -48,7 +48,7 @@ class TruckCategoryEntity {
       'maxLoad': maxLoad,
       'description': description,
       'imageUrl': imageUrl,
-      'estimatedLength': estimatedLength,
+      'estimatedLenght': estimatedLenght,
       'estimatedWidth': estimatedWidth,
       'estimatedHeight': estimatedHeight,
       'price': price,
@@ -59,7 +59,7 @@ class TruckCategoryEntity {
   String toJson() => json.encode(toMap());
   @override
   String toString() {
-    return 'TruckCategoryEntity(id: $id, categoryName: $categoryName, maxLoad: $maxLoad, description: $description, imageUrl: $imageUrl, estimatedLength: $estimatedLength, estimatedWidth: $estimatedWidth, estimatedHeight: $estimatedHeight, price: $price, totalTrips: $totalTrips)';
+    return 'TruckCategoryEntity(id: $id, categoryName: $categoryName, maxLoad: $maxLoad, description: $description, imageUrl: $imageUrl, estimatedLenght: $estimatedLenght, estimatedWidth: $estimatedWidth, estimatedHeight: $estimatedHeight, price: $price, totalTrips: $totalTrips)';
   }
 
   factory TruckCategoryEntity.fromJson(String source) =>

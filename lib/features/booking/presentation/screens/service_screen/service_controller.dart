@@ -70,7 +70,7 @@ class ServiceController extends _$ServiceController {
     BuildContext context,
   ) async {
     ServicesPackageEntity? serviceCateDataById;
-    // state = const AsyncLoading();
+    state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
