@@ -7,10 +7,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
+import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
@@ -49,7 +52,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     }
 
     final state = ref.watch(orderControllerProvider);
-
+    final stateProfile = ref.watch(profileControllerProvider);
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -101,8 +104,64 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final serviceAll = fetchReslutService.items;
 
+    // Kiểm tra assignments
+    final getAssID = order.assignments
+        .firstWhere(
+          (e) => e.staffType == 'REVIEWER',
+          orElse: () => AssignmentResponseEntity(
+            bookingId: 0,
+            staffType: 'REVIEWER',
+            userId: 2,
+            id: 0,
+            status: "READY",
+            isResponsible: false,
+            price: 0,
+          ), // Provide a default instance
+        )
+        .userId;
+
+    final getServiceId = order.bookingDetails
+        .firstWhere(
+          (e) => e.type == 'TRUCK',
+          orElse: () => BookingDetailResponseEntity(
+            bookingId: 0,
+            id: 0,
+            type: 'TRUCK',
+            serviceId: 0,
+            quantity: 0,
+            price: 0,
+            status: "READY",
+            name: "TRUCK",
+            description: "TRUCK",
+            imageUrl: "TRUCK",
+          ),
+        )
+        .serviceId;
+
+    final useFetchResultProfileAssign = useFetchObject<ProfileEntity>(
+      function: (context) async {
+        return ref
+            .read(profileControllerProvider.notifier)
+            .getProfileInforById(getAssID, context);
+      },
+      context: context,
+    );
+    final ProfileAssign = useFetchResultProfileAssign.data;
+
+    final useFetchResultService = useFetchObject<ServicesPackageEntity>(
+      function: (context) async {
+        return ref
+            .read(serviceControllerProvider.notifier)
+            .getServicesById(getServiceId, context);
+      },
+      context: context,
+    );
+    final serviceData = useFetchResultService.data;
+
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: state.isLoading ||
+          useFetchResultService.isFetchingData ||
+          stateProfile.isLoading,
       child: Scaffold(
         appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
@@ -162,7 +221,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     : statusOrders == BookingStatusType.assigned
                         ? Column(
                             children: [
-                              const ProfileInfo(),
+                              ProfileInfo(profileAssign: ProfileAssign),
                               const SizedBox(height: 20),
                               const LabelText(
                                 content: 'Thông tin đánh giá',
@@ -181,7 +240,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           )
                         : Column(
                             children: [
-                              const ProfileInfo(),
+                              ProfileInfo(profileAssign: ProfileAssign),
                               const SizedBox(height: 20),
                               const LabelText(
                                 content: 'Thông tin đánh giá',
@@ -230,7 +289,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 const SizedBox(height: 20),
                 PriceDetails(
                   order: order,
-                  serviceAll: serviceAll,
+                  serviceData: serviceData,
                   statusAsync: statusAsync,
                 ),
               ],

@@ -49,13 +49,13 @@ class OrderScreen extends HookConsumerWidget {
     }, const []);
 
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Danh sách đặt dịch vụ',
-        // iconFirst: Icons.refresh_rounded,
         centerTitle: true,
         backgroundColor: AssetsConstants.primaryMain,
         // iconSecond: Icons.filter_list_alt,
-        // onCallBackFirst: fetchReslut.refresh,
+        iconFirst: Icons.refresh_rounded,
+        onCallBackFirst: fetchReslut.refresh,
         // onCallBackSecond: () => {
         //   //show filter bottom or tom
         // },

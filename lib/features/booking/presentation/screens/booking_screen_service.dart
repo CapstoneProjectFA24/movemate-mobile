@@ -55,7 +55,8 @@ class BookingScreenService extends HookConsumerWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const DailyUIChallengeCard(),
+            child: DailyUIChallengeCard(
+                isReviewOnline: bookingState.isReviewOnline),
           );
         },
       );
@@ -172,11 +173,13 @@ class BookingScreenService extends HookConsumerWidget {
         totalPrice: bookingStatePrice?.total ?? 0,
         isButtonEnabled: true,
         onPlacePress: () {
+          print("check review ${bookingState.isReviewOnline}");
           showConfirmationDialog();
         },
         buttonText: 'Đặt đơn',
         priceLabel: 'Tổng giá',
         onConfirm: () {
+          print("check review ${bookingState.isReviewOnline}");
           Navigator.pop(context);
           showConfirmationDialog();
         },

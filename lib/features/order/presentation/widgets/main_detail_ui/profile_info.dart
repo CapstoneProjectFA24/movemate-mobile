@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:movemate/features/order/presentation/widgets/profile_card.dart';
+import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 
 class ProfileInfo extends StatelessWidget {
+  final ProfileEntity? profileAssign;
   const ProfileInfo({
+    required this.profileAssign,
     super.key,
   });
 
@@ -17,16 +20,19 @@ class ProfileInfo extends StatelessWidget {
       child: ProfileCard(
         title: "Thông tin người đánh giá",
         profileImageUrl:
-            'https://storage.googleapis.com/a1aa/image/kQqIOadQcVp4CFdZfMh5llKP6sUMpfDr5KIUucyHmaXaArsTA.jpg',
-        name: 'Lê Văn Phước Đại',
-        rating: 5.0,
-        ratingDetails: '73-H1 613.58',
+            // 'https://storage.googleapis.com/a1aa/image/kQqIOadQcVp4CFdZfMh5llKP6sUMpfDr5KIUucyHmaXaArsTA.jpg',
+            profileAssign?.avatarUrl ??
+                'https://storage.googleapis.com/a1aa/image/kQqIOadQcVp4CFdZfMh5llKP6sUMpfDr5KIUucyHmaXaArsTA.jpg',
+        name: '${profileAssign?.name}',
+        // rating: profileAssign?.codeIntroduce ?? '4.5',
+        ratingDetails: '${profileAssign?.phone}',
         onPhonePressed: () {
           // Handle phone icon press
         },
         onCommentPressed: () {
           // Handle comment icon press
         },
+        iconCall: true,
       ),
     );
   }

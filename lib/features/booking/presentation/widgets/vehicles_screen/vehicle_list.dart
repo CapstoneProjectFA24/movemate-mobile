@@ -103,7 +103,8 @@ class VehicleList extends ConsumerWidget {
                 //       .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
                 // }
               }
-              if (bookingState.houseType?.name == checkhousetype) {
+              if (bookingState.houseType?.name == checkhousetype ||
+                  bookingState.houseType?.name == null) {
                 bookingNotifier
                     .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
               }

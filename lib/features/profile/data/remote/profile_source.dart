@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,6 +27,13 @@ abstract class ProfileSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,
+  );
+
+      // get wallet
+  @GET(APIConstants.get_wallet)
+  Future<HttpResponse<WalletResponse>> getWallet(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
   );
 }
 

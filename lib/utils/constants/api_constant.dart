@@ -35,6 +35,9 @@ class APIConstants {
   // payments
   static const paymentsBooking = '/payments';
   static const paymentsDeposit = '/wallets/recharge';
+  //wallet
+  static const get_wallet = '/wallets/balance';
+
 //get user
   static const get_user = '/users';
   // api vietmap-key

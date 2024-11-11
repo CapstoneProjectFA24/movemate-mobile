@@ -19,12 +19,13 @@ import 'package:movemate/features/order/presentation/widgets/details/priceItem.d
 class PriceDetails extends HookConsumerWidget {
   final OrderEntity order;
   final AsyncValue<BookingStatusType> statusAsync;
-  final List<ServicesPackageEntity> serviceAll;
+  // final List<ServicesPackageEntity> serviceAll;
+  final ServicesPackageEntity? serviceData;
   const PriceDetails({
     super.key,
     required this.order,
-    required this.serviceAll, // thêm dữ liệu serviceAll vào để lấy thông tin service tương ứng
-
+    //  required this.serviceAll, // thêm dữ liệu serviceAll vào để lấy thông tin service tương ứng
+    required this.serviceData,
     required this.statusAsync,
   });
 
@@ -115,40 +116,41 @@ class PriceDetails extends HookConsumerWidget {
     }
 
     // Lấy danh sách inverseParentService từ serviceAll
-    final List<SubServiceEntity> inverseParentServiceList =
-        serviceAll.expand((service) => service.inverseParentService).toList();
+    // final List<SubServiceEntity> inverseParentServiceList =
+    //     serviceAll.expand((service) => service.inverseParentService).toList();
 
     // Lấy danh sách serviceId từ bookingDetails
-    final List<int> getServices = order.bookingDetails
-        .where((detail) => detail.type == "TRUCK")
-        .map((truckDetail) => truckDetail.serviceId)
-        .whereType<int>()
-        .toList();
+    // final List<int> getServices = order.bookingDetails
+    //     .where((detail) => detail.type == "TRUCK")
+    //     .map((truckDetail) => truckDetail.serviceId)
+    //     .whereType<int>()
+    //     .toList();
 
     // Hàm tìm imageUrl từ truckCategory dựa trên serviceId
-    String? findImageUrl(int serviceId) {
-      final matchingService = inverseParentServiceList.firstWhere(
-        (subService) => subService.id == serviceId,
-        orElse: () => SubServiceEntity(
-          id: -1,
-          name: 'Unknown',
-          truckCategory: null,
-          isQuantity: false,
-          amount: 0,
-          description: '',
-          discountRate: 0,
-          imageUrl: '',
-          isActived: false,
-          quantityMax: 0,
-          tier: 0,
-          type: '',
-        ),
-      );
+    // String? findImageUrl(int serviceId) {
+    //   final matchingService = inverseParentServiceList.firstWhere(
+    //     (subService) => subService.id == serviceId,
+    //     orElse: () => SubServiceEntity(
+    //       id: -1,
+    //       name: 'Unknown',
+    //       truckCategory: null,
+    //       isQuantity: false,
+    //       amount: 0,
+    //       description: '',
+    //       discountRate: 0,
+    //       imageUrl: '',
+    //       isActived: false,
+    //       quantityMax: 0,
+    //       tier: 0,
+    //       type: '',
+    //     ),
+    //   );
 
-      return matchingService.truckCategory?.imageUrl;
-    }
+    //   return matchingService.truckCategory?.imageUrl;
+    // }
 
-    print("tìm ảnh  ${findImageUrl(getServices.first)}");
+    // print("tìm ảnh  ${findImageUrl(getServices.first)}");
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -185,11 +187,12 @@ class PriceDetails extends HookConsumerWidget {
               .where((detail) => detail.type == "TRUCK")
               .map((truckDetail) {
             // Tìm imageUrl cho truckDetail này
-            String imageUrl = findImageUrl(truckDetail.serviceId) ??
-                'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg';
+            // String imageUrl = findImageUrl(truckDetail.serviceId) ??
+            //     'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg';
 
             return buildItem(
-              imageUrl: imageUrl,
+              imageUrl: serviceData?.imageUrl ??
+                  'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg',
               title: truckDetail.name ?? 'Xe Tải',
               description: truckDetail.description ?? 'Không có mô tả',
             );

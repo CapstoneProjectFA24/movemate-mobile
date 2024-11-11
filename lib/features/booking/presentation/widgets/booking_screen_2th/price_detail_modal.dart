@@ -7,13 +7,11 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ServiceItem {
   final String title;
-  // final double unitPrice;
   final int quantity;
   final double totalPrice;
 
   ServiceItem({
     required this.title,
-    // required this.unitPrice,
     required this.quantity,
     required this.totalPrice,
   });
@@ -27,7 +25,6 @@ class ServiceItem {
   }) {
     return ServiceItem(
       title: title ?? this.title,
-      // unitPrice: unitPrice ?? this.unitPrice,
       quantity: quantity ?? this.quantity,
       totalPrice: totalPrice ?? this.totalPrice,
     );
@@ -41,24 +38,23 @@ String formatPrice(int price) {
 }
 
 class PriceDetailModal extends ConsumerWidget {
-  final VoidCallback? onConfirm; // Add this line
+  final VoidCallback? onConfirm;
 
-  const PriceDetailModal({super.key, this.onConfirm}); // Update constructor
+  const PriceDetailModal({super.key, this.onConfirm});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingStateResponse = ref.watch(bookingResponseProviderPrice);
+
     // Tạo danh sách các dịch vụ đã chọn
     List<ServiceItem> allSelectedServices = [
-      // ...bookingStateResponse!.bookingDetails.map((subService) => ServiceItem(
-      //       title: subService.name,
-      //       // unitPrice: subService.price,
-      //       quantity: subService.quantity,
-      //       totalPrice: subService.price,
-      //     )),
-      ...bookingStateResponse!.feeDetails.map((fee) => ServiceItem(
+      ...bookingStateResponse!.bookingDetails.map((subService) => ServiceItem(
+            title: subService.name,
+            quantity: subService.quantity,
+            totalPrice: subService.price,
+          )),
+      ...bookingStateResponse.feeDetails.map((fee) => ServiceItem(
             title: fee.name,
-            // unitPrice: fee.amount.toDouble(),
             quantity: fee.quantity ?? 1,
             totalPrice: fee.amount,
           )),
@@ -67,74 +63,82 @@ class PriceDetailModal extends ConsumerWidget {
     return Container(
       color: AssetsConstants.whiteColor,
       padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Chi tiết giá',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AssetsConstants.blackColor,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Fixed Title
+          const Text(
+            'Chi tiết giá',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AssetsConstants.blackColor,
             ),
-            const SizedBox(height: 2),
-            // Hiển thị danh sách các dịch vụ
-            ...allSelectedServices.map((service) => buildPriceDetailRow(
+          ),
+          const SizedBox(height: 8),
+          // Scrollable List of Services
+          Expanded(
+            child: ListView.builder(
+              itemCount: allSelectedServices.length,
+              itemBuilder: (context, index) {
+                final service = allSelectedServices[index];
+                return buildPriceDetailRow(
                   service.title,
                   service.totalPrice,
                   service.quantity,
-                )),
-            const SizedBox(height: 4),
-            // Hiển thị tổng giá
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Tổng cộng',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  formatPrice(bookingStateResponse.total.toInt()),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AssetsConstants.primaryDark,
-                  ),
-                ),
-              ],
+                );
+              },
             ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: onConfirm ??
-                    () {
-                      Navigator.pop(context); // Default action
-                    },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AssetsConstants.primaryDark,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+          ),
+          const SizedBox(height: 8),
+          // Fixed Total Price
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Tổng cộng',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: const Text(
-                  'Xác nhận',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AssetsConstants.whiteColor,
-                  ),
+              ),
+              Text(
+                formatPrice(bookingStateResponse.total.toInt()),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AssetsConstants.primaryDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Fixed Confirm Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: onConfirm ??
+                  () {
+                    Navigator.pop(context); // Default action
+                  },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AssetsConstants.primaryDark,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Xác nhận',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AssetsConstants.whiteColor,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -147,7 +151,7 @@ class PriceDetailModal extends ConsumerWidget {
         children: [
           // Cột Title
           Expanded(
-            flex: 4, // Tỷ lệ không gian dành cho cột Title
+            flex: 4,
             child: Text(
               title,
               style: const TextStyle(
@@ -159,7 +163,7 @@ class PriceDetailModal extends ConsumerWidget {
           ),
           // Cột Quantity
           Expanded(
-            flex: 1, // Tỷ lệ không gian dành cho cột Quantity
+            flex: 1,
             child: Text(
               quantity.toString(),
               textAlign: TextAlign.center,
@@ -170,9 +174,8 @@ class PriceDetailModal extends ConsumerWidget {
           ),
           // Cột Price
           Expanded(
-            flex: 3, // Tỷ lệ không gian dành cho cột Price
+            flex: 3,
             child: Text(
-              // '${priceFormat.format(price)} đ',
               formatPrice(price.toInt()),
               textAlign: TextAlign.right,
               style: const TextStyle(

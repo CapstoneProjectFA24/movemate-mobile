@@ -41,6 +41,8 @@ class RoomMediaSection extends ConsumerWidget {
     final bool isUploadingLivingRoomVideo =
         bookingState.isUploadingLivingRoomVideo;
 
+    // print('check tải ảnh $isUploadingLivingRoomImage');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,7 +106,8 @@ class RoomMediaSection extends ConsumerWidget {
                 hasVideos: videos.isNotEmpty,
               );
             }
-
+            print('check index $imageCount');
+            print('check index ${images.length}');
             return const SizedBox.shrink(); // Render nothing
           },
         ),
@@ -122,5 +125,4 @@ class RoomMediaSection extends ConsumerWidget {
       ],
     );
   }
-
 }

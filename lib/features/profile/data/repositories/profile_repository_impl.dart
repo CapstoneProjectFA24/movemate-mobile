@@ -1,5 +1,6 @@
 // import local
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 import 'package:movemate/features/profile/domain/repositories/profile_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -17,15 +18,16 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
 
   @override
   Future<ProfileResponse> getProfileInfor({
-      required PagingModel request,
+    required PagingModel request,
     required String accessToken,
   }) async {
     return getDataOf(
-      request: () => _profileSource.getProfileInfor(APIConstants.contentType, accessToken),
+      request: () =>
+          _profileSource.getProfileInfor(APIConstants.contentType, accessToken),
     );
   }
 
-    @override
+  @override
   Future<ProfileResponse> getProfileInforById({
     required String accessToken,
     required int id,
@@ -35,6 +37,20 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
         id,
+      ),
+    );
+  }
+
+  @override
+  Future<WalletResponse> getWallet({
+    //  PagingModel? request,
+    required String accessToken,
+  }) async {
+    print("check repo");
+    return getDataOf(
+      request: () => _profileSource.getWallet(
+        APIConstants.contentType,
+        accessToken,
       ),
     );
   }

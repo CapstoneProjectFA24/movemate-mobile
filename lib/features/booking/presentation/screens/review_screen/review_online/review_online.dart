@@ -36,7 +36,7 @@ class ReviewOnline extends HookConsumerWidget {
       },
       context: context,
     );
-    final profileUser = useFetchResultProfile.data;
+    final profileUserAssign = useFetchResultProfile.data;
 
     final useFetchResultService = useFetchObject<ServicesPackageEntity>(
       function: (context) async {
@@ -46,10 +46,12 @@ class ReviewOnline extends HookConsumerWidget {
       },
       context: context,
     );
-    final serviceData = useFetchResultProfile.data;
+    final serviceData = useFetchResultService.data;
 
-    print('profileUser: $profileUser');
+    print('profileUserAssign: $profileUserAssign');
     print('serviceData: $serviceData');
+    print('serviceData: ${serviceData?.imageUrl}');
+    print('order.bookingDetails  : ${order.bookingDetails}');
     return LoadingOverlay(
       isLoading: useFetchResultProfile.isFetchingData ||
           useFetchResultService.isFetchingData,
@@ -76,9 +78,13 @@ class ReviewOnline extends HookConsumerWidget {
                   style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
                 const SizedBox(height: 16),
-                buildServiceCard(order: order, profileUser: profileUser),
+                buildServiceCard(
+                    order: order,
+                    profileUserAssign: profileUserAssign,
+                    serviceData: serviceData),
                 const SizedBox(height: 16),
-                buildContactCard(order: order, profileUser: profileUser),
+                buildContactCard(
+                    order: order, profileUserAssign: profileUserAssign),
                 const SizedBox(height: 24),
               ],
             ),
@@ -125,7 +131,9 @@ class ReviewOnline extends HookConsumerWidget {
   }
 
   Widget buildServiceCard(
-      {required OrderEntity order, required ProfileEntity? profileUser}) {
+      {required OrderEntity order,
+      required ProfileEntity? profileUserAssign,
+      required ServicesPackageEntity? serviceData}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -146,7 +154,8 @@ class ReviewOnline extends HookConsumerWidget {
           Row(
             children: [
               Image.network(
-                'https://img.lovepik.com/png/20231013/Cartoon-blue-logistics-transport-truck-package-consumption-driver_196743_wh860.png',
+                // 'https://img.lovepik.com/png/20231013/Cartoon-blue-logistics-transport-truck-package-consumption-driver_196743_wh860.png',
+                '${serviceData?.imageUrl}',
                 width: 100,
                 height: 100,
               ),
@@ -157,8 +166,9 @@ class ReviewOnline extends HookConsumerWidget {
                   children: [
                     Text(
                         order.bookingDetails
-                            .map((e) => e.name.toString())
-                            .join(',\n '),
+                            .firstWhere((e) => e.type == 'TRUCK')
+                            .name,
+                        // .join('\n '),
                         style: const TextStyle(fontWeight: FontWeight.bold)),
                     // Text('${order.bookingDetails.map((e) => e.type)} dịch vụ',
                     //     style: const TextStyle(color: Colors.grey)),
@@ -185,7 +195,7 @@ class ReviewOnline extends HookConsumerWidget {
   }
 
   Widget buildContactCard(
-      {required OrderEntity order, required ProfileEntity? profileUser}) {
+      {required OrderEntity order, required ProfileEntity? profileUserAssign}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -203,7 +213,7 @@ class ReviewOnline extends HookConsumerWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage('${profileUser?.avatarUrl}'),
+            backgroundImage: NetworkImage('${profileUserAssign?.avatarUrl}'),
             radius: 25,
           ),
           const SizedBox(width: 16),
@@ -213,7 +223,7 @@ class ReviewOnline extends HookConsumerWidget {
               children: [
                 Text(order.review != null ? order.review! : '',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text('${profileUser?.name}',
+                Text('${profileUserAssign?.name}',
                     style: const TextStyle(color: Colors.grey)),
               ],
             ),

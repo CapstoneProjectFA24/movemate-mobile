@@ -159,6 +159,10 @@ class BookingScreen extends HookConsumerWidget {
     final scrollController = useScrollController();
     final controller = ref.read(serviceControllerProvider.notifier);
 
+    final checkConditionOnline = bookingState.livingRoomImages.length +
+            bookingState.livingRoomVideos.length >
+        0;
+
     final fetchResultVehicles = useFetch<InverseParentServiceEntity>(
       function: (model, context) async {
         return await controller.getServicesTruck(model, context);
@@ -258,12 +262,13 @@ class BookingScreen extends HookConsumerWidget {
 
                   return SummarySection(
                     buttonText: "Bước tiếp theo",
-                    priceLabel:
-                        (bookingState.selectedVehicle?.name == 'not selected' ||
-                                bookingState.selectedVehicle?.name == null ||
-                                bookingState.houseType?.name == checkhousetype)
-                            ? ''
-                            : "Giá",
+                    priceLabel: (bookingState.selectedVehicle?.name ==
+                                'not selected' ||
+                            bookingState.selectedVehicle?.name == null ||
+                            bookingState.houseType?.name == checkhousetype ||
+                            bookingState.houseType?.name == null)
+                        ? ''
+                        : "Giá",
 
                     buttonIcon: false,
                     // totalPrice:
@@ -272,8 +277,18 @@ class BookingScreen extends HookConsumerWidget {
                     totalPrice: (bookingStatePrice?.total ?? 0.0),
                     isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {
+                      print(
+                          "check điều kiện ảnh :  ${bookingState.livingRoomImages.length} ");
+                      print(
+                          "check điều kiện ảnh :  ${bookingState.livingRoomVideos.length} ");
+                      print(
+                          "check điều kiện reviewOnl :  $checkConditionOnline");
                       // print(
                       //     " tuan object chon xe ${bookingState.selectedVehicle}");
+
+                      if (checkConditionOnline) {
+                        bookingNotifier.updateIsReviewOnline(true);
+                      }
                       if (bookingState.houseType != null &&
                           bookingState.houseType?.id != 0 &&
                           bookingState.houseType?.id != null &&

@@ -6,21 +6,32 @@ class ProfileCard extends StatelessWidget {
   final String? title; // Thêm tham số title
   final String profileImageUrl;
   final String name;
-  final double rating;
+  final String? rating;
   final String ratingDetails;
-  final VoidCallback onPhonePressed;
-  final VoidCallback onCommentPressed;
+  final VoidCallback? onPhonePressed;
+  final VoidCallback? onCommentPressed;
+  final bool iconCall;
+  final bool iconChat;
 
   const ProfileCard({
     super.key,
-    this.title, // Thêm tham số title
+    this.title,
     required this.profileImageUrl,
     required this.name,
-    required this.rating,
+    this.rating,
     required this.ratingDetails,
-    required this.onPhonePressed,
-    required this.onCommentPressed,
-  });
+    this.onPhonePressed,
+    this.onCommentPressed,
+    this.iconCall = false,
+    this.iconChat = false,
+  })  : assert(
+          !iconCall || onPhonePressed != null,
+          'onPhonePressed must be provided when iconCall is true',
+        ),
+        assert(
+          !iconChat || onCommentPressed != null,
+          'onCommentPressed must be provided when iconChat is true',
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -95,14 +106,15 @@ class ProfileCard extends StatelessWidget {
                     // Đánh giá
                     Row(
                       children: [
-                        const Icon(
-                          FontAwesomeIcons.solidStar,
-                          size: 14,
-                          color: Color(0xFFF5A623),
-                        ),
+                        if (rating != null)
+                          const Icon(
+                            FontAwesomeIcons.solidStar,
+                            size: 14,
+                            color: Color(0xFFF5A623),
+                          ),
                         const SizedBox(width: 4),
                         Text(
-                          '$rating • $ratingDetails',
+                          'Sđt: $ratingDetails',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey.shade600,
@@ -117,22 +129,24 @@ class ProfileCard extends StatelessWidget {
               // Biểu tượng hành động
               Row(
                 children: [
-                  IconButton(
-                    icon: FaIcon(
-                      FontAwesomeIcons.phone,
-                      size: 18,
-                      color: Colors.grey.shade600,
+                  if (iconCall)
+                    IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.phone,
+                        size: 18,
+                        color: Colors.grey.shade600,
+                      ),
+                      onPressed: onPhonePressed,
                     ),
-                    onPressed: onPhonePressed,
-                  ),
-                  IconButton(
-                    icon: FaIcon(
-                      FontAwesomeIcons.commentDots,
-                      size: 18,
-                      color: Colors.grey.shade600,
+                  if (iconChat)
+                    IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.commentDots,
+                        size: 18,
+                        color: Colors.grey.shade600,
+                      ),
+                      onPressed: onCommentPressed,
                     ),
-                    onPressed: onCommentPressed,
-                  ),
                 ],
               ),
             ],
