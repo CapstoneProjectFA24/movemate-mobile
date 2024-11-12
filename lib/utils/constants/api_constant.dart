@@ -44,6 +44,13 @@ class APIConstants {
   // api vietmap-key
   static const apiVietMapKey =
       "38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444";
+  // api vietmap-key backup
+  // static const apiVietMapKey =
+  //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
+
+  // api vietmap-key backup-v2
+  // static const apiVietMapKey =
+  //     "e7fb2f56a9eca6890aae01882c6b789527a21dcf88c75145";
 
   // error
   static const Map<String, String> errorTrans = {
