@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/home/presentation/widgets/map_widget/auto_complete_viet_map.dart';
 import 'package:movemate/features/home/presentation/widgets/map_widget/button_custom.dart';
-import 'package:movemate/features/home/presentation/widgets/map_widget/location_bottom_sheet.dart';
 import 'package:movemate/features/home/presentation/widgets/map_widget/location_info_card.dart';
 import 'package:movemate/services/map_services/location_service.dart';
 import 'package:movemate/services/map_services/map_service.dart';
@@ -32,6 +32,9 @@ class LocationSelectionScreenState
   Line? currentRoute;
   bool isTracking = false;
 
+  final TextEditingController _pickupController = TextEditingController();
+  final TextEditingController _dropoffController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,8 @@ class LocationSelectionScreenState
   void dispose() {
     clearCurrentRoute();
     mapController?.dispose();
+    _pickupController.dispose();
+    _dropoffController.dispose();
     super.dispose();
   }
 
@@ -180,6 +185,30 @@ class LocationSelectionScreenState
       body: SafeArea(
         child: Column(
           children: [
+            // Phần nhập địa điểm "Từ" và "Đến"
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Trường "Từ"
+                  AutocompleteWidget(
+                    label: 'Từ',
+                    controller: _pickupController,
+                    isPickUp: true,
+                    // overlayDirection: OverlayDirection.above, // Hiển thị gợi ý lên trên
+                  ),
+                  const SizedBox(height: 16),
+                  // Trường "Đến"
+                  AutocompleteWidget(
+                    label: 'Đến',
+                    controller: _dropoffController,
+                    isPickUp: false,
+                    // overlayDirection: OverlayDirection.below, // Hiển thị gợi ý xuống dưới
+                  ),
+                ],
+              ),
+            ),
+            // Bản đồ
             Expanded(
               child: Stack(
                 children: [
@@ -246,33 +275,20 @@ class LocationSelectionScreenState
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ButtonCustom(
-                buttonText: (bookingState.dropOffLocation != null &&
-                        bookingState.pickUpLocation != null)
-                    ? "Chọn lại địa chỉ"
-                    : "Chọn địa chỉ",
-                isButtonEnabled: mapController != null,
-                onButtonPressed: () {
-                  if (mapController != null) {
-                    showModalBottomSheet(
-                      backgroundColor: AssetsConstants.whiteColor,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
-                      ),
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) => const FractionallySizedBox(
-                        heightFactor: 0.7,
-                        child: LocationBottomSheet(),
-                      ),
-                    );
-                  }
-                },
+            // Nút xác nhận
+            if (bookingState.dropOffLocation != null &&
+                bookingState.pickUpLocation != null)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ButtonCustom(
+                  buttonText: "Xác nhận",
+                  isButtonEnabled: true,
+                  onButtonPressed: () {
+                    // Xử lý khi nhấn nút xác nhận, ví dụ chuyển trang
+                    context.router.pop();
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
