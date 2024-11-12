@@ -213,7 +213,8 @@ class BookingRequest {
     addVideosToResourceList(booking.livingRoomVideos, 'living_room');
 
     // Tính toán khoảng cách ước tính (ví dụ)
-    String estimatedDistance = '3'; // Có thể tính toán dựa trên tọa độ
+    String estimatedDistance =
+        booking.estimatedDistance ?? '0'; // Có thể tính toán dựa trên tọa độ
 
     // Tính toán thời gian giao hàng ước tính (ví dụ)
     String estimatedDeliveryTime =

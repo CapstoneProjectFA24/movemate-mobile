@@ -23,7 +23,7 @@ class NotesSectionState extends ConsumerState<NotesSection> {
   Color borderColor = Colors.orange;
 
   // Giá trị mặc định khi không có ghi chú
-  final String defaultNote = 'Không có ghi chú';
+  final String defaultNote = '';
 
   @override
   void initState() {
@@ -109,7 +109,7 @@ class NotesSectionState extends ConsumerState<NotesSection> {
                 child: TextField(
                   controller: textController,
                   autofillHints:
-                      textController.text.isEmpty ? const ['Ghi chú'] : null,
+                      textController.text.isEmpty ? const [''] : null,
                   focusNode: focusNode,
                   maxLines: 3,
                   onChanged: (value) {
