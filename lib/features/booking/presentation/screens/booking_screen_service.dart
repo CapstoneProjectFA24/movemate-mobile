@@ -71,7 +71,7 @@ class BookingScreenService extends HookConsumerWidget {
         centerTitle: true,
         showBackButton: true,
         onCallBackFirst: () {
-          context.router.pop();
+          // context.router.pop();
           bookingNotifier.resetAllQuantities();
           // context.router.pushAndPopUntil(const BookingScreenRoute(),
           //     predicate: (Route<dynamic> route) => false);
