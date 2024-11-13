@@ -89,8 +89,9 @@ class TrackingMapState extends State<TrackingMap> {
   }
 
   void _updateStaffLocation() {
-    if (_staffLocation == null || !_isMapReady || _navigationController == null)
+    if (_staffLocation == null || !_isMapReady || _navigationController == null) {
       return;
+    }
 
     // Update camera to follow staff
     _navigationController?.animateCamera(

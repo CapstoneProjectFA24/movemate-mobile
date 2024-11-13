@@ -1,7 +1,6 @@
 // booking_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movemate/features/booking/data/models/vehicle_model.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';

@@ -9,7 +9,6 @@ import 'package:movemate/features/booking/domain/entities/truck_category_entity.
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_info.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';

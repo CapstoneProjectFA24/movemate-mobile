@@ -5,7 +5,6 @@ import 'package:movemate/features/home/presentation/widgets/background_image.dar
 import 'package:movemate/features/home/presentation/widgets/header.dart'
     as home_header;
 import 'package:movemate/features/home/presentation/widgets/promotion/voucher_section.dart';
-import 'package:movemate/features/home/presentation/widgets/promotion_section.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/service_selector.dart';
 import 'package:movemate/features/home/presentation/widgets/vehicle_carousel.dart';
 

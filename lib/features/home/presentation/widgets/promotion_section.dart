@@ -1,8 +1,4 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/home/presentation/screens/voucher/voucher_screen.dart';
-import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 
 class PromotionSection extends StatelessWidget {
   const PromotionSection({super.key});

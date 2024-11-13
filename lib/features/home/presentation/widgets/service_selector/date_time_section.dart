@@ -9,6 +9,7 @@ class DateTimeSection extends StatefulWidget {
   final TextEditingController controller;
   final bool showErrors;
   final bool isDateTimeInvalid;
+  final bool isDateTimeLimit;
   final VoidCallback onTap;
   final VoidCallback onClear; // Callback to clear the date
   final FocusNode focusNode;
@@ -17,6 +18,7 @@ class DateTimeSection extends StatefulWidget {
     required this.controller,
     required this.showErrors,
     required this.isDateTimeInvalid,
+    required this.isDateTimeLimit,
     required this.onTap,
     required this.onClear, // Added to constructor
     required this.focusNode,
@@ -97,18 +99,34 @@ class _DateTimeSectionState extends State<DateTimeSection> {
         ),
 
         // Error Message
-        if (widget.showErrors &&
-            (widget.controller.text == 'Chọn ngày và giờ' ||
-                widget.isDateTimeInvalid))
+        if (widget.showErrors)
           Padding(
             padding: const EdgeInsets.only(left: 8.0, top: 4.0),
-            child: LabelText(
-              content: widget.controller.text == 'Chọn ngày và giờ'
-                  ? 'Vui lòng chọn thời gian thích hợp'
-                  : 'Không được là thời gian trong quá khứ',
-              size: 12,
-              color: Colors.red,
-              fontWeight: FontWeight.w400,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.isDateTimeLimit)
+                  const LabelText(
+                    content: 'Thời gian hoạt động từ 7h sáng đến 5h chiều',
+                    size: 12,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w400,
+                  ),
+                if (widget.isDateTimeInvalid)
+                  const LabelText(
+                    content: 'Không được là thời gian trong quá khứ',
+                    size: 12,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w400,
+                  ),
+                if (widget.controller.text == 'Chọn ngày và giờ')
+                  const LabelText(
+                    content: 'Vui lòng chọn thời gian thích hợp',
+                    size: 12,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w400,
+                  ),
+              ],
             ),
           ),
       ],

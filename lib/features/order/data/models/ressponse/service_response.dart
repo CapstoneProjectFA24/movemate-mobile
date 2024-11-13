@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 
 class ServiceResponse {

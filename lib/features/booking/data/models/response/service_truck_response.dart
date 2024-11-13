@@ -3,7 +3,6 @@
 import 'dart:convert';
 
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
-import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 
 class ServiceTruckResponse {
   final List<InverseParentServiceEntity> payload;

@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 

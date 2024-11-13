@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 
 class WalletResponse {

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/timeLine_title.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/utils/enums/booking_status_type.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:animate_do/animate_do.dart';
 

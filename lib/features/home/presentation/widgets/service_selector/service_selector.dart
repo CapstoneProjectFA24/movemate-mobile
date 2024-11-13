@@ -25,6 +25,7 @@ class ServiceSelector extends HookConsumerWidget {
     final showErrors = useState(false);
 
     final isDateTimeInvalid = useState(false);
+    final isDateTimeLimit = useState(false);
 
     final pickUpController = useTextEditingController(text: 'Chọn địa điểm');
     final dropOffController = useTextEditingController(text: 'Chọn địa điểm');
@@ -41,10 +42,14 @@ class ServiceSelector extends HookConsumerWidget {
 
     void validateDateTime() {
       if (bookingState.bookingDate != null) {
+        int hour = bookingState.bookingDate!.hour;
         isDateTimeInvalid.value =
             bookingState.bookingDate!.isBefore(DateTime.now());
+        isDateTimeLimit.value = hour < 7 || hour >= 17;
+        
       } else {
         isDateTimeInvalid.value = true;
+        isDateTimeLimit.value = true;
       }
     }
 
@@ -143,8 +148,14 @@ class ServiceSelector extends HookConsumerWidget {
               bookingState.dropOffLocation!.address != 'Chọn địa điểm';
           final isDateValid =
               bookingState.bookingDate != null && !isDateTimeInvalid.value;
+          final isDateValidLimit = bookingState.bookingDate != null &&
+              !isDateTimeLimit.value &&
+              isDateValid;
 
-          if (isPickUpValid && isDropOffValid && isDateValid) {
+          if (isPickUpValid &&
+              isDropOffValid &&
+              isDateValid &&
+              isDateValidLimit) {
             showErrors.value = false;
           }
         }
@@ -157,7 +168,8 @@ class ServiceSelector extends HookConsumerWidget {
       bookingState.pickUpLocation,
       bookingState.dropOffLocation,
       bookingState.bookingDate,
-      isDateTimeInvalid.value
+      isDateTimeInvalid.value,
+      isDateTimeLimit.value
     ]);
 
     useEffect(() {
@@ -171,8 +183,14 @@ class ServiceSelector extends HookConsumerWidget {
               bookingState.dropOffLocation!.address != 'Chọn địa điểm';
           final isDateValid =
               bookingState.bookingDate != null && !isDateTimeInvalid.value;
+          final isDateValidLimit = bookingState.bookingDate != null &&
+              !isDateTimeLimit.value &&
+              isDateValid;
 
-          if (isPickUpValid && isDropOffValid && isDateValid) {
+          if (isPickUpValid &&
+              isDropOffValid &&
+              isDateValid &&
+              isDateValidLimit) {
             showErrors.value = false;
           }
         }
@@ -191,7 +209,8 @@ class ServiceSelector extends HookConsumerWidget {
       bookingState.pickUpLocation,
       bookingState.dropOffLocation,
       bookingState.bookingDate,
-      isDateTimeInvalid.value
+      isDateTimeInvalid.value,
+      isDateTimeLimit.value
     ]);
 
     return Card(
@@ -256,6 +275,7 @@ class ServiceSelector extends HookConsumerWidget {
                 controller: dateController,
                 showErrors: showErrors.value,
                 isDateTimeInvalid: isDateTimeInvalid.value,
+                isDateTimeLimit: isDateTimeLimit.value,
                 onTap: () async {
                   final selectedDate =
                       await selectDate(bookingState.bookingDate);
@@ -276,22 +296,20 @@ class ServiceSelector extends HookConsumerWidget {
                 onPressed: () {
                   showErrors.value = true; // Show validation errors
 
-                  // bookingNotifier.updatePickUpLocation(LocationModel(
-                  //     label: 'label',
-                  //     address:
-                  //         'Nhà Văn Hoá Sinh Viên, university, Dĩ An, Vietnam',
-                  //     latitude: 10.8753395,
-                  //     longitude: 106.8000331,
-                  //     distance: "43"));
-                  // bookingNotifier.updateDropOffLocation(
-                  //   LocationModel(
-                  //       label: 'label',
-                  //       address:
-                  //           'FPT University - HCMC Campus, university, Ho Chi Minh City, Vietnam',
-                  //       latitude: 10.841416800000001,
-                  //       longitude: 106.81007447258705,
-                  //       distance: '2'),
-                  // );
+                  bookingNotifier.updatePickUpLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          'Nhà Văn Hoá Sinh Viên, university, Dĩ An, Vietnam',
+                      latitude: 10.8753395,
+                      longitude: 106.8000331,
+                      distance: "43"));
+                  bookingNotifier.updateDropOffLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          'FPT University - HCMC Campus, university, Ho Chi Minh City, Vietnam',
+                      latitude: 10.841416800000001,
+                      longitude: 106.81007447258705,
+                      distance: '2'));
 
                   // bookingNotifier.updateBookingDate(
                   //     DateTime.now().add(const Duration(days: 1)));
@@ -301,7 +319,8 @@ class ServiceSelector extends HookConsumerWidget {
                   final isDropOffValid = bookingState.dropOffLocation != null &&
                       bookingState.dropOffLocation!.address != 'Chọn địa điểm';
                   final isDateValid = bookingState.bookingDate != null &&
-                      !isDateTimeInvalid.value;
+                      !isDateTimeInvalid.value &&
+                      !isDateTimeLimit.value;
 
                   final isPickUpSelected =
                       bookingState.pickUpLocation?.address != 'Chọn địa điểm';

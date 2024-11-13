@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
