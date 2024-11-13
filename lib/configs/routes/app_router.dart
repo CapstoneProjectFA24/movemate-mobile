@@ -13,6 +13,7 @@ import 'package:movemate/features/home/presentation/screens/voucher/voucher_scre
 import 'package:movemate/features/order/presentation/widgets/details/time_line_booking.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/transaction_result_screen_by_wallet.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
@@ -219,6 +220,11 @@ class AppRouter extends _$AppRouter {
         //thanh toán thành công
         AutoRoute(
           page: TransactionResultScreenRoute.page,
+          // initial: true,
+        ),
+        //thanh toán thành công
+        AutoRoute(
+          page: TransactionResultScreenByWalletRoute.page,
           // initial: true,
         ),
         //timeline test

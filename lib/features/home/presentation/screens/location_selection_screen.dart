@@ -203,6 +203,19 @@ class LocationSelectionScreenState
                     controller: _dropoffController,
                     isPickUp: false,
                   ),
+                  if (bookingState.estimatedDistance != null &&
+                      (bookingState.dropOffLocation?.latitude != 0 &&
+                          bookingState.pickUpLocation?.latitude != 0))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        'Khoảng cách: ${double.parse(bookingState.estimatedDistance ?? '0').toStringAsFixed(1)} km',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

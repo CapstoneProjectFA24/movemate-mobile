@@ -13,7 +13,9 @@ String formatPrice(int price) {
   final formatter = NumberFormat('#,###', 'vi_VN');
   return '${formatter.format(price)} đ';
 }
-
+final refreshWallet = StateProvider.autoDispose<bool>(
+  (ref) => true,
+);
 class BalanceIndicator extends HookConsumerWidget {
   const BalanceIndicator({super.key});
 
@@ -31,6 +33,7 @@ class BalanceIndicator extends HookConsumerWidget {
     final walletUser = useFetchResultWallet.isFetchingData
         ? 0
         : useFetchResultWallet.data?.balance ?? 0;
+        final result = useFetchResultWallet.refresh;
 
     print(" số dư : $walletUser");
 

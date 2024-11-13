@@ -23,6 +23,13 @@ class BookingNotifier extends StateNotifier<Booking> {
     longitude: 0.0,
     distance: 'Chọn địa điểm',
   );
+  final emptyLocationModelInMap = LocationModel(
+    label: ' ',
+    address: '  ',
+    latitude: 0.0,
+    longitude: 0.0,
+    distance: '  ',
+  );
   BookingNotifier()
       : super(Booking(
           totalPrice: 0.0,
@@ -92,7 +99,6 @@ class BookingNotifier extends StateNotifier<Booking> {
 
 // Method to update selected vehicle
   void updateSelectedVehicle(InverseParentServiceEntity? vehicle) {
-    
     state = state.copyWith(
       selectedVehicle: vehicle, // This can now accept null to unselect
       vehicleError: null, // Clear error when vehicle is selected or unselected
@@ -435,10 +441,10 @@ class BookingNotifier extends StateNotifier<Booking> {
     );
   }
 
-  void updateDistance(LocationModel? location) {
-    print("Updating distance Location: ${location?.distance}");
+  void updateDistance(String location) {
+    print("Updating distance Location: $location");
     state = state.copyWith(
-      estimatedDistance: location?.distance,
+      estimatedDistance: location,
       // selectorHasError: null,
     );
   }
@@ -471,6 +477,17 @@ class BookingNotifier extends StateNotifier<Booking> {
 
   void clearDropOffLocation() {
     state = state.copyWith(dropOffLocation: emptyLocationModel);
+    print(" Clearing Drop-Off Location ${state.dropOffLocation?.address}");
+  }
+
+  void clearPickUpLocationInMap() {
+    state = state.copyWith(pickUpLocation: emptyLocationModelInMap);
+    print(
+        " Clearing pick-up Location ${emptyLocationModelInMap.address.toString()}");
+  }
+
+  void clearDropOffLocationInMap() {
+    state = state.copyWith(dropOffLocation: emptyLocationModelInMap);
     print(" Clearing Drop-Off Location ${state.dropOffLocation?.address}");
   }
 

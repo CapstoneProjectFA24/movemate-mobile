@@ -227,13 +227,6 @@ class LocationBottomSheet extends HookConsumerWidget {
                   }),
                   const SizedBox(height: 20),
 
-                  // Chi tiết vị trí đã chọn
-                  // if (selectedLocation != null) ...[
-                  //   Text('Địa điểm đã chọn: ${selectedLocation['display']}'),
-                  //   Text('Vĩ độ: ${selectedLocation['lat']}'),
-                  //   Text('Kinh độ: ${selectedLocation['lng']}'),
-                  // ],
-
                   const SizedBox(height: 20),
                 ],
               ),
@@ -289,13 +282,7 @@ class LocationBottomSheet extends HookConsumerWidget {
                     dropOffLocation['lng'],
                   );
                   bookingNotifier.updateDistance(
-                    LocationModel(
-                      label: selectedLocation['name'],
-                      address: selectedLocation['display'],
-                      latitude: selectedLocation['lat'],
-                      longitude: selectedLocation['lng'],
-                      distance: distance.toString(),
-                    ),
+                    distance.toString(),
                   );
                   print('Khoảng cách distance: $distance km');
                   // print('Khoảng cách address: ${location.address} km');

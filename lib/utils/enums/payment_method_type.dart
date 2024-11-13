@@ -15,13 +15,13 @@ extension PaymentMethodTypeExtension on PaymentMethodType {
   String get imageUrl {
     switch (this) {
       case PaymentMethodType.momo:
-        return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvgKuQKWNXtGtsM0RQ-mt_-Rjl0W8gZJ5Kkw&s';
+        return 'https://res.cloudinary.com/dietfw7lr/image/upload/v1731512036/images_aniobl.png';
       case PaymentMethodType.vnpay:
-        return 'https://vnpay.vn/s1/statics.vnpay.vn/2023/6/0cb6rjka67v1685959226087.jpg'; // Replace with actual URL
+        return 'https://res.cloudinary.com/dietfw7lr/image/upload/v1731512036/0cb6rjka67v1685959226087_tywkmh.jpg'; // Replace with actual URL
       case PaymentMethodType.payos:
         return 'https://res.cloudinary.com/dietfw7lr/image/upload/v1729283227/tk9d9gzthqg62slzhnaf.png'; // Replace with actual URL
       case PaymentMethodType.wallet:
-        return ''; // Replace with actual URL
+        return 'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1731511719/movemate_logo_e6f1lk.png'; // Replace with actual URL
     }
   }
 
@@ -34,7 +34,7 @@ extension PaymentMethodTypeExtension on PaymentMethodType {
       case PaymentMethodType.payos:
         return 'PayOS';
       case PaymentMethodType.wallet:
-        return 'Wallet';
+        return 'Ví MoveMate';
     }
   }
 }

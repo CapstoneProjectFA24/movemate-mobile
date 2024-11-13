@@ -14,6 +14,7 @@ abstract class PaymentRepository {
     required String accessToken,
     required PaymentRequest request,
   });
+
   Future<PaymentResponse> createPaymentDeposit({
     required String accessToken,
     required PaymentRequest request,

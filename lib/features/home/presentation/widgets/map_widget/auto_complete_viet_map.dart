@@ -6,6 +6,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
+final pickupSelectedLocationProvider =
+    StateProvider<Map<String, dynamic>?>((ref) => null);
+final dropoffSelectedLocationProvider =
+    StateProvider<Map<String, dynamic>?>((ref) => null);
+
 class ModifiedAutocompleteWidget extends ConsumerStatefulWidget {
   final String label;
   final TextEditingController controller;
@@ -182,7 +187,6 @@ class _ModifiedAutocompleteWidgetState
     final refId = suggestion['ref_id'];
     final url = Uri.parse(
         'https://maps.vietmap.vn/api/place/v3?apikey=$apiKey&refid=$refId');
-
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -202,6 +206,22 @@ class _ModifiedAutocompleteWidgetState
           bookingNotifier.updateDropOffLocation(location);
         }
 
+        // Đọc lại các giá trị từ bookingProvider
+        final bookingState = ref.read(bookingProvider);
+        final pickUpLocation = bookingState.pickUpLocation;
+        final dropOffLocation = bookingState.dropOffLocation;
+
+        if (pickUpLocation != null && dropOffLocation != null) {
+          final distance = await calculateDistance(
+            pickUpLocation.latitude,
+            pickUpLocation.longitude,
+            dropOffLocation.latitude,
+            dropOffLocation.longitude,
+          );
+          bookingNotifier.updateDistance(distance.toString());
+          print('Khoảng cách distance: $distance km');
+        }
+
         widget.controller.text = details['display'];
 
         setState(() {
@@ -212,6 +232,42 @@ class _ModifiedAutocompleteWidgetState
       }
     } catch (e) {
       print('Error fetching location details: $e');
+    }
+  }
+
+  Future<double> calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) async {
+    const apiKey = APIConstants.apiVietMapKey;
+    final url = Uri.parse(
+      'https://maps.vietmap.vn/api/matrix?api-version=1.1&'
+      'apikey=$apiKey&'
+      'point=$lat1,$lon1&'
+      'point=$lat2,$lon2&'
+      'points_encoded=false&'
+      'vehicle=car&'
+      'sources=0&'
+      'destinations=1&'
+      'annotation=distance',
+    );
+
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final distance =
+            data['distances'][0][0] / 1000; // Khoảng cách tính bằng km
+        print('Khoảng cách distance: $distance km');
+        print('Khoảng cách data: $data km');
+        return distance;
+      } else {
+        throw Exception('Failed to fetch distance: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -253,11 +309,11 @@ class _ModifiedAutocompleteWidgetState
                         if (widget.isPickUp) {
                           ref
                               .read(bookingProvider.notifier)
-                              .updatePickUpLocation(null);
+                              .clearPickUpLocationInMap();
                         } else {
                           ref
                               .read(bookingProvider.notifier)
-                              .updateDropOffLocation(null);
+                              .clearDropOffLocationInMap();
                         }
                       },
                     ),

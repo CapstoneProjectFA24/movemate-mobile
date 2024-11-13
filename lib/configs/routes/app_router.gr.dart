@@ -318,6 +318,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    TransactionResultScreenByWalletRoute.name: (routeData) {
+      final args = routeData.argsAs<TransactionResultScreenByWalletRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TransactionResultScreenByWallet(
+          key: args.key,
+          isSuccess: args.isSuccess,
+          bookingId: args.bookingId,
+        ),
+      );
+    },
     VehiclePriceListScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1265,6 +1276,50 @@ class TransactionResultScreenRouteArgs {
   @override
   String toString() {
     return 'TransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId, allUri: $allUri}';
+  }
+}
+
+/// generated route for
+/// [TransactionResultScreenByWallet]
+class TransactionResultScreenByWalletRoute
+    extends PageRouteInfo<TransactionResultScreenByWalletRouteArgs> {
+  TransactionResultScreenByWalletRoute({
+    Key? key,
+    required bool isSuccess,
+    required String bookingId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TransactionResultScreenByWalletRoute.name,
+          args: TransactionResultScreenByWalletRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+            bookingId: bookingId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionResultScreenByWalletRoute';
+
+  static const PageInfo<TransactionResultScreenByWalletRouteArgs> page =
+      PageInfo<TransactionResultScreenByWalletRouteArgs>(name);
+}
+
+class TransactionResultScreenByWalletRouteArgs {
+  const TransactionResultScreenByWalletRouteArgs({
+    this.key,
+    required this.isSuccess,
+    required this.bookingId,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  final String bookingId;
+
+  @override
+  String toString() {
+    return 'TransactionResultScreenByWalletRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId}';
   }
 }
 

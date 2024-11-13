@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'; // Import for hooks
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
@@ -11,12 +12,18 @@ import 'package:movemate/utils/enums/enums_export.dart';
 
 final paymentMethodProvider =
     StateProvider<PaymentMethodType>((ref) => PaymentMethodType.momo);
+// Hàm hỗ trợ để định dạng giá
+String formatPrice(int price) {
+  final formatter = NumberFormat('#,###', 'vi_VN');
+  return '${formatter.format(price)} đ';
+}
 
 // List of available payment methods
 final paymentList = [
   PaymentMethodType.momo,
   PaymentMethodType.vnpay,
   PaymentMethodType.payos,
+  PaymentMethodType.wallet,
 ];
 
 @RoutePage()
@@ -63,16 +70,36 @@ class PaymentScreen extends HookConsumerWidget {
     final selectedMethod = ref.watch(paymentMethodProvider);
     final paymentController = ref.watch(paymentControllerProvider.notifier);
     final state = ref.watch(paymentControllerProvider);
-
+    print("check method $selectedMethod");
     print('Selected Payment Method: ${selectedMethod.type}');
 
-    Future<void> handlePayment() async {
-      await paymentController.createPaymentBooking(
-        context: context,
-        selectedMethod: selectedMethod.type,
-        bookingId: bookingResponse.id.toString(),
-      );
-      print("bookingID: ${bookingResponse.id.toString()}");
+    Future<void> handlePaymentButtonPressed() async {
+      try {
+        if (selectedMethod == PaymentMethodType.wallet) {
+          await paymentController.createPaymentBookingByWallet(
+            context: context,
+            selectedMethod: selectedMethod.type,
+            bookingId: bookingResponse.id.toString(),
+          );
+          print(
+              "Payment via Wallet. bookingID: ${bookingResponse.id.toString()}");
+        } else {
+          await paymentController.createPaymentBooking(
+            context: context,
+            selectedMethod: selectedMethod.type,
+            bookingId: bookingResponse.id.toString(),
+          );
+          print(
+              "Payment normally. bookingID: ${bookingResponse.id.toString()}");
+        }
+      } catch (e) {
+        // Handle any errors that occur during the payment process
+        print("Payment failed: $e");
+        // Optionally, show a dialog or snackbar to inform the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Payment failed: $e')),
+        );
+      }
     }
 
     return LoadingOverlay(
@@ -91,7 +118,6 @@ class PaymentScreen extends HookConsumerWidget {
               // Pop back to the TabViewScreen
               context.router.popUntilRouteWithName(TabViewScreenRoute.name);
             }
-            
           },
         ),
         body: SafeArea(
@@ -279,24 +305,25 @@ class PaymentScreen extends HookConsumerWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              'Tổng giá tiền',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black87),
+                            const LabelText(
+                              content: 'Tổng giá tiền',
+                              size: AssetsConstants.labelFontSize * 1.3,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w600,
                             ),
                             Row(
                               children: [
-                                Text(
-                                  '${bookingResponse.deposit.toString()} VNĐ',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
+                                LabelText(
+                                  content: formatPrice(
+                                      bookingResponse.deposit.toInt()),
+                                  size: AssetsConstants.labelFontSize * 1.3,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
                                 ),
                                 TextButton(
                                   onPressed: () {},
                                   child: const Text(
-                                    '▼',
+                                    '',
                                     style: TextStyle(color: Color(0xFFFF7F00)),
                                   ),
                                 ),
@@ -310,25 +337,26 @@ class PaymentScreen extends HookConsumerWidget {
                       margin: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 10),
                       child: ElevatedButton(
-                          onPressed: handlePayment,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF7F00),
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
+                        onPressed: handlePaymentButtonPressed,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF7F00),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Text(
+                            'Hoàn tất thanh toán bằng ${selectedMethod.displayName}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Text(
-                              'Hoàn tất thanh toán bằng ${selectedMethod.displayName}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )),
+                        ),
+                      ),
                     ),
                   ],
                 ),

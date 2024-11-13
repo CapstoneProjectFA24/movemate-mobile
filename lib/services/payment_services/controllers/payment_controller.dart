@@ -1,6 +1,7 @@
 // config
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -131,6 +132,68 @@ class PaymentController extends _$PaymentController {
 
           await createPaymentDeposit(
               context: context, selectedMethod: selectedMethod, amount: amount);
+        },
+      );
+    }
+  }
+
+  Future<void> createPaymentBookingByWallet({
+    required BuildContext context,
+    required String selectedMethod,
+    required String bookingId,
+  }) async {
+    state = const AsyncLoading();
+    final paymentRepository = ref.read(paymentRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    final authRepository = ref.read(authRepositoryProvider);
+
+    final request = PaymentRequest(
+      bookingId: bookingId,
+      selectedMethod: selectedMethod,
+    );
+
+    state = await AsyncValue.guard(() async {
+      final res = await paymentRepository.createPaymentBooking(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
+      print("createPaymentBookingByWallet: ${res.payload}");
+    });
+    if (!state.hasError) {
+      const isSuccess = true;
+      ref.read(appRouterProvider).push(TransactionResultScreenByWalletRoute(
+            isSuccess: isSuccess,
+            bookingId: bookingId,
+          ));
+    }
+    if (state.hasError) {
+      state = await AsyncValue.guard(
+        () async {
+          final statusCode = (state.error as DioException).onStatusDio();
+          await handleAPIError(
+            statusCode: statusCode,
+            stateError: state.error!,
+            context: context,
+            onCallBackGenerateToken: () async => await reGenerateToken(
+              authRepository,
+              context,
+            ),
+          );
+
+          // if refresh token expired
+          if (state.hasError) {
+            await ref.read(signInControllerProvider.notifier).signOut(context);
+            return;
+          }
+
+          if (statusCode != StatusCodeType.unauthentication.type) {
+            return;
+          }
+
+          await createPaymentBookingByWallet(
+              context: context,
+              selectedMethod: selectedMethod,
+              bookingId: bookingId);
         },
       );
     }
