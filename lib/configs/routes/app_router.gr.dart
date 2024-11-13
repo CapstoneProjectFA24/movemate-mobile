@@ -288,7 +288,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TrackingMap(
           key: args.key,
           staffId: args.staffId,
-          staffIds: args.staffIds,
           role: args.role,
           job: args.job,
         ),
@@ -1164,7 +1163,6 @@ class TrackingMapRoute extends PageRouteInfo<TrackingMapRouteArgs> {
   TrackingMapRoute({
     Key? key,
     required String staffId,
-    required List<String> staffIds,
     required String role,
     required OrderEntity job,
     List<PageRouteInfo>? children,
@@ -1173,7 +1171,6 @@ class TrackingMapRoute extends PageRouteInfo<TrackingMapRouteArgs> {
           args: TrackingMapRouteArgs(
             key: key,
             staffId: staffId,
-            staffIds: staffIds,
             role: role,
             job: job,
           ),
@@ -1190,7 +1187,6 @@ class TrackingMapRouteArgs {
   const TrackingMapRouteArgs({
     this.key,
     required this.staffId,
-    required this.staffIds,
     required this.role,
     required this.job,
   });
@@ -1199,15 +1195,13 @@ class TrackingMapRouteArgs {
 
   final String staffId;
 
-  final List<String> staffIds;
-
   final String role;
 
   final OrderEntity job;
 
   @override
   String toString() {
-    return 'TrackingMapRouteArgs{key: $key, staffId: $staffId, staffIds: $staffIds, role: $role, job: $job}';
+    return 'TrackingMapRouteArgs{key: $key, staffId: $staffId, role: $role, job: $job}';
   }
 }
 

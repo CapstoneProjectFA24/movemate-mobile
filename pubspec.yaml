@@ -111,6 +111,7 @@ flutter:
   assets:
     - assets/fonts/
     - assets/images/
+    - assets/navigation_symbol/
     - assets/images/background/
     - assets/images/booking/
     - assets/images/home/

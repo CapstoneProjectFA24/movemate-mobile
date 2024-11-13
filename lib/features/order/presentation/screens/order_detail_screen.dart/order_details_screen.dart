@@ -298,11 +298,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   child: ElevatedButton.icon(
                     onPressed: () => context.router.push(
                       TrackingMapRoute(
-                        staffId: "61",
-                        role: "DRIVER",
-                        staffIds: const ["61"],
-                        job: order,
-                      ),
+                          staffId: "61", role: "DRIVER", job: order),
                     ),
                     icon: const Icon(Icons.location_on, color: Colors.white),
                     label: const Text(
