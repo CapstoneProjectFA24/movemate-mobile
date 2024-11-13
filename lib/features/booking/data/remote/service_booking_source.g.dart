@@ -229,7 +229,7 @@ class _ServiceBookingSource implements ServiceBookingSource {
     )
             .compose(
               _dio.options,
-              '/services',
+              '/services/truck-category',
               queryParameters: queryParameters,
               data: _data,
             )

@@ -66,7 +66,7 @@ abstract class ServiceBookingSource {
     @Path('id') int id,
   );
   // get all Services truck
-  @GET(APIConstants.get_list_truck)
+  @GET(APIConstants.get_list_truck_cate)
   Future<HttpResponse<ServiceTruckResponse>> getServicesTruck(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,

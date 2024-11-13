@@ -16,6 +16,7 @@ import 'package:movemate/utils/commons/widgets/no_more_content.dart';
 // vehicle_list.dart
 const checkhousetype = 'Chọn loại nhà ở';
 
+// vehicle_list.dart// vehicle_list.dart
 class VehicleList extends ConsumerWidget {
   final FetchResult<InverseParentServiceEntity> fetchResult;
   final ScrollController scrollController;
@@ -28,10 +29,8 @@ class VehicleList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Truy cập đến BookingNotifier và Booking thông qua các provider
     final bookingNotifier = ref.watch(bookingProvider.notifier);
     final bookingState = ref.watch(bookingProvider);
-    // Không cần bookingStateRead vì đã có bookingState
 
     if (fetchResult.isFetchingData && fetchResult.items.isEmpty) {
       return const SizedBox(
@@ -61,63 +60,37 @@ class VehicleList extends ConsumerWidget {
               debugPrint("Xe được chọn là: ${service.name}");
               debugPrint("Xe được chọn là: ${service.parentServiceId}");
 
-              // Kiểm tra xem dịch vụ đã được chọn chưa
               if (bookingState.selectedVehicle?.id == service.id) {
-                // Nếu đã chọn, bỏ chọn
-                bookingNotifier.updateSelectedVehicle(null);
-                debugPrint("Bỏ chọn xe: ${service.name}");
+                // Nếu xe đã được chọn trước đó, gọi hàm resetVehiclesSelected()
+                bookingNotifier.resetVehiclesSelected(null);
               } else {
-                // Nếu chưa chọn, chọn dịch vụ
+                // Nếu xe chưa được chọn, gọi hàm updateSelectedVehicle()
                 bookingNotifier.updateSelectedVehicle(service);
+              }
 
-                // Gọi submitBooking và lấy kết quả
-                final bookingResponse = await ref
-                    .read(servicePackageControllerProvider.notifier)
-                    .postValuationBooking(
-                      context: context,
-                    );
+              final bookingResponse = await ref
+                  .read(servicePackageControllerProvider.notifier)
+                  .postValuationBooking(
+                    context: context,
+                  );
 
-                print('tuan bookingEntity  bookingResponse :$bookingResponse');
-                print(
-                    'tuan bookingEntity  bookingState.houseType?.name : ${bookingState.houseType?.name}');
-                if (bookingResponse != null) {
-                  try {
-                    // Chuyển đổi BookingResponseEntity thành Booking
-                    final bookingtotal = bookingResponse.total;
-                    final bookingdeposit = bookingResponse.deposit;
-                    bookingNotifier.updateBookingResponse(bookingResponse);
-                    print('tuan bookingEntity  total : $bookingtotal');
-                    print('tuan bookingEntity  deposit : $bookingdeposit');
-                    print(
-                        'tuan bookingResponse: ${bookingResponse.bookingDetails.toString()}');
-                    print(
-                        'tuan bookingResponse: ${bookingResponse.feeDetails.toString()}');
-
-                    // Xóa bookingState sau khi đã đăng ký thành công
-                    // bookingNotifier.reset();
-                  } catch (e) {
-                    // Xử lý ngoại lệ nếu chuyển đổi thất bại
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Đã xảy ra lỗi: $e')),
-                    );
-                  }
-                } else {
-                  // Xử lý khi bookingResponse là null
-                  // Bạn có thể thêm logic xử lý khi bỏ chọn xe nếu cần
+              if (bookingResponse != null) {
+                try {
+                  bookingNotifier.updateBookingResponse(bookingResponse);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+                  );
                 }
-
-                if (bookingState.houseType?.name == checkhousetype ||
-                    bookingState.houseType?.name == null) {
-                  bookingNotifier
-                      .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
-                }
+              }
+              if (bookingState.houseType?.name == checkhousetype ||
+                  bookingState.houseType?.name == null) {
+                bookingNotifier
+                    .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");
               }
             },
           ),
         ),
-
-        // Loading hoặc No More Content indicator
         SizedBox(
           height: 60,
           child: Center(

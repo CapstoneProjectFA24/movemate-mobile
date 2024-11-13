@@ -166,11 +166,13 @@ class BookingScreen extends HookConsumerWidget {
         return await controller.getServicesTruck(model, context);
       },
       initialPagingModel: PagingModel(
-        type: 'TRUCK',
+        // type: 'TRUCK',
+        sortColumn: 'truckCategoryId',
+        sortDir: 0,
       ),
       context: context,
     );
-
+    print("check list ${fetchResultVehicles.items.toString()} ");
     print(
         " tuan bookingState selectedVehicle ${bookingState.selectedVehicle?.name}");
     return Scaffold(

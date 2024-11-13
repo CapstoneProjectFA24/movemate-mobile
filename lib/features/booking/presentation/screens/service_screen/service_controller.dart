@@ -125,11 +125,14 @@ class ServiceController extends _$ServiceController {
       );
 
       List<InverseParentServiceEntity> inverseServices = [];
-
-      // Collect all inverseParentServices from payload
-      for (var servicePackage in response.payload) {
-        inverseServices.addAll(servicePackage.inverseParentService);
+      for (var element in response.payload) {
+        inverseServices.add(element);
       }
+      print("object check response ${response.payload}");
+      // Collect all inverseParentServices from payload
+      // for (var servicePackage in response.payload) {
+      //   inverseServices.addAll(servicePackage.inverseParentService);
+      // }
 
       return inverseServices;
     } catch (error) {

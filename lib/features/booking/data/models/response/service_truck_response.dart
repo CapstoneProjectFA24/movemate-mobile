@@ -2,10 +2,11 @@
 
 import 'dart:convert';
 
+import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/services_package_truck_entity.dart';
 
 class ServiceTruckResponse {
-  final List<ServicesPackageTruckEntity> payload;
+  final List<InverseParentServiceEntity> payload;
 
   ServiceTruckResponse({
     required this.payload,
@@ -14,8 +15,8 @@ class ServiceTruckResponse {
   factory ServiceTruckResponse.fromMap(Map<String, dynamic> map) {
     return ServiceTruckResponse(
       payload: map['payload'] != null
-          ? List<ServicesPackageTruckEntity>.from(
-              map['payload'].map((x) => ServicesPackageTruckEntity.fromMap(x)))
+          ? List<InverseParentServiceEntity>.from(
+              map['payload'].map((x) => InverseParentServiceEntity.fromMap(x)))
           : [],
     );
   }

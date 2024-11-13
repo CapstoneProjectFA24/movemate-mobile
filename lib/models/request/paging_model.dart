@@ -9,6 +9,7 @@ class PagingModel {
   final String? searchDateFrom;
   final String? searchDateTo;
   final String? type;
+  final int? sortDir;
 
   PagingModel({
     this.pageNumber = 1,
@@ -21,5 +22,6 @@ class PagingModel {
     this.searchDateFrom,
     this.searchDateTo,
     this.type,
+    this.sortDir,
   });
 }

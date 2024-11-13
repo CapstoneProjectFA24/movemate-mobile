@@ -33,6 +33,8 @@ class APIConstants {
   static const bookings = '/bookings';
 //get list truck
   static const get_list_truck = '/services';
+//get list truck
+  static const get_list_truck_cate = '/services/truck-category';
   // payments
   static const paymentsBooking = '/payments';
   static const paymentsDeposit = '/wallets/recharge';

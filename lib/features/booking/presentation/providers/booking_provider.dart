@@ -93,11 +93,20 @@ class BookingNotifier extends StateNotifier<Booking> {
 
 // Method to update selected vehicle
   void updateSelectedVehicle(InverseParentServiceEntity? vehicle) {
+    
     state = state.copyWith(
       selectedVehicle: vehicle, // This can now accept null to unselect
       vehicleError: null, // Clear error when vehicle is selected or unselected
     );
+    print("Xe được chọn là:go here ready2 ${state.selectedVehicle}");
+    calculateAndUpdateTotalPrice();
+  }
 
+  void clearSelectedVehicle() {
+    state = state.copyWith(
+      selectedVehicle: null,
+      vehicleError: null,
+    );
     calculateAndUpdateTotalPrice();
   }
 

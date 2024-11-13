@@ -115,8 +115,12 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
       page: request.pageNumber,
       perPage: request.pageSize,
       type: request.type ?? 'truck', // Đảm bảo `type` được đặt
+      sortColumn: request.sortColumn ?? 'truckCategoryId',
+      sortDir: request.sortDir ?? 0,
+      // sortColumn: 'truckCategoryId',
+      // sortDir: 0,
     ).toMap();
-
+    print("check repo $truckQueries");
     return getDataOf(
       request: () => _serviceBookingSource.getServicesTruck(
           APIConstants.contentType, accessToken, truckQueries),

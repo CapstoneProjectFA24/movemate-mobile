@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
+// vehicle_card.dart// vehicle_card.dart
 class VehicleCard extends StatelessWidget {
   final InverseParentServiceEntity service;
   final bool isSelected;
@@ -18,9 +19,8 @@ class VehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final truckCategory = service.truckCategory;
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         padding: const EdgeInsets.all(8),
@@ -130,16 +130,11 @@ class VehicleCard extends StatelessWidget {
               ),
             ),
             // Selection Icon
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (isSelected)
-                  const Icon(
-                    Icons.check_circle,
-                    color: AssetsConstants.primaryDark,
-                  ),
-              ],
-            ),
+            if (isSelected)
+              const Icon(
+                Icons.check_circle,
+                color: AssetsConstants.primaryDark,
+              ),
           ],
         ),
       ),
