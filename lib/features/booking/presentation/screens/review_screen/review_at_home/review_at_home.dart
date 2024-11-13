@@ -142,7 +142,7 @@ class AppointmentTime extends StatelessWidget {
   Widget build(BuildContext context) {
     print("order updatedAt ${order.updatedAt}");
     print("order reviewAt ${order.reviewAt}");
-
+// hàm để định dạng ngày tháng
     final formattedDateReviewAt = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.reviewAt.toString()));
 

@@ -47,6 +47,7 @@ class _ModifiedAutocompleteWidgetState
 
     widget.controller.addListener(() {
       setState(() {});
+      _onChanged(widget.controller.text);
     });
   }
 
@@ -168,7 +169,7 @@ class _ModifiedAutocompleteWidgetState
                     title: Text(
                       suggestion['display'],
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: Colors.black, // Đặt màu sắc mong muốn
                       ),
                     ),
                     onTap: () => _selectSuggestion(suggestion),
@@ -283,14 +284,17 @@ class _ModifiedAutocompleteWidgetState
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
+              color: Colors.black, // Đặt màu sắc mong muốn
             ),
           ),
           const SizedBox(height: 8),
           TextField(
             controller: widget.controller,
             focusNode: _focusNode,
+            style: const TextStyle(color: Colors.black), // Đặt màu văn bản
             decoration: InputDecoration(
               hintText: widget.isPickUp ? 'Tìm điểm đi' : 'Tìm điểm đến',
+              hintStyle: TextStyle(color: Colors.grey[600]), // Màu gợi ý
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
