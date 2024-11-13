@@ -188,7 +188,7 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
                                         '',
                                         formatTime(result?.updatedAt ??
                                             DateTime.now()),
-                                        containerWidth),
+                                        containerWidth * 0.89),
                                   ],
                                 ),
                               ),

@@ -3,12 +3,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:intl/intl.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
+
+// Hàm hỗ trợ để định dạng giá
+String formatPrice(int price) {
+  final formatter = NumberFormat('#,###', 'vi_VN');
+  return '${formatter.format(price)} đ';
+}
+
+// Hàm phân tích allUri
+Map<String, dynamic> parseAllUri(String allUri) {
+  String trimmed = allUri.trim();
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+    trimmed = trimmed.substring(1, trimmed.length - 1);
+  } else {
+    throw const FormatException('Invalid format for allUri');
+  }
+
+  List<String> keyValuePairs = trimmed.split(', ');
+  Map<String, dynamic> resultMap = {};
+
+  for (String pair in keyValuePairs) {
+    List<String> kv = pair.split(': ');
+    if (kv.length != 2) continue;
+
+    String key = kv[0].trim();
+    String value = kv[1].trim();
+
+    if (value.toLowerCase() == 'true') {
+      resultMap[key] = true;
+    } else if (value.toLowerCase() == 'false') {
+      resultMap[key] = false;
+    } else if (int.tryParse(value) != null) {
+      resultMap[key] = int.parse(value);
+    } else if (double.tryParse(value) != null) {
+      resultMap[key] = double.parse(value);
+    } else {
+      resultMap[key] = value;
+    }
+  }
+
+  return resultMap;
+}
+
+final paymentList = [
+  PaymentMethodType.momo,
+  PaymentMethodType.vnpay,
+  PaymentMethodType.payos,
+];
 
 @RoutePage()
 class TransactionResultScreen extends ConsumerWidget {
   final String bookingId;
   final bool isSuccess;
   final String allUri;
+
   const TransactionResultScreen({
     super.key,
     @PathParam('isSuccess') required this.isSuccess,
@@ -16,14 +66,90 @@ class TransactionResultScreen extends ConsumerWidget {
     @PathParam('') required this.allUri,
   });
 
+  // Hàm phân tích allUri
+  Map<String, dynamic> parseAllUri(String allUri) {
+    String trimmed = allUri.trim();
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+      trimmed = trimmed.substring(1, trimmed.length - 1);
+    } else {
+      throw const FormatException('Invalid format for allUri');
+    }
+
+    List<String> keyValuePairs = trimmed.split(', ');
+    Map<String, dynamic> resultMap = {};
+
+    for (String pair in keyValuePairs) {
+      List<String> kv = pair.split(': ');
+      if (kv.length != 2) continue;
+
+      String key = kv[0].trim();
+      String value = kv[1].trim();
+
+      if (value.toLowerCase() == 'true') {
+        resultMap[key] = true;
+      } else if (value.toLowerCase() == 'false') {
+        resultMap[key] = false;
+      } else if (int.tryParse(value) != null) {
+        resultMap[key] = int.parse(value);
+      } else if (double.tryParse(value) != null) {
+        resultMap[key] = double.parse(value);
+      } else {
+        resultMap[key] = value;
+      }
+    }
+
+    return resultMap;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
     double containerHeight = MediaQuery.of(context).size.height * 0.5;
     print('allUri: $allUri');
 
-    //{isSuccess: true, amount: 312000, payDate: 11/07/2024 23:36:49, bookingId: 426-a66aec19-e687-427b-a836-ee65150cbc1b, transactionCode: 4223169412, userId: 3, paymentMethod: Momo}
+    // Phân tích allUri thành Map
+    Map<String, dynamic> allUriMap;
+    try {
+      allUriMap = parseAllUri(allUri);
+    } catch (e) {
+      // Xử lý lỗi nếu định dạng allUri không hợp lệ
+      allUriMap = {};
+      print('Error parsing allUri: $e');
+    }
 
+    // Trích xuất các giá trị từ Map
+    bool isSuccessParsed = allUriMap['isSuccess'] ?? false;
+    int amount = allUriMap['amount'] ?? 0;
+    String payDateStr = allUriMap['payDate'] ?? '';
+    String bookingIdParsed = allUriMap['bookingId']?.toString() ?? '';
+    String transactionCode = allUriMap['transactionCode']?.toString() ?? '';
+    int userId = allUriMap['userId'] ?? 0;
+    String paymentMethod = allUriMap['paymentMethod'] ?? '';
+
+    // Phân tích và định dạng lại payDate
+    DateTime payDate;
+    try {
+      payDate = DateFormat('MM/dd/yyyy HH:mm:ss').parse(payDateStr);
+    } catch (e) {
+      // Xử lý lỗi nếu định dạng payDate không hợp lệ
+      payDate = DateTime.now(); // Giá trị mặc định
+      print('Error parsing payDate: $e');
+    }
+
+    // Định dạng lại ngày và giờ
+    String formattedDate = DateFormat('dd/MM/yyyy').format(payDate);
+    String formattedTime = DateFormat('HH:mm:ss').format(payDate);
+
+    // Chuyển đổi paymentMethod string thành enum
+    PaymentMethodType? paymentMethodType =
+        PaymentMethodType.fromString(paymentMethod);
+
+    // Lấy imageUrl từ enum hoặc sử dụng hình ảnh mặc định
+    String paymentImageUrl = paymentMethodType?.imageUrl ??
+        'https://storage.googleapis.com/a1aa/image/EvKuteb1nL1qFy7sLmipOsj94j9pY7MX5RSo2xyLvNRJKfnTA.jpg'; // Hình ảnh mặc định
+
+    // Lấy displayName từ enum hoặc sử dụng tên mặc định
+    String paymentDisplayName = paymentMethodType?.displayName ?? paymentMethod;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -73,7 +199,7 @@ class TransactionResultScreen extends ConsumerWidget {
                                 Icons.check,
                                 color: Colors.orange.shade500,
                                 size: containerWidth *
-                                    0.1, // Tăng kích thước icon dựa trên chiều rộng container
+                                    0.1, // Tăng kích thước icon
                               ),
                             ),
                             // Tiêu đề
@@ -85,8 +211,7 @@ class TransactionResultScreen extends ConsumerWidget {
                                 style: TextStyle(
                                   color: Colors.orange.shade500,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: containerWidth *
-                                      0.06, // Điều chỉnh kích thước phông chữ theo chiều rộng container
+                                  fontSize: containerWidth * 0.06,
                                 ),
                               ),
                             ),
@@ -96,8 +221,8 @@ class TransactionResultScreen extends ConsumerWidget {
                                   const EdgeInsets.symmetric(horizontal: 24),
                               child: Column(
                                 children: [
-                                  buildTransactionDetailRow(
-                                      'Số tiền', '420.000đ', containerWidth),
+                                  buildTransactionDetailRow('Số tiền',
+                                      formatPrice(amount), containerWidth),
                                   const SizedBox(height: 8),
                                   buildTransactionDetailRow('Phí giao dịch',
                                       'Miễn phí', containerWidth),
@@ -118,15 +243,21 @@ class TransactionResultScreen extends ConsumerWidget {
                               child: Column(
                                 children: [
                                   buildTransactionDetailRow('Mã giao dịch',
-                                      '20201118181445', containerWidth),
+                                      transactionCode, containerWidth),
                                   const SizedBox(height: 8),
                                   buildTransactionDetailRow('Nguồn tiền',
-                                      'Sacombank', containerWidth),
+                                      paymentMethod, containerWidth),
                                   const SizedBox(height: 8),
                                   buildTransactionDetailRow(
                                       'Thời gian giao dịch',
-                                      '21:15 - 18/05/2024',
+                                      formattedDate,
                                       containerWidth),
+                                  const SizedBox(height: 2),
+                                  buildTransactionDetailRow(
+                                    '',
+                                    formattedTime,
+                                    containerWidth * 0.89,
+                                  ),
                                 ],
                               ),
                             ),
@@ -149,11 +280,10 @@ class TransactionResultScreen extends ConsumerWidget {
                               width: 40,
                               height: 40,
                               margin: const EdgeInsets.only(right: 8),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                      'https://storage.googleapis.com/a1aa/image/EvKuteb1nL1qFy7sLmipOsj94j9pY7MX5RSo2xyLvNRJKfnTA.jpg'),
+                                  image: NetworkImage(paymentImageUrl),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -163,18 +293,13 @@ class TransactionResultScreen extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Số dư ví Ontop Bank',
+                                    'Thanh toán ví điện tử',
                                     style: TextStyle(
                                       fontSize: containerWidth * 0.045,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(
-                                    '958.000đ',
-                                    style: TextStyle(
-                                      fontSize: containerWidth * 0.045,
-                                    ),
-                                  ),
+                                  // Bạn có thể thêm các thông tin khác ở đây nếu cần
                                 ],
                               ),
                             ),
@@ -234,11 +359,6 @@ class TransactionResultScreen extends ConsumerWidget {
                         child: SizedBox(
                           height: 48,
                           child: ElevatedButton(
-                            // onPressed: () {
-                            //   context.router
-                            //       .push(const TransactionDetailsOrderRoute());
-                            // },
-
                             onPressed: () async {
                               // Trích xuất phần số nguyên từ bookingId để lấy id
                               final idPart = bookingId.split('-').first;
@@ -272,7 +392,6 @@ class TransactionResultScreen extends ConsumerWidget {
                                 );
                               }
                             },
-
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange.shade800,
                               shape: RoundedRectangleBorder(

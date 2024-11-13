@@ -8,6 +8,16 @@ enum PaymentMethodType {
 
   final String type;
   const PaymentMethodType(this.type);
+
+  // Phương thức chuyển đổi từ chuỗi thành enum
+  static PaymentMethodType? fromString(String method) {
+    for (var e in PaymentMethodType.values) {
+      if (e.type.toLowerCase() == method.toLowerCase()) {
+        return e;
+      }
+    }
+    return null; // Trả về null nếu không tìm thấy
+  }
 }
 
 // Extension to get image URL and display name
