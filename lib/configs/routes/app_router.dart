@@ -56,6 +56,7 @@ import 'package:movemate/features/profile/presentation/screens/profile_screen/pr
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
+import 'package:movemate/features/order/presentation/screens/tracking_map/tracking_map.dart';
 
 import 'package:movemate/features/test-payment/payment_result_screen.dart';
 
@@ -165,6 +166,9 @@ class AppRouter extends _$AppRouter {
         //  order flow
         AutoRoute(
           page: OrderScreenRoute.page,
+        ),
+        AutoRoute(
+          page: TrackingMapRoute.page,
         ),
         AutoRoute(
           page: OrderDetailsScreenRoute.page,

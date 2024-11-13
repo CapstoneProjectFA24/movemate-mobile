@@ -281,6 +281,19 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TimeLineBooking(),
       );
     },
+    TrackingMapRoute.name: (routeData) {
+      final args = routeData.argsAs<TrackingMapRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TrackingMap(
+          key: args.key,
+          staffId: args.staffId,
+          staffIds: args.staffIds,
+          role: args.role,
+          job: args.job,
+        ),
+      );
+    },
     TransactionDetailsOrderRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1132,6 +1145,59 @@ class TimeLineBookingRoute extends PageRouteInfo<void> {
   static const String name = 'TimeLineBookingRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TrackingMap]
+class TrackingMapRoute extends PageRouteInfo<TrackingMapRouteArgs> {
+  TrackingMapRoute({
+    Key? key,
+    required String staffId,
+    required List<String> staffIds,
+    required String role,
+    required OrderEntity job,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TrackingMapRoute.name,
+          args: TrackingMapRouteArgs(
+            key: key,
+            staffId: staffId,
+            staffIds: staffIds,
+            role: role,
+            job: job,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TrackingMapRoute';
+
+  static const PageInfo<TrackingMapRouteArgs> page =
+      PageInfo<TrackingMapRouteArgs>(name);
+}
+
+class TrackingMapRouteArgs {
+  const TrackingMapRouteArgs({
+    this.key,
+    required this.staffId,
+    required this.staffIds,
+    required this.role,
+    required this.job,
+  });
+
+  final Key? key;
+
+  final String staffId;
+
+  final List<String> staffIds;
+
+  final String role;
+
+  final OrderEntity job;
+
+  @override
+  String toString() {
+    return 'TrackingMapRouteArgs{key: $key, staffId: $staffId, staffIds: $staffIds, role: $role, job: $job}';
+  }
 }
 
 /// generated route for
