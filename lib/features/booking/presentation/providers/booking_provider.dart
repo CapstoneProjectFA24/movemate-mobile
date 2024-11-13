@@ -168,12 +168,6 @@ class BookingNotifier extends StateNotifier<Booking> {
       total = (0.7 * total);
     }
 
-    // Tính thuế GTGT
-    // double vat = total * 0.08;
-
-    // Cập nhật tổng giá bao gồm thuế GTGT
-    // total += vat;
-    // Cập nhật tổng giá
     state = state.copyWith(totalPrice: total);
   }
 
@@ -410,19 +404,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     updatedChecklistValues[index] = value;
     state = state.copyWith(checklistValues: updatedChecklistValues);
   }
-
-  // Location methods
-  // void updatePickUpLocation(LocationModel? location) {
-  //   state = state.copyWith(pickUpLocation: location);
-  // }
-
-  // void updateDropOffLocation(LocationModel? location) {
-  //   state = state.copyWith(dropOffLocation: location);
-  // }
-
-  // void updateBookingDate(DateTime? date) {
-  //   state = state.copyWith(bookingDate: date);
-  // }
 
   void setSelectorHasError(String error) {
     state = state.copyWith(selectorHasError: error);
