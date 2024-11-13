@@ -191,19 +191,17 @@ class LocationSelectionScreenState
               child: Column(
                 children: [
                   // Trường "Từ"
-                  AutocompleteWidget(
+                  ModifiedAutocompleteWidget(
                     label: 'Từ',
                     controller: _pickupController,
                     isPickUp: true,
-                    // overlayDirection: OverlayDirection.above, // Hiển thị gợi ý lên trên
                   ),
                   const SizedBox(height: 16),
                   // Trường "Đến"
-                  AutocompleteWidget(
+                  ModifiedAutocompleteWidget(
                     label: 'Đến',
                     controller: _dropoffController,
                     isPickUp: false,
-                    // overlayDirection: OverlayDirection.below, // Hiển thị gợi ý xuống dưới
                   ),
                 ],
               ),

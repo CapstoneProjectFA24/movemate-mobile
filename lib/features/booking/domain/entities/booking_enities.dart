@@ -72,7 +72,7 @@ class Booking {
     this.isRoundTrip = false,
     this.isReviewOnline = false,
     List<bool>? checklistValues,
-    this.notes = 'Ghi chú',
+    this.notes = '',
     this.servicesFeeList = const [],
     // Booking select packages
     this.selectedVehicle,

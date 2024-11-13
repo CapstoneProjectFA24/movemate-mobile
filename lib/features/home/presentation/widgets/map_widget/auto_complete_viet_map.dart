@@ -6,12 +6,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 
-class AutocompleteWidget extends ConsumerStatefulWidget {
+class ModifiedAutocompleteWidget extends ConsumerStatefulWidget {
   final String label;
   final TextEditingController controller;
   final bool isPickUp;
 
-  const AutocompleteWidget({
+  const ModifiedAutocompleteWidget({
     super.key,
     required this.label,
     required this.controller,
@@ -19,12 +19,38 @@ class AutocompleteWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<AutocompleteWidget> createState() => _AutocompleteWidgetState();
+  ConsumerState<ModifiedAutocompleteWidget> createState() =>
+      _ModifiedAutocompleteWidgetState();
 }
 
-class _AutocompleteWidgetState extends ConsumerState<AutocompleteWidget> {
+class _ModifiedAutocompleteWidgetState
+    extends ConsumerState<ModifiedAutocompleteWidget> {
   List<dynamic> _suggestions = [];
   bool _isLoading = false;
+  OverlayEntry? _overlayEntry;
+  final LayerLink _layerLink = LayerLink();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        _removeOverlay();
+      }
+    });
+
+    widget.controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _removeOverlay();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   void _onChanged(String value) {
     if (value.length > 2) {
@@ -33,6 +59,7 @@ class _AutocompleteWidgetState extends ConsumerState<AutocompleteWidget> {
       setState(() {
         _suggestions = [];
       });
+      _removeOverlay();
     }
   }
 
@@ -56,20 +83,98 @@ class _AutocompleteWidgetState extends ConsumerState<AutocompleteWidget> {
           _suggestions = results;
           _isLoading = false;
         });
+        _showOverlay();
       } else {
         setState(() {
           _suggestions = [];
           _isLoading = false;
         });
-        print('Error fetching autocomplete results: ${response.statusCode}');
+        _removeOverlay();
       }
     } catch (e) {
       setState(() {
         _suggestions = [];
         _isLoading = false;
       });
-      print('Error fetching autocomplete results: $e');
+      _removeOverlay();
     }
+  }
+
+  void _showOverlay() {
+    if (_overlayEntry != null) {
+      _overlayEntry!.markNeedsBuild();
+      return;
+    }
+
+    _overlayEntry = _createOverlayEntry();
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    Size size = renderBox.size;
+    Offset offset = renderBox.localToGlobal(Offset.zero);
+
+    double topOffset;
+    double leftOffset = offset.dx;
+    double width = size.width;
+
+    // Modify the positioning to make the suggestions dropdown on top of the "Đến" label
+    if (widget.isPickUp) {
+      topOffset = offset.dy - (_suggestions.length * 60.0);
+    } else {
+      topOffset = offset.dy + size.height;
+    }
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        left: leftOffset,
+        width: width,
+        top: topOffset,
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(
+              0.0, widget.isPickUp ? size.height + 20.0 : size.height + 20.0),
+          child: Material(
+            elevation: 4.0,
+            child: Container(
+              constraints: const BoxConstraints(
+                maxHeight: 200,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: _suggestions.length,
+                itemBuilder: (context, index) {
+                  final suggestion = _suggestions[index];
+                  return ListTile(
+                    leading: const Icon(Icons.location_on, color: Colors.red),
+                    title: Text(
+                      suggestion['display'],
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    onTap: () => _selectSuggestion(suggestion),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _selectSuggestion(Map<String, dynamic> suggestion) async {
@@ -97,21 +202,13 @@ class _AutocompleteWidgetState extends ConsumerState<AutocompleteWidget> {
           bookingNotifier.updateDropOffLocation(location);
         }
 
-        // Cập nhật vị trí trên bản đồ
-        if (ref.read(bookingProvider).pickUpLocation != null &&
-            ref.read(bookingProvider).dropOffLocation != null) {
-          // Nếu cả hai địa điểm đã chọn, vẽ tuyến đường
-          // Bạn có thể gọi hàm vẽ tuyến đường ở đây hoặc nơi cần thiết
-        }
+        widget.controller.text = details['display'];
 
         setState(() {
           _suggestions = [];
         });
 
-        // Cập nhật TextField
-        widget.controller.text = details['display'];
-      } else {
-        print('Error fetching location details: ${response.statusCode}');
+        _removeOverlay();
       }
     } catch (e) {
       print('Error fetching location details: $e');
@@ -120,57 +217,66 @@ class _AutocompleteWidgetState extends ConsumerState<AutocompleteWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: widget.controller,
-          decoration: InputDecoration(
-            hintText: widget.isPickUp ? 'Tìm điểm đi' : 'Tìm điểm đến',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.label,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
-            suffixIcon: _isLoading ? const CircularProgressIndicator() : null,
           ),
-          onChanged: _onChanged,
-        ),
-        if (_suggestions.isNotEmpty)
-          Container(
-            constraints: const BoxConstraints(maxHeight: 200),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
-            ),
-            child: ListView.builder(
-              itemCount: _suggestions.length,
-              itemBuilder: (context, index) {
-                final suggestion = _suggestions[index];
-                return ListTile(
-                  leading: const Icon(Icons.location_on, color: Colors.red),
-                  title: Text(
-                    suggestion['display'],
-                    selectionColor: Colors.blue,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
+          const SizedBox(height: 8),
+          TextField(
+            controller: widget.controller,
+            focusNode: _focusNode,
+            decoration: InputDecoration(
+              hintText: widget.isPickUp ? 'Tìm điểm đi' : 'Tìm điểm đến',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.controller.text.isNotEmpty)
+                    IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        widget.controller.clear();
+                        setState(() {
+                          _suggestions = [];
+                        });
+                        _removeOverlay();
+                        if (widget.isPickUp) {
+                          ref
+                              .read(bookingProvider.notifier)
+                              .updatePickUpLocation(null);
+                        } else {
+                          ref
+                              .read(bookingProvider.notifier)
+                              .updateDropOffLocation(null);
+                        }
+                      },
                     ),
-                  ),
-                  onTap: () => _selectSuggestion(suggestion),
-                );
-              },
+                  if (_isLoading)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                ],
+              ),
             ),
+            onChanged: _onChanged,
           ),
-      ],
+        ],
+      ),
     );
   }
 }
