@@ -91,15 +91,15 @@ class Buttons extends HookConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ActionButton(
-          text: 'Thay đổi lịch hẹn',
-          color: Colors.white,
-          borderColor: const Color(0xFFFF6600),
-          textColor: const Color(0xFFFF6600),
-          onPressed: () {
-            // Handle event when 'Thay đổi lịch hẹn' button is pressed
-          },
-        ),
+        // ActionButton(
+        //   text: 'Thay đổi lịch hẹn',
+        //   color: Colors.white,
+        //   borderColor: const Color(0xFFFF6600),
+        //   textColor: const Color(0xFFFF6600),
+        //   onPressed: () {
+        //     // Handle event when 'Thay đổi lịch hẹn' button is pressed
+        //   },
+        // ),
         const SizedBox(height: 8),
         ActionButton(
           text: 'Xác nhận',
@@ -235,7 +235,7 @@ class ContactInfo extends HookConsumerWidget {
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CircleAvatar(
             radius: 20,
@@ -269,15 +269,15 @@ class ContactInfo extends HookConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(width: 10),
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.phone,
-                size: 18, color: Color(0xFF666666)),
-            onPressed: () {
-              // Xử lý sự kiện khi nhấn vào biểu tượng điện thoại
-            },
-          ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 20),
+          // IconButton(
+          //   icon: const Icon(FontAwesomeIcons.phone,
+          //       size: 18, color: Color(0xFF666666)),
+          //   onPressed: () {
+          //     // Xử lý sự kiện khi nhấn vào biểu tượng điện thoại
+          //   },
+          // ),
+          const SizedBox(width: 20),
           IconButton(
             icon: const Icon(FontAwesomeIcons.comment,
                 size: 18, color: Color(0xFF666666)),
