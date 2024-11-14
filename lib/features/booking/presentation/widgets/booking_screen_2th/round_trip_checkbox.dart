@@ -36,14 +36,24 @@ class RoundTripCheckbox extends StatelessWidget {
             ),
           ),
           FadeInLeft(
-              child: const LabelText(
-            content: 'Vận chuyển 2 chiều',
-            size: Checkbox.width + 1,
-            fontFamily: 'popins',
-            fontWeight: FontWeight.bold,
-          )),
+            child: const LabelText(
+              content: 'Vận chuyển 2 chiều',
+              size: 16,
+              fontFamily: 'popins',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const Spacer(),
-          FadeInRight(child: const Text('+70%')),
+          FadeInRight(
+            child: const Text(
+              '+70%',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
         ],
       ),
     );

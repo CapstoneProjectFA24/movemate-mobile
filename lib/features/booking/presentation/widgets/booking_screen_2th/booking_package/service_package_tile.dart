@@ -142,7 +142,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 1.0),
               child: Text(
-                widget.servicePackage.description,
+                formatPrice(widget.servicePackage.amount.toInt()).toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
