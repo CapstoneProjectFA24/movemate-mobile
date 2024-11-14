@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/widgets/tracking_map_item/chat_screen.dart';
+import 'package:movemate/features/order/presentation/widgets/tracking_map_item/status_bottom_sheet.dart';
+import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vietmap_flutter_navigation/vietmap_flutter_navigation.dart';
 
@@ -96,9 +100,8 @@ class TrackingMapState extends State<TrackingMap> {
 
   void _initStaffTracking() {
     final String bookingId = widget.job.id.toString();
-    DatabaseReference staffLocationRef = FirebaseDatabase.instance
-        .ref()
-        .child('tracking_locations/34/DRIVER/61');
+    DatabaseReference staffLocationRef =
+        FirebaseDatabase.instance.ref().child('tracking_locations/2/DRIVER/61');
     // DatabaseReference staffLocationRef = FirebaseDatabase.instance.ref().child(
     //     'tracking_locations/$bookingId/${widget.role}/${widget.staffId}');
 
@@ -144,54 +147,73 @@ class TrackingMapState extends State<TrackingMap> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Track Delivery'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.router.pop(),
+        appBar: const CustomAppBar(
+          title: "Theo dõi tiến trình",
+          backButtonColor: AssetsConstants.whiteColor,
+          backgroundColor: AssetsConstants.mainColor,
         ),
-      ),
-      body: Stack(
-        children: [
-          NavigationView(
-            mapOptions: _navigationOption,
-            onMapCreated: (controller) {
-              setState(() {
-                _navigationController = controller;
-                _isMapReady = true;
-              });
-
-              if (_staffLocation != null) {
-                _updateStaffLocation();
-              } else {
-                controller.buildRoute(
-                  waypoints: [deliveryPoint, deliveryPoint],
-                  profile: DrivingProfile.cycling,
-                ).then((success) {
-                  if (!success) {
-                    print('Failed to build initial route');
-                  }
-                }).catchError((error) {
-                  print('Error building initial route: $error');
+        body: Stack(
+          children: [
+            NavigationView(
+              mapOptions: _navigationOption,
+              onMapCreated: (controller) {
+                setState(() {
+                  _navigationController = controller;
+                  _isMapReady = true;
                 });
-              }
-            },
-          ),
-          if (_staffLocation == null)
-            const Center(
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text(
-                    'Waiting for staff location updates...',
-                    style: TextStyle(fontSize: 16),
+
+                if (_staffLocation != null) {
+                  _updateStaffLocation();
+                } else {
+                  controller.buildRoute(
+                    waypoints: [deliveryPoint, deliveryPoint],
+                    profile: DrivingProfile.cycling,
+                  ).then((success) {
+                    if (!success) {
+                      print('Failed to build initial route');
+                    }
+                  }).catchError((error) {
+                    print('Error building initial route: $error');
+                  });
+                }
+              },
+            ),
+            if (_staffLocation == null)
+              const Center(
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Waiting for staff location updates...',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: TrackingMapBottomSheet(
+                job: widget.job,
+              ),
             ),
-        ],
-      ),
-    );
+            Positioned(
+              bottom: 220,
+              right: 20,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatScreen()),
+                  );
+                },
+                backgroundColor: Colors.orange,
+                child: const Icon(Icons.chat),
+              ),
+            ),
+          ],
+        ));
   }
 
   @override
