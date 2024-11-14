@@ -61,8 +61,12 @@ class SubServiceTile extends ConsumerWidget {
                         ),
                         // Nút Icon thông tin
                         IconButton(
-                          icon: const Icon(Icons.info_outline,
-                              color: Colors.blue),
+                          icon: const Icon(
+                            Icons.info_outline,
+                            color: Colors.grey,
+                          ),
+                          iconSize:
+                              20, // Set the icon size as desired (default is 24)
                           onPressed: () {
                             _showDescriptionModal(
                                 context, subService.description, subService);
@@ -70,38 +74,14 @@ class SubServiceTile extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    // Mô tả dịch vụ
-                    Text(
-                      subService.description,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                   ],
                 ),
               ),
-              // const SizedBox(width: 8),
-              // Phần trailing (IconButton và ServiceTrailingWidget)
-              // Sử dụng SizedBox để giới hạn chiều rộng tối đa
               SizedBox(
-                width: 120, // Điều chỉnh giá trị này theo nhu cầu
+                width: 120,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Nút Icon thông tin (nếu cần)
-                    // Nếu bạn chỉ có một IconButton, hãy đảm bảo nó không bị trùng lặp
-                    // Nếu không cần, có thể loại bỏ phần này
-                    // IconButton(
-                    //   icon: const Icon(Icons.info_outline, color: Colors.blue),
-                    //   onPressed: () {
-                    //     _showDescriptionModal(context, subService.description);
-                    //   },
-                    // ),
-                    // ServiceTrailingWidget
                     ServiceTrailingWidget(
                       quantity: quantity,
                       addService: !subService.isQuantity,
@@ -176,39 +156,58 @@ class SubServiceTile extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Tiêu đề
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Mô tả Dịch vụ',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    Center(
+                      child: Container(
+                        width: 30.0,
+                        height: 5.0,
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ],
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    // Nội dung mô tả
+
+                    // Circular Image at the top
+                    Center(
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                          child: Image.network(
+                            subService.imageUrl,
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Content title
                     Text(
                       subService.name,
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
-                    // Nội dung mô tả
-                    Text(
-                      subService.type,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    // Nội dung mô tả
+                    const SizedBox(height: 8),
+
+                    // Content description
                     Text(
                       description,
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Roboto',
+                      ),
+                      textAlign: TextAlign.center,
+                    )
                   ],
                 ),
               ),
