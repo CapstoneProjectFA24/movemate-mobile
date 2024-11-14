@@ -28,7 +28,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
     //phần dịch vụ lớn => có dịch vụ con
     if (widget.servicePackage.inverseParentService.isNotEmpty) {
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 16),
+        margin: const EdgeInsets.symmetric(vertical: 12),
         decoration: _isExpanded
             ? null
             : BoxDecoration(
