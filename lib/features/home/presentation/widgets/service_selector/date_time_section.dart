@@ -105,21 +105,23 @@ class _DateTimeSectionState extends State<DateTimeSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.isDateTimeLimit)
-                  const LabelText(
-                    content: 'Thời gian hoạt động từ 7h sáng đến 5h chiều',
-                    size: 12,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w400,
-                  ),
-                if (widget.isDateTimeInvalid)
+                // if (widget.isDateTimeLimit)
+                //   const LabelText(
+                //     content: 'Thời gian hoạt động từ 7h sáng đến 5h chiều',
+                //     size: 12,
+                //     color: Colors.red,
+                //     fontWeight: FontWeight.w400,
+                //   ),
+                if (widget.isDateTimeInvalid &&
+                    !(widget.controller.text == 'Chọn ngày và giờ'))
                   const LabelText(
                     content: 'Không được là thời gian trong quá khứ',
                     size: 12,
                     color: Colors.red,
                     fontWeight: FontWeight.w400,
                   ),
-                if (widget.controller.text == 'Chọn ngày và giờ')
+                if (widget.controller.text == 'Chọn ngày và giờ' ||
+                    widget.isDateTimeLimit)
                   const LabelText(
                     content: 'Vui lòng chọn thời gian thích hợp',
                     size: 12,
