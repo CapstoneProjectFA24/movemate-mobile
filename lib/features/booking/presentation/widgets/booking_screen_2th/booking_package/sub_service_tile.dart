@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+
+String formatPrice(int price) {
+  final formatter = NumberFormat('#,###', 'vi_VN');
+  return '${formatter.format(price)} đ';
+}
 
 class SubServiceTile extends ConsumerWidget {
   final SubServiceEntity subService;
@@ -73,6 +79,10 @@ class SubServiceTile extends ConsumerWidget {
                           },
                         ),
                       ],
+                    ),
+                    Text(
+                      formatPrice(subService.amount.toInt()).toString(),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
