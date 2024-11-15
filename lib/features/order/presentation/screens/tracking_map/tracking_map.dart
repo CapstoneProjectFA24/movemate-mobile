@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:math';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/tracking_map_item/chat_screen.dart';
@@ -12,7 +9,6 @@ import 'package:movemate/features/order/presentation/widgets/tracking_map_item/s
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:vietmap_flutter_navigation/vietmap_flutter_navigation.dart';
 
 @RoutePage()
@@ -38,7 +34,7 @@ class TrackingMapState extends State<TrackingMap> {
   MapNavigationViewController? _navigationController;
   late MapOptions _navigationOption;
   final _vietmapNavigationPlugin = VietMapNavigationPlugin();
-
+  RouteProgressEvent? routeProgressEvent;
   // Staff location tracking
   StreamSubscription<DatabaseEvent>? _locationSubscription;
   LatLng? _staffLocation;
@@ -49,28 +45,21 @@ class TrackingMapState extends State<TrackingMap> {
   @override
   void initState() {
     super.initState();
-    _requestLocationPermission();
     _initNavigation();
     _initStaffTracking();
-  }
-
-  Future<void> _requestLocationPermission() async {
-    if (await Permission.location.isDenied) {
-      await Permission.location.request();
-    }
   }
 
   Future<void> _initNavigation() async {
     if (!mounted) return;
     _navigationOption = _vietmapNavigationPlugin.getDefaultOptions();
-    _navigationOption.simulateRoute = false;
+    _navigationOption.simulateRoute = true;
     _navigationOption.apiKey = APIConstants.apiVietMapKey;
     _navigationOption.mapStyle =
         "https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${APIConstants.apiVietMapKey}";
     _vietmapNavigationPlugin.setDefaultOptions(_navigationOption);
   }
 
-  void _buildInitialRoute() async {
+  void _buildRoute() async {
     if (_navigationController != null && _staffLocation != null) {
       List<String> pickupPointCoordinates = widget.job.pickupPoint.split(',');
       LatLng pickupPoint = LatLng(
@@ -79,8 +68,9 @@ class TrackingMapState extends State<TrackingMap> {
       );
 
       if (_staffLocation != null) {
+        // Đảo ngược thứ tự waypoints: từ pickup point đến staff location
         _navigationController?.buildRoute(
-          waypoints: [_staffLocation!, pickupPoint],
+          waypoints: [pickupPoint, _staffLocation!],
           profile: DrivingProfile.cycling,
         ).then((success) {
           if (!success) {
@@ -89,21 +79,14 @@ class TrackingMapState extends State<TrackingMap> {
         }).catchError((error) {
           print('Error building route: $error');
         });
-      } else {
-        print('Invalid staff location or delivery point');
       }
-    } else {
-      print('_navigationController or _staffLocation is null');
     }
   }
 
   void _initStaffTracking() {
-    final String bookingId = widget.job.id.toString();
     DatabaseReference staffLocationRef = FirebaseDatabase.instance
         .ref()
         .child('tracking_locations/81/DRIVER/61');
-    // DatabaseReference staffLocationRef = FirebaseDatabase.instance.ref().child(
-    //     'tracking_locations/$bookingId/${widget.role}/${widget.staffId}');
 
     _locationSubscription = staffLocationRef.onValue.listen((event) {
       if (!mounted) return;
@@ -115,27 +98,26 @@ class TrackingMapState extends State<TrackingMap> {
 
         setState(() {
           _staffLocation = LatLng(lat, long);
-          _updateStaffLocation();
+          _updateMapView();
         });
       }
     });
   }
 
-  void _updateStaffLocation() {
+  void _updateMapView() {
     if (_staffLocation == null ||
         !_isMapReady ||
         _navigationController == null) {
       return;
     }
 
-    // Update camera to follow staff
     _navigationController?.animateCamera(
       latLng: _staffLocation!,
       zoom: 15,
       duration: const Duration(milliseconds: 1000),
     );
 
-    _buildInitialRoute();
+    _buildRoute();
   }
 
   @override
@@ -163,8 +145,9 @@ class TrackingMapState extends State<TrackingMap> {
                 });
 
                 if (_staffLocation != null) {
-                  _updateStaffLocation();
+                  _updateMapView();
                 } else {
+                  // Khi chưa có staff location, hiển thị route từ điểm pickup đến chính nó
                   controller.buildRoute(
                     waypoints: [pickupPoint, pickupPoint],
                     profile: DrivingProfile.cycling,
@@ -176,6 +159,15 @@ class TrackingMapState extends State<TrackingMap> {
                     print('Error building initial route: $error');
                   });
                 }
+              },
+              onRouteProgressChange: (RouteProgressEvent routeProgressEvent) {
+                print('-----------ProgressChange----------');
+                print(routeProgressEvent.currentLocation?.bearing);
+                print(routeProgressEvent.currentLocation?.altitude);
+                print(routeProgressEvent.currentLocation?.accuracy);
+                print(routeProgressEvent.currentLocation?.bearing);
+                print(routeProgressEvent.currentLocation?.latitude);
+                print(routeProgressEvent.currentLocation?.longitude);
               },
             ),
             if (_staffLocation == null)
