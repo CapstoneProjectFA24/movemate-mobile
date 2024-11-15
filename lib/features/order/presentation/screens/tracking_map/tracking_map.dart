@@ -72,16 +72,15 @@ class TrackingMapState extends State<TrackingMap> {
 
   void _buildInitialRoute() async {
     if (_navigationController != null && _staffLocation != null) {
-      List<String> deliveryPointCoordinates =
-          widget.job.deliveryPoint.split(',');
-      LatLng deliveryPoint = LatLng(
-        double.parse(deliveryPointCoordinates[0].trim()),
-        double.parse(deliveryPointCoordinates[1].trim()),
+      List<String> pickupPointCoordinates = widget.job.pickupPoint.split(',');
+      LatLng pickupPoint = LatLng(
+        double.parse(pickupPointCoordinates[0].trim()),
+        double.parse(pickupPointCoordinates[1].trim()),
       );
 
       if (_staffLocation != null) {
         _navigationController?.buildRoute(
-          waypoints: [_staffLocation!, deliveryPoint],
+          waypoints: [_staffLocation!, pickupPoint],
           profile: DrivingProfile.cycling,
         ).then((success) {
           if (!success) {
@@ -100,8 +99,9 @@ class TrackingMapState extends State<TrackingMap> {
 
   void _initStaffTracking() {
     final String bookingId = widget.job.id.toString();
-    DatabaseReference staffLocationRef =
-        FirebaseDatabase.instance.ref().child('tracking_locations/2/DRIVER/61');
+    DatabaseReference staffLocationRef = FirebaseDatabase.instance
+        .ref()
+        .child('tracking_locations/81/DRIVER/61');
     // DatabaseReference staffLocationRef = FirebaseDatabase.instance.ref().child(
     //     'tracking_locations/$bookingId/${widget.role}/${widget.staffId}');
 
@@ -140,10 +140,10 @@ class TrackingMapState extends State<TrackingMap> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> deliveryPointCoordinates = widget.job.deliveryPoint.split(',');
-    LatLng deliveryPoint = LatLng(
-      double.parse(deliveryPointCoordinates[0].trim()),
-      double.parse(deliveryPointCoordinates[1].trim()),
+    List<String> pickupPointCoordinates = widget.job.pickupPoint.split(',');
+    LatLng pickupPoint = LatLng(
+      double.parse(pickupPointCoordinates[0].trim()),
+      double.parse(pickupPointCoordinates[1].trim()),
     );
 
     return Scaffold(
@@ -166,7 +166,7 @@ class TrackingMapState extends State<TrackingMap> {
                   _updateStaffLocation();
                 } else {
                   controller.buildRoute(
-                    waypoints: [deliveryPoint, deliveryPoint],
+                    waypoints: [pickupPoint, pickupPoint],
                     profile: DrivingProfile.cycling,
                   ).then((success) {
                     if (!success) {

@@ -45,7 +45,7 @@ class APIConstants {
   static const get_user = '/users';
   // api vietmap-key
   static const apiVietMapKey =
-      "38db2f3d058b34e0f52f067fe66a902830fac1a044e8d444";
+      "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
   // api vietmap-key backup
   // static const apiVietMapKey =
   //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
