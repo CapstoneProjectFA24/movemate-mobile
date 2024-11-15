@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/tracking_map_item/chat_screen.dart';
 import 'package:movemate/features/order/presentation/widgets/tracking_map_item/status_bottom_sheet.dart';
@@ -49,6 +50,48 @@ class TrackingMapState extends State<TrackingMap> {
     _initStaffTracking();
   }
 
+  LatLng _getPickupPointLatLng() {
+    final pickupPointCoordinates = widget.job.pickupPoint.split(',');
+    return LatLng(
+      double.parse(pickupPointCoordinates[0].trim()),
+      double.parse(pickupPointCoordinates[1].trim()),
+    );
+  }
+
+  LatLng _getDeliveryPointLatLng() {
+    final deliveryPointCoordinates = widget.job.deliveryPoint.split(',');
+    return LatLng(
+      double.parse(deliveryPointCoordinates[0].trim()),
+      double.parse(deliveryPointCoordinates[1].trim()),
+    );
+  }
+
+  AssignmentResponseEntity? _getAssignmentForUser() {
+    return widget.job.assignments.firstWhere(
+      (e) => e.userId.toString() == widget.staffId,
+      orElse: () => AssignmentResponseEntity(
+        id: 0,
+        userId: 0,
+        bookingId: 0,
+        status: '',
+        staffType: '',
+      ),
+    );
+  }
+
+  bool isStaffComing(String? assignmentStatus) {
+    return ((widget.job.status == "COMING" ||
+            widget.job.status == "IN_PROGRESS") &&
+        (assignmentStatus == "WAITING" ||
+            assignmentStatus == "ASSIGNED" ||
+            assignmentStatus == "INCOMING"));
+  }
+
+  bool isStaffProgress(String? assignmentStatus) {
+    return ((widget.job.status == "IN_PROGRESS") &&
+        (assignmentStatus == "ARRIVED" || assignmentStatus == "IN_PROGRESS"));
+  }
+
   Future<void> _initNavigation() async {
     if (!mounted) return;
     _navigationOption = _vietmapNavigationPlugin.getDefaultOptions();
@@ -60,17 +103,23 @@ class TrackingMapState extends State<TrackingMap> {
   }
 
   void _buildRoute() async {
+    final assignment = _getAssignmentForUser();
+    final subStatus = assignment?.status;
+
     if (_navigationController != null && _staffLocation != null) {
-      List<String> pickupPointCoordinates = widget.job.pickupPoint.split(',');
-      LatLng pickupPoint = LatLng(
-        double.parse(pickupPointCoordinates[0].trim()),
-        double.parse(pickupPointCoordinates[1].trim()),
-      );
+      LatLng waypoint;
+
+      if (isStaffComing(subStatus)) {
+        waypoint = _getPickupPointLatLng();
+      } else if (isStaffProgress(subStatus)) {
+        waypoint = _getDeliveryPointLatLng();
+      } else {
+        return;
+      }
 
       if (_staffLocation != null) {
-        // Đảo ngược thứ tự waypoints: từ pickup point đến staff location
         _navigationController?.buildRoute(
-          waypoints: [pickupPoint, _staffLocation!],
+          waypoints: [waypoint, _staffLocation!],
           profile: DrivingProfile.cycling,
         ).then((success) {
           if (!success) {
@@ -86,7 +135,7 @@ class TrackingMapState extends State<TrackingMap> {
   void _initStaffTracking() {
     DatabaseReference staffLocationRef = FirebaseDatabase.instance
         .ref()
-        .child('tracking_locations/81/DRIVER/61');
+        .child('tracking_locations/78/DRIVER/61');
 
     _locationSubscription = staffLocationRef.onValue.listen((event) {
       if (!mounted) return;
@@ -120,6 +169,38 @@ class TrackingMapState extends State<TrackingMap> {
     _buildRoute();
   }
 
+  // void _addMarker() async {
+  //   if (_navigationController != null) {
+  //     final assignment = _getAssignmentForUser();
+  //     final subStatus = assignment?.status;
+
+  //     LatLng pickupPoint = _getPickupPointLatLng();
+
+  //     LatLng deliveryPoint = _getDeliveryPointLatLng();
+
+  //     List<NavigationMarker> markers = [];
+
+  //     if (isStaffComing(subStatus)) {
+  //       markers.add(NavigationMarker(
+  //         imagePath: "assets/images/booking/vehicles/truck1.png",
+  //         height: 80,
+  //         width: 80,
+  //         latLng: pickupPoint,
+  //       ));
+  //     } else if (isStaffProgress(subStatus)) {
+  //       markers.add(NavigationMarker(
+  //         imagePath: "assets/images/booking/vehicles/truck1.png",
+  //         height: 80,
+  //         width: 80,
+  //         latLng: deliveryPoint,
+  //       ));
+  //     }
+
+  //     await _navigationController!.addImageMarkers(markers);
+  //     print("Markers added successfully: ${markers.length} markers");
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     List<String> pickupPointCoordinates = widget.job.pickupPoint.split(',');
@@ -142,6 +223,8 @@ class TrackingMapState extends State<TrackingMap> {
                 setState(() {
                   _navigationController = controller;
                   _isMapReady = true;
+
+                  // _addMarker();
                 });
 
                 if (_staffLocation != null) {

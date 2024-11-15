@@ -7,35 +7,47 @@ class AssignmentResponseEntity {
   final int userId;
   final int bookingId;
   final String status;
-  final double price;
+  final double? price;
   final String staffType;
-  final bool isResponsible;
-
+  final bool? isResponsible;
   AssignmentResponseEntity({
     required this.id,
     required this.userId,
     required this.bookingId,
     required this.status,
-    required this.price,
+    this.price,
     required this.staffType,
-    required this.isResponsible,
+    this.isResponsible,
   });
 
   factory AssignmentResponseEntity.fromMap(Map<String, dynamic> json) {
     return AssignmentResponseEntity(
-      id: json['id'] ?? 0,
+       id: json['id'] ?? 0,
       userId: json['userId'] ?? 0,
       bookingId: json['bookingId'] ?? 0,
       status: json['status'] ?? '',
-      price: json['price'] ?? 0,
+      price: json['price'] != null
+          ? (json['price'] is double
+              ? json['price']
+              : (json['price'] is int
+                  ? (json['price'] as int).toDouble()
+                  : null))
+          : null,
       staffType: json['staffType'] ?? '',
-      isResponsible: json['isResponsible'] ?? false,
+      isResponsible: json['isResponsible'] != null
+          ? (json['isResponsible'] is bool
+              ? json['isResponsible']
+              : (json['isResponsible'] is int
+                  ? json['isResponsible'] == 1
+                  : null))
+          : null,
+    
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+       'id': id,
       'userId': userId,
       'bookingId': bookingId,
       'status': status,
