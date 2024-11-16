@@ -25,13 +25,9 @@ class ProfileDetailScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(
         backgroundColor: AssetsConstants.primaryMain,
-        // iconFirst: Icons.chevron_left,
         showBackButton: true,
         backButtonColor: AssetsConstants.whiteColor,
-        // onCallBackFirst: () {
-        //   // Hành động khi nhấn vào icon
-        //   Navigator.pop(context); // Quay lại trang trước
-        // },
+      
         title: "Trang cá nhân của tôi",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {

@@ -1,5 +1,6 @@
 // import local
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 import 'package:movemate/features/profile/domain/repositories/profile_repository.dart';
@@ -34,6 +35,19 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
   }) async {
     return getDataOf(
       request: () => _profileSource.getProfileInforById(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
+  @override
+  Future<StaffProfileResponse> getProfileDriverInforById({
+    required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _profileSource.getProfileDriverInforById(
         APIConstants.contentType,
         accessToken,
         id,

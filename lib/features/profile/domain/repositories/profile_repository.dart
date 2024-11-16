@@ -1,5 +1,6 @@
 // local
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 
@@ -19,6 +20,10 @@ abstract class ProfileRepository {
 
   // House Type Methods get by id
   Future<ProfileResponse> getProfileInforById({
+    required String accessToken,
+    required int id,
+  });
+  Future<StaffProfileResponse> getProfileDriverInforById({
     required String accessToken,
     required int id,
   });

@@ -18,9 +18,9 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/book
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/map_widget.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_driver_info.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_poster_info.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_reviewer_info.dart';
+
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_staff_info.dart';
+
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/service_info_card.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
@@ -80,33 +80,20 @@ class OrderDetailsScreen extends HookConsumerWidget {
       context: context,
     );
     final houseType = useFetchResult.data;
-    int? getStaffTypeById(OrderEntity order, String staffType) {
+
+    List<AssignmentResponseEntity> getListStaffResponsibility(
+        OrderEntity order) {
       try {
-        final staffTypeMapping = {
-          'REVIEWER': 'REVIEWER',
-          'DRIVER': 'DRIVER',
-          'PORTER': 'PORTER',
-        };
-        if (staffTypeMapping.containsKey(staffType)) {
-          final assignment = order.assignments.firstWhere((e) =>
-              e.staffType == staffTypeMapping[staffType] &&
-              e.isResponsible == true);
-          return assignment.userId;
-        }
+        final staffResponsibility =
+            order.assignments.where((e) => e.isResponsible == true).toList();
+        return staffResponsibility;
       } catch (e) {
         print('Error: $e');
-        return null;
+        return [];
       }
-      return null;
     }
 
-    final reviewerById = getStaffTypeById(order, "REVIEWER");
-    final driverById = getStaffTypeById(order, "DRIVER");
-    final posterById = getStaffTypeById(order, "PORTER");
-    print("tuan 1 -=$reviewerById");
-    print("tuan 2 -$driverById");
-    print("tuan 3- $posterById");
-  
+    final listStaffResponsibility = getListStaffResponsibility(order);
 
     final getServiceId = order.bookingDetails
         .firstWhere(
@@ -179,20 +166,17 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 const SizedBox(height: 16),
                 Column(
                   children: [
-                    if (reviewerById != null)
-                      ProfileReviewerInfo(
-                        id: reviewerById,
-                      ),
-                    const SizedBox(height: 20),
-                    if (driverById != null)
-                      ProfileDriverInfo(
-                        id: driverById,
-                      ),
-                    const SizedBox(height: 20),
-                    if (posterById != null)
-                      ProfilePosterInfo(
-                        id: posterById,
-                      ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: listStaffResponsibility.length,
+                        itemBuilder: (context, index) {
+                          final staffAssignment =
+                              listStaffResponsibility[index];
+                          return ProfileStaffInfo(
+                            staffAssignment: staffAssignment,
+                          );
+                        }),
                     const SizedBox(height: 20),
                     const LabelText(
                       content: 'Thông tin khách hàng',

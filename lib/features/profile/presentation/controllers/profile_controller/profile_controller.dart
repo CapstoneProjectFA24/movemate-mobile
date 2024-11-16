@@ -75,7 +75,7 @@ class ProfileController extends _$ProfileController {
   ) async {
     ProfileEntity? profileInfor;
 
-    // state = const AsyncLoading();
+    state = const AsyncLoading();
     final profileRepository = ref.read(profileRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
@@ -83,10 +83,10 @@ class ProfileController extends _$ProfileController {
     state = await AsyncValue.guard(() async {
       final response = await profileRepository.getProfileInforById(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        id: id,
+        id: 11,
       );
       profileInfor = response.payload;
-      print("controller ${profileInfor?.email}");
+      // print("controller ${profileInfor?.email}");
     });
 
     if (state.hasError) {
@@ -111,7 +111,6 @@ class ProfileController extends _$ProfileController {
     }
     return profileInfor;
   }
-
 //wallet
 
   Future<WalletEntity?> getWallet(
