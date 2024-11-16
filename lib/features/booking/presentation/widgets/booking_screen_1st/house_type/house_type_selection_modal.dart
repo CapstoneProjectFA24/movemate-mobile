@@ -71,7 +71,7 @@ class HouseTypeSelectionModal extends HookConsumerWidget {
       final houseTypes = houseTypeEntities.map((e) => e.name).toList();
 
       return SelectionModal(
-        title: 'Chọn loại nhà ở',
+        title: 'Chọn loại hình cần chuyển',
         items: houseTypes,
         onItemSelected: (selectedItem) {
           // Tìm đối tượng HouseTypeEntity được chọn

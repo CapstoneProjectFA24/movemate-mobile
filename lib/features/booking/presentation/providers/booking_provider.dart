@@ -509,7 +509,8 @@ class BookingNotifier extends StateNotifier<Booking> {
   ) {
     print("Resetting house type info");
     state = state.copyWith(
-      houseType: HouseTypeEntity(name: 'Chọn loại nhà ở', description: ''),
+      houseType:
+          HouseTypeEntity(name: 'Chọn loại hình cần chuyển', description: ''),
       houseTypeError: null,
       numberOfRooms: 1,
       numberOfFloors: 1,

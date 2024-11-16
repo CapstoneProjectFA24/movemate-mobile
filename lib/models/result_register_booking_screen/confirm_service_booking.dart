@@ -23,68 +23,94 @@ class ConfirmServiceBookingScreen extends ConsumerWidget {
       child: Scaffold(
         body: Stack(
           children: [
-            // Background Image
             Positioned.fill(
-              child: Image.asset(
-                "assets/images/Group39449.png",
-                fit: BoxFit.cover,
+              child: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/background/bg_1.jpg"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             Center(
               child: Container(
                 width: 350,
-                height: MediaQuery.of(context).size.height *
-                    (3 / 5), // 3/5 of screen height
+                height: MediaQuery.of(context).size.height * (3 / 5),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF57C00), // #f57c00
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 32.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Replace the icon with the logo and truck image
-                      const SizedBox(height: 20),
-                      Image.asset(
-                        'assets/images/logo/MoveMateLogo2.png', // Truck image
-                        width: 280, // Adjust size as needed
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Image.asset(
+                          'assets/images/logo/MoveMateLogo2.png',
+                          width: 180,
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                    const Text(
+                      'MoveMate đang xử lý!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Color(0xFFF57C00),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
-
-                      const SizedBox(height: 60),
-                      // Text message
-                      const Text(
-                        'MoveMate đang xử lý!\nMời bạn xác nhận lại dịch vụ của\nbạn để đảm bảo không có sai sót.',
-                        textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 15),
+                    Image.asset(
+                      'assets/images/background/giphy.webp',
+                      width: 200,
+                      height: 150,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 15),
+                    const Text(
+                      'Mời bạn xác nhận lại dịch vụ của\nbạn để đảm bảo không có sai sót.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF57C00),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 30),
+                      ),
+                      onPressed: () {
+                        print("Đi đến My Booking");
+                        context.router.replaceAll(
+                          [OrderDetailsScreenRoute(order: order)],
+                        );
+                      },
+                      child: const Text(
+                        'Xác nhận',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Spacer(), // Pushes the button to the bottom
-                      // Button to navigate back to home page
-                      SizedBox(
-                        width: 350 * (6 / 7), // 2/3 of the container width
-                        height: 50, // 2/3 of the container width
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Colors.white, // Background color of the button
-                            foregroundColor: const Color(
-                                0xFFF57C00), // Text color of the button
-                          ),
-                          onPressed: () {
-                            print("đi đến My booking");
-
-                            context.router.replaceAll(
-                                [OrderDetailsScreenRoute(order: order)]);
-                          },
-                          child: const Text('OK'),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

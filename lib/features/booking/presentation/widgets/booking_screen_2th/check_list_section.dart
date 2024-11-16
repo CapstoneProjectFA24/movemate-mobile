@@ -29,8 +29,8 @@ class ChecklistSection extends HookConsumerWidget {
           child: FadeInUp(
             child: const LabelText(
               content: 'Hướng dẫn chuyển nhà',
-              size: AssetsConstants.labelFontSize + 4.0,
-              fontWeight: FontWeight.w600,
+              size: AssetsConstants.labelFontSize + 2.0,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -49,6 +49,7 @@ class ChecklistSection extends HookConsumerWidget {
                   checklistOptions[index],
                   style: const TextStyle(
                     color: AssetsConstants.blackColor,
+                    fontSize: 14, // Giảm kích thước phông chữ
                   ),
                 ),
               ),

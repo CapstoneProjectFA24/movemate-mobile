@@ -417,7 +417,7 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
                         strokeWidth: 2,
                       ),
                     )
-                  : const Text('Xác nhận đặt lịch hẹn',
+                  : const Text('Xác nhận lịch hẹn',
                       style: TextStyle(fontSize: 14));
             }),
           ),

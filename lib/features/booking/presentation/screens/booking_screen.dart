@@ -215,9 +215,9 @@ class BookingScreen extends HookConsumerWidget {
                           const SizedBox(height: 16),
                           const LabelText(
                             content:
-                                "Lưu ý: Bỏ qua mục này nếu bạn muốn xếp lịch hẹn đánh giá tại nhà.",
+                                "Lưu ý: Nếu bỏ qua mục này chúng tôi sẽ mặc định xếp lịch hẹn đánh giá tại nhà cho bạn.",
                             size: 12,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                             color: Colors.grey,
                           ),
                           Row(
@@ -259,7 +259,7 @@ class BookingScreen extends HookConsumerWidget {
                   final bookingNotifier = ref.read(bookingProvider.notifier);
 
                   return SummarySection(
-                    buttonText: "Bước tiếp theo",
+                    buttonText: "Tiếp tục",
                     priceLabel: (bookingState.selectedVehicle?.name ==
                                 'not selected' ||
                             bookingState.selectedVehicle?.name == null ||

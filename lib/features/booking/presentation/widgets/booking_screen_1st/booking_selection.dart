@@ -31,7 +31,8 @@ class BookingSelection extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SelectionButton(
-              label: bookingState.houseType?.name ?? 'Chọn loại nhà ở',
+              label:
+                  bookingState.houseType?.name ?? 'Chọn loại hình cần chuyển',
               icon: Icons.arrow_drop_down,
               onTap: () => showHouseTypeModal(context, bookingNotifier),
             ),
@@ -60,7 +61,7 @@ class BookingSelection extends HookConsumerWidget {
                 onTap: () => showNumberSelectionModal(
                   context,
                   title: 'Số lượng phòng',
-                  maxNumber: 10,
+                  maxNumber: 30,
                   onNumberSelected: (number) {
                     bookingNotifier.updateNumberOfRooms(number);
                   },

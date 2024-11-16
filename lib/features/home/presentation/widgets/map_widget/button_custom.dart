@@ -16,7 +16,7 @@ class ButtonCustom extends StatelessWidget {
     super.key,
     required this.isButtonEnabled,
     required this.onButtonPressed,
-    this.buttonText = 'Bước tiếp theo', // Nội dung mặc định của button
+    this.buttonText = 'Tiếp tục', // Nội dung mặc định của button
     this.buttonColor =
         AssetsConstants.primaryMain, // Màu sắc mặc định của button
     this.disabledButtonColor =
