@@ -295,20 +295,20 @@ class ServiceSelector extends HookConsumerWidget {
                 onPressed: () {
                   showErrors.value = true; // Show validation errors
 
-                  bookingNotifier.updatePickUpLocation(LocationModel(
-                      label: 'label',
-                      address:
-                          '152a Mã lò, Bình Trị Đông A, Bình Tân, Ho Chi Minh City, Vietnam',
-                      latitude: 10.763150,
-                      longitude: 106.604640,
-                      distance: "43"));
-                  bookingNotifier.updateDropOffLocation(LocationModel(
-                      label: 'label',
-                      address:
-                          '252 Mã lò, Bình Trị Đông B, Bình Tân, Ho Chi Minh City, Vietnam',
-                      latitude: 10.769140,
-                      longitude: 106.602870,
-                      distance: '2'));
+                  // bookingNotifier.updatePickUpLocation(LocationModel(
+                  //     label: 'label',
+                  //     address:
+                  //         '152a Mã lò, Bình Trị Đông A, Bình Tân, Ho Chi Minh City, Vietnam',
+                  //     latitude: 10.763150,
+                  //     longitude: 106.604640,
+                  //     distance: "43"));
+                  // bookingNotifier.updateDropOffLocation(LocationModel(
+                  //     label: 'label',
+                  //     address:
+                  //         '252 Mã lò, Bình Trị Đông B, Bình Tân, Ho Chi Minh City, Vietnam',
+                  //     latitude: 10.769140,
+                  //     longitude: 106.602870,
+                  //     distance: '2'));
 
                   // bookingNotifier.updateBookingDate(
                   //     DateTime.now().add(const Duration(days: 1)));
