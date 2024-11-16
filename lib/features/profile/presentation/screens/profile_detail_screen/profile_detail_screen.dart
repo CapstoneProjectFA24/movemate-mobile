@@ -28,10 +28,10 @@ class ProfileDetailScreen extends HookConsumerWidget {
         // iconFirst: Icons.chevron_left,
         showBackButton: true,
         backButtonColor: AssetsConstants.whiteColor,
-        onCallBackFirst: () {
-          // Hành động khi nhấn vào icon
-          Navigator.pop(context); // Quay lại trang trước
-        },
+        // onCallBackFirst: () {
+        //   // Hành động khi nhấn vào icon
+        //   Navigator.pop(context); // Quay lại trang trước
+        // },
         title: "Trang cá nhân của tôi",
         iconSecond: Icons.home_outlined,
         onCallBackSecond: () {
@@ -140,10 +140,10 @@ class ProfileDetailScreen extends HookConsumerWidget {
                   onEditPressed: () {
                     context.router.push(const ContactScreenRoute());
                   },
-                  children: const [
-                    InfoRow(label: 'Số điện thoại', value: '08999123456'),
-                    InfoRow(label: 'Gmail', value: '19521234@gm.uit.edu.vn'),
-                    InfoRow(
+                  children: [
+                    InfoRow(label: 'Số điện thoại', value: '${user.phone}'),
+                    InfoRow(label: 'Gmail', value: user.email),
+                    const InfoRow(
                         label: 'Địa chỉ',
                         value: 'Quận 9, Thành phố Hồ Chí Minh'),
                   ],
