@@ -1,5 +1,3 @@
-// components/booking_status.dart
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
@@ -10,38 +8,86 @@ import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 
 class BookingStatus extends HookConsumerWidget {
   final OrderEntity order;
-  const BookingStatus({
-    super.key,
-    required this.order,
-  });
+
+  const BookingStatus({super.key, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
-    return Column(
-      children: [
-        FadeInUp(
-          child: Padding(
-              padding: const EdgeInsets.only(left: 14.0),
-              child: LabelText(
-                content: bookingStatus.statusMessage,
-                size: 20,
-                fontWeight: FontWeight.w500,
-              )),
-        ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.only(left: 14.0),
-          child: FadeInUp(
-            child: const Text(
-              "MoveMate sẽ gửi thông tin đến bạn sau",
-              style: TextStyle(fontSize: 14),
-            ),
+
+    final insTructionIconFolowStatus = bookingStatus.canMakePayment ||
+        bookingStatus.canAcceptSchedule ||
+        bookingStatus.canReviewSuggestion;
+
+    final isComplete = bookingStatus.isCompleted;
+    return FadeIn(
+      duration: const Duration(milliseconds: 800),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isComplete
+                ? [
+                    Colors.green.shade400,
+                    Colors.green.shade600,
+                  ]
+                : !insTructionIconFolowStatus
+                    ? [Colors.blueAccent.withOpacity(0.2), Colors.white]
+                    : [Colors.orangeAccent.withOpacity(0.5), Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
-      ],
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FadeInUp(
+              duration: const Duration(milliseconds: 500),
+              child: Row(
+                children: [
+                  Icon(
+                    isComplete ? Icons.check_circle : Icons.info_outline,
+                    color: isComplete
+                        ? Colors.green
+                        : !insTructionIconFolowStatus
+                            ? Colors.blue.shade500
+                            : Colors.red.shade400,
+                    size: 28,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: LabelText(
+                      content: bookingStatus.statusMessage,
+                      size: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            FadeInUp(
+              duration: const Duration(milliseconds: 700),
+              child: const Text(
+                "MoveMate sẽ gửi thông tin đến bạn sau",
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

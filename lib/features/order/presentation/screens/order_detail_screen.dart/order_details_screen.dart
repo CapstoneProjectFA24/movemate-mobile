@@ -158,7 +158,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 BookingStatus(order: order),
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
                 TimelineSteps(
                   order: order,
                   expandedIndex: expandedIndex,
