@@ -18,7 +18,9 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/book
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/map_widget.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_info.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_driver_info.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_poster_info.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_reviewer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/service_info_card.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
@@ -78,56 +80,33 @@ class OrderDetailsScreen extends HookConsumerWidget {
       context: context,
     );
     final houseType = useFetchResult.data;
+    int? getStaffTypeById(OrderEntity order, String staffType) {
+      try {
+        final staffTypeMapping = {
+          'REVIEWER': 'REVIEWER',
+          'DRIVER': 'DRIVER',
+          'PORTER': 'PORTER',
+        };
+        if (staffTypeMapping.containsKey(staffType)) {
+          final assignment = order.assignments.firstWhere((e) =>
+              e.staffType == staffTypeMapping[staffType] &&
+              e.isResponsible == true);
+          return assignment.userId;
+        }
+      } catch (e) {
+        print('Error: $e');
+        return null;
+      }
+      return null;
+    }
 
-    final useFetchResultProfile = useFetchObject<ProfileEntity>(
-      function: (context) async {
-        return ref
-            .read(profileControllerProvider.notifier)
-            .getProfileInforById(order.userId, context);
-      },
-      context: context,
-    );
-    final profileUser = useFetchResultProfile.data;
-
-    final fetchReslut = useFetch<OrderEntity>(
-      function: (model, context) => ref
-          .read(orderControllerProvider.notifier)
-          .getBookings(model, context),
-      initialPagingModel: PagingModel(
-        pageSize: 50,
-        pageNumber: 1,
-      ),
-      context: context,
-    );
-
-    final fetchReslutService = useFetch<ServicesPackageEntity>(
-      function: (model, context) => ref
-          .read(orderControllerProvider.notifier)
-          .getAllService(model, context),
-      initialPagingModel: PagingModel(
-        type: 'TRUCK',
-        pageSize: 50,
-        pageNumber: 1,
-      ),
-      context: context,
-    );
-    final serviceAll = fetchReslutService.items;
-
-    // Kiểm tra assignments
-    final getAssID = order.assignments
-        .firstWhere(
-          (e) => e.staffType == 'REVIEWER',
-          orElse: () => AssignmentResponseEntity(
-            bookingId: 0,
-            staffType: 'REVIEWER',
-            userId: 2,
-            id: 0,
-            status: "READY",
-            isResponsible: false,
-            price: 0,
-          ), // Provide a default instance
-        )
-        .userId;
+    final reviewerById = getStaffTypeById(order, "REVIEWER");
+    final driverById = getStaffTypeById(order, "DRIVER");
+    final posterById = getStaffTypeById(order, "PORTER");
+    print("tuan 1 -=$reviewerById");
+    print("tuan 2 -$driverById");
+    print("tuan 3- $posterById");
+  
 
     final getServiceId = order.bookingDetails
         .firstWhere(
@@ -146,17 +125,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
           ),
         )
         .serviceId;
-    print("serviceId: $getServiceId ");
-
-    final useFetchResultProfileAssign = useFetchObject<ProfileEntity>(
-      function: (context) async {
-        return ref
-            .read(profileControllerProvider.notifier)
-            .getProfileInforById(getAssID, context);
-      },
-      context: context,
-    );
-    final ProfileAssign = useFetchResultProfileAssign.data;
 
     final useFetchResultService = useFetchObject<ServicesPackageEntity>(
       function: (context) async {
@@ -209,63 +177,36 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   expandedIndex: expandedIndex,
                 ),
                 const SizedBox(height: 16),
-                statusOrders == BookingStatusType.pending
-                    ? Column(
-                        children: [
-                          const LabelText(
-                            content: 'Thông tin khách hàng',
-                            size: 20,
-                            fontFamily: 'bold',
-                            color: AssetsConstants.blackColor,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          ServiceInfoCard(
-                            statusAsync: statusAsync,
-                            order: order,
-                            houseType: houseType,
-                            profileUser: profileUser,
-                          ),
-                        ],
-                      )
-                    : statusOrders == BookingStatusType.assigned
-                        ? Column(
-                            children: [
-                              ProfileInfo(profileAssign: ProfileAssign),
-                              const SizedBox(height: 20),
-                              const LabelText(
-                                content: 'Thông tin khách hàng',
-                                size: 20,
-                                fontFamily: 'bold',
-                                color: AssetsConstants.blackColor,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              ServiceInfoCard(
-                                statusAsync: statusAsync,
-                                order: order,
-                                houseType: houseType,
-                                profileUser: profileUser,
-                              )
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              ProfileInfo(profileAssign: ProfileAssign),
-                              const SizedBox(height: 20),
-                              const LabelText(
-                                content: 'Thông tin khách hàng',
-                                size: 20,
-                                fontFamily: 'bold',
-                                color: AssetsConstants.blackColor,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              ServiceInfoCard(
-                                statusAsync: statusAsync,
-                                order: order,
-                                houseType: houseType,
-                                profileUser: profileUser,
-                              )
-                            ],
-                          ),
+                Column(
+                  children: [
+                    if (reviewerById != null)
+                      ProfileReviewerInfo(
+                        id: reviewerById,
+                      ),
+                    const SizedBox(height: 20),
+                    if (driverById != null)
+                      ProfileDriverInfo(
+                        id: driverById,
+                      ),
+                    const SizedBox(height: 20),
+                    if (posterById != null)
+                      ProfilePosterInfo(
+                        id: posterById,
+                      ),
+                    const SizedBox(height: 20),
+                    const LabelText(
+                      content: 'Thông tin khách hàng',
+                      size: 20,
+                      fontFamily: 'bold',
+                      color: AssetsConstants.blackColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    ServiceInfoCard(
+                      order: order,
+                      houseType: houseType,
+                    )
+                  ],
+                ),
                 const SizedBox(height: 20),
                 (statusOrders == BookingStatusType.assigned &&
                             order.isReviewOnline == false) ||

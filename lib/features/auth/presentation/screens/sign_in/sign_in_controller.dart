@@ -50,6 +50,12 @@ class SignInController extends _$SignInController {
         final userModel = UserModel(
           id: user.payload.id,
           email: user.payload.email,
+          roleName: user.payload.roleName,
+          roleId: user.payload.roleId,
+          name: user.payload.name,
+          avatarUrl: user.payload.avatarUrl,
+          gender: user.payload.gender,
+          phone: user.payload.phone,
           tokens: user.payload.tokens,
         );
 

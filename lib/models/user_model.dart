@@ -5,8 +5,14 @@ import 'user_token.dart';
 class UserModel {
   final int? id;
   final String email;
-  final TokenModel tokens;
+  final String? roleName;
+  final int? roleId;
+  final String? name;
+  final String? phone;
+  final String? gender;
+  final String? avatarUrl;
   final String? fcmToken;
+  final TokenModel tokens;
   final List<UserDevice>? userTokens;
 
   UserModel({
@@ -15,6 +21,12 @@ class UserModel {
     required this.tokens,
     this.fcmToken,
     this.userTokens,
+    this.avatarUrl,
+    this.roleName,
+    this.roleId,
+    this.name,
+    this.phone,
+    this.gender,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +38,24 @@ class UserModel {
 
     result.addAll({'email': email});
     result.addAll({'tokens': tokens.toMap()});
+    if (roleName != null) {
+      result.addAll({'roleName': roleName});
+    }
+    if (roleId != null) {
+      result.addAll({'roleId': roleId});
+    }
+    if (name != null) {
+      result.addAll({'name': name});
+    }
+    if (phone != null) {
+      result.addAll({'phone': phone});
+    }
+    if (gender != null) {
+      result.addAll({'gender': gender});
+    }
+    if (avatarUrl != null) {
+      result.addAll({'avatarUrl': avatarUrl});
+    }
     if (fcmToken != null) {
       result.addAll({'fcmToken': fcmToken});
     }
@@ -40,7 +70,13 @@ class UserModel {
     return UserModel(
       id: map['id']?.toInt(),
       email: map['email'] ?? '',
+      avatarUrl: map['avatarUrl'] ?? '',
       tokens: TokenModel.fromMap(map['tokens']),
+      roleName: map['roleName'] ?? '',
+      roleId: map['roleId']?.toInt() ?? 0,
+      name: map['name'] ?? '',
+      phone: map['phone'] ?? '',
+      gender: map['gender'] ?? '',
       fcmToken: map['fcmToken'],
       userTokens: map['userTokens'] != null
           ? List<UserDevice>.from(
@@ -57,6 +93,12 @@ class UserModel {
   UserModel copyWith({
     int? id,
     String? email,
+    String? roleName,
+    int? roleId,
+    String? name,
+    String? phone,
+    String? gender,
+    String? avatarUrl,
     TokenModel? tokens,
     String? fcmToken,
     List<UserDevice>? userTokens,
@@ -64,9 +106,15 @@ class UserModel {
     return UserModel(
       id: id ?? this.id,
       email: email ?? this.email,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
       tokens: tokens ?? this.tokens,
       fcmToken: fcmToken ?? this.fcmToken,
       userTokens: userTokens ?? this.userTokens,
+      roleName: roleName ?? this.roleName,
+      roleId: roleId ?? this.roleId,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+      gender: gender ?? this.gender,
     );
   }
 }

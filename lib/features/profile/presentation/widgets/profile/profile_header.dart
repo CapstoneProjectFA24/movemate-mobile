@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/models/user_model.dart';
 
 class ProfileHeader extends StatelessWidget {
-  final Map<String, Object> profile;
+  final UserModel? profile;
 
   const ProfileHeader({super.key, required this.profile});
 
@@ -28,7 +29,13 @@ class ProfileHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage(profile['imagePath'].toString()),
+                backgroundImage: NetworkImage(profile!.avatarUrl.toString() ??
+                    'assets/images/profile/Image.png'),
+                backgroundColor:
+                    Colors.grey[200], // Optional: placeholder color
+                onBackgroundImageError: (_, __) {
+                  // Handle image loading errors if needed
+                },
               ),
               const SizedBox(width: 16.0),
               Expanded(
@@ -36,7 +43,7 @@ class ProfileHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      profile['name'].toString(),
+                      profile!.name.toString(),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -44,7 +51,7 @@ class ProfileHeader extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      profile['phoneNumber'].toString(),
+                      profile!.phone.toString(),
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,

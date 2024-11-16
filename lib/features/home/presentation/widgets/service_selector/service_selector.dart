@@ -318,8 +318,10 @@ class ServiceSelector extends HookConsumerWidget {
                   final isDropOffValid = bookingState.dropOffLocation != null &&
                       bookingState.dropOffLocation!.address != 'Chọn địa điểm';
                   final isDateValid = bookingState.bookingDate != null &&
-                      !isDateTimeInvalid.value &&
-                      !isDateTimeLimit.value;
+                          !isDateTimeInvalid.value
+
+                      //  &&!isDateTimeLimit.value
+                      ;
 
                   final isPickUpSelected =
                       bookingState.pickUpLocation?.address != 'Chọn địa điểm';

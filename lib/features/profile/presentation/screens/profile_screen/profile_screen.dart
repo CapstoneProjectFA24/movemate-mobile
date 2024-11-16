@@ -7,7 +7,9 @@ import 'package:movemate/features/profile/presentation/widgets/profile/profile_h
 import 'package:movemate/features/profile/presentation/widgets/profile/profile_menu.dart';
 import 'package:movemate/features/profile/presentation/widgets/profile/promo_section.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/providers/common_provider.dart';
 
 @RoutePage()
 class ProfileScreen extends HookConsumerWidget {
@@ -15,7 +17,8 @@ class ProfileScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final authProvider = ref.read(signInControllerProvider);
+    final user = ref.read(authProvider);
+
     final profile = {
       'name': 'Lê An',
       'phoneNumber': '0972266784',
@@ -88,7 +91,7 @@ class ProfileScreen extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileHeader(profile: profile),
+            ProfileHeader(profile: user),
             const SizedBox(height: 24.0),
             const PromoSection(),
             const SizedBox(height: 24.0),

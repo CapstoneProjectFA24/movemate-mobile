@@ -11,7 +11,7 @@ class ProfileCard extends StatelessWidget {
   final VoidCallback? onPhonePressed;
   final VoidCallback? onCommentPressed;
   final bool iconCall;
-  final bool iconChat;
+  final bool iconLocation;
 
   const ProfileCard({
     super.key,
@@ -23,14 +23,14 @@ class ProfileCard extends StatelessWidget {
     this.onPhonePressed,
     this.onCommentPressed,
     this.iconCall = false,
-    this.iconChat = false,
+    this.iconLocation = false,
   })  : assert(
           !iconCall || onPhonePressed != null,
           'onPhonePressed must be provided when iconCall is true',
         ),
         assert(
-          !iconChat || onCommentPressed != null,
-          'onCommentPressed must be provided when iconChat is true',
+          !iconLocation || onCommentPressed != null,
+          'onCommentPressed must be provided when iconLocation is true',
         );
 
   @override
@@ -138,10 +138,10 @@ class ProfileCard extends StatelessWidget {
                       ),
                       onPressed: onPhonePressed,
                     ),
-                  if (iconChat)
+                  if (iconLocation)
                     IconButton(
                       icon: FaIcon(
-                        FontAwesomeIcons.commentDots,
+                        FontAwesomeIcons.mapLocation,
                         size: 18,
                         color: Colors.grey.shade600,
                       ),
