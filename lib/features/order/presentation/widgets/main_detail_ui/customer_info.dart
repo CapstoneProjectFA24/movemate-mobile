@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 class CustomerInfo extends StatelessWidget {
   final ValueNotifier<bool> isExpanded;
   final VoidCallback toggleDropdown;
-  final Object statusOrders;
   const CustomerInfo({
     super.key,
     required this.isExpanded,
-    required this.statusOrders,
     required this.toggleDropdown,
   });
 

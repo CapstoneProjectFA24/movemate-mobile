@@ -28,6 +28,12 @@ class BookingStatusResult {
   final bool
       isOnlineSuggestionReady; // Có đề xuất mới online (reviewing + REVIEWER/suggested)
 
+  // Status indicators - Driver Flow
+  final bool isDriverProcessingMoving;
+
+  // Status indicator - Porter Flow
+  final bool isPorterProcessingMoving;
+
   // Common indicators
   final bool isMovingInProgress; // Đang vận chuyển (coming)
   final bool isCompleted; // Hoàn thành
@@ -45,6 +51,8 @@ class BookingStatusResult {
     this.isOnlineReviewing = false,
     this.isOnlineSuggestionReady = false,
     this.isMovingInProgress = false,
+    this.isDriverProcessingMoving = false,
+    this.isPorterProcessingMoving = false,
     this.isCompleted = false,
   });
 }
@@ -142,6 +150,54 @@ BookingStatusResult useBookingStatus(
       }
     }
 
+    // Check driver state
+    final isDriverIncoming =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.incoming);
+
+    final isDriverInProgress =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
+
+    // flag to check driver state
+    bool isDriverProcessingMoving = false;
+    switch (status) {
+      case BookingStatusType.coming:
+        if (isDriverInProgress || isDriverIncoming) {
+          isDriverProcessingMoving = true;
+        }
+        break;
+      case BookingStatusType.inProgress:
+        if (isDriverInProgress || isDriverIncoming) {
+          isDriverProcessingMoving = true;
+        }
+        break;
+      default:
+        break;
+    }
+
+    // check porter state
+    final isPorterIncoming =
+        hasAssignmentWithStatus("PORTER", AssignmentsStatusType.incoming);
+
+    final isPorterInProgress =
+        hasAssignmentWithStatus("PORTER", AssignmentsStatusType.inProgress);
+
+    // flag to check driver state
+    bool isPorterProcessingMoving = false;
+    switch (status) {
+      case BookingStatusType.coming:
+        if (isPorterIncoming || isPorterInProgress) {
+          isPorterProcessingMoving = true;
+        }
+        break;
+      case BookingStatusType.inProgress:
+        if (isPorterIncoming || isPorterInProgress) {
+          isPorterProcessingMoving = true;
+        }
+        break;
+      default:
+        break;
+    }
+
     return BookingStatusResult(
       statusMessage: determineStatusMessage(
         status,
@@ -165,6 +221,10 @@ BookingStatusResult useBookingStatus(
       isProcessingRequest: isProcessingRequest,
       isOnlineReviewing: isOnlineReviewing,
       isOnlineSuggestionReady: isOnlineSuggestionReady,
+
+      // Driver and Porter states
+      isDriverProcessingMoving: isDriverProcessingMoving,
+      isPorterProcessingMoving: isPorterProcessingMoving,
 
       // Common states
       isMovingInProgress: status == BookingStatusType.coming,
@@ -193,6 +253,7 @@ String determineStatusMessage(
         return "Vui lòng thanh toán để tiến hành dịch vụ";
       case BookingStatusType.coming:
         return "Đội ngũ vận chuyển đang trên đường đến";
+
       default:
         return _getDefaultStatusMessage(status);
     }
@@ -213,6 +274,7 @@ String determineStatusMessage(
         return "Vui lòng xác nhận đề xuất dịch vụ";
       case BookingStatusType.coming:
         return "Đội ngũ vận chuyển đang trên đường đến";
+
       default:
         return _getDefaultStatusMessage(status);
     }

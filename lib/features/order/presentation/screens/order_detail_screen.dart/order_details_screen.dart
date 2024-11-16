@@ -23,6 +23,7 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/serv
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -51,6 +52,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final state = ref.watch(orderControllerProvider);
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
+
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -59,6 +61,15 @@ class OrderDetailsScreen extends HookConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (err, stack) => Text('Error: $err'),
     );
+
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
+    // TO DO for traking position
+    final canCheckReviewerTracking = bookingStatus.isReviewerMoving;
+    final canCheckDriverTracking = bookingStatus.isDriverProcessingMoving;
+    final canCheckPorterTracking = bookingStatus.isPorterProcessingMoving;
 
     final useFetchResult = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
@@ -156,8 +167,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
       context: context,
     );
     final serviceData = useFetchResultService.data;
-    print("servicedata $serviceData");
-    print("servicedata $serviceData");
 
     return LoadingOverlay(
       isLoading:
@@ -281,7 +290,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 const SizedBox(height: 10),
                 (statusOrders == BookingStatusType.reviewed)
                     ? CustomerInfo(
-                        statusOrders: statusOrders,
                         isExpanded: isExpanded,
                         toggleDropdown: toggleDropdown,
                       )
