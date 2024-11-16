@@ -5,6 +5,7 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 
 class BookingStatus extends HookConsumerWidget {
   final OrderEntity order;
@@ -16,25 +17,31 @@ class BookingStatus extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
-
+    final isCancelled = bookingStatus.isCancelled;
     final insTructionIconFolowStatus = bookingStatus.canMakePayment ||
         bookingStatus.canAcceptSchedule ||
         bookingStatus.canReviewSuggestion;
 
     final isComplete = bookingStatus.isCompleted;
+
     return FadeIn(
       duration: const Duration(milliseconds: 800),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: isComplete
+            colors: isCancelled
                 ? [
-                    Colors.green.shade400,
-                    Colors.green.shade600,
+                    Colors.blueGrey.shade400,
+                    Colors.grey.shade600,
                   ]
-                : !insTructionIconFolowStatus
-                    ? [Colors.blueAccent.withOpacity(0.2), Colors.white]
-                    : [Colors.orangeAccent.withOpacity(0.5), Colors.white],
+                : isComplete
+                    ? [
+                        Colors.green.shade400,
+                        Colors.green.shade600,
+                      ]
+                    : !insTructionIconFolowStatus
+                        ? [Colors.blueAccent.withOpacity(0.2), Colors.white]
+                        : [Colors.orangeAccent.withOpacity(0.5), Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -57,12 +64,18 @@ class BookingStatus extends HookConsumerWidget {
               child: Row(
                 children: [
                   Icon(
-                    isComplete ? Icons.check_circle : Icons.info_outline,
-                    color: isComplete
-                        ? Colors.green
-                        : !insTructionIconFolowStatus
-                            ? Colors.blue.shade500
-                            : Colors.red.shade400,
+                    isCancelled
+                        ? Icons.cancel
+                        : isComplete
+                            ? Icons.check_circle
+                            : Icons.info_outline,
+                    color: isCancelled
+                        ? Colors.red
+                        : isComplete
+                            ? AssetsConstants.green6
+                            : !insTructionIconFolowStatus
+                                ? Colors.blue.shade500
+                                : Colors.red.shade400,
                     size: 28,
                   ),
                   const SizedBox(width: 8),
@@ -71,7 +84,7 @@ class BookingStatus extends HookConsumerWidget {
                       content: bookingStatus.statusMessage,
                       size: 20,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: isCancelled ? Colors.white : Colors.black87,
                     ),
                   ),
                 ],
@@ -80,9 +93,12 @@ class BookingStatus extends HookConsumerWidget {
             const SizedBox(height: 10),
             FadeInUp(
               duration: const Duration(milliseconds: 700),
-              child: const Text(
+              child: Text(
                 "MoveMate sẽ gửi thông tin đến bạn sau",
-                style: TextStyle(fontSize: 14, color: Colors.black54),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: isCancelled ? Colors.white70 : Colors.black54,
+                ),
               ),
             ),
           ],
