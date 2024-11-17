@@ -77,12 +77,11 @@ class ProfileStaffInfo extends HookConsumerWidget {
           ));
           break;
         case "REVIEWER":
-          // Uncomment và customize route cho Reviewer khi cần
-          // context.router.push(TrackingReviewerMapRoute(
-          //   staffId: staffAssignment.userId.toString(),
-          //   role: "REVIEWER",
-          //   job: order,
-          // ));
+          context.router.push(ReviewerTrackingMapRoute(
+            staffId: staffAssignment.userId.toString(),
+            job: order,
+            bookingStatus: bookingStatus,
+          ));
           break;
         case "PORTER":
           // Thêm route cho Porter nếu cần
