@@ -19,6 +19,7 @@ import 'package:movemate/features/profile/presentation/screens/contact/contact_s
 import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/models/loading_screen/loading_screen.dart';
 import 'package:movemate/models/result_register_booking_screen/confirm_service_booking.dart';
 import 'package:movemate/models/result_register_booking_screen/register_success.dart';
@@ -57,7 +58,7 @@ import 'package:movemate/features/profile/presentation/screens/profile_screen/pr
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
-import 'package:movemate/features/order/presentation/screens/tracking_map/tracking_map.dart';
+import 'package:movemate/features/order/presentation/screens/driver_tracking_map/driver_tracking_map.dart';
 
 import 'package:movemate/features/test-payment/payment_result_screen.dart';
 
@@ -169,7 +170,7 @@ class AppRouter extends _$AppRouter {
           page: OrderScreenRoute.page,
         ),
         AutoRoute(
-          page: TrackingMapRoute.page,
+          page: TrackingDriverMapRoute.page,
         ),
         AutoRoute(
           page: OrderDetailsScreenRoute.page,

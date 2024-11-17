@@ -129,15 +129,6 @@ class ProfileCard extends StatelessWidget {
               // Biểu tượng hành động
               Row(
                 children: [
-                  if (iconCall)
-                    IconButton(
-                      icon: FaIcon(
-                        FontAwesomeIcons.phone,
-                        size: 18,
-                        color: Colors.grey.shade600,
-                      ),
-                      onPressed: onPhonePressed,
-                    ),
                   if (iconLocation)
                     IconButton(
                       icon: FaIcon(
@@ -146,6 +137,15 @@ class ProfileCard extends StatelessWidget {
                         color: Colors.grey.shade600,
                       ),
                       onPressed: onCommentPressed,
+                    ),
+                  if (iconCall)
+                    IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.phone,
+                        size: 18,
+                        color: Colors.grey.shade600,
+                      ),
+                      onPressed: onPhonePressed,
                     ),
                 ],
               ),

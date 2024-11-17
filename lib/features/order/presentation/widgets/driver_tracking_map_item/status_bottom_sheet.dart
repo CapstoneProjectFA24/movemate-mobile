@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 
-class TrackingMapBottomSheet extends StatelessWidget {
+class TrackingMapBottomSheet extends HookConsumerWidget {
   final OrderEntity job;
 
   const TrackingMapBottomSheet({
@@ -10,12 +13,19 @@ class TrackingMapBottomSheet extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     String title;
     String imageUrl1;
     String imageUrl2;
 
-    // Define different images and titles for each status
+    // TOTO - TUẤN HÃY SET CÁI STATUS ĐỂ HIỂN THỊ HÌNH ẢNH (4 cái ở dưới cho hiển thị hình hen) dùng status của realtime từ booking
+    // FLOW WIDGET NÀY CỦA DRIVER
+    // CHỈNH ĐỂ HIỂN THỊ ĐỦ 1 VÀI HÌNH ẢNH CHO khách xem với flow của driver
+    // ĐỢI - ĐANG DI CHUYỂN TỚI BẠN - ĐANG THỰC VẬN CHUYỂN - HOÀN TẤT
+    final bookingAsync = ref.watch(bookingStreamProvider(job.id.toString()));
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, job.isReviewOnline);
+
     switch (job.status) {
       case 'đang vận chuyển':
         title = 'Đang vận chuyển';
@@ -84,11 +94,11 @@ class TrackingMapBottomSheet extends StatelessWidget {
   }
 }
 
-class ArrowWidget extends StatelessWidget {
+class ArrowWidget extends HookConsumerWidget {
   const ArrowWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
         Row(
