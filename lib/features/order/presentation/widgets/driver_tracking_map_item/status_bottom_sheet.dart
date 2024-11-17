@@ -18,12 +18,6 @@ class TrackingMapBottomSheet extends HookConsumerWidget {
     String imageUrl1;
     String imageUrl2;
 
-    // TOTO - TUẤN HÃY SET CÁI STATUS ĐỂ HIỂN THỊ HÌNH ẢNH (4 cái ở dưới cho hiển thị hình hen) dùng status của realtime từ booking
-    // FLOW WIDGET NÀY CỦA DRIVER
-    // CHỈNH ĐỂ HIỂN THỊ ĐỦ 1 VÀI HÌNH ẢNH CHO khách xem với flow của driver
-    // ĐỢI - ĐANG DI CHUYỂN TỚI BẠN - ĐANG THỰC VẬN CHUYỂN - HOÀN TẤT
-    //assined --  incoming --           inprogress -- completed
-
     final bookingAsync = ref.watch(bookingStreamProvider(job.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, job.isReviewOnline);
