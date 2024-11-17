@@ -35,34 +35,27 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
   late MapOptions _navigationOption;
   final _vietmapNavigationPlugin = VietMapNavigationPlugin();
   RouteProgressEvent? routeProgressEvent;
+
   // Staff location tracking
   StreamSubscription<DatabaseEvent>? _locationSubscription;
   LatLng? _staffLocation;
+  Timer? _cameraUpdateThrottle;
 
   // Map state
   bool _isMapReady = false;
+  bool _isFollowingDriver = true;
+  double _currentZoom = 15.0;
+  final double _minZoom = 12.0;
+  final double _maxZoom = 18.0;
+
+  // Marker handling
+  List<NavigationMarker>? _currentMarkers;
 
   @override
   void initState() {
     super.initState();
     _initNavigation();
     _initStaffTracking();
-  }
-
-  LatLng _getPickupPointLatLng() {
-    final pickupPointCoordinates = widget.job.pickupPoint.split(',');
-    return LatLng(
-      double.parse(pickupPointCoordinates[0].trim()),
-      double.parse(pickupPointCoordinates[1].trim()),
-    );
-  }
-
-  LatLng _getDeliveryPointLatLng() {
-    final deliveryPointCoordinates = widget.job.deliveryPoint.split(',');
-    return LatLng(
-      double.parse(deliveryPointCoordinates[0].trim()),
-      double.parse(deliveryPointCoordinates[1].trim()),
-    );
   }
 
   Future<void> _initNavigation() async {
@@ -73,6 +66,60 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     _navigationOption.mapStyle =
         "https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${APIConstants.apiVietMapKey}";
     _vietmapNavigationPlugin.setDefaultOptions(_navigationOption);
+  }
+
+  void _initStaffTracking() {
+    DatabaseReference staffLocationRef = FirebaseDatabase.instance
+        .ref()
+        .child('tracking_locations/${widget.job.id}/DRIVER/${widget.staffId}');
+
+    _locationSubscription = staffLocationRef.onValue.listen((event) {
+      if (!mounted) return;
+
+      if (event.snapshot.value != null) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>;
+        final double lat = data['lat'] as double;
+        final double long = data['long'] as double;
+
+        setState(() {
+          _staffLocation = LatLng(lat, long);
+          if (_isFollowingDriver) {
+            _throttledCameraUpdate();
+          }
+          _updateDriverMarker();
+        });
+      }
+    });
+  }
+
+  void _throttledCameraUpdate() {
+    _cameraUpdateThrottle?.cancel();
+    _cameraUpdateThrottle = Timer(const Duration(milliseconds: 500), () {
+      _updateMapView();
+    });
+  }
+
+  void _updateMapView() {
+    if (_staffLocation == null ||
+        !_isMapReady ||
+        _navigationController == null ||
+        !_isFollowingDriver) {
+      return;
+    }
+    double? bearing;
+
+    if (routeProgressEvent?.currentLocation?.bearing != null) {
+      bearing = routeProgressEvent!.currentLocation!.bearing!.toDouble();
+    }
+
+    _navigationController?.animateCamera(
+      latLng: _staffLocation!,
+      zoom: _currentZoom,
+      duration: const Duration(milliseconds: 1000),
+      bearing: bearing,
+    );
+
+    _buildRoute();
   }
 
   void _buildRoute() async {
@@ -102,161 +149,242 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     }
   }
 
-  void _initStaffTracking() {
-    DatabaseReference staffLocationRef = FirebaseDatabase.instance
-        .ref()
-        .child('tracking_locations/${widget.job.id}/DRIVER/${widget.staffId}');
+  Future<void> _updateDriverMarker() async {
+    if (_navigationController == null || _staffLocation == null) return;
 
-    _locationSubscription = staffLocationRef.onValue.listen((event) {
-      if (!mounted) return;
+    if (_currentMarkers != null) {
+      await _navigationController!.removeMarkers(
+        _currentMarkers!.map((m) => m.markerId!).toList(),
+      );
+    }
 
-      if (event.snapshot.value != null) {
-        final data = event.snapshot.value as Map<dynamic, dynamic>;
-        final double lat = data['lat'] as double;
-        final double long = data['long'] as double;
+    List<NavigationMarker> markers = [];
 
-        setState(() {
-          _staffLocation = LatLng(lat, long);
-          _updateMapView();
-        });
+    // Add destination marker
+    if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
+      markers.add(NavigationMarker(
+        imagePath: "assets/images/booking/vehicles/truck1.png",
+        height: 80,
+        width: 80,
+        latLng: _getPickupPointLatLng(),
+      ));
+    } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
+      markers.add(NavigationMarker(
+        imagePath: "assets/images/booking/vehicles/truck1.png",
+        height: 80,
+        width: 80,
+        latLng: _getDeliveryPointLatLng(),
+      ));
+    }
+
+    markers.add(NavigationMarker(
+      imagePath: "assets/images/booking/vehicles/truck1.png",
+      height: 60,
+      width: 60,
+      latLng: _staffLocation!,
+    ));
+
+    _currentMarkers = await _navigationController!.addImageMarkers(markers);
+  }
+
+  LatLng _parseCoordinates(String coordinateString) {
+    try {
+      final coordinates = coordinateString.split(',');
+      return LatLng(
+        double.parse(coordinates[0].trim()),
+        double.parse(coordinates[1].trim()),
+      );
+    } catch (e) {
+      print('Error parsing coordinates: $e');
+      return const LatLng(0, 0);
+    }
+  }
+
+  LatLng _getPickupPointLatLng() {
+    return _parseCoordinates(widget.job.pickupPoint);
+  }
+
+  LatLng _getDeliveryPointLatLng() {
+    return _parseCoordinates(widget.job.deliveryPoint);
+  }
+
+  void _zoomIn() {
+    if (_currentZoom < _maxZoom) {
+      setState(() {
+        _currentZoom = (_currentZoom + 1).clamp(_minZoom, _maxZoom);
+        if (_staffLocation != null && _navigationController != null) {
+          _navigationController?.moveCamera(
+            latLng: _staffLocation!,
+            zoom: _currentZoom,
+            bearing: 100,
+          );
+        }
+      });
+    }
+  }
+
+  void _zoomOut() {
+    if (_currentZoom > _minZoom) {
+      setState(() {
+        _currentZoom -= 1;
+        _updateMapView();
+      });
+    }
+  }
+
+  void _toggleFollowDriver() {
+    setState(() {
+      _isFollowingDriver = !_isFollowingDriver;
+      if (_isFollowingDriver) {
+        _updateMapView();
       }
     });
   }
 
-  void _updateMapView() {
-    if (_staffLocation == null ||
-        !_isMapReady ||
-        _navigationController == null) {
-      return;
-    }
-
-    _navigationController?.animateCamera(
-      latLng: _staffLocation!,
-      zoom: 15,
-      duration: const Duration(milliseconds: 1000),
-    );
-
-    _buildRoute();
-  }
-
-  void _addMarker() async {
-    if (_navigationController != null) {
-      LatLng pickupPoint = _getPickupPointLatLng();
-
-      LatLng deliveryPoint = _getDeliveryPointLatLng();
-
-      List<NavigationMarker> markers = [];
-
-      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
-        markers.add(NavigationMarker(
-          imagePath: "assets/images/booking/vehicles/truck1.png",
-          height: 80,
-          width: 80,
-          latLng: pickupPoint,
-        ));
-      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
-        markers.add(NavigationMarker(
-          imagePath: "assets/images/booking/vehicles/truck1.png",
-          height: 80,
-          width: 80,
-          latLng: deliveryPoint,
-        ));
-      }
-
-      await _navigationController!.addImageMarkers(markers);
-      print("Markers added successfully: ${markers.length} markers");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    LatLng pickupPoint = _getPickupPointLatLng();
-
     return Scaffold(
-        appBar: const CustomAppBar(
-          title: "Theo dõi tiến trình của tài xế",
-          backButtonColor: AssetsConstants.whiteColor,
-          backgroundColor: AssetsConstants.mainColor,
-        ),
-        body: Stack(
-          children: [
-            NavigationView(
-              mapOptions: _navigationOption,
-              onMapCreated: (controller) {
-                setState(() {
-                  _navigationController = controller;
-                  _isMapReady = true;
+      appBar: const CustomAppBar(
+        title: "Theo dõi tiến trình của tài xế",
+        backButtonColor: AssetsConstants.whiteColor,
+        backgroundColor: AssetsConstants.mainColor,
+      ),
+      body: Stack(
+        children: [
+          NavigationView(
+            mapOptions: _navigationOption,
+            onMapCreated: (controller) {
+              setState(() {
+                _navigationController = controller;
+                _isMapReady = true;
+                _updateDriverMarker();
+              });
 
-                  _addMarker();
-                });
-
-                if (_staffLocation != null) {
-                  _updateMapView();
-                } else {
-                  // Khi chưa có staff location, hiển thị route từ điểm pickup đến chính nó
-                  controller.buildRoute(
-                    waypoints: [pickupPoint, pickupPoint],
-                    profile: DrivingProfile.drivingTraffic,
-                  ).then((success) {
-                    if (!success) {
-                      print('Failed to build initial route');
-                    }
-                  }).catchError((error) {
-                    print('Error building initial route: $error');
-                  });
-                }
-              },
-              onRouteProgressChange: (RouteProgressEvent routeProgressEvent) {
-                print('-----------ProgressChange----------');
-                print(routeProgressEvent.currentLocation?.bearing);
-                print(routeProgressEvent.currentLocation?.altitude);
-                print(routeProgressEvent.currentLocation?.accuracy);
-                print(routeProgressEvent.currentLocation?.bearing);
-                print(routeProgressEvent.currentLocation?.latitude);
-                print(routeProgressEvent.currentLocation?.longitude);
-              },
-            ),
-            if (_staffLocation == null)
-              const Center(
-                child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      'Waiting for staff location updates...',
-                      style: TextStyle(fontSize: 16),
-                    ),
+              if (_staffLocation != null) {
+                _updateMapView();
+              } else {
+                controller.buildRoute(
+                  waypoints: [_getPickupPointLatLng(), _getPickupPointLatLng()],
+                  profile: DrivingProfile.drivingTraffic,
+                );
+              }
+            },
+            onRouteProgressChange: (RouteProgressEvent event) {
+              setState(() {
+                routeProgressEvent = event;
+              });
+            },
+          ),
+          if (_staffLocation == null)
+            const Center(
+              child: Card(
+                elevation: 4,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text(
+                        'Đang tìm vị trí tài xế...',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
+          // Map controls
+          Positioned(
+            right: 16,
+            bottom: 220,
+            child: Column(
+              children: [
+                FloatingActionButton(
+                  heroTag: "chat",
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ChatScreen()),
+                    );
+                  },
+                  backgroundColor: Colors.orange,
+                  child: const Icon(Icons.chat),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton(
+                  heroTag: "follow",
+                  onPressed: _toggleFollowDriver,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    _isFollowingDriver ? Icons.location_on : Icons.location_off,
+                    color: _isFollowingDriver ? Colors.blue : Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton(
+                  heroTag: "zoomIn",
+                  onPressed: _zoomIn,
+                  backgroundColor: Colors.white,
+                  child: const Icon(Icons.add, color: Colors.black),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton(
+                  heroTag: "zoomOut",
+                  onPressed: _zoomOut,
+                  backgroundColor: Colors.white,
+                  child: const Icon(Icons.remove, color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+          // Trip info card
+          if (routeProgressEvent != null)
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: TrackingMapBottomSheet(
-                job: widget.job,
+              top: 16,
+              left: 16,
+              right: 16,
+              child: Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Thời gian còn lại: ${(routeProgressEvent!.durationRemaining! / 60).toStringAsFixed(0)} phút',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Khoảng cách: ${(routeProgressEvent!.distanceRemaining! / 1000).toStringAsFixed(1)} km',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            Positioned(
-              bottom: 220,
-              right: 20,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChatScreen()),
-                  );
-                },
-                backgroundColor: Colors.orange,
-                child: const Icon(Icons.chat),
-              ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: TrackingMapBottomSheet(
+              job: widget.job,
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
     _locationSubscription?.cancel();
+    _cameraUpdateThrottle?.cancel();
     if (_navigationController != null) {
       _navigationController!.onDispose();
     }
