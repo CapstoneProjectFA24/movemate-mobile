@@ -22,29 +22,58 @@ class TrackingMapBottomSheet extends HookConsumerWidget {
     // FLOW WIDGET NÀY CỦA DRIVER
     // CHỈNH ĐỂ HIỂN THỊ ĐỦ 1 VÀI HÌNH ẢNH CHO khách xem với flow của driver
     // ĐỢI - ĐANG DI CHUYỂN TỚI BẠN - ĐANG THỰC VẬN CHUYỂN - HOÀN TẤT
+    //assined --  incoming --           inprogress -- completed
+
     final bookingAsync = ref.watch(bookingStreamProvider(job.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, job.isReviewOnline);
 
-    switch (job.status) {
-      case 'đang vận chuyển':
-        title = 'Đang vận chuyển';
-        imageUrl1 = 'https://example.com/transit_image1.jpg';
-        imageUrl2 = 'https://example.com/transit_image2.jpg';
-        break;
-      case 'đã giao tới':
-        title = 'Đã giao tới';
-        imageUrl1 = 'https://example.com/delivered_image1.jpg';
-        imageUrl2 = 'https://example.com/delivered_image2.jpg';
-        break;
-      case 'đang bốc vác':
-      default:
-        title = 'Đang bốc vác';
-        imageUrl1 =
-            'https://storage.googleapis.com/a1aa/image/eq28WdUZ0GwXSyUbvWvmQNR1PnwoYdyBBZoxnanwyUGr6V4JA.jpg';
-        imageUrl2 =
-            'https://storage.googleapis.com/a1aa/image/vofMEZ1jlD0TSipQlRFA4flClWaV6oSEOMoua9CHKoeqqXhnA.jpg';
-        break;
+    // switch (job.status) {
+    //   case 'đang vận chuyển':
+    //     title = 'Đang vận chuyển';
+    //     imageUrl1 = 'https://example.com/transit_image1.jpg';
+    //     imageUrl2 = 'https://example.com/transit_image2.jpg';
+    //     break;
+    //   case 'đã giao tới':
+    //     title = 'Đã giao tới';
+    //     imageUrl1 = 'https://example.com/delivered_image1.jpg';
+    //     imageUrl2 = 'https://example.com/delivered_image2.jpg';
+    //     break;
+    //   case 'đang bốc vác':
+    //   default:
+    //     title = 'Đang bốc vác';
+    //     imageUrl1 =
+    //         'https://storage.googleapis.com/a1aa/image/eq28WdUZ0GwXSyUbvWvmQNR1PnwoYdyBBZoxnanwyUGr6V4JA.jpg';
+    //     imageUrl2 =
+    //         'https://storage.googleapis.com/a1aa/image/vofMEZ1jlD0TSipQlRFA4flClWaV6oSEOMoua9CHKoeqqXhnA.jpg';
+    //     break;
+    // }
+
+    if (bookingStatus.isDriverInProgressToBuildRoute) {
+      title = 'Đang di chuyển đến bạn';
+      imageUrl1 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731879919/Delivery-Animation_eecea5.gif';
+      imageUrl2 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif';
+    } else if (bookingStatus.isDriverProcessingMoving &&
+        !bookingStatus.isStaffDriverComingToBuildRoute) {
+      title = 'Đang thực hiện vận chuyển';
+      imageUrl1 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731880923/download_yx9ebi.gif';
+      imageUrl2 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif';
+    } else if (bookingStatus.isCompleted) {
+      title = 'Hoàn tất';
+      imageUrl1 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731881178/Truck_Delivery_upapf6.gif';
+      imageUrl2 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731881454/download_zamufh.jpg';
+    } else {
+      title = 'Đang trên đường đến';
+      imageUrl1 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731879919/Delivery-Animation_eecea5.gif';
+      imageUrl2 =
+          'https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif';
     }
 
     return BottomSheet(
@@ -69,20 +98,28 @@ class TrackingMapBottomSheet extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    imageUrl1,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: Image.network(
+                      imageUrl1,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                   const SizedBox(width: 20),
                   const ArrowWidget(),
                   const SizedBox(width: 20),
-                  Image.network(
-                    imageUrl2,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: Image.network(
+                      imageUrl2,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ],
               ),
