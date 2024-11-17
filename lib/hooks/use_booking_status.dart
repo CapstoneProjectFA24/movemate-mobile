@@ -30,6 +30,8 @@ class BookingStatusResult {
 
   // Status indicators - Driver Flow
   final bool isDriverProcessingMoving;
+  final bool isStaffDriverComingToBuildRoute;
+  final bool isDriverInProgressToBuildRoute;
 
   // Status indicator - Porter Flow
   final bool isPorterProcessingMoving;
@@ -54,6 +56,8 @@ class BookingStatusResult {
     this.isOnlineSuggestionReady = false,
     this.isMovingInProgress = false,
     this.isDriverProcessingMoving = false,
+    this.isStaffDriverComingToBuildRoute = false,
+    this.isDriverInProgressToBuildRoute = false,
     this.isPorterProcessingMoving = false,
     this.isCompleted = false,
     this.isCancelled = false,
@@ -155,24 +159,52 @@ BookingStatusResult useBookingStatus(
     }
 
     // Check driver state
+
+    final isDriverWaiting =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.waiting);
+    final isDriverAssigned =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.assigned);
     final isDriverIncoming =
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.incoming);
-
+    final isDriverArrived =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.arrived);
     final isDriverInProgress =
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
+    final isDriverCompleted =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.completed);
 
     // flag to check driver state
     bool isDriverProcessingMoving = false;
+    bool isStaffDriverComingToBuildRoute = false;
+    bool isDriverInProgressToBuildRoute = false;
     switch (status) {
       case BookingStatusType.coming:
-        if (isDriverInProgress || isDriverIncoming) {
+        if (isDriverInProgress ||
+            isDriverIncoming ||
+            isDriverArrived ||
+            isDriverAssigned ||
+            isDriverCompleted) {
           isDriverProcessingMoving = true;
         }
+        isStaffDriverComingToBuildRoute = isDriverWaiting ||
+            isDriverAssigned ||
+            isDriverIncoming ||
+            (!isDriverInProgress && !isDriverCompleted);
         break;
       case BookingStatusType.inProgress:
-        if (isDriverInProgress || isDriverIncoming) {
+        if (isDriverInProgress ||
+            isDriverIncoming ||
+            isDriverArrived ||
+            isDriverAssigned ||
+            isDriverCompleted) {
           isDriverProcessingMoving = true;
         }
+        isStaffDriverComingToBuildRoute = isDriverWaiting ||
+            isDriverAssigned ||
+            isDriverIncoming ||
+            (!isDriverInProgress && !isDriverCompleted);
+
+        isDriverInProgressToBuildRoute = isDriverArrived || isDriverInProgress;
         break;
       default:
         break;
@@ -228,6 +260,8 @@ BookingStatusResult useBookingStatus(
 
       // Driver and Porter states
       isDriverProcessingMoving: isDriverProcessingMoving,
+      isStaffDriverComingToBuildRoute: isStaffDriverComingToBuildRoute,
+      isDriverInProgressToBuildRoute: isDriverInProgressToBuildRoute,
       isPorterProcessingMoving: isPorterProcessingMoving,
 
       // Common states

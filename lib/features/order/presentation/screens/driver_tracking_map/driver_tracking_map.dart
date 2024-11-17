@@ -2,35 +2,35 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
-import 'package:movemate/features/order/presentation/widgets/tracking_map_item/chat_screen.dart';
-import 'package:movemate/features/order/presentation/widgets/tracking_map_item/status_bottom_sheet.dart';
+import 'package:movemate/features/order/presentation/widgets/driver_tracking_map_item/chat_screen.dart';
+import 'package:movemate/features/order/presentation/widgets/driver_tracking_map_item/status_bottom_sheet.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:vietmap_flutter_navigation/vietmap_flutter_navigation.dart';
 
 @RoutePage()
-class TrackingMap extends StatefulWidget {
+class TrackingDriverMap extends StatefulWidget {
   final String staffId;
-  final String role;
   final OrderEntity job;
+  final BookingStatusResult bookingStatus;
 
-  const TrackingMap({
+  const TrackingDriverMap({
     super.key,
     required this.staffId,
-    required this.role,
     required this.job,
+    required this.bookingStatus,
   });
 
   static const String apiKey = APIConstants.apiVietMapKey;
 
   @override
-  State<StatefulWidget> createState() => TrackingMapState();
+  State<StatefulWidget> createState() => TrackingDriverMapState();
 }
 
-class TrackingMapState extends State<TrackingMap> {
+class TrackingDriverMapState extends State<TrackingDriverMap> {
   MapNavigationViewController? _navigationController;
   late MapOptions _navigationOption;
   final _vietmapNavigationPlugin = VietMapNavigationPlugin();
@@ -65,32 +65,6 @@ class TrackingMapState extends State<TrackingMap> {
     );
   }
 
-  AssignmentResponseEntity? _getAssignmentForUser() {
-    return widget.job.assignments.firstWhere(
-      (e) => e.userId.toString() == widget.staffId,
-      orElse: () => AssignmentResponseEntity(
-        id: 0,
-        userId: 0,
-        bookingId: 0,
-        status: '',
-        staffType: '',
-      ),
-    );
-  }
-
-  bool isStaffComing(String? assignmentStatus) {
-    return ((widget.job.status == "COMING" ||
-            widget.job.status == "IN_PROGRESS") &&
-        (assignmentStatus == "WAITING" ||
-            assignmentStatus == "ASSIGNED" ||
-            assignmentStatus == "INCOMING"));
-  }
-
-  bool isStaffProgress(String? assignmentStatus) {
-    return ((widget.job.status == "IN_PROGRESS") &&
-        (assignmentStatus == "ARRIVED" || assignmentStatus == "IN_PROGRESS"));
-  }
-
   Future<void> _initNavigation() async {
     if (!mounted) return;
     _navigationOption = _vietmapNavigationPlugin.getDefaultOptions();
@@ -102,15 +76,12 @@ class TrackingMapState extends State<TrackingMap> {
   }
 
   void _buildRoute() async {
-    final assignment = _getAssignmentForUser();
-    final subStatus = assignment?.status;
-
     if (_navigationController != null && _staffLocation != null) {
       LatLng waypoint;
 
-      if (isStaffComing(subStatus)) {
+      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
         waypoint = _getPickupPointLatLng();
-      } else if (isStaffProgress(subStatus)) {
+      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
         waypoint = _getDeliveryPointLatLng();
       } else {
         return;
@@ -119,7 +90,7 @@ class TrackingMapState extends State<TrackingMap> {
       if (_staffLocation != null) {
         _navigationController?.buildRoute(
           waypoints: [waypoint, _staffLocation!],
-          profile: DrivingProfile.cycling,
+          profile: DrivingProfile.drivingTraffic,
         ).then((success) {
           if (!success) {
             print('Failed to build route');
@@ -134,7 +105,7 @@ class TrackingMapState extends State<TrackingMap> {
   void _initStaffTracking() {
     DatabaseReference staffLocationRef = FirebaseDatabase.instance
         .ref()
-        .child('tracking_locations/78/DRIVER/61');
+        .child('tracking_locations/${widget.job.id}/DRIVER/${widget.staffId}');
 
     _locationSubscription = staffLocationRef.onValue.listen((event) {
       if (!mounted) return;
@@ -168,45 +139,38 @@ class TrackingMapState extends State<TrackingMap> {
     _buildRoute();
   }
 
-  // void _addMarker() async {
-  //   if (_navigationController != null) {
-  //     final assignment = _getAssignmentForUser();
-  //     final subStatus = assignment?.status;
+  void _addMarker() async {
+    if (_navigationController != null) {
+      LatLng pickupPoint = _getPickupPointLatLng();
 
-  //     LatLng pickupPoint = _getPickupPointLatLng();
+      LatLng deliveryPoint = _getDeliveryPointLatLng();
 
-  //     LatLng deliveryPoint = _getDeliveryPointLatLng();
+      List<NavigationMarker> markers = [];
 
-  //     List<NavigationMarker> markers = [];
+      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
+        markers.add(NavigationMarker(
+          imagePath: "assets/images/booking/vehicles/truck1.png",
+          height: 80,
+          width: 80,
+          latLng: pickupPoint,
+        ));
+      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
+        markers.add(NavigationMarker(
+          imagePath: "assets/images/booking/vehicles/truck1.png",
+          height: 80,
+          width: 80,
+          latLng: deliveryPoint,
+        ));
+      }
 
-  //     if (isStaffComing(subStatus)) {
-  //       markers.add(NavigationMarker(
-  //         imagePath: "assets/images/booking/vehicles/truck1.png",
-  //         height: 80,
-  //         width: 80,
-  //         latLng: pickupPoint,
-  //       ));
-  //     } else if (isStaffProgress(subStatus)) {
-  //       markers.add(NavigationMarker(
-  //         imagePath: "assets/images/booking/vehicles/truck1.png",
-  //         height: 80,
-  //         width: 80,
-  //         latLng: deliveryPoint,
-  //       ));
-  //     }
-
-  //     await _navigationController!.addImageMarkers(markers);
-  //     print("Markers added successfully: ${markers.length} markers");
-  //   }
-  // }
+      await _navigationController!.addImageMarkers(markers);
+      print("Markers added successfully: ${markers.length} markers");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<String> pickupPointCoordinates = widget.job.pickupPoint.split(',');
-    LatLng pickupPoint = LatLng(
-      double.parse(pickupPointCoordinates[0].trim()),
-      double.parse(pickupPointCoordinates[1].trim()),
-    );
+    LatLng pickupPoint = _getPickupPointLatLng();
 
     return Scaffold(
         appBar: const CustomAppBar(
@@ -223,7 +187,7 @@ class TrackingMapState extends State<TrackingMap> {
                   _navigationController = controller;
                   _isMapReady = true;
 
-                  // _addMarker();
+                  _addMarker();
                 });
 
                 if (_staffLocation != null) {
@@ -232,7 +196,7 @@ class TrackingMapState extends State<TrackingMap> {
                   // Khi chưa có staff location, hiển thị route từ điểm pickup đến chính nó
                   controller.buildRoute(
                     waypoints: [pickupPoint, pickupPoint],
-                    profile: DrivingProfile.cycling,
+                    profile: DrivingProfile.drivingTraffic,
                   ).then((success) {
                     if (!success) {
                       print('Failed to build initial route');

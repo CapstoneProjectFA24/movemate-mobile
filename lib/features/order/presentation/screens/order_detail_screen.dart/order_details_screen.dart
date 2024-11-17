@@ -172,6 +172,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                               listStaffResponsibility[index];
                           return ProfileStaffInfo(
                             staffAssignment: staffAssignment,
+                            order: order,
                           );
                         }),
                     const SizedBox(height: 20),
@@ -222,33 +223,6 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   serviceData: serviceData,
                   statusAsync: statusAsync,
                 ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: ElevatedButton.icon(
-                    onPressed: () => context.router.push(
-                      TrackingMapRoute(
-                          staffId: "61", role: "DRIVER", job: order),
-                    ),
-                    icon: const Icon(Icons.location_on, color: Colors.white),
-                    label: const Text(
-                      'Theo dõi vị trí tài xế',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // hoặc màu chủ đạo của app
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                )
               ],
             ),
           ),

@@ -281,15 +281,15 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TimeLineBooking(),
       );
     },
-    TrackingMapRoute.name: (routeData) {
-      final args = routeData.argsAs<TrackingMapRouteArgs>();
+    TrackingDriverMapRoute.name: (routeData) {
+      final args = routeData.argsAs<TrackingDriverMapRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: TrackingMap(
+        child: TrackingDriverMap(
           key: args.key,
           staffId: args.staffId,
-          role: args.role,
           job: args.job,
+          bookingStatus: args.bookingStatus,
         ),
       );
     },
@@ -1158,50 +1158,50 @@ class TimeLineBookingRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [TrackingMap]
-class TrackingMapRoute extends PageRouteInfo<TrackingMapRouteArgs> {
-  TrackingMapRoute({
+/// [TrackingDriverMap]
+class TrackingDriverMapRoute extends PageRouteInfo<TrackingDriverMapRouteArgs> {
+  TrackingDriverMapRoute({
     Key? key,
     required String staffId,
-    required String role,
     required OrderEntity job,
+    required BookingStatusResult bookingStatus,
     List<PageRouteInfo>? children,
   }) : super(
-          TrackingMapRoute.name,
-          args: TrackingMapRouteArgs(
+          TrackingDriverMapRoute.name,
+          args: TrackingDriverMapRouteArgs(
             key: key,
             staffId: staffId,
-            role: role,
             job: job,
+            bookingStatus: bookingStatus,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'TrackingMapRoute';
+  static const String name = 'TrackingDriverMapRoute';
 
-  static const PageInfo<TrackingMapRouteArgs> page =
-      PageInfo<TrackingMapRouteArgs>(name);
+  static const PageInfo<TrackingDriverMapRouteArgs> page =
+      PageInfo<TrackingDriverMapRouteArgs>(name);
 }
 
-class TrackingMapRouteArgs {
-  const TrackingMapRouteArgs({
+class TrackingDriverMapRouteArgs {
+  const TrackingDriverMapRouteArgs({
     this.key,
     required this.staffId,
-    required this.role,
     required this.job,
+    required this.bookingStatus,
   });
 
   final Key? key;
 
   final String staffId;
 
-  final String role;
-
   final OrderEntity job;
+
+  final BookingStatusResult bookingStatus;
 
   @override
   String toString() {
-    return 'TrackingMapRouteArgs{key: $key, staffId: $staffId, role: $role, job: $job}';
+    return 'TrackingDriverMapRouteArgs{key: $key, staffId: $staffId, job: $job, bookingStatus: $bookingStatus}';
   }
 }
 
