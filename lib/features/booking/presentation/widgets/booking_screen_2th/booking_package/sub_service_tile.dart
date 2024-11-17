@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
@@ -14,13 +15,17 @@ String formatPrice(int price) {
 
 class SubServiceTile extends ConsumerWidget {
   final SubServiceEntity subService;
-
-  const SubServiceTile({super.key, required this.subService});
+  const SubServiceTile({
+    super.key,
+    required this.subService,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final bookingState = ref.watch(bookingProvider);
+    final priceSystem =
+        ref.watch(ResponseProviderOneOfSystemService)?.bookingDetails;
 
     final currentSubService = bookingState.selectedSubServices.firstWhere(
       (s) => s.id == subService.id,
@@ -28,6 +33,26 @@ class SubServiceTile extends ConsumerWidget {
     );
 
     final int quantity = currentSubService.quantity ?? 0;
+
+    // Giá mặc định từ subService.amount
+    double displayPrice = subService.amount.toInt().toDouble();
+
+    if (priceSystem != null) {
+      // Tìm BookingDetailResponseEntity có serviceId trùng với subService.id
+      BookingDetailResponseEntity? matchedDetail;
+      try {
+        matchedDetail = priceSystem.firstWhere(
+          (detail) => detail.serviceId == subService.id,
+        );
+      } catch (e) {
+        matchedDetail = null;
+      }
+
+      if (matchedDetail != null) {
+        // Sử dụng giá từ BookingDetailResponseEntity
+        displayPrice = matchedDetail.price;
+      }
+    }
 
     return Card(
       color: AssetsConstants.whiteColor,
@@ -81,7 +106,7 @@ class SubServiceTile extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      formatPrice(subService.amount.toInt()).toString(),
+                      formatPrice(displayPrice.toInt()).toString(),
                       style: const TextStyle(fontSize: 16),
                     ),
                   ],

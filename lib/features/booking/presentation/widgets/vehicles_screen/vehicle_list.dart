@@ -13,7 +13,7 @@ import 'package:movemate/utils/commons/widgets/home_shimmer.dart';
 import 'package:movemate/utils/commons/widgets/no_more_content.dart';
 
 // vehicle_list.dart
-const checkhousetype = 'Chọn loại hình cần chuyển';
+const title = 'Chọn loại hình cần chuyển';
 
 // vehicle_list.dart// vehicle_list.dart
 class VehicleList extends ConsumerWidget {
@@ -82,7 +82,7 @@ class VehicleList extends ConsumerWidget {
                   );
                 }
               }
-              if (bookingState.houseType?.name == checkhousetype ||
+              if (bookingState.houseType?.name == title ||
                   bookingState.houseType?.name == null) {
                 bookingNotifier
                     .setHouseTypeError("Vui lòng chọn loại nhà phù hợp");

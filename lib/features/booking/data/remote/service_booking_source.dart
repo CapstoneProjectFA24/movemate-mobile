@@ -9,6 +9,7 @@ import 'package:movemate/features/booking/data/models/response/truck_cate_respon
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -105,6 +106,13 @@ abstract class ServiceBookingSource {
   @POST(APIConstants.post_valuation_booking_service)
   Future<HttpResponse<BookingResponse>> postValuationBooking(
     @Body() BookingValuationRequest request,
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+  );
+  // Post ValuationPriceOneOfSystemService  booking service
+  @POST(APIConstants.post_valuation_booking_service)
+  Future<HttpResponse<BookingResponse>> postValuationPriceOneOfSystemService(
+    @Body() ValuationPriceOneOfSystemServiceRequest request,
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );

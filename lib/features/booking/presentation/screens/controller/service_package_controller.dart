@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
@@ -25,6 +26,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'service_package_controller.g.dart';
 
 final bookingResponseProviderPrice =
+    StateProvider<BookingResponseEntity?>((ref) => null);
+final ResponseProviderOneOfSystemService =
     StateProvider<BookingResponseEntity?>((ref) => null);
 
 @riverpod
@@ -96,7 +99,7 @@ class ServicePackageController extends _$ServicePackageController {
         request: request,
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
       );
-      print("HouseTypeEntity: ${response.payload.toString()}");
+      // print("HouseTypeEntity: ${response.payload.toString()}");
       houseTypeData = response.payload;
       state = AsyncData(houseTypeData);
     });
@@ -243,7 +246,7 @@ class ServicePackageController extends _$ServicePackageController {
 
     // Debugging
     print(
-        '  tuan Booking Request: ${jsonEncode(bookingValuationRequest.toMap())}');
+        '\n tuan Booking a 0.1 Request: ${jsonEncode(bookingValuationRequest.toMap())}');
 
     state = await AsyncValue.guard(() async {
       final response = await serviceBookingRepository.postValuationBooking(
@@ -254,6 +257,65 @@ class ServicePackageController extends _$ServicePackageController {
       responsePayload = response.payload;
       ref.read(bookingResponseProviderPrice.notifier).state = responsePayload;
       // return responsePayload;
+      print("\n tuan Booking a 0.2 Response: ${jsonEncode(responsePayload)}");
+    });
+
+    if (state.hasError) {
+      final statusCode = (state.error as DioException).onStatusDio();
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: state.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (state.hasError) {
+        await ref.read(signInControllerProvider.notifier).signOut(context);
+      }
+      return null;
+    }
+
+    return responsePayload;
+  }
+
+  Future<BookingResponseEntity?> postValuationPriceOneOfSystemService({
+    required BuildContext context,
+  }) async {
+    // Kiểm tra nếu đã đang xử lý thì không làm gì cả
+    if (state is AsyncLoading) {
+      return null;
+    }
+    // state = const AsyncLoading();
+    final bookingState = ref.read(bookingProvider);
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    final bookingValuationRequest =
+        ValuationPriceOneOfSystemServiceRequest.fromBooking(bookingState);
+    BookingResponseEntity? responsePayload;
+
+    // Debugging
+    print(
+        ' \n tuan Booking a 1 Request Valuation Price One Of System Service : ${jsonEncode(bookingValuationRequest.toMap())}');
+
+    state = await AsyncValue.guard(() async {
+      final response =
+          await serviceBookingRepository.postValuationPriceOneOfSystemService(
+        request: bookingValuationRequest,
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      );
+      // Không thiết lập lại state ở đây
+      responsePayload = response.payload;
+      ref.read(ResponseProviderOneOfSystemService.notifier).state =
+          responsePayload;
+      // return responsePayload;
+      // print(
+      //     " \n tuan Booking a 2  Response Valuation Price One Of System Service  ${jsonEncode(responsePayload)} ");
+      print(
+          " \n tuan Booking a 3  Response Valuation Price One Of System Service  ${jsonEncode(responsePayload!.bookingDetails.toString())} ");
     });
 
     if (state.hasError) {

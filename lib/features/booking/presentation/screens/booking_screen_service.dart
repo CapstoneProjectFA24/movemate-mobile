@@ -26,13 +26,11 @@ class BookingScreenService extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.sizeOf(context);
-    final bookingState = ref.watch(bookingProvider);
-    final bookingStatePrice = ref.watch(bookingResponseProviderPrice);
-    final bookingNotifier = ref.read(bookingProvider.notifier);
-
     final state = ref.watch(servicePackageControllerProvider);
-    final double? price = bookingState.totalPrice;
+    final bookingState = ref.watch(bookingProvider);
+    final bookingNotifier = ref.read(bookingProvider.notifier);
+    final bookingStatePrice = ref.watch(bookingResponseProviderPrice);
+
 
     final fetchResult = useFetch<ServicesPackageEntity>(
       function: (model, context) async {
@@ -111,8 +109,10 @@ class BookingScreenService extends HookConsumerWidget {
                               : Container();
                         }
                         final package = fetchResult.items[index];
-                        return ServicePackageTile(servicePackage: package);
-                        // return ServicePackageList(servicePackages: servicePackages);
+                        return ServicePackageTile(
+                          servicePackage: package,
+                          //  priceSystem : statePriceSystem,
+                        );
                       },
                     ),
                   const SizedBox(height: 16),

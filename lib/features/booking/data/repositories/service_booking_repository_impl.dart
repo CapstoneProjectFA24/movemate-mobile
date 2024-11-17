@@ -13,6 +13,7 @@ import 'package:movemate/features/booking/data/models/response/truck_cate_respon
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -190,6 +191,19 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
   }) {
     return getDataOf(
       request: () => _serviceBookingSource.postValuationBooking(
+        request,
+        APIConstants.contentType,
+        accessToken,
+      ),
+    );
+  }
+  @override
+  Future<BookingResponse> postValuationPriceOneOfSystemService({
+    required ValuationPriceOneOfSystemServiceRequest request,
+    required String accessToken,
+  }) {
+    return getDataOf(
+      request: () => _serviceBookingSource.postValuationPriceOneOfSystemService(
         request,
         APIConstants.contentType,
         accessToken,

@@ -103,7 +103,7 @@ class BookingNotifier extends StateNotifier<Booking> {
       selectedVehicle: vehicle, // This can now accept null to unselect
       vehicleError: null, // Clear error when vehicle is selected or unselected
     );
-    print("Xe được chọn là:go here ready2 ${state.selectedVehicle}");
+    // print("Xe được chọn là:go here ready2 ${state.selectedVehicle}");
     calculateAndUpdateTotalPrice();
   }
 

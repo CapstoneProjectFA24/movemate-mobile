@@ -16,7 +16,8 @@ import 'number_selection_modal.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/house_type_selection_modal.dart';
 
 class BookingSelection extends HookConsumerWidget {
-  const BookingSelection({super.key});
+  final String title;
+  const BookingSelection({super.key, required this.title});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,8 +32,7 @@ class BookingSelection extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SelectionButton(
-              label:
-                  bookingState.houseType?.name ?? 'Chọn loại hình cần chuyển',
+              label: bookingState.houseType?.name ?? title,
               icon: Icons.arrow_drop_down,
               onTap: () => showHouseTypeModal(context, bookingNotifier),
             ),

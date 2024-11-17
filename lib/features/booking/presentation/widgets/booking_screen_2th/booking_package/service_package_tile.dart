@@ -1,6 +1,7 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
@@ -25,6 +26,10 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
 
   @override
   Widget build(BuildContext context) {
+    print("tuan booking a check service ");
+
+    Map<int, double> priceMap = {};
+
     //phần dịch vụ lớn => có dịch vụ con
     if (widget.servicePackage.inverseParentService.isNotEmpty) {
       return Container(
@@ -92,7 +97,9 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             ),
             children:
                 widget.servicePackage.inverseParentService.map((subService) {
-              return SubServiceTile(subService: subService);
+              return SubServiceTile(
+                subService: subService,
+              );
             }).toList(),
           ),
         ),
@@ -174,8 +181,8 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
                 // bookingNotifier.calculateAndUpdateTotalPrice();
                 try {
                   // Chuyển đổi BookingResponseEntity thành Booking
-                  final bookingtotal = bookingResponse.total;
-                  final bookingdeposit = bookingResponse.deposit;
+                  // final bookingtotal = bookingResponse.total;
+                  // final bookingdeposit = bookingResponse.deposit;
                   bookingNotifier.updateBookingResponse(bookingResponse);
                   // print('tuan bookingEntity  total : $bookingtotal');
                   // print('tuan bookingEntity  deposit : $bookingdeposit');
@@ -189,9 +196,9 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
                 } catch (e) {
                   // Xử lý ngoại lệ nếu chuyển đổi thất bại
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Đã xảy ra lỗi: $e')),
-                  );
+                  // ScaffoldMessenger.of(context).showSnackBar(
+                  //   SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+                  // );
                 }
               },
             ),

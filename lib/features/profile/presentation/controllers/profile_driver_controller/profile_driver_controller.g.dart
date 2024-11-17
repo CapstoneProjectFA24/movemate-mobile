@@ -7,7 +7,7 @@ part of 'profile_driver_controller.dart';
 // **************************************************************************
 
 String _$profileDriverControllerHash() =>
-    r'a9dfae8be6a7d247fadd0154c1874af24ca4e7fb';
+    r'0e669bf250c2df26956c7b266b1b4df48b809eb9';
 
 /// See also [ProfileDriverController].
 @ProviderFor(ProfileDriverController)

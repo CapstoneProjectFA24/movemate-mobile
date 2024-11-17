@@ -143,7 +143,9 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 //     );
 //   }
 // }
-const checkhousetype = 'Chọn loại nhà ở';
+// const checkhousetype = 'Chọn loại hình cần chuyển';
+const title = 'Chọn loại hình cần chuyển';
+
 
 @RoutePage()
 class BookingScreen extends HookConsumerWidget {
@@ -172,7 +174,7 @@ class BookingScreen extends HookConsumerWidget {
       ),
       context: context,
     );
-    print("check list ${fetchResultVehicles.items.toString()} ");
+    // print("check list ${fetchResultVehicles.items.toString()} ");
     print(
         " tuan bookingState selectedVehicle ${bookingState.selectedVehicle?.name}");
     return Scaffold(
@@ -206,7 +208,7 @@ class BookingScreen extends HookConsumerWidget {
                       padding: const EdgeInsets.all(16.0),
                       sliver: SliverList(
                         delegate: SliverChildListDelegate([
-                          const BookingSelection(),
+                          const BookingSelection(title: title),
                           const SizedBox(height: 16),
                           const RoomMediaSection(
                             roomTitle: 'Tải ảnh lên',
@@ -263,7 +265,7 @@ class BookingScreen extends HookConsumerWidget {
                     priceLabel: (bookingState.selectedVehicle?.name ==
                                 'not selected' ||
                             bookingState.selectedVehicle?.name == null ||
-                            bookingState.houseType?.name == checkhousetype ||
+                            bookingState.houseType?.name == title ||
                             bookingState.houseType?.name == null)
                         ? ''
                         : "Giá",
@@ -271,14 +273,20 @@ class BookingScreen extends HookConsumerWidget {
                     totalPrice: (bookingStatePrice?.total ?? 0.0),
                     isButtonEnabled: bookingState.selectedVehicle != null,
                     onPlacePress: () async {
-                      print(
-                          "check điều kiện ảnh :  ${bookingState.livingRoomImages.length} ");
-                      print(
-                          "check điều kiện ảnh :  ${bookingState.livingRoomVideos.length} ");
+                      // print(
+                      //     "check điều kiện ảnh :  ${bookingState.livingRoomImages.length} ");
+                      // print(
+                      //     "check điều kiện ảnh :  ${bookingState.livingRoomVideos.length} ");
                       print(
                           "check điều kiện reviewOnl :  $checkConditionOnline");
                       // print(
                       //     " tuan object chon xe ${bookingState.selectedVehicle}");
+
+                      await ref
+                          .read(servicePackageControllerProvider.notifier)
+                          .postValuationPriceOneOfSystemService(
+                            context: context,
+                          );
 
                       if (checkConditionOnline) {
                         bookingNotifier.updateIsReviewOnline(true);
@@ -290,7 +298,9 @@ class BookingScreen extends HookConsumerWidget {
                           bookingState.houseType?.id != null &&
                           bookingState.selectedVehicle != null &&
                           bookingState.selectedVehicle?.name !=
-                              'not selected') {
+                              'not selected'
+                              
+                              ) {
                         context.router.push(const BookingScreenServiceRoute());
                       } else {
                         if (bookingState.houseType == null ||
