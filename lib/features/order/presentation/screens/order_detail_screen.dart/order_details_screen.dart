@@ -23,17 +23,14 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/prof
 
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/service_info_card.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
-import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 // Hooks
-import 'package:movemate/hooks/use_fetch.dart';
 
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {

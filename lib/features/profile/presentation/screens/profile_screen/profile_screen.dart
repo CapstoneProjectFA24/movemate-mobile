@@ -7,7 +7,6 @@ import 'package:movemate/features/profile/presentation/widgets/profile/profile_h
 import 'package:movemate/features/profile/presentation/widgets/profile/profile_menu.dart';
 import 'package:movemate/features/profile/presentation/widgets/profile/promo_section.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
-import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
 

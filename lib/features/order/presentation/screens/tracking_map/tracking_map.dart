@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/tracking_map_item/chat_screen.dart';
