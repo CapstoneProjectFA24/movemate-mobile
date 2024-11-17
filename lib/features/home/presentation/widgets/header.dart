@@ -1,11 +1,14 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/utils/providers/common_provider.dart';
 
-class Header extends StatelessWidget {
+class Header extends HookConsumerWidget {
   const Header({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.read(authProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 50, left: 16, right: 16),
       child: Column(
@@ -15,9 +18,9 @@ class Header extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               FadeInUp(
-                child: const Text(
-                  'Chào mừng Pi!',
-                  style: TextStyle(
+                child: Text(
+                  'Chào mừng ${user?.name ?? "PI"}!',
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
