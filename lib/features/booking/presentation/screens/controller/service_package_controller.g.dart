@@ -7,7 +7,7 @@ part of 'service_package_controller.dart';
 // **************************************************************************
 
 String _$servicePackageControllerHash() =>
-    r'0a447d873610e2ed71e6607a30b30b34de39a918';
+    r'5c027b4f49ca5ea5862327074227a712d722cb90';
 
 /// See also [ServicePackageController].
 @ProviderFor(ServicePackageController)

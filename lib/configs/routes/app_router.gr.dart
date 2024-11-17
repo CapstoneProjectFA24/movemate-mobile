@@ -215,6 +215,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ReviewerTrackingMapRoute.name: (routeData) {
+      final args = routeData.argsAs<ReviewerTrackingMapRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ReviewerTrackingMap(
+          key: args.key,
+          staffId: args.staffId,
+          job: args.job,
+          bookingStatus: args.bookingStatus,
+        ),
+      );
+    },
     ServiceScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -969,6 +981,55 @@ class ReviewOnlineRouteArgs {
   @override
   String toString() {
     return 'ReviewOnlineRouteArgs{key: $key, order: $order}';
+  }
+}
+
+/// generated route for
+/// [ReviewerTrackingMap]
+class ReviewerTrackingMapRoute
+    extends PageRouteInfo<ReviewerTrackingMapRouteArgs> {
+  ReviewerTrackingMapRoute({
+    Key? key,
+    required String staffId,
+    required OrderEntity job,
+    required BookingStatusResult bookingStatus,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ReviewerTrackingMapRoute.name,
+          args: ReviewerTrackingMapRouteArgs(
+            key: key,
+            staffId: staffId,
+            job: job,
+            bookingStatus: bookingStatus,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReviewerTrackingMapRoute';
+
+  static const PageInfo<ReviewerTrackingMapRouteArgs> page =
+      PageInfo<ReviewerTrackingMapRouteArgs>(name);
+}
+
+class ReviewerTrackingMapRouteArgs {
+  const ReviewerTrackingMapRouteArgs({
+    this.key,
+    required this.staffId,
+    required this.job,
+    required this.bookingStatus,
+  });
+
+  final Key? key;
+
+  final String staffId;
+
+  final OrderEntity job;
+
+  final BookingStatusResult bookingStatus;
+
+  @override
+  String toString() {
+    return 'ReviewerTrackingMapRouteArgs{key: $key, staffId: $staffId, job: $job, bookingStatus: $bookingStatus}';
   }
 }
 

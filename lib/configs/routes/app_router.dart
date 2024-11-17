@@ -59,6 +59,7 @@ import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
 import 'package:movemate/features/order/presentation/screens/driver_tracking_map/driver_tracking_map.dart';
+import 'package:movemate/features/order/presentation/screens/reviewer_tracking_map/reviewer_tracking_map.dart';
 
 import 'package:movemate/features/test-payment/payment_result_screen.dart';
 
@@ -171,6 +172,9 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: TrackingDriverMapRoute.page,
+        ),
+        AutoRoute(
+          page: ReviewerTrackingMapRoute.page,
         ),
         AutoRoute(
           page: OrderDetailsScreenRoute.page,
