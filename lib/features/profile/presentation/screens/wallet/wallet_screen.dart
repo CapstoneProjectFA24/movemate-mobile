@@ -6,6 +6,8 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 // import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/enums/price_helper.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 
 @RoutePage()
 class WalletScreen extends HookConsumerWidget {
@@ -13,6 +15,9 @@ class WalletScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final wallet = ref.read(walletProvider);
+    // print("check wallet ${wallet?.balance}");
+
     final List<Map<String, dynamic>> paymentMethods = [
       {
         'name': 'Momo',
@@ -82,14 +87,14 @@ class WalletScreen extends HookConsumerWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: const EdgeInsets.all(10),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.account_balance_wallet,
+                        const Icon(Icons.account_balance_wallet,
                             color: AssetsConstants.primaryMain),
                         Text(
-                          'Số dư Ví: 1.000.000 đ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          'Số dư Ví: ${PriceHelper.formatPrice(wallet?.balance.toInt() ?? 0)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),

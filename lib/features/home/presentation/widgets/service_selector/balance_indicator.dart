@@ -33,7 +33,7 @@ class BalanceIndicator extends HookConsumerWidget {
     final walletUser = useFetchResultWallet.isFetchingData
         ? 0
         : useFetchResultWallet.data?.balance ?? 0;
-        final result = useFetchResultWallet.refresh;
+        // final result = useFetchResultWallet.refresh;
 
     print(" số dư : $walletUser");
 

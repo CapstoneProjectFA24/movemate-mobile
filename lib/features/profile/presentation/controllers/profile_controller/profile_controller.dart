@@ -11,6 +11,7 @@ import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/enums/status_code_type.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // config
@@ -131,6 +132,16 @@ class ProfileController extends _$ProfileController {
       );
       walletInfor = response.payload;
       print("controller response $walletInfor");
+
+      final walletEntity = WalletEntity(
+        balance: response.payload.balance,
+        id: response.payload.id,
+        userId: response.payload.userId,
+      );
+
+      ref.read(walletProvider.notifier).update(
+            (state) => walletEntity,
+          );
     });
 
     if (state.hasError) {
