@@ -35,6 +35,11 @@ class _ModifiedAutocompleteWidgetState
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
   final FocusNode _focusNode = FocusNode();
+  bool _isProgrammaticallySettingText = false;
+  void _controllerListener() {
+    setState(() {});
+    _onChanged(widget.controller.text);
+  }
 
   @override
   void initState() {
@@ -43,11 +48,6 @@ class _ModifiedAutocompleteWidgetState
       if (!_focusNode.hasFocus) {
         _removeOverlay();
       }
-    });
-
-    widget.controller.addListener(() {
-      setState(() {});
-      _onChanged(widget.controller.text);
     });
   }
 
@@ -111,14 +111,15 @@ class _ModifiedAutocompleteWidgetState
       _overlayEntry!.markNeedsBuild();
       return;
     }
-
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
   }
 
   void _removeOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
   }
 
   OverlayEntry _createOverlayEntry() {
@@ -165,15 +166,17 @@ class _ModifiedAutocompleteWidgetState
                 itemBuilder: (context, index) {
                   final suggestion = _suggestions[index];
                   return ListTile(
-                    leading: const Icon(Icons.location_on, color: Colors.red),
-                    title: Text(
-                      suggestion['display'],
-                      style: const TextStyle(
-                        color: Colors.black, // Đặt màu sắc mong muốn
+                      leading: const Icon(Icons.location_on, color: Colors.red),
+                      title: Text(
+                        suggestion['display'],
+                        style: const TextStyle(
+                          color: Colors.black, // Đặt màu sắc mong muốn
+                        ),
                       ),
-                    ),
-                    onTap: () => _selectSuggestion(suggestion),
-                  );
+                      onTap: () {
+                        _selectSuggestion(suggestion);
+                        _removeOverlay(); // Đóng dropdown ngay sau khi chọn
+                      });
                 },
               ),
             ),
@@ -223,6 +226,7 @@ class _ModifiedAutocompleteWidgetState
           print('Khoảng cách distance: $distance km');
         }
 
+        _isProgrammaticallySettingText = true;
         widget.controller.text = details['display'];
 
         setState(() {
@@ -230,6 +234,11 @@ class _ModifiedAutocompleteWidgetState
         });
 
         _removeOverlay();
+
+        // Đặt lại _isProgrammaticallySettingText sau khi khung hình hiện tại đã hoàn thành
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _isProgrammaticallySettingText = false;
+        });
       }
     } catch (e) {
       print('Error fetching location details: $e');
@@ -314,11 +323,19 @@ class _ModifiedAutocompleteWidgetState
                           ref
                               .read(bookingProvider.notifier)
                               .clearPickUpLocationInMap();
+                          ref
+                              .read(bookingProvider.notifier)
+                              .clearPickUpLocation();
                         } else {
                           ref
                               .read(bookingProvider.notifier)
                               .clearDropOffLocationInMap();
+                          ref
+                              .read(bookingProvider.notifier)
+                              .clearDropOffLocation();
                         }
+                        _focusNode
+                            .requestFocus(); // Đảm bảo TextField giữ focus
                       },
                     ),
                   if (_isLoading)
@@ -333,7 +350,12 @@ class _ModifiedAutocompleteWidgetState
                 ],
               ),
             ),
-            onChanged: _onChanged,
+            
+            onChanged: (value) {
+              if (!_isProgrammaticallySettingText) {
+                _onChanged(value);
+              }
+            },
           ),
         ],
       ),

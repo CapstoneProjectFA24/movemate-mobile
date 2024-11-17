@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/domain/entities/staff_profile_entity.dart';
 
 class StaffProfileResponse {
