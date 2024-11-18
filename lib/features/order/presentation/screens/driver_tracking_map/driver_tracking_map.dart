@@ -266,27 +266,27 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
               ),
             ),
           // Map controls
-          Positioned(
-            right: 16,
-            bottom: 220,
-            child: Column(
-              children: [
-                FloatingActionButton(
-                  heroTag: "chat",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ChatScreen()),
-                    );
-                  },
-                  backgroundColor: Colors.orange,
-                  child: const Icon(Icons.chat),
-                ),
-                const SizedBox(height: 4),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   right: 16,
+          //   bottom: 220,
+          //   child: Column(
+          //     children: [
+          //       FloatingActionButton(
+          //         heroTag: "chat",
+          //         onPressed: () {
+          //           Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) => const ChatScreen()),
+          //           );
+          //         },
+          //         backgroundColor: Colors.orange,
+          //         child: const Icon(Icons.chat),
+          //       ),
+          //       const SizedBox(height: 4),
+          //     ],
+          //   ),
+          // ),
           // Trip info card
           if (routeProgressEvent != null)
             Positioned(
