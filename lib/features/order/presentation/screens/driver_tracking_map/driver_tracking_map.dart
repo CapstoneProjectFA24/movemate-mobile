@@ -44,9 +44,6 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
   // Map state
   bool _isMapReady = false;
   bool _isFollowingDriver = true;
-  double _currentZoom = 15.0;
-  final double _minZoom = 12.0;
-  final double _maxZoom = 18.0;
 
   // Marker handling
   List<NavigationMarker>? _currentMarkers;
@@ -94,7 +91,7 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
 
   void _throttledCameraUpdate() {
     _cameraUpdateThrottle?.cancel();
-    _cameraUpdateThrottle = Timer(const Duration(milliseconds: 500), () {
+    _cameraUpdateThrottle = Timer(const Duration(milliseconds: 100), () {
       _updateMapView();
     });
   }
@@ -106,18 +103,11 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
         !_isFollowingDriver) {
       return;
     }
-    double? bearing;
+    // double? bearing;
 
-    if (routeProgressEvent?.currentLocation?.bearing != null) {
-      bearing = routeProgressEvent!.currentLocation!.bearing!.toDouble();
-    }
-
-    _navigationController?.animateCamera(
-      latLng: _staffLocation!,
-      zoom: _currentZoom,
-      duration: const Duration(milliseconds: 1000),
-      bearing: bearing,
-    );
+    // if (routeProgressEvent?.currentLocation?.bearing != null) {
+    //   bearing = routeProgressEvent!.currentLocation!.bearing!.toDouble();
+    // }
 
     _buildRoute();
   }
@@ -137,7 +127,7 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
       if (_staffLocation != null) {
         _navigationController?.buildRoute(
           waypoints: [waypoint, _staffLocation!],
-          profile: DrivingProfile.drivingTraffic,
+          profile: DrivingProfile.cycling,
         ).then((success) {
           if (!success) {
             print('Failed to build route');
@@ -159,8 +149,8 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     }
 
     List<NavigationMarker> markers = [];
-    print(
-        'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
+    // print(
+    //     'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
     // Add destination marker
     if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
       markers.add(NavigationMarker(
@@ -212,30 +202,6 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     return _parseCoordinates(widget.job.deliveryPoint);
   }
 
-  void _zoomIn() {
-    if (_currentZoom < _maxZoom) {
-      setState(() {
-        _currentZoom = (_currentZoom + 1).clamp(_minZoom, _maxZoom);
-        if (_staffLocation != null && _navigationController != null) {
-          _navigationController?.moveCamera(
-            latLng: _staffLocation!,
-            zoom: _currentZoom,
-            bearing: 100,
-          );
-        }
-      });
-    }
-  }
-
-  void _zoomOut() {
-    if (_currentZoom > _minZoom) {
-      setState(() {
-        _currentZoom -= 1;
-        _updateMapView();
-      });
-    }
-  }
-
   void _toggleFollowDriver() {
     setState(() {
       _isFollowingDriver = !_isFollowingDriver;
@@ -269,7 +235,7 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
               } else {
                 controller.buildRoute(
                   waypoints: [_getPickupPointLatLng(), _getPickupPointLatLng()],
-                  profile: DrivingProfile.drivingTraffic,
+                  profile: DrivingProfile.cycling,
                 );
               }
             },
@@ -317,30 +283,7 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
                   backgroundColor: Colors.orange,
                   child: const Icon(Icons.chat),
                 ),
-                const SizedBox(height: 8),
-                FloatingActionButton(
-                  heroTag: "follow",
-                  onPressed: _toggleFollowDriver,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    _isFollowingDriver ? Icons.location_on : Icons.location_off,
-                    color: _isFollowingDriver ? Colors.blue : Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                FloatingActionButton(
-                  heroTag: "zoomIn",
-                  onPressed: _zoomIn,
-                  backgroundColor: Colors.white,
-                  child: const Icon(Icons.add, color: Colors.black),
-                ),
-                const SizedBox(height: 8),
-                FloatingActionButton(
-                  heroTag: "zoomOut",
-                  onPressed: _zoomOut,
-                  backgroundColor: Colors.white,
-                  child: const Icon(Icons.remove, color: Colors.black),
-                ),
+                const SizedBox(height: 4),
               ],
             ),
           ),
