@@ -263,12 +263,17 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
                                 final tabsRouter = context.router.root
                                     .innerRouterOf<TabsRouter>(
                                         TabViewScreenRoute.name);
-                                print("TabViewScreenRoute $tabsRouter");
                                 if (tabsRouter != null) {
                                   tabsRouter.setActiveIndex(0);
-                                  // Pop back to the TabViewScreen
-                                  context.router
-                                      .pushNamed(TabViewScreenRoute.name);
+                                  context.router.popUntilRouteWithName(
+                                      TabViewScreenRoute.name);
+                                } else {
+                                  context.router.pushAndPopUntil(
+                                    const TabViewScreenRoute(children: [
+                                      HomeScreenRoute(),
+                                    ]),
+                                    predicate: (route) => false,
+                                  );
                                 }
                               },
                               // Example of a button to navigate to the Home tab
