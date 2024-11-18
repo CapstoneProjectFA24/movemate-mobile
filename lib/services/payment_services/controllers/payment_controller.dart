@@ -1,4 +1,5 @@
 // config
+import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/configs/routes/app_router.dart';
@@ -140,7 +141,7 @@ class PaymentController extends _$PaymentController {
   Future<void> createPaymentBookingByWallet({
     required BuildContext context,
     required String selectedMethod,
-    required String bookingId,
+    required int bookingId,
   }) async {
     state = const AsyncLoading();
     final paymentRepository = ref.read(paymentRepositoryProvider);
@@ -148,7 +149,7 @@ class PaymentController extends _$PaymentController {
     final authRepository = ref.read(authRepositoryProvider);
 
     final request = PaymentRequest(
-      bookingId: bookingId,
+      bookingId: bookingId.toString(),
       selectedMethod: selectedMethod,
     );
 
@@ -159,13 +160,11 @@ class PaymentController extends _$PaymentController {
       );
       print("createPaymentBookingByWallet: ${res.payload}");
     });
-    if (!state.hasError) {
-      const isSuccess = true;
-      ref.read(appRouterProvider).push(TransactionResultScreenByWalletRoute(
-            isSuccess: isSuccess,
-            bookingId: bookingId,
-          ));
-    }
+
+    context.router.push(TransactionResultScreenByWalletRoute(
+      bookingId: bookingId,
+    ));
+    print("createPaymentBookingByWallet 2:");
     if (state.hasError) {
       state = await AsyncValue.guard(
         () async {
@@ -190,10 +189,10 @@ class PaymentController extends _$PaymentController {
             return;
           }
 
-          await createPaymentBookingByWallet(
-              context: context,
-              selectedMethod: selectedMethod,
-              bookingId: bookingId);
+          // await createPaymentBookingByWallet(
+          //     context: context,
+          //     selectedMethod: selectedMethod,
+          //     bookingId: bookingId);
         },
       );
     }

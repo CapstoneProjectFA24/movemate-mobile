@@ -335,7 +335,6 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: TransactionResultScreenByWallet(
           key: args.key,
-          isSuccess: args.isSuccess,
           bookingId: args.bookingId,
         ),
       );
@@ -1340,14 +1339,12 @@ class TransactionResultScreenByWalletRoute
     extends PageRouteInfo<TransactionResultScreenByWalletRouteArgs> {
   TransactionResultScreenByWalletRoute({
     Key? key,
-    required bool isSuccess,
-    required String bookingId,
+    required int bookingId,
     List<PageRouteInfo>? children,
   }) : super(
           TransactionResultScreenByWalletRoute.name,
           args: TransactionResultScreenByWalletRouteArgs(
             key: key,
-            isSuccess: isSuccess,
             bookingId: bookingId,
           ),
           initialChildren: children,
@@ -1362,19 +1359,16 @@ class TransactionResultScreenByWalletRoute
 class TransactionResultScreenByWalletRouteArgs {
   const TransactionResultScreenByWalletRouteArgs({
     this.key,
-    required this.isSuccess,
     required this.bookingId,
   });
 
   final Key? key;
 
-  final bool isSuccess;
-
-  final String bookingId;
+  final int bookingId;
 
   @override
   String toString() {
-    return 'TransactionResultScreenByWalletRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId}';
+    return 'TransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId}';
   }
 }
 
