@@ -33,6 +33,19 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreenService(),
       );
     },
+    ChatWithStaffScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<ChatWithStaffScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ChatWithStaffScreen(
+          key: args.key,
+          staffId: args.staffId,
+          staffName: args.staffName,
+          staffRole: args.staffRole,
+          bookingId: args.bookingId,
+        ),
+      );
+    },
     CleaningServiceScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -400,6 +413,60 @@ class BookingScreenServiceRoute extends PageRouteInfo<void> {
   static const String name = 'BookingScreenServiceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ChatWithStaffScreen]
+class ChatWithStaffScreenRoute
+    extends PageRouteInfo<ChatWithStaffScreenRouteArgs> {
+  ChatWithStaffScreenRoute({
+    Key? key,
+    required String staffId,
+    required String staffName,
+    required StaffRole staffRole,
+    required String bookingId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChatWithStaffScreenRoute.name,
+          args: ChatWithStaffScreenRouteArgs(
+            key: key,
+            staffId: staffId,
+            staffName: staffName,
+            staffRole: staffRole,
+            bookingId: bookingId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatWithStaffScreenRoute';
+
+  static const PageInfo<ChatWithStaffScreenRouteArgs> page =
+      PageInfo<ChatWithStaffScreenRouteArgs>(name);
+}
+
+class ChatWithStaffScreenRouteArgs {
+  const ChatWithStaffScreenRouteArgs({
+    this.key,
+    required this.staffId,
+    required this.staffName,
+    required this.staffRole,
+    required this.bookingId,
+  });
+
+  final Key? key;
+
+  final String staffId;
+
+  final String staffName;
+
+  final StaffRole staffRole;
+
+  final String bookingId;
+
+  @override
+  String toString() {
+    return 'ChatWithStaffScreenRouteArgs{key: $key, staffId: $staffId, staffName: $staffName, staffRole: $staffRole, bookingId: $bookingId}';
+  }
 }
 
 /// generated route for

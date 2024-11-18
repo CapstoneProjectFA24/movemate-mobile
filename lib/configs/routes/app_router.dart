@@ -10,6 +10,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/features/home/presentation/screens/map_test_screen.dart';
 import 'package:movemate/features/home/presentation/screens/voucher/voucher_details_screen.dart';
 import 'package:movemate/features/home/presentation/screens/voucher/voucher_screen.dart';
+import 'package:movemate/features/order/presentation/screens/chat_screen/chat_with_staff_screen.dart';
 import 'package:movemate/features/order/presentation/widgets/details/time_line_booking.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
@@ -23,6 +24,7 @@ import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/models/loading_screen/loading_screen.dart';
 import 'package:movemate/models/result_register_booking_screen/confirm_service_booking.dart';
 import 'package:movemate/models/result_register_booking_screen/register_success.dart';
+import 'package:movemate/services/chat_services/models/chat_model.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
@@ -164,6 +166,9 @@ class AppRouter extends _$AppRouter {
         //TODO
         AutoRoute(
           page: PackageDetailScreenRoute.page,
+        ),
+        AutoRoute(
+          page: ChatWithStaffScreenRoute.page,
         ),
 
         //  order flow
