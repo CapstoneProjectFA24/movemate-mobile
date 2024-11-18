@@ -63,8 +63,7 @@ class ServiceSelector extends HookConsumerWidget {
     Future<DateTime?> selectDate(DateTime? initialDate) async {
       final now = DateTime.now();
 
-      final defaultTime =
-          TimeOfDay(hour: (now.hour + 1) % 24, minute: now.minute);
+      final defaultTime = TimeOfDay(hour: (now.hour) % 24, minute: now.minute);
 
       final lastDate = now.add(const Duration(days: 30));
 

@@ -125,6 +125,7 @@ flutter:
     - assets/images/payment_status/
     - assets/images/logo/MoveMateLogo2.png
     - assets/images/booking/vehicles/truck1.png
+    - assets/images/booking/vehicles/The-driver-on-his-way.gif
   # fonts:
   #   - family: Open Sans
   #     fonts:

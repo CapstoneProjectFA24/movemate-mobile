@@ -163,14 +163,16 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     // Add destination marker
     if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
       markers.add(NavigationMarker(
-        imagePath: "assets/images/booking/vehicles/truck1.png",
+        imagePath:
+            "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
         height: 80,
         width: 80,
         latLng: _getPickupPointLatLng(),
       ));
     } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
       markers.add(NavigationMarker(
-        imagePath: "assets/images/booking/vehicles/truck1.png",
+        imagePath:
+            "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
         height: 80,
         width: 80,
         latLng: _getDeliveryPointLatLng(),

@@ -84,7 +84,7 @@ class ProfileController extends _$ProfileController {
     state = await AsyncValue.guard(() async {
       final response = await profileRepository.getProfileInforById(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        id: 11,
+        id: id,
       );
       profileInfor = response.payload;
       // print("controller ${profileInfor?.email}");
