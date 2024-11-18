@@ -28,7 +28,7 @@ class ReviewAtHome extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(bookingControllerProvider);
-   
+
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Scaffold(
@@ -146,7 +146,8 @@ class AppointmentTime extends StatelessWidget {
 // hàm để định dạng ngày tháng
     final formattedDateReviewAt = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.reviewAt.toString()));
-
+    final formattedTimeReviewAt =
+        DateFormat('hh:mm').format(DateTime.parse(order.reviewAt.toString()));
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -155,14 +156,14 @@ class AppointmentTime extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color(0xFFFF6600),
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 5),
         LabelText(
-          content: '$formattedDateReviewAt ',
-          size: 16,
+          content: '$formattedDateReviewAt  $formattedTimeReviewAt ',
+          size: 18,
           color: AssetsConstants.primaryMain,
           fontWeight: FontWeight.bold,
         ),
@@ -176,13 +177,10 @@ class Description extends StatelessWidget {
   final OrderEntity order;
   @override
   Widget build(BuildContext context) {
-    final formattedTimeReviewAt =
-        DateFormat('hh:mm').format(DateTime.parse(order.reviewAt.toString()));
-
-    return Text(
-      'Nhằm nâng cao tính chính xác của dịch vụ chúng tôi đề cử nhân viên đến xem xét vào lúc $formattedTimeReviewAt',
+    return const Text(
+      'Nhằm nâng cao tính chính xác của dịch vụ chúng tôi đề cử nhân viên đến xem xét ',
       textAlign: TextAlign.center,
-      style: const TextStyle(
+      style: TextStyle(
         color: Color(0xFF666666),
         fontSize: 14,
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
@@ -56,20 +57,28 @@ class PriceDetails extends HookConsumerWidget {
 
     // }
 
-    void handleActionPress() {
+    void handleActionPress() async {
       if (order.isReviewOnline) {
         // Online Flow: Review -> Payment
         if (bookingStatus.canReviewSuggestion ||
             bookingStatus.isOnlineReviewing ||
             bookingStatus.isOnlineSuggestionReady) {
-          context.pushRoute(ReviewOnlineRoute(order: order));
+          final bookingController =
+              ref.read(bookingControllerProvider.notifier);
+          final orderEntity =
+              await bookingController.getOrderEntityById(order.id);
+          context.pushRoute(ReviewOnlineRoute(order: orderEntity ?? order));
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
         }
       } else {
         // Offline Flow: Schedule -> Payment -> Review
         if (bookingStatus.canAcceptSchedule) {
-          context.pushRoute(ReviewAtHomeRoute(order: order));
+          final bookingController =
+              ref.read(bookingControllerProvider.notifier);
+          final orderEntity =
+              await bookingController.getOrderEntityById(order.id);
+          context.pushRoute(ReviewAtHomeRoute(order: orderEntity ?? order));
         } else if (bookingStatus.canReviewSuggestion) {
           showDialog(
             context: context,
@@ -258,7 +267,7 @@ class PriceDetails extends HookConsumerWidget {
           const SizedBox(height: 20),
 
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.grey[50],
               borderRadius: BorderRadius.circular(10),
@@ -269,14 +278,12 @@ class PriceDetails extends HookConsumerWidget {
                 const LabelText(
                   content: 'Ghi chú',
                   size: 14,
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontWeight: FontWeight.w500,
                 ),
                 const SizedBox(height: 8),
                 LabelText(
-                  content: (order.note?.isEmpty ?? true)
-                      ? 'Không có ghi chú'
-                      : order.note!,
+                  content: (order.note?.isEmpty ?? true) ? '' : order.note!,
                   size: 15,
                   color: Colors.black87,
                   fontWeight: FontWeight.w400,

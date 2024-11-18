@@ -164,6 +164,9 @@ class BookingController extends _$BookingController {
             id: order.id,
           );
 
+      ref
+          .read(refreshOrderList.notifier)
+          .update((state) => !ref.read(refreshOrderList));
       // stream realtime -> ref status
       // case1
       // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscrent

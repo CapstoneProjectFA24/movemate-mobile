@@ -203,27 +203,27 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     )
                   ],
                 ),
-                const SizedBox(height: 20),
-                (statusOrders == BookingStatusType.assigned &&
-                            order.isReviewOnline == false) ||
-                        (statusOrders == BookingStatusType.reviewed &&
-                            order.isReviewOnline == true)
-                    ? Column(
-                        children: [
-                          FadeInLeft(
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 16.0),
-                              child: Text(
-                                "Map",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                          const MapWidget(),
-                        ],
-                      )
-                    : Container(),
+                // const SizedBox(height: 20),
+                // (statusOrders == BookingStatusType.assigned &&
+                //             order.isReviewOnline == false) ||
+                //         (statusOrders == BookingStatusType.reviewed &&
+                //             order.isReviewOnline == true)
+                //     ? Column(
+                //         children: [
+                //           FadeInLeft(
+                //             child: const Padding(
+                //               padding: EdgeInsets.only(left: 16.0),
+                //               child: Text(
+                //                 "Map",
+                //                 style: TextStyle(
+                //                     fontSize: 20, fontWeight: FontWeight.bold),
+                //               ),
+                //             ),
+                //           ),
+                //           const MapWidget(),
+                //         ],
+                //       )
+                //     : Container(),
                 const SizedBox(height: 10),
                 (statusOrders == BookingStatusType.reviewed)
                     ? CustomerInfo(
