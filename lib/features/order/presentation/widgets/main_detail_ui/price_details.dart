@@ -93,7 +93,7 @@ class PriceDetails extends HookConsumerWidget {
       } else {
         // Offline Flow
         if (bookingStatus.canAcceptSchedule) {
-          return 'Xác nhận lịch khảo sát';
+          return 'Xem lịch khảo sát';
         } else if (bookingStatus.canReviewSuggestion) {
           return 'Xem xét đề xuất';
         } else if (bookingStatus.canMakePayment) {
