@@ -82,7 +82,7 @@ class BookingStatus extends HookConsumerWidget {
                   Expanded(
                     child: LabelText(
                       content: bookingStatus.statusMessage,
-                      size: 12,
+                      size: 14,
                       fontWeight: FontWeight.w400,
                       color: isCancelled ? Colors.white : Colors.black87,
                     ),
@@ -96,7 +96,7 @@ class BookingStatus extends HookConsumerWidget {
               child: Text(
                 "MoveMate sẽ gửi thông tin đến bạn sau",
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   color: isCancelled ? Colors.white70 : Colors.black54,
                 ),
               ),
