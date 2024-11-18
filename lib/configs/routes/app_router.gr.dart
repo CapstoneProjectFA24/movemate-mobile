@@ -43,6 +43,7 @@ abstract class _$AppRouter extends RootStackRouter {
           staffName: args.staffName,
           staffRole: args.staffRole,
           bookingId: args.bookingId,
+          staffImageAvatar: args.staffImageAvatar,
         ),
       );
     },
@@ -425,6 +426,7 @@ class ChatWithStaffScreenRoute
     required String staffName,
     required StaffRole staffRole,
     required String bookingId,
+    required String staffImageAvatar,
     List<PageRouteInfo>? children,
   }) : super(
           ChatWithStaffScreenRoute.name,
@@ -434,6 +436,7 @@ class ChatWithStaffScreenRoute
             staffName: staffName,
             staffRole: staffRole,
             bookingId: bookingId,
+            staffImageAvatar: staffImageAvatar,
           ),
           initialChildren: children,
         );
@@ -451,6 +454,7 @@ class ChatWithStaffScreenRouteArgs {
     required this.staffName,
     required this.staffRole,
     required this.bookingId,
+    required this.staffImageAvatar,
   });
 
   final Key? key;
@@ -463,9 +467,11 @@ class ChatWithStaffScreenRouteArgs {
 
   final String bookingId;
 
+  final String staffImageAvatar;
+
   @override
   String toString() {
-    return 'ChatWithStaffScreenRouteArgs{key: $key, staffId: $staffId, staffName: $staffName, staffRole: $staffRole, bookingId: $bookingId}';
+    return 'ChatWithStaffScreenRouteArgs{key: $key, staffId: $staffId, staffName: $staffName, staffRole: $staffRole, bookingId: $bookingId, staffImageAvatar: $staffImageAvatar}';
   }
 }
 

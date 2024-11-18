@@ -108,14 +108,47 @@ class ProfileStaffInfo extends HookConsumerWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Liên hệ với nhân viên'),
-            content: Text('Bạn có muốn chat với ${staff?.name} không?'),
+            title: const Text(
+              'Liên hệ với nhân viên',
+              style: TextStyle(
+                color: Colors.orange,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: 'Bạn có muốn chat với ',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                  TextSpan(
+                    text: '${staff?.name}',
+                    style: const TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: ' không?',
+                    style: TextStyle(color: Colors.black87),
+                  ),
+                ],
+              ),
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            backgroundColor: Colors.white,
             actions: [
               TextButton(
                 onPressed: () => context.router.pop(),
-                child: const Text('Hủy'),
+                child: const Text(
+                  'Đóng',
+                  style: TextStyle(color: Colors.grey),
+                ),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   context.router.pop();
                   context.router.push(
@@ -123,11 +156,26 @@ class ProfileStaffInfo extends HookConsumerWidget {
                       staffId: staffAssignment.userId.toString(),
                       staffName: staff?.name ?? 'Nhân viên',
                       staffRole: _convertToStaffRole(staffAssignment.staffType),
+                      staffImageAvatar: staff?.avatarUrl ?? '',
                       bookingId: order.id.toString(),
                     ),
                   );
                 },
-                child: const Text('Chat ngay'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.chat),
+                    SizedBox(width: 8.0),
+                    Text('Chat ngay'),
+                  ],
+                ),
               ),
             ],
           );

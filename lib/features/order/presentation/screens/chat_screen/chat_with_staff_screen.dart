@@ -15,20 +15,22 @@ class ChatWithStaffScreen extends HookConsumerWidget {
   final String staffName;
   final StaffRole staffRole;
   final String bookingId;
+  final String staffImageAvatar;
 
   const ChatWithStaffScreen({
-    Key? key,
+    super.key,
     required this.staffId,
     required this.staffName,
     required this.staffRole,
     required this.bookingId,
-  }) : super(key: key);
+    required this.staffImageAvatar,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chatManager = ChatManager(
       bookingId: bookingId,
-      currentUserId: ref.read(authProvider)!.id.toString() ,
+      currentUserId: ref.read(authProvider)!.id.toString(),
       currentUserRole: 'customer',
     );
 
@@ -44,7 +46,7 @@ class ChatWithStaffScreen extends HookConsumerWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          
+
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
@@ -65,16 +67,16 @@ class ChatContent extends HookConsumerWidget {
   final ChatManager chatManager;
 
   const ChatContent({
-    Key? key,
+    super.key,
     required this.conversationId,
     required this.chatManager,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messageController = useTextEditingController();
     final messages = useStream(chatManager.getMessages(conversationId));
-
+    final user = ref.read(authProvider);
     return Column(
       children: [
         Expanded(
@@ -85,8 +87,9 @@ class ChatContent extends HookConsumerWidget {
                   itemCount: messages.data!.length,
                   itemBuilder: (context, index) {
                     final message = messages.data![index];
-                    final isSent = message.senderId == chatManager.currentUserId;
-                    
+                    final isSent =
+                        message.senderId == chatManager.currentUserId;
+
                     return ChatMessage(
                       text: message.content,
                       time: _formatTimestamp(message.timestamp),
@@ -133,10 +136,10 @@ class ChatInputBox extends StatelessWidget {
   final TextEditingController controller;
 
   const ChatInputBox({
-    Key? key,
+    super.key,
     required this.onSendMessage,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +163,7 @@ class ChatInputBox extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.send, color: Colors.grey),
+            icon: const Icon(Icons.send, color: AssetsConstants.primaryLight),
             onPressed: () => onSendMessage(controller.text),
           ),
         ],

@@ -140,11 +140,11 @@ class ProfileCard extends StatelessWidget {
                     ),
                   if (iconCall)
                     IconButton(
-                      icon: FaIcon(
-                        FontAwesomeIcons.phone,
-                        size: 18,
-                        color: Colors.grey.shade600,
-                      ),
+                      icon: const Icon(Icons.chat),
+                      color: Colors.orangeAccent,
+                      iconSize: 25,
+                      padding: const EdgeInsets.all(8.0),
+                      tooltip: 'Open Chat',
                       onPressed: onPhonePressed,
                     ),
                 ],
