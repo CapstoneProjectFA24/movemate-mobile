@@ -1,6 +1,5 @@
 // order_details_screen.dart
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,7 +16,6 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/map_widget.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details.dart';
 
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_staff_info.dart';
@@ -26,9 +24,7 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/serv
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
-import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';

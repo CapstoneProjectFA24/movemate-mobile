@@ -1,7 +1,6 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';

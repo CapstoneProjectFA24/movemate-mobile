@@ -13,7 +13,6 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
