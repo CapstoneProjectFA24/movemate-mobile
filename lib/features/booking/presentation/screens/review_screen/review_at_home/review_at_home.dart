@@ -155,14 +155,14 @@ class AppointmentTime extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color(0xFFFF6600),
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 5),
         LabelText(
           content: '$formattedDateReviewAt ',
-          size: 18,
+          size: 16,
           color: AssetsConstants.primaryMain,
           fontWeight: FontWeight.bold,
         ),

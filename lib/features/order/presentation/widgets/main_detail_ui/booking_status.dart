@@ -63,27 +63,27 @@ class BookingStatus extends HookConsumerWidget {
               duration: const Duration(milliseconds: 500),
               child: Row(
                 children: [
-                  Icon(
-                    isCancelled
-                        ? Icons.cancel
-                        : isComplete
-                            ? Icons.check_circle
-                            : Icons.info_outline,
-                    color: isCancelled
-                        ? Colors.red
-                        : isComplete
-                            ? AssetsConstants.green6
-                            : !insTructionIconFolowStatus
-                                ? Colors.blue.shade500
-                                : Colors.red.shade400,
-                    size: 28,
-                  ),
+                  // Icon(
+                  //   isCancelled
+                  //       ? Icons.cancel
+                  //       : isComplete
+                  //           ? Icons.check_circle
+                  //           : Icons.info_outline,
+                  //   color: isCancelled
+                  //       ? Colors.red
+                  //       : isComplete
+                  //           ? AssetsConstants.green6
+                  //           : !insTructionIconFolowStatus
+                  //               ? Colors.blue.shade500
+                  //               : Colors.red.shade400,
+                  //   size: 20,
+                  // ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: LabelText(
                       content: bookingStatus.statusMessage,
-                      size: 20,
-                      fontWeight: FontWeight.w600,
+                      size: 12,
+                      fontWeight: FontWeight.w400,
                       color: isCancelled ? Colors.white : Colors.black87,
                     ),
                   ),
@@ -96,7 +96,7 @@ class BookingStatus extends HookConsumerWidget {
               child: Text(
                 "MoveMate sẽ gửi thông tin đến bạn sau",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 10,
                   color: isCancelled ? Colors.white70 : Colors.black54,
                 ),
               ),
