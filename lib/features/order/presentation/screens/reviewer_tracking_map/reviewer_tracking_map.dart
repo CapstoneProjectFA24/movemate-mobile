@@ -110,11 +110,11 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
       return;
     }
 
-    _navigationController?.animateCamera(
-      latLng: _staffLocation!,
-      zoom: 15,
-      duration: const Duration(milliseconds: 1000),
-    );
+    // _navigationController?.animateCamera(
+    //   latLng: _staffLocation!,
+    //   zoom: 15,
+    //   duration: const Duration(milliseconds: 1000),
+    // );
 
     _buildRoute();
   }
