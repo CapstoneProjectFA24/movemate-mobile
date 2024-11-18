@@ -275,8 +275,8 @@ class PriceDetails extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const LabelText(
-                  content: 'Ghi chú',
+                LabelText(
+                  content: (order.note?.isEmpty ?? true) ? '' : 'Ghi chú',
                   size: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
