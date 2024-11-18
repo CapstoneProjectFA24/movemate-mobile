@@ -29,6 +29,10 @@ part 'booking_controller.g.dart';
 final bookingResponseProvider =
     StateProvider<BookingResponseEntity?>((ref) => null);
 
+final refreshOrderList = StateProvider.autoDispose<bool>(
+  (ref) => true,
+);
+
 @riverpod
 class BookingController extends _$BookingController {
   int? bookingId;
@@ -159,8 +163,6 @@ class BookingController extends _$BookingController {
             request: request,
             id: order.id,
           );
-
-
 
       // stream realtime -> ref status
       // case1

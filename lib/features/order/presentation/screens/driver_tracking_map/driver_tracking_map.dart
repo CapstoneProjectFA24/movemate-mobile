@@ -159,7 +159,8 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     }
 
     List<NavigationMarker> markers = [];
-
+    print(
+        'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
     // Add destination marker
     if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
       markers.add(NavigationMarker(
@@ -178,9 +179,10 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
         latLng: _getDeliveryPointLatLng(),
       ));
     }
-
+// assets/images/booking/vehicles/abf959e9.png
     markers.add(NavigationMarker(
-      imagePath: "assets/images/booking/vehicles/truck1.png",
+      // imagePath: "assets/images/booking/vehicles/truck1.png",
+      imagePath: "assets/images/booking/vehicles/abf959e9.png",
       height: 60,
       width: 60,
       latLng: _staffLocation!,

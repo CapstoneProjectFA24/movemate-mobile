@@ -131,14 +131,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
         },
         context: context);
 
-    //  await bookingController
-    //                     .getOrderEntityById(order.id);
-
-    // final useFetchResults = orderEntity.refresh;
-    // useEffect(() {
-    //   useFetchResults();
-    //   return null;
-    // }, [bookingAsync]);
+    ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
 
     print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
