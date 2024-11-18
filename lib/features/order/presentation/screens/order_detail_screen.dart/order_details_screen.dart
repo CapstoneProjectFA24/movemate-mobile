@@ -10,6 +10,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/assig
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -25,7 +26,9 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/serv
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
+import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -120,6 +123,24 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final serviceData = useFetchResultService.data;
 
+    final orderEntity = useFetchObject<OrderEntity>(
+        function: (context) async {
+          return ref
+              .read(bookingControllerProvider.notifier)
+              .getOrderEntityById(order.id);
+        },
+        context: context);
+
+    //  await bookingController
+    //                     .getOrderEntityById(order.id);
+
+    // final useFetchResults = orderEntity.refresh;
+    // useEffect(() {
+    //   useFetchResults();
+    //   return null;
+    // }, [bookingAsync]);
+
+    print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
       isLoading:
           state.isLoading || stateService.isLoading || stateProfile.isLoading,

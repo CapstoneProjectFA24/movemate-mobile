@@ -32,11 +32,9 @@ String formatTime(DateTime date) {
 
 @RoutePage()
 class TransactionResultScreenByWallet extends HookConsumerWidget {
-  final String bookingId;
-  final bool isSuccess;
+  final int bookingId;
   const TransactionResultScreenByWallet({
     super.key,
-    required this.isSuccess,
     required this.bookingId,
   });
 
@@ -45,14 +43,14 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
     double containerHeight = MediaQuery.of(context).size.height * 0.5;
     // print('allUri: $allUri');
-    int? bookingIdInt = int.tryParse(bookingId);
+
     //{isSuccess: true, amount: 312000, payDate: 11/07/2024 23:36:49, bookingId: 426-a66aec19-e687-427b-a836-ee65150cbc1b, transactionCode: 4223169412, userId: 3, paymentMethod: Momo}
     final state = ref.watch(bookingControllerProvider);
     final useFetchResultOrder = useFetchObject<OrderEntity>(
       function: (context) async {
         return ref
             .read(bookingControllerProvider.notifier)
-            .getOrderEntityById(bookingIdInt ?? 0);
+            .getOrderEntityById(bookingId);
       },
       context: context,
     );
@@ -265,13 +263,17 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
                                 final tabsRouter = context.router.root
                                     .innerRouterOf<TabsRouter>(
                                         TabViewScreenRoute.name);
+                                print("TabViewScreenRoute $tabsRouter");
                                 if (tabsRouter != null) {
                                   tabsRouter.setActiveIndex(0);
                                   // Pop back to the TabViewScreen
-                                  context.router.popUntilRouteWithName(
-                                      TabViewScreenRoute.name);
+                                  context.router
+                                      .pushNamed(TabViewScreenRoute.name);
                                 }
                               },
+                              // Example of a button to navigate to the Home tab
+                              // Navigating to Home screen within TabViewScreen
+
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 side: const BorderSide(color: Colors.white),
@@ -302,34 +304,26 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
 
                               onPressed: () async {
                                 // Trích xuất phần số nguyên từ bookingId để lấy id
-                                final idPart = bookingId.split('-').first;
-                                final id = int.tryParse(idPart);
 
-                                if (id != null) {
-                                  // Sử dụng BookingController để lấy OrderEntity
-                                  final bookingController = ref
-                                      .read(bookingControllerProvider.notifier);
-                                  final orderEntity = await bookingController
-                                      .getOrderEntityById(id);
+                                final id = bookingId;
 
-                                  if (orderEntity != null) {
-                                    // Điều hướng đến OrderDetailsScreen với orderEntity
-                                    context.router.push(OrderDetailsScreenRoute(
-                                        order: orderEntity));
-                                  } else {
-                                    // Xử lý lỗi nếu không tìm thấy OrderEntity
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Không tìm thấy thông tin đơn hàng')),
-                                    );
-                                  }
+                                // Sử dụng BookingController để lấy OrderEntity
+                                final bookingController = ref
+                                    .read(bookingControllerProvider.notifier);
+                                final orderEntity = await bookingController
+                                    .getOrderEntityById(id);
+
+                                if (orderEntity != null) {
+                                  // Điều hướng đến OrderDetailsScreen với orderEntity
+                                  context.router.replaceAll([
+                                    OrderDetailsScreenRoute(order: orderEntity)
+                                  ]);
                                 } else {
-                                  // Xử lý lỗi nếu không thể trích xuất id
+                                  // Xử lý lỗi nếu không tìm thấy OrderEntity
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text(
-                                            'Không thể lấy id từ bookingId')),
+                                            'Không tìm thấy thông tin đơn hàng')),
                                   );
                                 }
                               },

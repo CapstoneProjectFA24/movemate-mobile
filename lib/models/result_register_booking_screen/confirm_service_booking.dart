@@ -1,13 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 
 @RoutePage()
-class ConfirmServiceBookingScreen extends ConsumerWidget {
+class ConfirmServiceBookingScreen extends HookConsumerWidget {
   final OrderEntity order;
   const ConfirmServiceBookingScreen({
     super.key,
@@ -96,10 +99,18 @@ class ConfirmServiceBookingScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             vertical: 15, horizontal: 30),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         print("Đi đến My Booking");
+
+                        final bookingController =
+                            ref.read(bookingControllerProvider.notifier);
+                        final orderEntity = await bookingController
+                            .getOrderEntityById(order.id);
+
                         context.router.replaceAll(
-                          [OrderDetailsScreenRoute(order: order)],
+                          [
+                            OrderDetailsScreenRoute(order: orderEntity ?? order)
+                          ],
                         );
                       },
                       child: const Text(

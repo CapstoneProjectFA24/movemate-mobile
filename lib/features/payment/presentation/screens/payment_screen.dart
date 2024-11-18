@@ -44,7 +44,7 @@ class PaymentScreen extends HookConsumerWidget {
 
     // Access the booking response from the provider
     final bookingResponse = ref.watch(bookingResponseProvider);
-
+// print("object");
     if (bookingResponse == null) {
       // Show a loading indicator while data is being fetched
       return Scaffold(
@@ -70,8 +70,6 @@ class PaymentScreen extends HookConsumerWidget {
     final selectedMethod = ref.watch(paymentMethodProvider);
     final paymentController = ref.watch(paymentControllerProvider.notifier);
     final state = ref.watch(paymentControllerProvider);
-    print("check method $selectedMethod");
-    print('Selected Payment Method: ${selectedMethod.type}');
 
     Future<void> handlePaymentButtonPressed() async {
       try {
@@ -79,26 +77,17 @@ class PaymentScreen extends HookConsumerWidget {
           await paymentController.createPaymentBookingByWallet(
             context: context,
             selectedMethod: selectedMethod.type,
-            bookingId: bookingResponse.id.toString(),
+            bookingId: id,
           );
-          print(
-              "Payment via Wallet. bookingID: ${bookingResponse.id.toString()}");
         } else {
           await paymentController.createPaymentBooking(
             context: context,
             selectedMethod: selectedMethod.type,
             bookingId: bookingResponse.id.toString(),
           );
-          print(
-              "Payment normally. bookingID: ${bookingResponse.id.toString()}");
         }
       } catch (e) {
-        // Handle any errors that occur during the payment process
         print("Payment failed: $e");
-        // Optionally, show a dialog or snackbar to inform the user
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment failed: $e')),
-        );
       }
     }
 

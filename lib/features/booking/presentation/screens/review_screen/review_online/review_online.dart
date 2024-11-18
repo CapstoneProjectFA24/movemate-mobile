@@ -270,27 +270,29 @@ class ReviewOnline extends HookConsumerWidget {
                           style: const TextStyle(fontWeight: FontWeight.bold)),
                       // Additional details can be added here
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text(truckCateDetails?.estimatedLenght ?? '',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade700)),
-                          Text(' dài, ',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade700)),
-                          Text(truckCateDetails?.estimatedWidth ?? '',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade700)),
-                          Text(' rộng, ',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade700)),
-                          Text(truckCateDetails?.estimatedHeight ?? '',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade700)),
-                          Text(' cao',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey.shade700)),
-                        ],
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            Text(truckCateDetails?.estimatedLenght ?? '',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade700)),
+                            Text(' dài, ',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade700)),
+                            Text(truckCateDetails?.estimatedWidth ?? '',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade700)),
+                            Text(' rộng, ',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade700)),
+                            Text(truckCateDetails?.estimatedHeight ?? '',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade700)),
+                            Text(' cao',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey.shade700)),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
