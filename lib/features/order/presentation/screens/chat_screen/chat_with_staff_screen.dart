@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:movemate/features/order/presentation/widgets/driver_tracking_map_item/chat_screen.dart';
 import 'package:movemate/services/chat_services/data/chat_services.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
@@ -40,8 +39,8 @@ class ChatWithStaffScreen extends HookConsumerWidget {
         backButtonColor: AssetsConstants.whiteColor,
         title: "Chat với $staffName",
       ),
-      body: FutureBuilder<String>(
-        future: chatManager.getOrCreateConversation(staffId, staffRole),
+      body: StreamBuilder<String>(
+        stream: _getConversationStream(chatManager),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -55,9 +54,18 @@ class ChatWithStaffScreen extends HookConsumerWidget {
           return ChatContent(
             conversationId: conversationId,
             chatManager: chatManager,
+            staffImageAvatar: staffImageAvatar,
+            staffName: staffName,
           );
         },
       ),
+    );
+  }
+
+  // Stream for conversation creation or existing conversation
+  Stream<String> _getConversationStream(ChatManager chatManager) {
+    return Stream.fromFuture(
+      chatManager.getOrCreateConversation(staffId, staffRole),
     );
   }
 }
@@ -65,51 +73,67 @@ class ChatWithStaffScreen extends HookConsumerWidget {
 class ChatContent extends HookConsumerWidget {
   final String conversationId;
   final ChatManager chatManager;
+  final String staffName;
+  final String staffImageAvatar;
 
   const ChatContent({
     super.key,
     required this.conversationId,
     required this.chatManager,
+    required this.staffImageAvatar,
+    required this.staffName,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messageController = useTextEditingController();
-    final messages = useStream(chatManager.getMessages(conversationId));
-    final user = ref.read(authProvider);
-    return Column(
-      children: [
-        Expanded(
-          child: messages.hasData
-              ? ListView.builder(
-                  reverse: true,
-                  padding: const EdgeInsets.all(10),
-                  itemCount: messages.data!.length,
-                  itemBuilder: (context, index) {
-                    final message = messages.data![index];
-                    final isSent =
-                        message.senderId == chatManager.currentUserId;
 
-                    return ChatMessage(
-                      text: message.content,
-                      time: _formatTimestamp(message.timestamp),
-                      isSent: isSent,
-                      // avatarUrl: !isSent ? message.senderAvatar : null,
-                    );
-                  },
-                )
-              : const Center(child: CircularProgressIndicator()),
-        ),
-        ChatInputBox(
-          onSendMessage: (content) async {
-            if (content.trim().isNotEmpty) {
-              await chatManager.sendMessage(conversationId, content);
-              messageController.clear();
-            }
-          },
-          controller: messageController,
-        ),
-      ],
+    return StreamBuilder<List<Message>>(
+      stream: chatManager.getMessages(conversationId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final messages = snapshot.data ?? [];
+
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                reverse: true,
+                padding: const EdgeInsets.all(10),
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  final isSent = message.senderId == chatManager.currentUserId;
+
+                  return ChatMessage(
+                    text: message.content,
+                    time: _formatTimestamp(message.timestamp),
+                    isSent: isSent,
+                    senderName: !isSent ? staffName : 'Bạn',
+                    avatarUrl: !isSent ? staffImageAvatar : null,
+                  );
+                },
+              ),
+            ),
+            ChatInputBox(
+              onSendMessage: (content) async {
+                if (content.trim().isNotEmpty) {
+                  messageController.clear();
+                  await chatManager.sendMessage(conversationId, content);
+                }
+              },
+              controller: messageController,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -127,6 +151,118 @@ class ChatContent extends HookConsumerWidget {
     } else {
       return '${timestamp.day}/${timestamp.month} ${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}';
     }
+  }
+}
+
+class ChatMessage extends StatelessWidget {
+  final String text;
+  final String time;
+  final bool isSent;
+  final String senderName;
+  final String? avatarUrl;
+
+  const ChatMessage({
+    super.key,
+    required this.text,
+    required this.time,
+    required this.isSent,
+    required this.senderName,
+    this.avatarUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: isSent ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: isSent
+              ? _buildSentMessageLayout()
+              : _buildReceivedMessageLayout(),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildSentMessageLayout() {
+    return [
+      Flexible(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AssetsConstants.primaryLight,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                text,
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                time,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildReceivedMessageLayout() {
+    return [
+      if (avatarUrl != null)
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(avatarUrl!),
+            radius: 20,
+          ),
+        ),
+      Flexible(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                senderName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(text),
+              const SizedBox(height: 5),
+              Text(
+                time,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ];
   }
 }
 

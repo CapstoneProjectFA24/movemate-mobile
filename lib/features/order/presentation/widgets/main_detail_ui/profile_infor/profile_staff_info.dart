@@ -57,7 +57,7 @@ class ProfileStaffInfo extends HookConsumerWidget {
       switch (staffType.toUpperCase()) {
         case "DRIVER":
           return "Thông tin tài xế";
-        case "POSTER":
+        case "PORTER":
           return "Thông tin người bốc vác";
         case "REVIEWER":
           return "Thông tin người đánh giá";

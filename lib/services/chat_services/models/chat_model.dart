@@ -31,8 +31,10 @@ class Message {
       senderId: data['senderId'],
       senderRole: data['senderRole'],
       attachments: List<String>.from(data['attachments'] ?? []),
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      readAt: data['readAt'] != null
+      timestamp: data['timestamp'] is Timestamp
+          ? (data['timestamp'] as Timestamp).toDate()
+          : DateTime.now(),
+      readAt: data['readAt'] is Timestamp
           ? (data['readAt'] as Timestamp).toDate()
           : null,
       status: data['status'],
@@ -50,8 +52,6 @@ class Message {
     };
   }
 }
-
-
 
 class Conversation {
   final String id;
@@ -73,11 +73,13 @@ class Conversation {
     return Conversation(
       id: doc.id,
       participants: data['participants'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
       status: data['status'],
-      lastMessage: data['lastMessage'] != null 
-        ? Message.fromFirestore(data['lastMessage'])
-        : null,
+      lastMessage: data['lastMessage'] != null
+          ? Message.fromFirestore(data['lastMessage'])
+          : null,
     );
   }
 }
