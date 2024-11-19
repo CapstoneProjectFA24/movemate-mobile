@@ -44,7 +44,7 @@ class ServiceSelector extends HookConsumerWidget {
         int hour = bookingState.bookingDate!.hour;
         isDateTimeInvalid.value =
             bookingState.bookingDate!.isBefore(DateTime.now());
-        isDateTimeLimit.value = hour < 7 || hour >= 19;
+        isDateTimeLimit.value = hour < 7 || hour > 17;
       } else {
         isDateTimeInvalid.value = true;
         isDateTimeLimit.value = true;
