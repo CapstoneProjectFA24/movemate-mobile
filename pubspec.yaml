@@ -55,6 +55,9 @@ dependencies:
   cloudinary_url_gen: ^1.0.0
   cloudinary_public: ^0.21.0
 
+  # Call 
+  zego_uikit_prebuilt_call: ^4.14.3
+
   #payment-link
   url_launcher: ^6.1.10
   uni_links: ^0.5.1

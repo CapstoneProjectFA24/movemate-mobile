@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/features/call_page/call_page.dart';
 import 'package:movemate/services/chat_services/data/chat_services.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
@@ -32,13 +33,25 @@ class ChatWithStaffScreen extends HookConsumerWidget {
       currentUserId: ref.read(authProvider)!.id.toString(),
       currentUserRole: 'customer',
     );
-
+    final currentUserId = ref.read(authProvider)!.id.toString();
+    final currentUserName = ref.read(authProvider)!.name.toString();
     return Scaffold(
       appBar: CustomAppBar(
-        backgroundColor: AssetsConstants.mainColor,
-        backButtonColor: AssetsConstants.whiteColor,
-        title: "Chat với $staffName",
-      ),
+          backgroundColor: AssetsConstants.mainColor,
+          backButtonColor: AssetsConstants.whiteColor,
+          title: "Chat với $staffName",
+          iconFirst: Icons.call,
+          onCallBackFirst: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CallPage(
+                        callID: '123456',
+                        currentUserId: currentUserId,
+                        currentUserName: currentUserName),
+                  ),
+                )
+              }),
       body: StreamBuilder<String>(
         stream: _getConversationStream(chatManager),
         builder: (context, snapshot) {
