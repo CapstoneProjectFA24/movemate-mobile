@@ -12,6 +12,7 @@ import 'package:movemate/features/home/presentation/screens/voucher/voucher_deta
 import 'package:movemate/features/home/presentation/screens/voucher/voucher_screen.dart';
 import 'package:movemate/features/order/presentation/screens/chat_screen/chat_with_staff_screen.dart';
 import 'package:movemate/features/order/presentation/widgets/details/time_line_booking.dart';
+import 'package:movemate/features/payment/presentation/screens/last_payment_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_result_screen_by_wallet.dart';
@@ -199,6 +200,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           // initial: true,
           page: PaymentScreenRoute.page,
+        ),
+        AutoRoute(
+          // initial: true,
+          page: LastPaymentScreenRoute.page,
         ),
         AutoRoute(
           page: SplashScreenRoute.page,

@@ -38,25 +38,7 @@ class PriceDetails extends HookConsumerWidget {
       return '${formatter.format(price)} đ';
     }
 
-    // void handleActionPress() {
-    //   if (bookingStatus.canMakePayment) {
-    //     context.pushRoute(PaymentScreenRoute(id: order.id));
-    //   } else if (bookingStatus.canReviewSuggestion) {
-    //     showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) =>
-    //           ReviewedToComingModal(order: order),
-    //     );
-    //   } else if (bookingStatus.canAcceptSchedule) {
-    //     if (order.isReviewOnline) {
-    //       context.pushRoute(ReviewOnlineRoute(order: order));
-    //     } else {
-    //       context.pushRoute(ReviewAtHomeRoute(order: order));
-    //     }
-    //   }
-
-    // }
-
+    print("checking price ${bookingStatus.isCompleted}");
     void handleActionPress() async {
       if (order.isReviewOnline) {
         // Online Flow: Review -> Payment
@@ -70,6 +52,10 @@ class PriceDetails extends HookConsumerWidget {
           context.pushRoute(ReviewOnlineRoute(order: orderEntity ?? order));
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
+        } else if (bookingStatus.canMakePaymentLast) {
+          print("check status ${bookingStatus.canMakePaymentLast}");
+          context.pushRoute(LastPaymentScreenRoute(
+              id: order.id, status: bookingStatus.canMakePaymentLast));
         }
       } else {
         // Offline Flow: Schedule -> Payment -> Review
@@ -87,6 +73,9 @@ class PriceDetails extends HookConsumerWidget {
           );
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
+        } else if (bookingStatus.canMakePaymentLast) {
+          context.pushRoute(LastPaymentScreenRoute(
+              id: order.id, status: bookingStatus.canMakePaymentLast));
         }
       }
     }
@@ -98,6 +87,8 @@ class PriceDetails extends HookConsumerWidget {
           return 'Xác nhận đánh giá';
         } else if (bookingStatus.canMakePayment) {
           return 'Thanh toán ngay';
+        } else if (bookingStatus.canMakePaymentLast) {
+          return 'Thanh toán ngay';
         }
       } else {
         // Offline Flow
@@ -107,6 +98,8 @@ class PriceDetails extends HookConsumerWidget {
           return 'Xem xét đề xuất';
         } else if (bookingStatus.canMakePayment) {
           return 'Thanh toán ngay';
+        } else if (bookingStatus.canMakePaymentLast) {
+          return 'Thanh toán ngay';
         }
       }
       return '';
@@ -115,7 +108,8 @@ class PriceDetails extends HookConsumerWidget {
     bool isActionEnabled() {
       return bookingStatus.canMakePayment ||
           bookingStatus.canReviewSuggestion ||
-          bookingStatus.canAcceptSchedule;
+          bookingStatus.canAcceptSchedule ||
+          bookingStatus.canMakePaymentLast;
       // bookingStatus.isOnlineReviewing ||
       // bookingStatus.isOnlineSuggestionReady;
       // bookingStatus.canConfirmCompletion;

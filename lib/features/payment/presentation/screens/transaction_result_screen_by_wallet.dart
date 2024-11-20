@@ -32,10 +32,12 @@ String formatTime(DateTime date) {
 
 @RoutePage()
 class TransactionResultScreenByWallet extends HookConsumerWidget {
+  final bool? status;
   final int bookingId;
   const TransactionResultScreenByWallet({
     super.key,
     required this.bookingId,
+    this.status,
   });
 
   @override

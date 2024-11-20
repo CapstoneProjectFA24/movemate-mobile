@@ -8,6 +8,7 @@ class BookingStatusResult {
   // Customer action states
   final bool canAcceptSchedule; // Xác nhận lịch khảo sát (offline only)
   final bool canMakePayment; // Thanh toán
+  final bool canMakePaymentLast; // Thanh toán
   final bool canReviewSuggestion; // Xác nhận đánh giá của reviewer
 
   // Status indicators - Offline Flow
@@ -46,6 +47,7 @@ class BookingStatusResult {
     required this.statusMessage,
     this.canAcceptSchedule = false,
     this.canMakePayment = false,
+    this.canMakePaymentLast = false,
     this.canReviewSuggestion = false,
     this.isWaitingStaffSchedule = false,
     this.isReviewerMoving = false,
@@ -92,10 +94,17 @@ BookingStatusResult useBookingStatus(
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.arrived);
     final isSuggestionReady =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.suggested);
+// check driver complete
+    final isDriverCompleted =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.completed);
+//check porter complete
+    final isPorterCompleted =
+        hasAssignmentWithStatus("PORTER", AssignmentsStatusType.completed);
 
     // Initialize action and state flags
     bool canAcceptSchedule = false;
     bool canMakePayment = false;
+    bool canMakePaymentLast = false;
     bool canReviewSuggestion = false;
     bool isWaitingStaffSchedule = false;
     bool isProcessingRequest = false;
@@ -124,6 +133,12 @@ BookingStatusResult useBookingStatus(
         case BookingStatusType.depositing:
           canMakePayment = true;
           break;
+        case BookingStatusType.inProgress:
+          if (isDriverCompleted && isPorterCompleted) {
+            canMakePaymentLast = true;
+          }
+
+          break;
         default:
           break;
       }
@@ -141,6 +156,7 @@ BookingStatusResult useBookingStatus(
         case BookingStatusType.depositing:
           canMakePayment = true;
           break;
+
         case BookingStatusType.reviewing:
           if (isReviewerMoving) {
             // Reviewer đang di chuyển
@@ -153,6 +169,11 @@ BookingStatusResult useBookingStatus(
         case BookingStatusType.reviewed:
           canReviewSuggestion = true;
           break;
+
+        case BookingStatusType.inProgress:
+          if (isDriverCompleted && isPorterCompleted) {
+            canMakePaymentLast = true;
+          }
         default:
           break;
       }
@@ -170,8 +191,6 @@ BookingStatusResult useBookingStatus(
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.arrived);
     final isDriverInProgress =
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
-    final isDriverCompleted =
-        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.completed);
 
     // flag to check driver state
     bool isDriverProcessingMoving = false;
@@ -245,6 +264,7 @@ BookingStatusResult useBookingStatus(
       // Customer actions
       canAcceptSchedule: canAcceptSchedule,
       canMakePayment: canMakePayment,
+      canMakePaymentLast: canMakePaymentLast,
       canReviewSuggestion: canReviewSuggestion,
 
       // Offline flow states
@@ -262,6 +282,8 @@ BookingStatusResult useBookingStatus(
       isDriverProcessingMoving: isDriverProcessingMoving,
       isStaffDriverComingToBuildRoute: isStaffDriverComingToBuildRoute,
       isDriverInProgressToBuildRoute: isDriverInProgressToBuildRoute,
+      // isDriverCompleted: isDriverCompleted,
+      // isPorterCompleted: isPorterCompleted,
       isPorterProcessingMoving: isPorterProcessingMoving,
 
       // Common states

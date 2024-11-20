@@ -81,6 +81,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const InfoScreen(),
       );
     },
+    LastPaymentScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<LastPaymentScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LastPaymentScreen(
+          key: args.key,
+          id: args.id,
+          status: args.status,
+        ),
+      );
+    },
     LoadingScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -350,6 +361,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: TransactionResultScreenByWallet(
           key: args.key,
           bookingId: args.bookingId,
+          status: args.status,
         ),
       );
     },
@@ -568,6 +580,49 @@ class InfoScreenRoute extends PageRouteInfo<void> {
   static const String name = 'InfoScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LastPaymentScreen]
+class LastPaymentScreenRoute extends PageRouteInfo<LastPaymentScreenRouteArgs> {
+  LastPaymentScreenRoute({
+    Key? key,
+    required int id,
+    required bool status,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LastPaymentScreenRoute.name,
+          args: LastPaymentScreenRouteArgs(
+            key: key,
+            id: id,
+            status: status,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LastPaymentScreenRoute';
+
+  static const PageInfo<LastPaymentScreenRouteArgs> page =
+      PageInfo<LastPaymentScreenRouteArgs>(name);
+}
+
+class LastPaymentScreenRouteArgs {
+  const LastPaymentScreenRouteArgs({
+    this.key,
+    required this.id,
+    required this.status,
+  });
+
+  final Key? key;
+
+  final int id;
+
+  final bool status;
+
+  @override
+  String toString() {
+    return 'LastPaymentScreenRouteArgs{key: $key, id: $id, status: $status}';
+  }
 }
 
 /// generated route for
@@ -1413,12 +1468,14 @@ class TransactionResultScreenByWalletRoute
   TransactionResultScreenByWalletRoute({
     Key? key,
     required int bookingId,
+    bool? status,
     List<PageRouteInfo>? children,
   }) : super(
           TransactionResultScreenByWalletRoute.name,
           args: TransactionResultScreenByWalletRouteArgs(
             key: key,
             bookingId: bookingId,
+            status: status,
           ),
           initialChildren: children,
         );
@@ -1433,15 +1490,18 @@ class TransactionResultScreenByWalletRouteArgs {
   const TransactionResultScreenByWalletRouteArgs({
     this.key,
     required this.bookingId,
+    this.status,
   });
 
   final Key? key;
 
   final int bookingId;
 
+  final bool? status;
+
   @override
   String toString() {
-    return 'TransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId}';
+    return 'TransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId, status: $status}';
   }
 }
 

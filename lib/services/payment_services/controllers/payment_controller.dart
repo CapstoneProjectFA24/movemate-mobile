@@ -139,6 +139,7 @@ class PaymentController extends _$PaymentController {
   }
 
   Future<void> createPaymentBookingByWallet({
+    bool? status,
     required BuildContext context,
     required String selectedMethod,
     required int bookingId,
@@ -158,13 +159,22 @@ class PaymentController extends _$PaymentController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
-      print("createPaymentBookingByWallet: ${res.payload}");
+      print("tuan createPaymentBookingByWallet: ${res.payload}");
     });
+    if (status != null && status == true) {
+      context.router.push(TransactionResultScreenByWalletRoute(
+        status: status,
+        bookingId: bookingId,
+      ));
+      print("tuan createPaymentBookingByWallet 2:");
+    } else {
+      context.router.push(TransactionResultScreenByWalletRoute(
+        bookingId: bookingId,
+      ));
+      print("tuan createPaymentBookingByWallet 3:");
+    }
 
-    context.router.push(TransactionResultScreenByWalletRoute(
-      bookingId: bookingId,
-    ));
-    print("createPaymentBookingByWallet 2:");
+    // print("createPaymentBookingByWallet 2:");
     if (state.hasError) {
       state = await AsyncValue.guard(
         () async {
