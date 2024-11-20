@@ -83,6 +83,64 @@ class PaymentController extends _$PaymentController {
     }
   }
 
+  Future<void> createLastPaymentBooking({
+    required BuildContext context,
+    required String selectedMethod,
+    required String bookingId,
+  }) async {
+    state = const AsyncLoading();
+    final paymentRepository = ref.read(paymentRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    final authRepository = ref.read(authRepositoryProvider);
+
+    final request = PaymentRequest(
+      bookingId: bookingId,
+      selectedMethod: selectedMethod,
+    );
+
+    state = await AsyncValue.guard(() async {
+      final res = await paymentRepository.createPaymentBooking(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
+      // print("createPaymentBooking: ${res.payload}");
+      await launchUrl(Uri.parse(res.payload),
+          mode: LaunchMode.externalApplication);
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(
+        () async {
+          final statusCode = (state.error as DioException).onStatusDio();
+          await handleAPIError(
+            statusCode: statusCode,
+            stateError: state.error!,
+            context: context,
+            onCallBackGenerateToken: () async => await reGenerateToken(
+              authRepository,
+              context,
+            ),
+          );
+
+          // if refresh token expired
+          if (state.hasError) {
+            await ref.read(signInControllerProvider.notifier).signOut(context);
+            return;
+          }
+
+          if (statusCode != StatusCodeType.unauthentication.type) {
+            return;
+          }
+
+          await createPaymentBooking(
+              context: context,
+              selectedMethod: selectedMethod,
+              bookingId: bookingId);
+        },
+      );
+    }
+  }
+
   Future<void> createPaymentDeposit({
     required BuildContext context,
     required String selectedMethod,
@@ -139,7 +197,6 @@ class PaymentController extends _$PaymentController {
   }
 
   Future<void> createPaymentBookingByWallet({
-    bool? status,
     required BuildContext context,
     required String selectedMethod,
     required int bookingId,
@@ -161,20 +218,72 @@ class PaymentController extends _$PaymentController {
       );
       print("tuan createPaymentBookingByWallet: ${res.payload}");
     });
-    if (status != null && status == true) {
-      context.router.push(TransactionResultScreenByWalletRoute(
-        status: status,
-        bookingId: bookingId,
-      ));
-      print("tuan createPaymentBookingByWallet 2:");
-    } else {
-      context.router.push(TransactionResultScreenByWalletRoute(
-        bookingId: bookingId,
-      ));
-      print("tuan createPaymentBookingByWallet 3:");
-    }
+
+    context.router.push(TransactionResultScreenByWalletRoute(
+      bookingId: bookingId,
+    ));
+    print("tuan createPaymentBookingByWallet 3:");
 
     // print("createPaymentBookingByWallet 2:");
+    if (state.hasError) {
+      state = await AsyncValue.guard(
+        () async {
+          final statusCode = (state.error as DioException).onStatusDio();
+          await handleAPIError(
+            statusCode: statusCode,
+            stateError: state.error!,
+            context: context,
+            onCallBackGenerateToken: () async => await reGenerateToken(
+              authRepository,
+              context,
+            ),
+          );
+
+          // if refresh token expired
+          if (state.hasError) {
+            await ref.read(signInControllerProvider.notifier).signOut(context);
+            return;
+          }
+
+          if (statusCode != StatusCodeType.unauthentication.type) {
+            return;
+          }
+
+          // await createPaymentBookingByWallet(
+          //     context: context,
+          //     selectedMethod: selectedMethod,
+          //     bookingId: bookingId);
+        },
+      );
+    }
+  }
+
+  Future<void> createLastPaymentBookingByWallet({
+    required BuildContext context,
+    required String selectedMethod,
+    required int bookingId,
+  }) async {
+    state = const AsyncLoading();
+    final paymentRepository = ref.read(paymentRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    final authRepository = ref.read(authRepositoryProvider);
+
+    final request = PaymentRequest(
+      bookingId: bookingId.toString(),
+      selectedMethod: selectedMethod,
+    );
+
+    state = await AsyncValue.guard(() async {
+      // final res = await paymentRepository.createPaymentBooking(
+      //   accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      //   request: request,
+      // );
+    });
+
+    context.router.push(LastTransactionResultScreenByWalletRoute(
+      bookingId: bookingId,
+    ));
+
     if (state.hasError) {
       state = await AsyncValue.guard(
         () async {

@@ -131,7 +131,9 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
                               Container(
                                 margin: const EdgeInsets.only(bottom: 16),
                                 child: Text(
-                                  'Đặt cọc thành công',
+                                  (status != null && status == true)
+                                      ? "Thanh toán thành công"
+                                      : "Đặt cọc thành công ",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.orange.shade500,

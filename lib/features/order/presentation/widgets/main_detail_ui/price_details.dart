@@ -53,9 +53,9 @@ class PriceDetails extends HookConsumerWidget {
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
         } else if (bookingStatus.canMakePaymentLast) {
-          print("check status ${bookingStatus.canMakePaymentLast}");
           context.pushRoute(LastPaymentScreenRoute(
-              id: order.id, status: bookingStatus.canMakePaymentLast));
+            id: order.id,
+          ));
         }
       } else {
         // Offline Flow: Schedule -> Payment -> Review
@@ -75,7 +75,8 @@ class PriceDetails extends HookConsumerWidget {
           context.pushRoute(PaymentScreenRoute(id: order.id));
         } else if (bookingStatus.canMakePaymentLast) {
           context.pushRoute(LastPaymentScreenRoute(
-              id: order.id, status: bookingStatus.canMakePaymentLast));
+            id: order.id,
+          ));
         }
       }
     }

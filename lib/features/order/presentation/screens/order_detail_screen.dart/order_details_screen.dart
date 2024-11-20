@@ -129,7 +129,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
 
-    print("tuan log check status 3 ${order.status}");
+    // print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
       isLoading:
           state.isLoading || stateService.isLoading || stateProfile.isLoading,

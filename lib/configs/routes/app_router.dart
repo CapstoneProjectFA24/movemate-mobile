@@ -12,13 +12,15 @@ import 'package:movemate/features/home/presentation/screens/voucher/voucher_deta
 import 'package:movemate/features/home/presentation/screens/voucher/voucher_screen.dart';
 import 'package:movemate/features/order/presentation/screens/chat_screen/chat_with_staff_screen.dart';
 import 'package:movemate/features/order/presentation/widgets/details/time_line_booking.dart';
-import 'package:movemate/features/payment/presentation/screens/last_payment_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/last_payment/last_payment_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/last_payment/last_transaction_result_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/last_payment/last_transaction_result_screen_by_wallet.dart';
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
-import 'package:movemate/features/payment/presentation/screens/transaction_result_screen.dart';
-import 'package:movemate/features/payment/presentation/screens/transaction_result_screen_by_wallet.dart';
+import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen_by_wallet.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
-import 'package:movemate/features/payment/presentation/screens/payment_screen.dart';
+import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
@@ -242,6 +244,15 @@ class AppRouter extends _$AppRouter {
           page: TransactionResultScreenByWalletRoute.page,
           // initial: true,
         ),
+        AutoRoute(
+          page: LastTransactionResultScreenRoute.page,
+          // initial: true,
+        ),
+        AutoRoute(
+          page: LastTransactionResultScreenByWalletRoute.page,
+          // initial: true,
+        ),
+
         //timeline test
         AutoRoute(
           page: TimeLineBookingRoute.page,

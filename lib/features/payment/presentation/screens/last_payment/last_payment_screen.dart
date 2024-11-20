@@ -29,8 +29,11 @@ final paymentList = [
 @RoutePage()
 class LastPaymentScreen extends HookConsumerWidget {
   final int id;
-  final bool status;
-  const LastPaymentScreen({super.key, required this.id, required this.status});
+
+  const LastPaymentScreen({
+    super.key,
+    required this.id,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,19 +78,17 @@ class LastPaymentScreen extends HookConsumerWidget {
     Future<void> handlePaymentButtonPressed() async {
       try {
         if (selectedMethod == PaymentMethodType.wallet) {
-          print("object context $status");
-          await paymentController.createPaymentBookingByWallet(
-            status: true,
+          await paymentController.createLastPaymentBookingByWallet(
             context: context,
             selectedMethod: selectedMethod.type,
             bookingId: id,
           );
         } else {
-          // await paymentController.createPaymentBooking(
-          //   context: context,
-          //   selectedMethod: selectedMethod.type,
-          //   bookingId: bookingResponse.id.toString(),
-          // );
+          await paymentController.createLastPaymentBooking(
+            context: context,
+            selectedMethod: selectedMethod.type,
+            bookingId: bookingResponse.id.toString(),
+          );
         }
       } catch (e) {
         print("Payment failed: $e");

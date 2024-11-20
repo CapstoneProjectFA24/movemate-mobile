@@ -88,6 +88,35 @@ abstract class _$AppRouter extends RootStackRouter {
         child: LastPaymentScreen(
           key: args.key,
           id: args.id,
+        ),
+      );
+    },
+    LastTransactionResultScreenRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<LastTransactionResultScreenRouteArgs>(
+          orElse: () => LastTransactionResultScreenRouteArgs(
+                isSuccess: pathParams.getBool('isSuccess'),
+                bookingId: pathParams.getString('bookingId'),
+                allUri: pathParams.getString(''),
+              ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LastTransactionResultScreen(
+          key: args.key,
+          isSuccess: args.isSuccess,
+          bookingId: args.bookingId,
+          allUri: args.allUri,
+        ),
+      );
+    },
+    LastTransactionResultScreenByWalletRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<LastTransactionResultScreenByWalletRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LastTransactionResultScreenByWallet(
+          key: args.key,
+          bookingId: args.bookingId,
           status: args.status,
         ),
       );
@@ -588,14 +617,12 @@ class LastPaymentScreenRoute extends PageRouteInfo<LastPaymentScreenRouteArgs> {
   LastPaymentScreenRoute({
     Key? key,
     required int id,
-    required bool status,
     List<PageRouteInfo>? children,
   }) : super(
           LastPaymentScreenRoute.name,
           args: LastPaymentScreenRouteArgs(
             key: key,
             id: id,
-            status: status,
           ),
           initialChildren: children,
         );
@@ -610,18 +637,113 @@ class LastPaymentScreenRouteArgs {
   const LastPaymentScreenRouteArgs({
     this.key,
     required this.id,
-    required this.status,
   });
 
   final Key? key;
 
   final int id;
 
-  final bool status;
+  @override
+  String toString() {
+    return 'LastPaymentScreenRouteArgs{key: $key, id: $id}';
+  }
+}
+
+/// generated route for
+/// [LastTransactionResultScreen]
+class LastTransactionResultScreenRoute
+    extends PageRouteInfo<LastTransactionResultScreenRouteArgs> {
+  LastTransactionResultScreenRoute({
+    Key? key,
+    required bool isSuccess,
+    required String bookingId,
+    required String allUri,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LastTransactionResultScreenRoute.name,
+          args: LastTransactionResultScreenRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+            bookingId: bookingId,
+            allUri: allUri,
+          ),
+          rawPathParams: {
+            'isSuccess': isSuccess,
+            'bookingId': bookingId,
+            '': allUri,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'LastTransactionResultScreenRoute';
+
+  static const PageInfo<LastTransactionResultScreenRouteArgs> page =
+      PageInfo<LastTransactionResultScreenRouteArgs>(name);
+}
+
+class LastTransactionResultScreenRouteArgs {
+  const LastTransactionResultScreenRouteArgs({
+    this.key,
+    required this.isSuccess,
+    required this.bookingId,
+    required this.allUri,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  final String bookingId;
+
+  final String allUri;
 
   @override
   String toString() {
-    return 'LastPaymentScreenRouteArgs{key: $key, id: $id, status: $status}';
+    return 'LastTransactionResultScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId, allUri: $allUri}';
+  }
+}
+
+/// generated route for
+/// [LastTransactionResultScreenByWallet]
+class LastTransactionResultScreenByWalletRoute
+    extends PageRouteInfo<LastTransactionResultScreenByWalletRouteArgs> {
+  LastTransactionResultScreenByWalletRoute({
+    Key? key,
+    required int bookingId,
+    bool? status,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LastTransactionResultScreenByWalletRoute.name,
+          args: LastTransactionResultScreenByWalletRouteArgs(
+            key: key,
+            bookingId: bookingId,
+            status: status,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LastTransactionResultScreenByWalletRoute';
+
+  static const PageInfo<LastTransactionResultScreenByWalletRouteArgs> page =
+      PageInfo<LastTransactionResultScreenByWalletRouteArgs>(name);
+}
+
+class LastTransactionResultScreenByWalletRouteArgs {
+  const LastTransactionResultScreenByWalletRouteArgs({
+    this.key,
+    required this.bookingId,
+    this.status,
+  });
+
+  final Key? key;
+
+  final int bookingId;
+
+  final bool? status;
+
+  @override
+  String toString() {
+    return 'LastTransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId, status: $status}';
   }
 }
 
