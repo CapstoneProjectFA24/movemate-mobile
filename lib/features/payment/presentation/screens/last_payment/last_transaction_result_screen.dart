@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
 
@@ -151,8 +155,30 @@ class LastTransactionResultScreen extends ConsumerWidget {
     // Lấy displayName từ enum hoặc sử dụng tên mặc định
     String paymentDisplayName = paymentMethodType?.displayName ?? paymentMethod;
 
+    final useFetchResultOrder = useFetchObject<OrderEntity>(
+      function: (context) async {
+        return ref
+            .read(bookingControllerProvider.notifier)
+            .getOrderEntityById(int.parse(bookingId));
+      },
+      context: context,
+    );
+    final result = useFetchResultOrder.data;
 
     final user = ref.read(authProvider);
+
+    List<BookingDetailResponseEntity> getListSerVices(OrderEntity? order) {
+      try {
+        final listServicesDetails =
+            order!.bookingDetails.where((e) => e.quantity > 0).toList();
+        return listServicesDetails;
+      } catch (e) {
+        print('Error: $e');
+        return [];
+      }
+    }
+
+    final listServices = getListSerVices(result);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -261,6 +287,22 @@ class LastTransactionResultScreen extends ConsumerWidget {
                                     formattedTime,
                                     containerWidth * 0.89,
                                   ),
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: listServices.length,
+                                      itemBuilder: (context, index) {
+                                        final serviceDetails =
+                                            listServices[index];
+                                        return buildTransactionDetailRow(
+                                          serviceDetails.name,
+                                          formatPrice(
+                                              (serviceDetails.price ?? 0)
+                                                  .toInt()),
+                                          containerWidth * 0.80,
+                                        );
+                                      }),
                                 ],
                               ),
                             ),
