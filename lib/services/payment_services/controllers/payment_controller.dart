@@ -268,10 +268,10 @@ class PaymentController extends _$PaymentController {
       selectedMethod: selectedMethod,
     );
     state = await AsyncValue.guard(() async {
-      // final res = await paymentRepository.createPaymentBooking(
-      //   accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-      //   request: request,
-      // );
+      final res = await paymentRepository.createPaymentBooking(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
     });
 
     context.router.push(LastTransactionResultScreenByWalletRoute(
