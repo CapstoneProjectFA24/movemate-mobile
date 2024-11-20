@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
@@ -43,7 +44,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
-    double containerHeight = MediaQuery.of(context).size.height * 0.5;
+
     // print('allUri: $allUri');
 
     final state = ref.watch(bookingControllerProvider);
@@ -71,6 +72,20 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
         : useFetchResultWallet.data?.balance ?? 0;
     final resultWallet = useFetchResultWallet.refresh;
 
+    List<BookingDetailResponseEntity> getListSerVices(OrderEntity? order) {
+      try {
+        final listServicesDetails =
+            order!.bookingDetails.where((e) => e.quantity > 0).toList();
+        return listServicesDetails;
+      } catch (e) {
+        print('Error: $e');
+        return [];
+      }
+    }
+
+    final listServices = getListSerVices(result);
+    double containerHeight =
+        MediaQuery.of(context).size.height * (listServices.length * 0.125);
     return LoadingOverlay(
       isLoading: state.isLoading || stateWallet.isLoading,
       child: Scaffold(
@@ -186,6 +201,22 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                         formatTime(result?.updatedAt ??
                                             DateTime.now()),
                                         containerWidth * 0.89),
+                                    ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: listServices.length,
+                                        itemBuilder: (context, index) {
+                                          final serviceDetails =
+                                              listServices[index];
+                                          return buildTransactionDetailRow(
+                                            serviceDetails.name,
+                                            formatPrice(
+                                                (serviceDetails.price ?? 0)
+                                                    .toInt()),
+                                            containerWidth * 0.80,
+                                          );
+                                        }),
                                   ],
                                 ),
                               ),
@@ -194,53 +225,53 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                           ),
                         ),
                         // Thông tin số dư ví - Đặt bên dưới container chính
-                        Container(
-                          width: containerWidth,
-                          margin: const EdgeInsets.symmetric(horizontal: 24),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 40,
-                                height: 40,
-                                margin: const EdgeInsets.only(right: 8),
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1731511719/movemate_logo_e6f1lk.png'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Số dư ví MoveMate',
-                                      style: TextStyle(
-                                        fontSize: containerWidth * 0.045,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      formatPrice(walletUser.toInt()),
-                                      style: TextStyle(
-                                        fontSize: containerWidth * 0.045,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
+                        // Container(
+                        //   width: containerWidth,
+                        //   margin: const EdgeInsets.symmetric(horizontal: 24),
+                        //   padding: const EdgeInsets.all(12),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.grey.shade100,
+                        //     borderRadius: BorderRadius.circular(8),
+                        //   ),
+                        //   child: Row(
+                        //     children: [
+                        //       Container(
+                        //         width: 40,
+                        //         height: 40,
+                        //         margin: const EdgeInsets.only(right: 8),
+                        //         decoration: const BoxDecoration(
+                        //           shape: BoxShape.circle,
+                        //           image: DecorationImage(
+                        //             image: NetworkImage(
+                        //                 'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1731511719/movemate_logo_e6f1lk.png'),
+                        //             fit: BoxFit.cover,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       Expanded(
+                        //         child: Column(
+                        //           crossAxisAlignment: CrossAxisAlignment.start,
+                        //           children: [
+                        //             Text(
+                        //               'Số dư ví MoveMate',
+                        //               style: TextStyle(
+                        //                 fontSize: containerWidth * 0.045,
+                        //                 fontWeight: FontWeight.bold,
+                        //               ),
+                        //             ),
+                        //             Text(
+                        //               formatPrice(walletUser.toInt()),
+                        //               style: TextStyle(
+                        //                 fontSize: containerWidth * 0.045,
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // const SizedBox(height: 24),
                       ],
                     ),
                   ),
@@ -277,6 +308,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                 }
                               },
                               // Example of a button to navigate to the Home tab
+
                               // Navigating to Home screen within TabViewScreen
 
                               style: ElevatedButton.styleFrom(

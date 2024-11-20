@@ -84,7 +84,7 @@ class LastPaymentScreen extends HookConsumerWidget {
             bookingId: id,
           );
         } else {
-          await paymentController.createLastPaymentBooking(
+          await paymentController.createPaymentBooking(
             context: context,
             selectedMethod: selectedMethod.type,
             bookingId: bookingResponse.id.toString(),

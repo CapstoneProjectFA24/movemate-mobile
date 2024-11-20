@@ -248,11 +248,6 @@ class PaymentController extends _$PaymentController {
           if (statusCode != StatusCodeType.unauthentication.type) {
             return;
           }
-
-          // await createPaymentBookingByWallet(
-          //     context: context,
-          //     selectedMethod: selectedMethod,
-          //     bookingId: bookingId);
         },
       );
     }
@@ -272,7 +267,6 @@ class PaymentController extends _$PaymentController {
       bookingId: bookingId.toString(),
       selectedMethod: selectedMethod,
     );
-
     state = await AsyncValue.guard(() async {
       // final res = await paymentRepository.createPaymentBooking(
       //   accessToken: APIConstants.prefixToken + user!.tokens.accessToken,

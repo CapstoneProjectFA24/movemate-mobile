@@ -62,14 +62,29 @@ void handleDeepLink(String link, WidgetRef ref) {
     final uri = Uri.parse(link);
     final isSuccess = uri.queryParameters['isSuccess'] == 'true';
     final bookingId = uri.queryParameters['bookingId'];
+    final category = uri.queryParameters['category '];
+// isDeposit = false
     final allUri = uri.queryParameters;
     ref.read(paymentResultProvider.notifier).state = isSuccess;
-
-    // Điều hướng tới TransactionResultScreen và truyền bookingId
-    ref.read(appRouterProvider).push(TransactionResultScreenRoute(
-          isSuccess: isSuccess,
-          bookingId: bookingId ?? '',
-          allUri: allUri.toString(),
-        ));
+    if (category == 'deposit') {
+      // Điều hướng tới TransactionResultScreen và truyền bookingId
+      ref.read(appRouterProvider).push(TransactionResultScreenRoute(
+            isSuccess: isSuccess,
+            bookingId: bookingId ?? '',
+            allUri: allUri.toString(),
+          ));
+    } else if (category == 'paywallet') {
+      ref.read(appRouterProvider).push(TransactionResultScreenRoute(
+            isSuccess: isSuccess,
+            bookingId: bookingId ?? '',
+            allUri: allUri.toString(),
+          ));
+    } else if (category == 'paytotal') {
+      ref.read(appRouterProvider).push(LastTransactionResultScreenRoute(
+            isSuccess: isSuccess,
+            bookingId: bookingId ?? '',
+            allUri: allUri.toString(),
+          ));
+    }
   }
 }

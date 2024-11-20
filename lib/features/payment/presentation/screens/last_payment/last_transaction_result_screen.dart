@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
+import 'package:movemate/utils/providers/common_provider.dart';
 
 // Hàm hỗ trợ để định dạng giá
 String formatPrice(int price) {
@@ -150,6 +150,9 @@ class LastTransactionResultScreen extends ConsumerWidget {
 
     // Lấy displayName từ enum hoặc sử dụng tên mặc định
     String paymentDisplayName = paymentMethodType?.displayName ?? paymentMethod;
+
+
+    final user = ref.read(authProvider);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
