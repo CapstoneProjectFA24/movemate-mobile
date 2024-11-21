@@ -99,6 +99,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const MapScreenTest(),
       );
     },
+    NotificationExceptScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const NotificationExceptScreen(),
+      );
+    },
     OTPVerificationScreenRoute.name: (routeData) {
       final args = routeData.argsAs<OTPVerificationScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -608,6 +614,20 @@ class MapScreenTestRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'MapScreenTestRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [NotificationExceptScreen]
+class NotificationExceptScreenRoute extends PageRouteInfo<void> {
+  const NotificationExceptScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          NotificationExceptScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'NotificationExceptScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
