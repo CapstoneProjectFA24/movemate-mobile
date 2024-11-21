@@ -63,6 +63,7 @@ import 'package:movemate/features/profile/presentation/screens/profile_screen/pr
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';
+import 'package:movemate/noti_exception.dart';
 import 'package:movemate/features/order/presentation/screens/driver_tracking_map/driver_tracking_map.dart';
 import 'package:movemate/features/order/presentation/screens/reviewer_tracking_map/reviewer_tracking_map.dart';
 
@@ -264,6 +265,10 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: MapScreenTestRoute.page,
+          // initial: true,
+        ),
+        AutoRoute(
+          page: NotificationExceptScreenRoute.page,
           // initial: true,
         ),
 
