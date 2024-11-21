@@ -253,7 +253,7 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(
           page: NotificationExceptScreenRoute.page,
-          initial: true,
+          // initial: true,
         ),
 
         AutoRoute(page: PaymentResultScreenRoute.page),

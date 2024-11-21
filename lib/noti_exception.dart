@@ -33,18 +33,17 @@ class NotificationExceptScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const Text(
-                      'Hệ thống đang quá tải nên chưa tìm được nhân viên\nphù hợp với đơn vận chuyển của bạn',
-                      textAlign: TextAlign.center,
+                      'Hệ thống đang quá tải nên chưa tìm được nhân viên phù hợp với đơn vận chuyển của bạn',
                       style: TextStyle(fontSize: 16, color: Colors.black87),
                     ),
                     const SizedBox(height: 10),
                     RichText(
                       text: const TextSpan(
-                        style: TextStyle(fontSize: 16, color: Colors.black),
+                        style: TextStyle(fontSize: 18, color: Colors.black),
                         children: [
                           TextSpan(text: 'Dự kiến nhân viên sẽ đến lúc '),
                           TextSpan(
-                            text: '11h30 Hôm nay',
+                            text: '11:30 Hôm nay',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -58,7 +57,6 @@ class NotificationExceptScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     const Text(
                       'MoveMate sẽ thông báo khi có nhân viên phụ trách\ncho đơn vận chuyển của bạn.',
-                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 14, color: Colors.grey),
                     ),
                   ],
@@ -70,24 +68,28 @@ class NotificationExceptScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.location_on, color: Colors.blue),
-                      title: Text(
-                        '172 Phạm Ngũ Lão, Hùng Vương, Bình Tân, Hồ Chí Minh',
-                        style: TextStyle(fontSize: 14),
+                color: Colors.white,
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.location_on, color: Colors.blue),
+                        title: Text(
+                          '172 Phạm Ngũ Lão, Hùng Vương, Bình Tân, Hồ Chí Minh',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
                       ),
-                    ),
-                    Divider(height: 1, thickness: 1),
-                    ListTile(
-                      leading: Icon(Icons.location_on, color: Colors.red),
-                      title: Text(
-                        '194 Cao Lãnh, Hùng Vương, Tân Phú, Hồ Chí Minh',
-                        style: TextStyle(fontSize: 14),
+                      Divider(height: 1, thickness: 1),
+                      ListTile(
+                        leading: Icon(Icons.location_on, color: Colors.red),
+                        title: Text(
+                          '194 Cao Lãnh, Hùng Vương, Tân Phú, Hồ Chí Minh',
+                          style: TextStyle(fontSize: 14, color: Colors.black),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -135,16 +137,19 @@ class NotificationExceptScreen extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.orange,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
+                    side: const BorderSide(color: Colors.orange, width: 2),
                   ),
                   minimumSize: const Size(double.infinity, 50),
                 ),
                 onPressed: () {},
-                child: const Text('Hủy vận chuyển',
-                    style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  'Hủy vận chuyển',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
               const SizedBox(height: 20),
             ],
