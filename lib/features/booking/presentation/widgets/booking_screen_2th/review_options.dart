@@ -534,4 +534,6 @@ class DailyUIChallengeCardState extends ConsumerState<DailyUIChallengeCard> {
       ),
     );
   }
+
+
 }

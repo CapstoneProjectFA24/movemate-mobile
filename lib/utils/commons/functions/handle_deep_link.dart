@@ -62,29 +62,37 @@ void handleDeepLink(String link, WidgetRef ref) {
     final uri = Uri.parse(link);
     final isSuccess = uri.queryParameters['isSuccess'] == 'true';
     final bookingId = uri.queryParameters['bookingId'];
-    final category = uri.queryParameters['category '];
+    final category = uri.queryParameters['category'];
 // isDeposit = false
     final allUri = uri.queryParameters;
     ref.read(paymentResultProvider.notifier).state = isSuccess;
-    if (category == 'deposit') {
+
+    print("Received payment result $allUri");
+    if (category == 'DEPOSIT') {
       // Điều hướng tới TransactionResultScreen và truyền bookingId
       ref.read(appRouterProvider).push(TransactionResultScreenRoute(
             isSuccess: isSuccess,
             bookingId: bookingId ?? '',
             allUri: allUri.toString(),
           ));
-    } else if (category == 'paywallet') {
+    } else if (category == 'PAYMENT_WALLET') {
       ref.read(appRouterProvider).push(TransactionResultScreenRoute(
             isSuccess: isSuccess,
             bookingId: bookingId ?? '',
             allUri: allUri.toString(),
           ));
-    } else if (category == 'paytotal') {
+    } else if (category == 'PAYMENT_TOTAL') {
       ref.read(appRouterProvider).push(LastTransactionResultScreenRoute(
             isSuccess: isSuccess,
             bookingId: bookingId ?? '',
             allUri: allUri.toString(),
           ));
     }
+
+    // ref.read(appRouterProvider).push(TransactionResultScreenRoute(
+    //       isSuccess: isSuccess,
+    //       bookingId: bookingId ?? '',
+    //       allUri: allUri.toString(),
+    //     ));
   }
 }
