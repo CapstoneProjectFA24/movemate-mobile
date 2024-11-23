@@ -54,9 +54,8 @@ class ServiceInfoCard extends HookConsumerWidget {
                     buildAddressRow(
                       Icons.location_on_outlined,
                       '''Từ:  ${order.pickupAddress}
-Số điện thoại: ${userdata?.phone}
 Tên: ${userdata?.name}
-Email: ${userdata?.email}''',
+Số điện thoại: ${userdata?.phone}''',
                     ),
                     const Divider(height: 12, color: Colors.grey, thickness: 1),
                     buildAddressRow(

@@ -195,15 +195,14 @@ class PriceDetails extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               LabelText(
-                content: 'Chi tiết giá',
-                size: 20, // Increased font size
+                content: 'Chi tiết đơn hàng',
+                size: 16, // Increased font size
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
               // You can add more widgets here if needed
             ],
           ),
-          const SizedBox(height: 20), // Increased spacing
 
           // Truck details
           ...orderObj!.bookingDetails
@@ -263,7 +262,7 @@ class PriceDetails extends HookConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: LabelText(
                   content: formatPrice(currentprice?.total.toInt() ?? 0),
-                  size: 20,
+                  size: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),

@@ -84,8 +84,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     }
 
     final listServices = getListSerVices(result);
-    double containerHeight =
-        MediaQuery.of(context).size.height * (listServices.length * 0.125);
+    double containerHeight = 600.0;
     return LoadingOverlay(
       isLoading: state.isLoading || stateWallet.isLoading,
       child: Scaffold(
@@ -162,12 +161,10 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                   children: [
                                     buildTransactionDetailRow(
                                         'Số tiền',
-                                        formatPrice(
-                                            (result?.totalReal ?? 0).toInt()),
+                                        formatPrice(((result?.total ?? 0) -
+                                                (result?.deposit ?? 0))
+                                            .toInt()),
                                         containerWidth),
-                                    const SizedBox(height: 8),
-                                    buildTransactionDetailRow('Phí giao dịch',
-                                        'Miễn phí', containerWidth),
                                   ],
                                 ),
                               ),
@@ -201,6 +198,15 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                         formatTime(result?.updatedAt ??
                                             DateTime.now()),
                                         containerWidth * 0.89),
+                                    // Đường kẻ nét đứt
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24),
+                                      child: DashedLine(
+                                          color: Colors.grey.shade300),
+                                    ),
                                     ListView.builder(
                                         shrinkWrap: true,
                                         physics:
@@ -396,22 +402,25 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
 
   Widget buildTransactionDetailRow(
       String title, String value, double containerWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: containerWidth * 0.045),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: containerWidth * 0.045,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.grey[700],
+              ),
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 174, 178, 183),
+              ),
+            ),
+          ],
+        ));
   }
 }
 

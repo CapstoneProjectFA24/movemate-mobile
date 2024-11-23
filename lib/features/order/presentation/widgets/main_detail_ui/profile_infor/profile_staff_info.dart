@@ -192,7 +192,19 @@ class ProfileStaffInfo extends HookConsumerWidget {
               'https://storage.googleapis.com/a1aa/image/kQqIOadQcVp4CFdZfMh5llKP6sUMpfDr5KIUucyHmaXaArsTA.jpg',
           name: staff?.name ?? '',
           ratingDetails: staff?.phone ?? '',
-          onPhonePressed: () => handleChatWithStaff(context, staff),
+          // onPhonePressed: () => handleChatWithStaff(context, staff),
+          onPhonePressed: () {
+            context.router.push(
+              ChatWithStaffScreenRoute(
+                staffId: staffAssignment.userId.toString(),
+                staffName: staff?.name ?? 'Nhân viên',
+                staffRole: _convertToStaffRole(staffAssignment.staffType),
+                staffImageAvatar: staff?.avatarUrl ?? '',
+                bookingId: order.id.toString(),
+              ),
+            );
+          },
+
           onCommentPressed: () => handleMapNavigation(
             context,
             staffAssignment.staffType,

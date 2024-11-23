@@ -68,7 +68,7 @@ class PriceDetailModal extends ConsumerWidget {
         children: [
           // Fixed Title
           const Text(
-            'Chi tiết giá',
+            'Chi tiết đơn hàng',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

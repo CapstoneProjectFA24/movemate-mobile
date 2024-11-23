@@ -194,7 +194,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     const SizedBox(height: 20),
                     const LabelText(
                       content: 'Thông tin khách hàng',
-                      size: 20,
+                      size: 16,
                       fontFamily: 'bold',
                       color: AssetsConstants.blackColor,
                       fontWeight: FontWeight.w500,
