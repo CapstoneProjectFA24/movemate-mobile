@@ -58,13 +58,13 @@ class CustomerInfo extends StatelessWidget {
             ],
           ),
 //hiển thị data cũ truyền order cũ vào
-          // if (isExpanded.value)
-          //   ...order.bookingDetails.map<Widget>((detail) {
-          //     return buildPriceItem(
-          //       detail.name ?? '',
-          //       formatPrice(detail.price.toInt()),
-          //     );
-          //   }),
+          if (isExpanded.value)
+            ...order.bookingDetails.map<Widget>((detail) {
+              return buildPriceItem(
+                detail.name ?? '',
+                formatPrice(detail.price.toInt()),
+              );
+            }),
         ],
       ),
     );

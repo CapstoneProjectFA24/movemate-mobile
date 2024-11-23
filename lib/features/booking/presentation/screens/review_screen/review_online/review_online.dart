@@ -155,12 +155,12 @@ class ReviewOnline extends HookConsumerWidget {
                       const SizedBox(height: 16),
                       buildContactCard(
                           order: order, profileUserAssign: profileUserAssign),
-                      const SizedBox(height: 24),
-                      CustomerInfo(
-                        order: order,
-                        isExpanded: isExpanded,
-                        toggleDropdown: toggleDropdown,
-                      )
+                      // const SizedBox(height: 24),
+                      // CustomerInfo(
+                      //   order: order,
+                      //   isExpanded: isExpanded,
+                      //   toggleDropdown: toggleDropdown,
+                      // )
                     ],
                   ),
                 ),
