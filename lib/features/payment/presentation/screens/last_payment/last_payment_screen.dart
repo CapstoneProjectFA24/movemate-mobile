@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -29,7 +31,6 @@ final paymentList = [
 @RoutePage()
 class LastPaymentScreen extends HookConsumerWidget {
   final int id;
-
   const LastPaymentScreen({
     super.key,
     required this.id,
@@ -37,6 +38,12 @@ class LastPaymentScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isExpanded = useState(false);
+    final expandedIndex = useState<int>(-1);
+    void toggleDropdown() {
+      isExpanded.value = !isExpanded.value;
+    }
+
     final bookingController = ref.read(bookingControllerProvider.notifier);
 
     // Call refreshBookingData when the widget is first built
@@ -126,15 +133,15 @@ class LastPaymentScreen extends HookConsumerWidget {
                       children: [
                         // Details
                         Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          margin: const EdgeInsets.symmetric(vertical: 30),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                'Thông tin đơn hàng',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black87),
-                              ),
+                              // Text(
+                              //   'Thông tin đơn hàng',
+                              //   style: TextStyle(
+                              //       fontSize: 16, color: Colors.black87),
+                              // ),
                               // const Text(
                               //   'số lượng 1',
                               //   style: TextStyle(
@@ -150,14 +157,14 @@ class LastPaymentScreen extends HookConsumerWidget {
                         ),
 
                         // Date
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            bookingResponse.createdAt ?? "",
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.black87),
-                          ),
-                        ),
+                        // Container(
+                        //   margin: const EdgeInsets.only(bottom: 10),
+                        //   child: Text(
+                        //     bookingResponse.createdAt ?? "",
+                        //     style: const TextStyle(
+                        //         fontSize: 16, color: Colors.black87),
+                        //   ),
+                        // ),
 
                         // Payment Method Section
                         const Row(
@@ -283,33 +290,73 @@ class LastPaymentScreen extends HookConsumerWidget {
                       ),
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const LabelText(
-                              content: 'Tiền thanh toán',
-                              size: AssetsConstants.labelFontSize * 1.3,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                LabelText(
-                                  content: formatPrice(
-                                      bookingResponse.totalReal.toInt()),
+                                const LabelText(
+                                  content: 'Tiền thanh toán',
                                   size: AssetsConstants.labelFontSize * 1.3,
-                                  fontWeight: FontWeight.w600,
                                   color: Colors.black87,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    '',
-                                    style: TextStyle(color: Color(0xFFFF7F00)),
-                                  ),
+                                Row(
+                                  children: [
+                                    LabelText(
+                                      content: formatPrice(
+                                          bookingResponse.totalReal.toInt()),
+                                      size: AssetsConstants.labelFontSize * 1.3,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                    IconButton(
+                                      onPressed: toggleDropdown,
+                                      icon: Icon(
+                                        isExpanded.value
+                                            ? Icons.arrow_drop_up
+                                            : Icons.arrow_drop_down,
+                                        color: const Color(0xFFFF7F00),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
+                            if (isExpanded.value)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Nội dung mở rộng ở đây
+                                    ...bookingResponse.bookingDetails
+                                        .map<Widget>((detail) {
+                                      return _OrderItem(
+                                        label: detail.name ?? '',
+                                        price:
+                                            formatPrice(detail.price.toInt()),
+                                      );
+                                    }),
+                                    // Đường kẻ nét đứt
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child: DashedLine(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                    _OrderItem(
+                                      label: 'Tiền đặt cọc',
+                                      price:
+                                          '- ${formatPrice(bookingResponse.deposit.toInt())}',
+                                    ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -345,6 +392,43 @@ class LastPaymentScreen extends HookConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _OrderItem extends StatelessWidget {
+  final String label;
+  final String price;
+  final bool isBold;
+
+  const _OrderItem({
+    super.key,
+    required this.label,
+    required this.price,
+    this.isBold = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            price,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -138,7 +138,7 @@ class ConfirmLastPayment extends HookConsumerWidget {
           height: 54,
           child: ElevatedButton(
             onPressed: () {
-              context.pushRoute(LastPaymentScreenRoute(
+              context.router.push(LastPaymentScreenRoute(
                 id: id,
               ));
             },
