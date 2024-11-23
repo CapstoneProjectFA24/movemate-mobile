@@ -169,7 +169,7 @@ class OrderItem extends HookConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             LabelText(
-                              content: formatPrice(order.totalReal.toInt()),
+                              content: formatPrice(order.total.toInt()),
                               size: 18,
                               color: AssetsConstants.primaryMain,
                               fontWeight: FontWeight.bold,

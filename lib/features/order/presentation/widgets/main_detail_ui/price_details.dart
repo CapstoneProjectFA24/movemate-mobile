@@ -249,17 +249,6 @@ class PriceDetails extends HookConsumerWidget {
             height: 32,
           ),
 
-          if (bookingStatus.statusMessage.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: LabelText(
-                content: bookingStatus.statusMessage,
-                size: 14,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-
           // Total amount
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -276,7 +265,7 @@ class PriceDetails extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: LabelText(
-                  content: formatPrice(currentprice?.totalReal.toInt() ?? 0),
+                  content: formatPrice(currentprice?.total.toInt() ?? 0),
                   size: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -284,8 +273,6 @@ class PriceDetails extends HookConsumerWidget {
               ),
             ],
           ),
-
-          const SizedBox(height: 20),
 
           Container(
             padding: const EdgeInsets.all(8),
