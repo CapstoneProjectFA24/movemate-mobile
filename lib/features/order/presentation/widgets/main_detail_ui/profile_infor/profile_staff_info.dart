@@ -58,9 +58,9 @@ class ProfileStaffInfo extends HookConsumerWidget {
         case "DRIVER":
           return "Thông tin tài xế";
         case "PORTER":
-          return "Thông tin người bốc vác";
+          return "Thông tin nhân viên bốc vác";
         case "REVIEWER":
-          return "Thông tin người đánh giá";
+          return "Thông tin nhân viên đánh giá";
         default:
           return "Thông tin tài xế";
       }
