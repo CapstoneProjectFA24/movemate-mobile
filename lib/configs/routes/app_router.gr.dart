@@ -53,6 +53,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CleaningServiceScreen(),
       );
     },
+    ConfirmLastPaymentRoute.name: (routeData) {
+      final args = routeData.argsAs<ConfirmLastPaymentRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ConfirmLastPayment(
+          key: args.key,
+          orderObj: args.orderObj,
+          id: args.id,
+        ),
+      );
+    },
     ConfirmServiceBookingScreenRoute.name: (routeData) {
       final args = routeData.argsAs<ConfirmServiceBookingScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -534,6 +545,50 @@ class CleaningServiceScreenRoute extends PageRouteInfo<void> {
   static const String name = 'CleaningServiceScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ConfirmLastPayment]
+class ConfirmLastPaymentRoute
+    extends PageRouteInfo<ConfirmLastPaymentRouteArgs> {
+  ConfirmLastPaymentRoute({
+    Key? key,
+    required OrderEntity? orderObj,
+    required int id,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ConfirmLastPaymentRoute.name,
+          args: ConfirmLastPaymentRouteArgs(
+            key: key,
+            orderObj: orderObj,
+            id: id,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ConfirmLastPaymentRoute';
+
+  static const PageInfo<ConfirmLastPaymentRouteArgs> page =
+      PageInfo<ConfirmLastPaymentRouteArgs>(name);
+}
+
+class ConfirmLastPaymentRouteArgs {
+  const ConfirmLastPaymentRouteArgs({
+    this.key,
+    required this.orderObj,
+    required this.id,
+  });
+
+  final Key? key;
+
+  final OrderEntity? orderObj;
+
+  final int id;
+
+  @override
+  String toString() {
+    return 'ConfirmLastPaymentRouteArgs{key: $key, orderObj: $orderObj, id: $id}';
+  }
 }
 
 /// generated route for

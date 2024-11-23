@@ -7,7 +7,6 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -60,7 +59,9 @@ class PriceDetails extends HookConsumerWidget {
       orderEntity.refresh();
       return null;
     }, [bookingAsync.value?.totalReal]);
+
     final orderObj = orderEntity.data;
+
     void handleActionPress() async {
       if (order.isReviewOnline) {
         // Online Flow: Review -> Payment
@@ -75,7 +76,8 @@ class PriceDetails extends HookConsumerWidget {
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
         } else if (bookingStatus.canMakePaymentLast) {
-          context.pushRoute(LastPaymentScreenRoute(
+          context.pushRoute(ConfirmLastPaymentRoute(
+            orderObj: orderObj,
             id: order.id,
           ));
         }
@@ -96,7 +98,8 @@ class PriceDetails extends HookConsumerWidget {
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
         } else if (bookingStatus.canMakePaymentLast) {
-          context.pushRoute(LastPaymentScreenRoute(
+          context.pushRoute(ConfirmLastPaymentRoute(
+            orderObj: orderObj,
             id: order.id,
           ));
         }
@@ -172,7 +175,7 @@ class PriceDetails extends HookConsumerWidget {
     //   return matchingService.truckCategory?.imageUrl;
     // }
 
-    // print("tìm ảnh  ${findImageUrl(getServices.first)}");
+    // print("tìm ảnh  ${orderObj}");
 
     return Container(
       decoration: BoxDecoration(
