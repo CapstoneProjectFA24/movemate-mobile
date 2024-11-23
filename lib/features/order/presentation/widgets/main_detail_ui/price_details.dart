@@ -114,7 +114,7 @@ class PriceDetails extends HookConsumerWidget {
         } else if (bookingStatus.canMakePayment) {
           return 'Thanh toán ngay';
         } else if (bookingStatus.canMakePaymentLast) {
-          return 'Thanh toán ngay';
+          return 'Xác nhận thanh toán';
         }
       } else {
         // Offline Flow
@@ -125,7 +125,7 @@ class PriceDetails extends HookConsumerWidget {
         } else if (bookingStatus.canMakePayment) {
           return 'Thanh toán ngay';
         } else if (bookingStatus.canMakePaymentLast) {
-          return 'Thanh toán ngay';
+          return 'Xác nhận thanh toán';
         }
       }
       return '';
