@@ -42,8 +42,8 @@ class ConfirmLastPayment extends HookConsumerWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
                     'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1732365346/movemate_logo_esm5fx.png',
-                    height: 150,
-                    width: 300,
+                    height: 130,
+                    width: 180,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -91,11 +91,10 @@ class ConfirmLastPayment extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Chi tiết đơn hàng',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
+              const _SummaryItem(
+                label: 'Chi tiết đơn hàng',
+                value: '',
+                isBold: true,
               ),
               const SizedBox(height: 8),
               ...orderObj!.bookingDetails.map<Widget>((detail) {
@@ -104,19 +103,28 @@ class ConfirmLastPayment extends HookConsumerWidget {
                   price: formatPrice(detail.price.toInt()),
                 );
               }),
+              const SizedBox(height: 8),
+              _OrderItem(
+                label: 'Tổng giá',
+                isBold: true,
+                price: formatPrice(orderObj!.total.toInt()),
+              ),
               const SizedBox(height: 16),
               _SummaryItem(
                 label: 'Ghi chú:',
                 value: (orderObj?.note != null && orderObj!.note!.isNotEmpty)
                     ? orderObj!.note!
                     : 'Không có',
+                isGrey: true,
               ),
               _SummaryItem(
                 label: 'Mã đơn hàng:',
                 value: orderObj!.id.toString(),
+                isGrey: true,
               ),
               _SummaryItem(
                 label: 'Thời gian vận chuyển:',
+                isGrey: true,
                 value: '$formattedDateBookingAt - $formattedTimeBookingAt',
               ),
             ],
@@ -173,7 +181,12 @@ class _OrderItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
           Text(
             price,
             style: TextStyle(
@@ -189,11 +202,14 @@ class _OrderItem extends StatelessWidget {
 class _SummaryItem extends StatelessWidget {
   final String label;
   final String value;
-
+  final bool isGrey;
+  final bool isBold;
   const _SummaryItem({
     super.key,
     required this.label,
     required this.value,
+    this.isGrey = false,
+    this.isBold = false,
   });
 
   @override
@@ -203,7 +219,15 @@ class _SummaryItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label),
+          Text(
+            label,
+            style: TextStyle(
+              color: isGrey
+                  ? AssetsConstants.greyColor
+                  : AssetsConstants.blackColor,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
           Text(value),
         ],
       ),
