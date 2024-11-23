@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
@@ -9,6 +11,8 @@ import 'package:movemate/features/booking/domain/entities/truck_category_entity.
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
@@ -60,6 +64,12 @@ class ReviewOnline extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isExpanded = useState(false);
+    final expandedIndex = useState<int>(-1);
+    void toggleDropdown() {
+      isExpanded.value = !isExpanded.value;
+    }
+
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
     final stateServicePackage = ref.watch(servicePackageControllerProvider);
@@ -146,6 +156,11 @@ class ReviewOnline extends HookConsumerWidget {
                       buildContactCard(
                           order: order, profileUserAssign: profileUserAssign),
                       const SizedBox(height: 24),
+                      CustomerInfo(
+                        order: order,
+                        isExpanded: isExpanded,
+                        toggleDropdown: toggleDropdown,
+                      )
                     ],
                   ),
                 ),
@@ -203,12 +218,13 @@ class ReviewOnline extends HookConsumerWidget {
   Widget buildServiceCard({
     required OrderEntity order,
     required ProfileEntity? profileUserAssign,
-    // required ServicesPackageEntity? serviceData,
     required TruckCategoryEntity? truckCateDetails,
   }) {
     return LoadingOverlay(
       isLoading: truckCateDetails == null,
       child: Container(
+        width: double.infinity,
+        height: 400, // Cố định chiều cao của buildServiceCard
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -227,7 +243,6 @@ class ReviewOnline extends HookConsumerWidget {
           children: [
             Row(
               children: [
-                // Service Image with Null Handling
                 truckCateDetails?.imageUrl != null &&
                         truckCateDetails!.imageUrl.isNotEmpty
                     ? Image.network(
@@ -268,7 +283,6 @@ class ReviewOnline extends HookConsumerWidget {
                               )
                               .name,
                           style: const TextStyle(fontWeight: FontWeight.bold)),
-                      // Additional details can be added here
                       const SizedBox(height: 8),
                       FittedBox(
                         child: Row(
@@ -311,7 +325,19 @@ class ReviewOnline extends HookConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
-            // Additional service details can be added here
+            // Sử dụng Expanded kết hợp với ListView để có thể scroll danh sách buildPriceItem
+            Expanded(
+              child: ListView.builder(
+                itemCount: order.bookingDetails.length,
+                itemBuilder: (context, index) {
+                  final detail = order.bookingDetails[index];
+                  return buildPriceItem(
+                    detail.name ?? '',
+                    formatPrice(detail.price.toInt()),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
