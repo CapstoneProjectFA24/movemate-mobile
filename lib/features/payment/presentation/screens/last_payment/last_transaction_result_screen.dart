@@ -258,9 +258,6 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                   children: [
                                     buildTransactionDetailRow('Số tiền',
                                         formatPrice(amount), containerWidth),
-                                    const SizedBox(height: 8),
-                                    buildTransactionDetailRow('Phí giao dịch',
-                                        'Miễn phí', containerWidth),
                                   ],
                                 ),
                               ),

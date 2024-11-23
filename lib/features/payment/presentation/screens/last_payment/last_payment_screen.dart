@@ -249,14 +249,14 @@ class LastPaymentScreen extends HookConsumerWidget {
                         // ),
 
                         // Note
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: const Text(
-                            'Đơn hàng của quý khách đã được giao đến địa chỉ mà quý khách đã cung cấp. Quý khách vui lòng kiểm tra kỹ số lượng, tình trạng của hàng hóa. \n\nMoveMate xin cảm ơn.',
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.black87),
-                          ),
-                        ),
+                        // Container(
+                        //   margin: const EdgeInsets.symmetric(vertical: 10),
+                        //   child: const Text(
+                        //     'Đơn hàng của quý khách đã được giao đến địa chỉ mà quý khách đã cung cấp. Quý khách vui lòng kiểm tra kỹ số lượng, tình trạng của hàng hóa. \n\nMoveMate xin cảm ơn.',
+                        //     style:
+                        //         TextStyle(fontSize: 14, color: Colors.black87),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
