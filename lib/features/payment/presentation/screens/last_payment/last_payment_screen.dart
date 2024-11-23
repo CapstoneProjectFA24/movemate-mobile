@@ -91,6 +91,19 @@ class LastPaymentScreen extends HookConsumerWidget {
             selectedMethod: selectedMethod.type,
             bookingId: id,
           );
+        } else if (selectedMethod == PaymentMethodType.cash) {
+          // await paymentController.createPaymentBooking(
+          //   context: context,
+          //   selectedMethod: selectedMethod.type,
+          //   bookingId: bookingResponse.id.toString(),
+          // );
+          showSnackBar(
+            context: context,
+            content: 'Phương thứ này đang bảo trì',
+            icon: const Icon(Icons.close),
+            backgroundColor: AssetsConstants.mainColor,
+            textColor: AssetsConstants.whiteColor,
+          );
         } else {
           await paymentController.createPaymentBooking(
             context: context,
