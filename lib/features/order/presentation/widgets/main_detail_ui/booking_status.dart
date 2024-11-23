@@ -16,6 +16,7 @@ class BookingStatus extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
     final isCancelled = bookingStatus.isCancelled;
     final insTructionIconFolowStatus = bookingStatus.canMakePayment ||
         bookingStatus.canAcceptSchedule ||
@@ -26,80 +27,42 @@ class BookingStatus extends HookConsumerWidget {
     return FadeIn(
       duration: const Duration(milliseconds: 800),
       child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isCancelled
-                ? [
-                    Colors.blueGrey.shade400,
-                    Colors.grey.shade600,
-                  ]
-                : isComplete
-                    ? [
-                        Colors.green.shade400,
-                        Colors.green.shade600,
-                      ]
-                    : !insTructionIconFolowStatus
-                        ? [Colors.blueAccent.withOpacity(0.2), Colors.white]
-                        : [Colors.orangeAccent.withOpacity(0.5), Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FadeInUp(
-              duration: const Duration(milliseconds: 500),
-              child: Row(
-                children: [
-                  // Icon(
-                  //   isCancelled
-                  //       ? Icons.cancel
-                  //       : isComplete
-                  //           ? Icons.check_circle
-                  //           : Icons.info_outline,
-                  //   color: isCancelled
-                  //       ? Colors.red
-                  //       : isComplete
-                  //           ? AssetsConstants.green6
-                  //           : !insTructionIconFolowStatus
-                  //               ? Colors.blue.shade500
-                  //               : Colors.red.shade400,
-                  //   size: 20,
-                  // ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: LabelText(
-                      content: bookingStatus.statusMessage,
-                      size: 14,
-                      fontWeight: FontWeight.w400,
-                      color: isCancelled ? Colors.white : Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
+            LabelText(
+              content: isCancelled
+                  ? 'Đã hủy'
+                  : isComplete
+                      ? 'Hoàn thành'
+                      : !insTructionIconFolowStatus
+                          ? 'Đang chờ thực hiện'
+                          : 'Đang thực hiện',
+              size: 16,
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(height: 10),
-            FadeInUp(
-              duration: const Duration(milliseconds: 700),
-              child: Text(
-                "MoveMate sẽ gửi thông tin đến bạn sau",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isCancelled ? Colors.white70 : Colors.black54,
+            if (bookingStatus.statusMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: LabelText(
+                  content: bookingStatus.statusMessage,
+                  size: 14,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
+            if (isComplete)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'Nếu cần hỗ trợ thêm, bạn vui lòng truy cập Trung tâm Trợ giúp nhé.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
           ],
         ),
       ),

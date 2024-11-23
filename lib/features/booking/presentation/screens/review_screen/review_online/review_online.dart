@@ -383,7 +383,7 @@ class ReviewOnline extends HookConsumerWidget {
               children: [
                 Text(order.review != null ? order.review! : '',
                     style: const TextStyle(fontWeight: FontWeight.bold)),
-                const Text('Liên hệ với nhận viên',
+                const Text('Liên hệ với nhân viên',
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 Text('${profileUserAssign?.name}',
                     style: TextStyle(color: Colors.grey.shade700)),
