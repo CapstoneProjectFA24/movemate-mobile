@@ -7,10 +7,12 @@ import 'package:movemate/features/booking/presentation/screens/controller/servic
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 //
 class OrderItem extends HookConsumerWidget {
@@ -43,6 +45,11 @@ class OrderItem extends HookConsumerWidget {
       context: context,
     );
     final houseTypeData = useFetchResult.data;
+
+    useEffect(() {
+      OrderStreamManager().updateJob(order);
+      return null;
+    }, [bookingAsync.value]);
 
     return GestureDetector(
       onTap: () {
@@ -367,6 +374,9 @@ Color getStatusColor(BookingStatusResult status) {
     return const Color(0xFF2196F3); // Xanh dương đậm
   }
 
+  if (status.isOnlineReviewing) {
+    return Colors.green.shade700; // Tím
+  }
   // Trạng thái thanh toán (Màu tím)
   if (status.canMakePayment) {
     return const Color(0xFF9C27B0); // Tím

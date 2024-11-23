@@ -25,6 +25,7 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/time
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -129,6 +130,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
 
+    useEffect(() {
+      OrderStreamManager().updateJob(order);
+      return null;
+    }, [bookingAsync.value]);
+
     // print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
       isLoading:
@@ -221,13 +227,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 //       )
                 //     : Container(),
                 const SizedBox(height: 10),
-                (statusOrders == BookingStatusType.reviewed)
-                    ? CustomerInfo(
-                        isExpanded: isExpanded,
-                        toggleDropdown: toggleDropdown,
-                      )
-                    : Container(),
-                const SizedBox(height: 20),
+                // (statusOrders == BookingStatusType.reviewed)
+                //     ? CustomerInfo(
+                //         isExpanded: isExpanded,
+                //         toggleDropdown: toggleDropdown,
+                //       )
+                //     : Container(),
+                // const SizedBox(height: 20),
                 PriceDetails(
                   order: order,
                   serviceData: serviceData,

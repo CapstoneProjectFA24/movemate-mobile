@@ -4,21 +4,33 @@ class BookingRealtimeEntity {
   final String id;
   final String status;
   final List<AssignmentsRealtimeEntity> assignments;
+  final double deposit;
+  final double total;
+  final double totalFee;
+  final double totalReal;
 
   BookingRealtimeEntity({
     required this.id,
     required this.status,
     required this.assignments,
+    required this.deposit,
+    required this.total,
+    required this.totalFee,
+    required this.totalReal,
   });
 
   factory BookingRealtimeEntity.fromMap(Map<String, dynamic> data, String id) {
     return BookingRealtimeEntity(
       id: id,
-      status: data['Status'],
+      status: data['Status'] ?? '',
       assignments: (data['Assignments'] as List<dynamic>?)
               ?.map((e) => AssignmentsRealtimeEntity.fromMap(e))
               .toList() ??
           [],
+      deposit: (data['Deposit'] as num?)?.toDouble() ?? 0.0,
+      total: (data['Total'] as num?)?.toDouble() ?? 0.0,
+      totalFee: (data['TotalFee'] as num?)?.toDouble() ?? 0.0,
+      totalReal: (data['TotalReal'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -27,6 +39,10 @@ class BookingRealtimeEntity {
       'id': id,
       'Status': status,
       'Assignments': assignments.map((e) => e.toMap()).toList(),
+      'Deposit': deposit,
+      'Total': total,
+      'TotalFee': totalFee,
+      'TotalReal': totalReal,
     };
   }
 

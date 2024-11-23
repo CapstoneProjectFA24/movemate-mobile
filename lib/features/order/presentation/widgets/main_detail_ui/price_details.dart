@@ -6,6 +6,8 @@ import 'package:movemate/features/booking/presentation/screens/controller/bookin
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -13,6 +15,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/presentation/widgets/details/item.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class PriceDetails extends HookConsumerWidget {
   final OrderEntity order;
@@ -38,7 +41,26 @@ class PriceDetails extends HookConsumerWidget {
       return '${formatter.format(price)} đ';
     }
 
+    final currentprice =
+        ref.watch(bookingStreamProvider(order.id.toString())).value;
+
+    print("updating current price ${currentprice?.totalReal.toString()}");
+
     print("checking price ${bookingStatus.isCompleted}");
+
+    final orderEntity = useFetchObject<OrderEntity>(
+        function: (context) async {
+          return ref
+              .read(bookingControllerProvider.notifier)
+              .getOrderEntityById(order.id);
+        },
+        context: context);
+
+    useEffect(() {
+      orderEntity.refresh();
+      return null;
+    }, [bookingAsync.value?.totalReal]);
+    final orderObj = orderEntity.data;
     void handleActionPress() async {
       if (order.isReviewOnline) {
         // Online Flow: Review -> Payment
@@ -184,7 +206,7 @@ class PriceDetails extends HookConsumerWidget {
           const SizedBox(height: 20), // Increased spacing
 
           // Truck details
-          ...order.bookingDetails
+          ...orderObj!.bookingDetails
               .where((detail) => detail.type == "TRUCK")
               .map((truckDetail) {
             // Tìm imageUrl cho truckDetail này
@@ -200,7 +222,7 @@ class PriceDetails extends HookConsumerWidget {
           }),
 
           // Price details
-          ...order.bookingDetails.map<Widget>((detail) {
+          ...orderObj.bookingDetails.map<Widget>((detail) {
             return buildPriceItem(
               detail.name ?? '',
               formatPrice(detail.price.toInt()),
@@ -208,9 +230,10 @@ class PriceDetails extends HookConsumerWidget {
           }),
 
           const SizedBox(height: 16),
-          buildSummary('Tiền đặt cọc', formatPrice(order.deposit.toInt())),
+          buildSummary(
+              'Tiền đặt cọc', formatPrice(currentprice?.deposit.toInt() ?? 0)),
           // Hiển thị các fee từ feeDetails
-          ...order.feeDetails.map((fee) {
+          ...orderObj.feeDetails.map((fee) {
             return buildSummary(
               fee.name,
               formatPrice(fee.amount.toInt()),
@@ -250,7 +273,7 @@ class PriceDetails extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: LabelText(
-                  content: formatPrice(order.totalReal.toInt()),
+                  content: formatPrice(currentprice?.totalReal.toInt() ?? 0),
                   size: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
