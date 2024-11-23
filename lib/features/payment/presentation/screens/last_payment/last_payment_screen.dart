@@ -26,6 +26,7 @@ final paymentList = [
   PaymentMethodType.vnpay,
   PaymentMethodType.payos,
   PaymentMethodType.wallet,
+  PaymentMethodType.cash,
 ];
 
 @RoutePage()
@@ -109,16 +110,6 @@ class LastPaymentScreen extends HookConsumerWidget {
           centerTitle: true,
           backButtonColor: AssetsConstants.whiteColor,
           title: "Hoàn tất thanh toán ",
-          // iconFirst: Icons.home,
-          // onCallBackFirst: () {
-          //   final tabsRouter = context.router.root
-          //       .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
-          //   if (tabsRouter != null) {
-          //     tabsRouter.setActiveIndex(0);
-          //     // Pop back to the TabViewScreen
-          //     context.router.popUntilRouteWithName(TabViewScreenRoute.name);
-          //   }
-          // },
         ),
         body: SafeArea(
           child: Column(

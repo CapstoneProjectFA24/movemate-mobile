@@ -4,7 +4,8 @@ enum PaymentMethodType {
   momo('Momo'),
   vnpay('VnPay'),
   payos('PayOS'),
-  wallet('Wallet');
+  wallet('Wallet'),
+  cash('Cash');
 
   final String type;
   const PaymentMethodType(this.type);
@@ -32,6 +33,8 @@ extension PaymentMethodTypeExtension on PaymentMethodType {
         return 'https://res.cloudinary.com/dietfw7lr/image/upload/v1729283227/tk9d9gzthqg62slzhnaf.png'; // Replace with actual URL
       case PaymentMethodType.wallet:
         return 'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1731511719/movemate_logo_e6f1lk.png'; // Replace with actual URL
+      case PaymentMethodType.cash:
+        return 'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1732370656/z6062646304366_0d697f4850b90ae1ff38b84b839a3408_kofc9n.jpg'; // Replace with actual URL
     }
   }
 
@@ -45,6 +48,8 @@ extension PaymentMethodTypeExtension on PaymentMethodType {
         return 'PayOS';
       case PaymentMethodType.wallet:
         return 'Ví MoveMate';
+      case PaymentMethodType.cash:
+        return 'Thanh toán bằng tiền mặt';
     }
   }
 }
