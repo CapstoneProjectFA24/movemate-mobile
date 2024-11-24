@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
@@ -54,6 +55,14 @@ class PriceDetails extends HookConsumerWidget {
               .getOrderEntityById(order.id);
         },
         context: context);
+
+
+            final useFetcholdOrder = useFetchObject<OrderEntity>(
+      function: (context) => ref
+          .read(orderControllerProvider.notifier)
+          .getBookingOldById(order.id, context),
+      context: context,
+    );
 
     useEffect(() {
       orderEntity.refresh();
