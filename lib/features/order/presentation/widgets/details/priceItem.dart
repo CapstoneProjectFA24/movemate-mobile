@@ -5,19 +5,19 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 Widget buildPriceItem(String description, String price) {
   return Container(
-    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
-          spreadRadius: 2,
-          blurRadius: 4,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
+    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    // decoration: BoxDecoration(
+    //   color: Colors.white,
+    //   borderRadius: BorderRadius.circular(8),
+    //   boxShadow: [
+    //     BoxShadow(
+    //       color: Colors.grey.withOpacity(0.2),
+    //       spreadRadius: 2,
+    //       blurRadius: 4,
+    //       offset: const Offset(0, 2),
+    //     ),
+    //   ],
+    // ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -27,7 +27,7 @@ Widget buildPriceItem(String description, String price) {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 11,
               fontWeight: FontWeight.w400,
               color: Colors.black,
             ),
@@ -39,9 +39,9 @@ Widget buildPriceItem(String description, String price) {
             Text(
               price,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 11,
                 fontWeight: FontWeight.w400,
-                color: Colors.black,
+                color: Colors.grey,
               ),
             ),
             const SizedBox(width: 12),

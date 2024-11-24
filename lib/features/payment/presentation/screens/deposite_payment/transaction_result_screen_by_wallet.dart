@@ -295,7 +295,7 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
                                 style: TextStyle(
                                   color: Colors.orange.shade500,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: containerWidth * 0.045,
+                                  fontSize: containerWidth * 0.040,
                                 ),
                               ),
                             ),
@@ -347,7 +347,7 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
                                 'Chi tiết đơn hàng',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: containerWidth * 0.045,
+                                  fontSize: containerWidth * 0.040,
                                   color: Colors.white,
                                 ),
                               ),

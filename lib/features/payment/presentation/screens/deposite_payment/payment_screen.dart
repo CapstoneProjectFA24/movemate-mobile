@@ -127,49 +127,51 @@ class PaymentScreen extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Details
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Thông tin đơn hàng',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black87),
-                              ),
-                              // const Text(
-                              //   'số lượng 1',
-                              //   style: TextStyle(
-                              //       fontSize: 16, color: Colors.black87),
-                              // ),
-                              // Text(
-                              //   bookingResponse.status ?? "",
-                              //   style: const TextStyle(
-                              //       fontSize: 16, color: Colors.black87),
-                              // ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   margin: const EdgeInsets.symmetric(vertical: 10),
+                        //   child: const Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Text(
+                        //         'Thông tin đơn hàng',
+                        //         style: TextStyle(
+                        //             fontSize: 16, color: Colors.black87),
+                        //       ),
+                        //       // const Text(
+                        //       //   'số lượng 1',
+                        //       //   style: TextStyle(
+                        //       //       fontSize: 16, color: Colors.black87),
+                        //       // ),
+                        //       // Text(
+                        //       //   bookingResponse.status ?? "",
+                        //       //   style: const TextStyle(
+                        //       //       fontSize: 16, color: Colors.black87),
+                        //       // ),
+                        //     ],
+                        //   ),
+                        // ),
 
                         // Date
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            bookingResponse.createdAt ?? "",
-                            style: const TextStyle(
-                                fontSize: 16, color: Colors.black87),
-                          ),
-                        ),
+                        // Container(
+                        //   margin: const EdgeInsets.only(bottom: 10),
+                        //   child: Text(
+                        //     bookingResponse.createdAt ?? "",
+                        //     style: const TextStyle(
+                        //         fontSize: 16, color: Colors.black87),
+                        //   ),
+                        // ),
 
                         // Payment Method Section
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'Phương thức thanh toán',
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.black87),
-                            ),
+                            Padding(
+                                padding: EdgeInsets.only(top: 30.0),
+                                child: Text('Chọn phương thức đặt cọc: ',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    )))
                             // TextButton(
                             //   onPressed: () {
                             //     // Handle 'View All' action
@@ -296,13 +298,13 @@ class PaymentScreen extends HookConsumerWidget {
                         ),
                       ),
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const LabelText(
-                              content: 'Tổng giá tiền',
-                              size: AssetsConstants.labelFontSize * 1.3,
+                              content: 'Tiền đặt cọc',
+                              size: AssetsConstants.labelFontSize,
                               color: Colors.black87,
                               fontWeight: FontWeight.w600,
                             ),
@@ -311,7 +313,7 @@ class PaymentScreen extends HookConsumerWidget {
                                 LabelText(
                                   content: formatPrice(
                                       bookingResponse.deposit.toInt()),
-                                  size: AssetsConstants.labelFontSize * 1.3,
+                                  size: AssetsConstants.labelFontSize * 1.2,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black87,
                                 ),

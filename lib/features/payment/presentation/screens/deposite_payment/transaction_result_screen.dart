@@ -348,7 +348,7 @@ class TransactionResultScreen extends ConsumerWidget {
                               style: TextStyle(
                                 color: Colors.orange.shade500,
                                 fontWeight: FontWeight.bold,
-                                fontSize: containerWidth * 0.045,
+                                fontSize: containerWidth * 0.040,
                               ),
                             ),
                           ),
@@ -402,7 +402,7 @@ class TransactionResultScreen extends ConsumerWidget {
                               'Chi tiết đơn hàng',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: containerWidth * 0.045,
+                                fontSize: containerWidth * 0.040,
                                 color: Colors.white,
                               ),
                             ),
