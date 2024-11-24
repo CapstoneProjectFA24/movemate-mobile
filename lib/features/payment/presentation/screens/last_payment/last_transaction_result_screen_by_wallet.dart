@@ -84,7 +84,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     }
 
     final listServices = getListSerVices(result);
-    double containerHeight = 600.0;
+    double containerHeight = listServices.length * 108.0;
     return LoadingOverlay(
       isLoading: state.isLoading || stateWallet.isLoading,
       child: Scaffold(
@@ -207,22 +207,36 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                       child: DashedLine(
                                           color: Colors.grey.shade300),
                                     ),
-                                    ListView.builder(
-                                        shrinkWrap: true,
+                                    SizedBox(
+                                      height: 152,
+                                      // decoration: BoxDecoration(
+                                      //   color: Colors.white,
+                                      //   borderRadius: BorderRadius.circular(16),
+                                      //   boxShadow: const [
+                                      //     BoxShadow(
+                                      //       color: Colors.black12,
+                                      //       blurRadius: 10,
+                                      //       spreadRadius: 2,
+                                      //     ),
+                                      //   ],
+                                      // ),
+                                      child: ListView.builder(
                                         physics:
-                                            const NeverScrollableScrollPhysics(),
+                                            const AlwaysScrollableScrollPhysics(), // Cho phép cuộn
                                         itemCount: listServices.length,
                                         itemBuilder: (context, index) {
                                           final serviceDetails =
                                               listServices[index];
-                                          return buildTransactionDetailRow(
+                                          return buildListService(
                                             serviceDetails.name,
                                             formatPrice(
                                                 (serviceDetails.price ?? 0)
                                                     .toInt()),
                                             containerWidth * 0.80,
                                           );
-                                        }),
+                                        },
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -410,17 +424,55 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
             Text(
               title,
               style: TextStyle(
+                fontSize: 12,
                 color: Colors.grey[700],
               ),
             ),
             Text(
               value,
               style: const TextStyle(
+                fontSize: 12,
                 color: Color.fromARGB(255, 174, 178, 183),
               ),
             ),
           ],
         ));
+  }
+
+  Widget buildListService(String title, String value, double containerWidth) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
+        children: [
+          Expanded(
+            flex: 5, // Allocate space for the title
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[700],
+              ),
+              softWrap: true, // Allow wrapping
+              overflow: TextOverflow.visible, // Ensure text is not clipped
+            ),
+          ),
+          const SizedBox(width: 10), // Add spacing between title and value
+          Expanded(
+            flex: 2, // Allocate space for the value
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color.fromARGB(255, 174, 178, 183),
+              ),
+              softWrap: true, // Allow wrapping
+              overflow: TextOverflow.visible, // Ensure text is not clipped
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

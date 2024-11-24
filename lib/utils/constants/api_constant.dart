@@ -59,6 +59,8 @@ class APIConstants {
     'Email is already registered.': 'Email này đã được đăng kí',
     'Phone number is already registered.': 'Số điện thoại này đã được đăng kí',
     'Email already exists.': 'Email này đã được đăng kí',
+    "Invalid email/phone number or password":
+        "Thông tin đăng nhập không chính xác.",
     'Phone already exists.': 'Số điện thoại này đã được đăng kí',
     'Email does not exist in the system.':
         'Email không tồn tại trong hệ thống.',
