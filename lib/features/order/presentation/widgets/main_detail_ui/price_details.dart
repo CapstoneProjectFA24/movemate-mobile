@@ -73,10 +73,12 @@ class PriceDetails extends HookConsumerWidget {
       return null;
     }, [bookingStatus.canReviewSuggestion]);
 
+    print("check data 1${orderObj?.bookingDetails.length}");
+    print("check data 2${orderOld?.bookingDetails.length}");
 // Kiểm tra điều kiện và gán giá trị cho biến orderData
     // final orderData = bookingStatus.canReviewSuggestion ? orderObj : orderOld;
-
     final orderData = bookingStatus.canReviewSuggestion ? orderObj : orderOld;
+    print("check data 3 ${orderData?.bookingDetails.length}");
 
     if (orderData == null) {
       return const Center(

@@ -46,7 +46,6 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
     double containerHeight = MediaQuery.of(context).size.height * 0.5;
     // print('allUri: $allUri');
 
-    //{isSuccess: true, amount: 312000, payDate: 11/07/2024 23:36:49, bookingId: 426-a66aec19-e687-427b-a836-ee65150cbc1b, transactionCode: 4223169412, userId: 3, paymentMethod: Momo}
     final state = ref.watch(bookingControllerProvider);
     final useFetchResultOrder = useFetchObject<OrderEntity>(
       function: (context) async {
@@ -74,7 +73,7 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
     final resultWallet = useFetchResultWallet.refresh;
 
     return LoadingOverlay(
-      isLoading: state.isLoading || stateWallet.isLoading,
+      isLoading: stateWallet.isLoading,
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
