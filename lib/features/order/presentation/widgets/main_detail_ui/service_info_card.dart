@@ -1,5 +1,3 @@
-// components/service_info_card.dart
-
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,8 +7,6 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/features/order/presentation/widgets/details/address.dart';
-import 'package:movemate/features/order/presentation/widgets/details/column.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
 
 class ServiceInfoCard extends HookConsumerWidget {
@@ -50,46 +46,96 @@ class ServiceInfoCard extends HookConsumerWidget {
                 buildHouseInformation(),
                 const SizedBox(height: spacing),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildAddressRow(
-                      Icons.location_on_outlined,
-                      '''Từ:  ${order.pickupAddress}
-Tên: ${userdata?.name}
-Số điện thoại: ${userdata?.phone}''',
-                    ),
-                    const Divider(height: 12, color: Colors.grey, thickness: 1),
-                    buildAddressRow(
-                      Icons.location_searching,
-                      'Đến : ${order.deliveryAddress}',
-                    ),
-                    const SizedBox(height: 4),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const LabelText(
-                              content: 'Ngày tạo:',
-                              size: 13,
-                              fontFamily: 'bold',
-                              color: AssetsConstants.blackColor,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            const SizedBox(width: 4),
-                            LabelText(
-                              content: "$formattedDate  $formattedTime",
-                              size: 13,
-                              color: AssetsConstants.blackColor,
-                              fontWeight: FontWeight.w400,
-                            )
-                          ],
+                    // Phần tên và số điện thoại
+                    Padding(
+                      padding: const EdgeInsets.only(left: 28.0),
+                      child: Text(
+                        '''Tên: ${userdata?.name}
+Số điện thoại: ${userdata?.phone}
+''',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black87,
                         ),
                       ),
                     ),
-                    // const SizedBox(height: 10),
+
+                    // Phần "Từ" có biểu tượng
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 16,
+                          color: Colors.green,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            "Từ: ${order.pickupAddress}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Dòng phân cách
+                    const Divider(height: 12, color: Colors.grey, thickness: 1),
+
+                    // Phần "Đến" có biểu tượng
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.location_searching,
+                          size: 16,
+                          color: Colors.blue,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Đến: ${order.deliveryAddress}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
+                ),
+                const SizedBox(height: spacing),
+
+                // Phần ngày tạo
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const LabelText(
+                          content: 'Ngày tạo:',
+                          size: 10,
+                          fontFamily: 'bold',
+                          color: AssetsConstants.greyColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        LabelText(
+                          content: "$formattedDate  $formattedTime",
+                          size: 10,
+                          color: AssetsConstants.greyColor,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -114,27 +160,68 @@ Số điện thoại: ${userdata?.phone}''',
   }
 
   Widget buildHouseInformation() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        LabelText(
+          content: 'Loại nhà : ${houseType?.name ?? "label"}',
+          size: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        const SizedBox(height: spacing),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LabelText(
-              content: 'Loại nhà : ${houseType?.name ?? "label"}',
-              size: 16,
-              fontWeight: FontWeight.bold,
+            Column(
+              children: [
+                const Icon(
+                  FontAwesomeIcons.building,
+                  size: 16,
+                  color: Colors.black87,
+                ),
+                Text(
+                  "Tầng: ${order.floorsNumber}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: spacing),
-            buildDetailColumn(
-              FontAwesomeIcons.building,
-              "Tầng :${order.floorsNumber}",
-            ),
-            buildDetailColumn(
-              FontAwesomeIcons.building,
-              "Phòng : ${order.roomNumber}",
+            const SizedBox(width: 16),
+            Column(
+              children: [
+                const Icon(
+                  FontAwesomeIcons.doorClosed,
+                  size: 16,
+                  color: Colors.black87,
+                ),
+                Text(
+                  "Phòng: ${order.roomNumber}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildDetailColumn(IconData icon, String content) {
+    return Column(
+      children: [
+        Icon(icon, size: 20, color: Colors.black54),
+        const SizedBox(height: 5),
+        Text(
+          content,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black87,
+          ),
         ),
       ],
     );

@@ -197,7 +197,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                               },
                               child: const LabelText(
                                 content: 'Chưa có tài khoản?',
-                                size: AssetsConstants.defaultFontSize - 10.0,
+                                size: AssetsConstants.defaultFontSize - 12.0,
                                 fontWeight: FontWeight.w700,
                                 color: AssetsConstants.mainColor,
                               ),
@@ -209,7 +209,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                               },
                               child: const LabelText(
                                 content: 'Quên mật khẩu?',
-                                size: AssetsConstants.defaultFontSize - 8.0,
+                                size: AssetsConstants.defaultFontSize - 12.0,
                                 fontWeight: FontWeight.w700,
                                 color: AssetsConstants.subtitleColorM,
                               ),
@@ -267,8 +267,8 @@ class SignInScreen extends HookConsumerWidget with Validations {
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: LabelText(
                                 content: 'hoặc đăng nhập với',
-                                size: AssetsConstants.defaultFontSize - 10.0,
-                                fontWeight: FontWeight.w700,
+                                size: AssetsConstants.defaultFontSize - 16.0,
+                                fontWeight: FontWeight.w600,
                                 color: AssetsConstants.subtitleColor,
                               ),
                             ),

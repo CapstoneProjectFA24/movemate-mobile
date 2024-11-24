@@ -231,7 +231,7 @@ class PriceDetails extends HookConsumerWidget {
             );
           }),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           buildSummary(
               'Tiền đặt cọc', formatPrice(currentprice?.deposit.toInt() ?? 0)),
           // Hiển thị các fee từ feeDetails

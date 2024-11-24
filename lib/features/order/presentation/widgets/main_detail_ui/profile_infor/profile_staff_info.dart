@@ -171,7 +171,7 @@ class ProfileStaffInfo extends HookConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.chat),
-                    SizedBox(width: 8.0),
+                    SizedBox(width: 6.0),
                     Text('Chat ngay'),
                   ],
                 ),

@@ -176,7 +176,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                   order: order,
                   expandedIndex: expandedIndex,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 Column(
                   children: [
                     ListView.builder(
