@@ -1,4 +1,5 @@
 // local
+import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
@@ -31,6 +32,17 @@ abstract class OrderRepository {
   });
 
   Future<TruckCategoryObjResponse> getTruckById({
+    // required PagingModel request,
+    required String accessToken,
+    required int id,
+  });
+
+  Future<BookingNewResponse> getBookingNewById({
+    // required PagingModel request,
+    required String accessToken,
+    required int id,
+  });
+  Future<BookingNewResponse> getBookingOldById({
     // required PagingModel request,
     required String accessToken,
     required int id,

@@ -1,6 +1,7 @@
 // import local
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/request/service_query_request.dart';
+import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
@@ -86,6 +87,33 @@ class OrderRepositoryImpl extends RemoteBaseRepository
     // print("repo log $id");
     return getDataOf(
       request: () => _orderSource.getTruckById(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
+
+  @override  
+  Future<BookingNewResponse> getBookingNewById({
+        required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _orderSource.getBookingNewById(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
+  @override  
+  Future<BookingNewResponse> getBookingOldById({
+        required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _orderSource.getBookingOldById(
         APIConstants.contentType,
         accessToken,
         id,
