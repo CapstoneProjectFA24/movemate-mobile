@@ -25,7 +25,9 @@ import 'package:movemate/utils/enums/enums_export.dart';
 @RoutePage()
 class ReviewOnline extends HookConsumerWidget {
   final OrderEntity order;
-  const ReviewOnline({super.key, required this.order});
+  final OrderEntity? orderOld;
+
+  const ReviewOnline({super.key, required this.order, required this.orderOld});
 
   // Helper method to get reviewer assignment with a default value
   AssignmentResponseEntity getReviewerAssignment(OrderEntity order) {
@@ -155,12 +157,12 @@ class ReviewOnline extends HookConsumerWidget {
                       const SizedBox(height: 16),
                       buildContactCard(
                           order: order, profileUserAssign: profileUserAssign),
-                      // const SizedBox(height: 24),
-                      // CustomerInfo(
-                      //   order: order,
-                      //   isExpanded: isExpanded,
-                      //   toggleDropdown: toggleDropdown,
-                      // )
+                      const SizedBox(height: 24),
+                      CustomerInfo(
+                        order: orderOld,
+                        isExpanded: isExpanded,
+                        toggleDropdown: toggleDropdown,
+                      )
                     ],
                   ),
                 ),

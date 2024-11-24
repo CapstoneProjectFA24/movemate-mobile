@@ -35,7 +35,7 @@ class PriceDetails extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
-
+    OrderEntity? orderCurent;
     String formatPrice(int price) {
       final formatter = NumberFormat('#,###', 'vi_VN');
       return '${formatter.format(price)} đ';
@@ -56,20 +56,27 @@ class PriceDetails extends HookConsumerWidget {
         },
         context: context);
 
-
-            final useFetcholdOrder = useFetchObject<OrderEntity>(
+    final useFetcholdOrder = useFetchObject<OrderEntity>(
       function: (context) => ref
           .read(orderControllerProvider.notifier)
           .getBookingOldById(order.id, context),
       context: context,
     );
+    final orderOld = useFetcholdOrder.data;
+
+    final orderObj = orderEntity.data;
 
     useEffect(() {
       orderEntity.refresh();
       return null;
     }, [bookingAsync.value?.totalReal]);
 
-    final orderObj = orderEntity.data;
+    useEffect(() {
+      return null;
+    }, [bookingStatus.canReviewSuggestion]);
+
+// Kiểm tra điều kiện và gán giá trị cho biến orderData
+    final orderData = bookingStatus.canReviewSuggestion ? orderObj : orderOld;
 
     void handleActionPress() async {
       if (order.isReviewOnline) {
@@ -81,7 +88,8 @@ class PriceDetails extends HookConsumerWidget {
               ref.read(bookingControllerProvider.notifier);
           final orderEntity =
               await bookingController.getOrderEntityById(order.id);
-          context.pushRoute(ReviewOnlineRoute(order: orderEntity ?? order));
+          context.pushRoute(ReviewOnlineRoute(
+              order: orderEntity ?? order, orderOld: orderOld));
         } else if (bookingStatus.canMakePayment) {
           context.pushRoute(PaymentScreenRoute(id: order.id));
         } else if (bookingStatus.canMakePaymentLast) {
@@ -217,7 +225,7 @@ class PriceDetails extends HookConsumerWidget {
           ),
 
           // Truck details
-          ...orderObj!.bookingDetails
+          ...orderData!.bookingDetails
               .where((detail) => detail.type == "TRUCK")
               .map((truckDetail) {
             // Tìm imageUrl cho truckDetail này
@@ -233,7 +241,7 @@ class PriceDetails extends HookConsumerWidget {
           }),
 
           // Price details
-          ...orderObj.bookingDetails.map<Widget>((detail) {
+          ...orderData.bookingDetails.map<Widget>((detail) {
             return buildPriceItem(
               detail.name ?? '',
               formatPrice(detail.price.toInt()),
@@ -242,9 +250,9 @@ class PriceDetails extends HookConsumerWidget {
 
           const SizedBox(height: 12),
           buildSummary(
-              'Tiền đặt cọc', formatPrice(currentprice?.deposit.toInt() ?? 0)),
+              'Tiền đặt cọc', formatPrice(orderData.deposit.toInt() ?? 0)),
           // Hiển thị các fee từ feeDetails
-          ...orderObj.feeDetails.map((fee) {
+          ...orderData.feeDetails.map((fee) {
             return buildSummary(
               fee.name,
               formatPrice(fee.amount.toInt()),
@@ -273,7 +281,7 @@ class PriceDetails extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: LabelText(
-                  content: formatPrice(currentprice?.total.toInt() ?? 0),
+                  content: formatPrice(orderData.total.toInt() ?? 0),
                   size: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,

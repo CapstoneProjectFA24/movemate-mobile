@@ -8,7 +8,7 @@ import 'package:movemate/features/order/presentation/widgets/details/priceItem.d
 class CustomerInfo extends StatelessWidget {
   final ValueNotifier<bool> isExpanded;
   final VoidCallback toggleDropdown;
-  final OrderEntity order;
+  final OrderEntity? order;
   const CustomerInfo({
     super.key,
     required this.order,
@@ -31,7 +31,7 @@ class CustomerInfo extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +59,7 @@ class CustomerInfo extends StatelessWidget {
           ),
 //hiển thị data cũ truyền order cũ vào
           if (isExpanded.value)
-            ...order.bookingDetails.map<Widget>((detail) {
+            ...order!.bookingDetails.map<Widget>((detail) {
               return buildPriceItem(
                 detail.name ?? '',
                 formatPrice(detail.price.toInt()),

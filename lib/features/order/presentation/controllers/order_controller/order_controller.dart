@@ -74,6 +74,7 @@ class OrderController extends _$OrderController {
 
     return orders;
   }
+
   Future<List<ServicesPackageEntity>> getAllService(
     PagingModel request,
     BuildContext context,
@@ -209,7 +210,6 @@ class OrderController extends _$OrderController {
     }
   }
 
-
   Future<OrderEntity?> getBookingNewById(
     int id,
     BuildContext context,
@@ -254,7 +254,6 @@ class OrderController extends _$OrderController {
     }
   }
 
-
   Future<OrderEntity?> getBookingOldById(
     int id,
     BuildContext context,
@@ -267,7 +266,7 @@ class OrderController extends _$OrderController {
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     final result = await AsyncValue.guard(() async {
-      final response = await truckTypeRepository.getBookingNewById(
+      final response = await truckTypeRepository.getBookingOldById(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         id: id,
       );
@@ -298,5 +297,4 @@ class OrderController extends _$OrderController {
       return null;
     }
   }
-
 }

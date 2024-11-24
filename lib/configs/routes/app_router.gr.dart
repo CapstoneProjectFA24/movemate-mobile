@@ -283,6 +283,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ReviewOnline(
           key: args.key,
           order: args.order,
+          orderOld: args.orderOld,
         ),
       );
     },
@@ -1276,12 +1277,14 @@ class ReviewOnlineRoute extends PageRouteInfo<ReviewOnlineRouteArgs> {
   ReviewOnlineRoute({
     Key? key,
     required OrderEntity order,
+    required OrderEntity? orderOld,
     List<PageRouteInfo>? children,
   }) : super(
           ReviewOnlineRoute.name,
           args: ReviewOnlineRouteArgs(
             key: key,
             order: order,
+            orderOld: orderOld,
           ),
           initialChildren: children,
         );
@@ -1296,15 +1299,18 @@ class ReviewOnlineRouteArgs {
   const ReviewOnlineRouteArgs({
     this.key,
     required this.order,
+    required this.orderOld,
   });
 
   final Key? key;
 
   final OrderEntity order;
 
+  final OrderEntity? orderOld;
+
   @override
   String toString() {
-    return 'ReviewOnlineRouteArgs{key: $key, order: $order}';
+    return 'ReviewOnlineRouteArgs{key: $key, order: $order, orderOld: $orderOld}';
   }
 }
 
