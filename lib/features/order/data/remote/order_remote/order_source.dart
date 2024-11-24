@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/request/service_query_request.dart';
+import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/truck_category_obj_response.dart';
@@ -25,6 +26,20 @@ abstract class OrderSource {
     @Header(APIConstants.authHeader) String accessToken,
     @Queries() OrderQueryRequest request,
   );
+
+  @GET('${APIConstants.bookings}/{id}')
+  Future<HttpResponse<BookingNewResponse>> getBookingNewById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
+  );
+  @GET('${APIConstants.bookings_old}/{id}')
+  Future<HttpResponse<BookingNewResponse>> getBookingOldById(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
+  );
+
   @GET(APIConstants.get_all_package_services)
   Future<HttpResponse<ServiceResponse>> getAllService(
     @Header(APIConstants.contentHeader) String contentType,
@@ -38,7 +53,7 @@ abstract class OrderSource {
     @Header(APIConstants.authHeader) String accessToken,
   );
   //get  truck by id
-   @GET('${APIConstants.get_list_truck}/{id}')
+  @GET('${APIConstants.get_list_truck}/{id}')
   Future<HttpResponse<TruckCategoryObjResponse>> getTruckById(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,

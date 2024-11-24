@@ -31,6 +31,7 @@ class APIConstants {
   // order
 
   static const bookings = '/bookings';
+  static const bookings_old = '/bookings/old-booking';
 //get list truck
   static const get_list_truck = '/services';
 //get list truck

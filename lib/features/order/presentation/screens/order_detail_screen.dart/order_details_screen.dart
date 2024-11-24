@@ -30,8 +30,8 @@ import 'package:movemate/services/realtime_service/booking_status_realtime/booki
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
-// Hooks
 
+// Hooks
 @RoutePage()
 class OrderDetailsScreen extends HookConsumerWidget {
   const OrderDetailsScreen({
@@ -52,8 +52,38 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
 
+    // Lấy order mới
+    final useFetchNewOrder = useFetchObject<OrderEntity>(
+      function: (context) => ref
+          .read(orderControllerProvider.notifier)
+          .getBookingNewById(order.id, context),
+      context: context,
+    );
+
+    // Lấy order cũ
+    final useFetcholdOrder = useFetchObject<OrderEntity>(
+      function: (context) => ref
+          .read(orderControllerProvider.notifier)
+          .getBookingOldById(order.id, context),
+      context: context,
+    );
+
+    final orderNew = useFetchNewOrder.data;
+    final orderOld = useFetcholdOrder.data;
+
+    final isOrderNewLoading = useFetchNewOrder.isFetchingData;
+    final isOrderOldLoading = useFetcholdOrder.isFetchingData;
+
+    // Chờ cho đến khi orderNew được load xong
+    if (isOrderNewLoading) {
+      return const LoadingOverlay(
+        isLoading: true,
+        child: Scaffold(),
+      );
+    }
+
     final statusAsync =
-        ref.watch(orderStatusStreamProvider(order.id.toString()));
+        ref.watch(orderStatusStreamProvider(orderNew!.id.toString()));
 
     final statusOrders = statusAsync.when(
       data: (status) => status,
@@ -61,9 +91,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
       error: (err, stack) => Text('Error: $err'),
     );
 
-    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+    final bookingAsync =
+        ref.watch(bookingStreamProvider(orderNew.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, orderNew.isReviewOnline);
 
     // TO DO for traking position
     final canCheckReviewerTracking = bookingStatus.isReviewerMoving;
@@ -73,7 +104,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final useFetchResult = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
           .read(servicePackageControllerProvider.notifier)
-          .getHouseTypeById(order.houseTypeId, context),
+          .getHouseTypeById(orderNew.houseTypeId, context),
       context: context,
     );
     final houseType = useFetchResult.data;
@@ -90,9 +121,9 @@ class OrderDetailsScreen extends HookConsumerWidget {
       }
     }
 
-    final listStaffResponsibility = getListStaffResponsibility(order);
+    final listStaffResponsibility = getListStaffResponsibility(orderNew);
 
-    final getServiceId = order.bookingDetails
+    final getServiceId = orderNew.bookingDetails
         .firstWhere(
           (e) => e.type == 'TRUCK',
           orElse: () => BookingDetailResponseEntity(
@@ -124,18 +155,17 @@ class OrderDetailsScreen extends HookConsumerWidget {
         function: (context) async {
           return ref
               .read(bookingControllerProvider.notifier)
-              .getOrderEntityById(order.id);
+              .getOrderEntityById(orderNew.id);
         },
         context: context);
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
 
     useEffect(() {
-      OrderStreamManager().updateJob(order);
+      OrderStreamManager().updateJob(orderNew);
       return null;
     }, [bookingAsync.value]);
 
-    // print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
       isLoading:
           state.isLoading || stateService.isLoading || stateProfile.isLoading,
@@ -146,7 +176,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
             Navigator.pop(context);
           },
           backButtonColor: AssetsConstants.whiteColor,
-          title: "Thông tin đơn hàng #${order.id ?? ""}",
+          title: "Thông tin đơn hàng #${orderNew.id ?? ""}",
           iconSecond: Icons.home_outlined,
           onCallBackSecond: () {
             final tabsRouter = context.router.root
@@ -170,10 +200,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BookingStatus(order: order),
+                BookingStatus(order: orderNew),
                 const SizedBox(height: 20),
                 TimelineSteps(
-                  order: order,
+                  order: orderNew,
                   expandedIndex: expandedIndex,
                 ),
                 const SizedBox(height: 14),
@@ -188,7 +218,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                               listStaffResponsibility[index];
                           return ProfileStaffInfo(
                             staffAssignment: staffAssignment,
-                            order: order,
+                            order: orderNew,
                           );
                         }),
                     const SizedBox(height: 20),
@@ -200,42 +230,14 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       fontWeight: FontWeight.w500,
                     ),
                     ServiceInfoCard(
-                      order: order,
+                      order: orderNew,
                       houseType: houseType,
                     )
                   ],
                 ),
-                // const SizedBox(height: 20),
-                // (statusOrders == BookingStatusType.assigned &&
-                //             order.isReviewOnline == false) ||
-                //         (statusOrders == BookingStatusType.reviewed &&
-                //             order.isReviewOnline == true)
-                //     ? Column(
-                //         children: [
-                //           FadeInLeft(
-                //             child: const Padding(
-                //               padding: EdgeInsets.only(left: 16.0),
-                //               child: Text(
-                //                 "Map",
-                //                 style: TextStyle(
-                //                     fontSize: 20, fontWeight: FontWeight.bold),
-                //               ),
-                //             ),
-                //           ),
-                //           const MapWidget(),
-                //         ],
-                //       )
-                //     : Container(),
                 const SizedBox(height: 10),
-                // (statusOrders == BookingStatusType.reviewed)
-                //     ? CustomerInfo(
-                //         isExpanded: isExpanded,
-                //         toggleDropdown: toggleDropdown,
-                //       )
-                //     : Container(),
-                // const SizedBox(height: 20),
                 PriceDetails(
-                  order: order,
+                  order: orderNew,
                   serviceData: serviceData,
                   statusAsync: statusAsync,
                 ),

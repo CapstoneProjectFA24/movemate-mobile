@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
+import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/domain/entites/truck_categories_entity.dart';
 
 import 'package:movemate/models/request/paging_model.dart';
@@ -202,6 +203,96 @@ class OrderController extends _$OrderController {
     }
 
     if (result is AsyncData<TruckCategoriesEntity>) {
+      return result.value;
+    } else {
+      return null;
+    }
+  }
+
+
+  Future<OrderEntity?> getBookingNewById(
+    int id,
+    BuildContext context,
+  ) async {
+    OrderEntity? order;
+
+    // state = const AsyncLoading();
+    final truckTypeRepository = ref.read(orderRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    final result = await AsyncValue.guard(() async {
+      final response = await truckTypeRepository.getBookingNewById(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+      // print("controller ${response.payload}");
+      return response.payload;
+    });
+
+    state = result;
+
+    if (result.hasError) {
+      final statusCode = (result.error as DioException).onStatusDio();
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: result.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (statusCode != StatusCodeType.unauthentication.type) {}
+    }
+
+    if (result is AsyncData<OrderEntity>) {
+      return result.value;
+    } else {
+      return null;
+    }
+  }
+
+
+  Future<OrderEntity?> getBookingOldById(
+    int id,
+    BuildContext context,
+  ) async {
+    OrderEntity? order;
+
+    // state = const AsyncLoading();
+    final truckTypeRepository = ref.read(orderRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    final result = await AsyncValue.guard(() async {
+      final response = await truckTypeRepository.getBookingNewById(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+      // print("controller ${response.payload}");
+      return response.payload;
+    });
+
+    state = result;
+
+    if (result.hasError) {
+      final statusCode = (result.error as DioException).onStatusDio();
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: result.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (statusCode != StatusCodeType.unauthentication.type) {}
+    }
+
+    if (result is AsyncData<OrderEntity>) {
       return result.value;
     } else {
       return null;
