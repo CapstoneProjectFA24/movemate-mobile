@@ -50,18 +50,28 @@ class BookingRealtimeEntity {
 }
 
 class AssignmentsRealtimeEntity {
+  final int bookingId;
   final String status;
   final String staffType;
+  final bool isResponsible;
+  final int userId;
 
   AssignmentsRealtimeEntity({
     required this.status,
     required this.staffType,
+    required this.isResponsible,
+    required this.userId,
+    required this.bookingId,
   });
 
   factory AssignmentsRealtimeEntity.fromMap(Map<String, dynamic> data) {
     return AssignmentsRealtimeEntity(
-      status: data['Status'],
-      staffType: data['StaffType'],
+      bookingId: data['BookingId'] ?? 0, // Cung cấp giá trị mặc định
+      status: data['Status'] ?? '',
+      staffType: data['StaffType'] ?? '',
+      isResponsible:
+          data['IsResponsible'] ?? false, // Mặc định là false nếu null
+      userId: data['UserId'] ?? 0,
     );
   }
 
@@ -69,6 +79,9 @@ class AssignmentsRealtimeEntity {
     return {
       'Status': status,
       'StaffType': staffType,
+      'IsResponsible': isResponsible,
+      'UserId': userId,
+      'BookingId': bookingId,
     };
   }
 

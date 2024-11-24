@@ -82,11 +82,7 @@ class PriceDetails extends HookConsumerWidget {
 
     if (orderData == null) {
       return const Center(
-        child: LabelText(
-          content: 'Không có dữ liệu đơn hàng',
-          size: 16,
-          color: Colors.red,
-        ),
+        child: CircularProgressIndicator(),
       );
     }
 

@@ -25,6 +25,7 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/time
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
@@ -64,6 +65,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
+    final bookingAssignment = bookingAsync.value?.assignments.length;
 
     // TO DO for traking position
     final canCheckReviewerTracking = bookingStatus.isReviewerMoving;
@@ -78,11 +80,17 @@ class OrderDetailsScreen extends HookConsumerWidget {
     );
     final houseType = useFetchResult.data;
 
-    List<AssignmentResponseEntity> getListStaffResponsibility(
+    List<AssignmentsRealtimeEntity>? getListStaffResponsibility(
         OrderEntity order) {
       try {
         final staffResponsibility =
-            order.assignments.where((e) => e.isResponsible == true).toList();
+            // order.assignments.where((e) => e.isResponsible == true).toList();
+            ref
+                .watch(bookingStreamProvider(order.id.toString()))
+                .value
+                ?.assignments
+                .where((e) => e.isResponsible == true)
+                .toList();
         return staffResponsibility;
       } catch (e) {
         print('Error: $e');
@@ -91,6 +99,15 @@ class OrderDetailsScreen extends HookConsumerWidget {
     }
 
     final listStaffResponsibility = getListStaffResponsibility(order);
+
+    final currentListStaff = ref
+        .watch(bookingStreamProvider(order.id.toString()))
+        .value
+        ?.assignments
+        .where((e) => e.isResponsible == true)
+        .toList();
+
+    print("check current list $currentListStaff");
 
     final getServiceId = order.bookingDetails
         .firstWhere(
@@ -135,6 +152,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
       return null;
     }, [bookingAsync.value]);
 
+    if (listStaffResponsibility == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     // print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
       isLoading:

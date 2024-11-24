@@ -10,11 +10,12 @@ import 'package:movemate/features/profile/presentation/controllers/profile_drive
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 
 class ProfileStaffInfo extends HookConsumerWidget {
-  final AssignmentResponseEntity staffAssignment;
+  final AssignmentsRealtimeEntity staffAssignment;
   final OrderEntity order;
 
   const ProfileStaffInfo({
