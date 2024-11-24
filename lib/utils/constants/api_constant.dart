@@ -7,7 +7,7 @@ class APIConstants {
 
   // auth
   static const login = '/authentications/login';
-  static const register = '/authentications/register';
+  static const register = '/authentications/registeration';
   static const checkExists = '/authentications/check-exists';
   static const verifyToken = '/authentications/verify-token';
   static const reGenerateToken = '/authentications/re';

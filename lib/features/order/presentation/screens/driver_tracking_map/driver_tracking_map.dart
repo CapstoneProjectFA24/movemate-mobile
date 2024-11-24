@@ -113,28 +113,30 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
 
   void _buildRoute() async {
     if (_navigationController != null && _staffLocation != null) {
-      LatLng waypoint;
+      List<LatLng> waypoints = [];
 
       if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
-        waypoint = _getPickupPointLatLng();
+        LatLng pickupPoint = _getPickupPointLatLng();
+        waypoints = [pickupPoint, _staffLocation!];
       } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
-        waypoint = _getDeliveryPointLatLng();
+        LatLng deliveryPoint = _getDeliveryPointLatLng();
+        waypoints = [_staffLocation!, deliveryPoint];
       } else {
         return;
       }
 
-      if (_staffLocation != null) {
-        _navigationController?.buildRoute(
-          waypoints: [waypoint, _staffLocation!],
-          profile: DrivingProfile.cycling,
-        ).then((success) {
-          if (!success) {
-            print('Failed to build route');
-          }
-        }).catchError((error) {
-          print('Error building route: $error');
-        });
-      }
+      _navigationController
+          ?.buildRoute(
+        waypoints: waypoints,
+        profile: DrivingProfile.cycling,
+      )
+          .then((success) {
+        if (!success) {
+          print('Failed to build route');
+        }
+      }).catchError((error) {
+        print('Error building route: $error');
+      });
     }
   }
 

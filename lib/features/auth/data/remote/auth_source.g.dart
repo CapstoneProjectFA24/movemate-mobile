@@ -74,7 +74,7 @@ class _AuthSource implements AuthSource {
     )
             .compose(
               _dio.options,
-              '/authentications/register',
+              '/authentications/registeration',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -176,7 +176,7 @@ class _AuthSource implements AuthSource {
     )
             .compose(
               _dio.options,
-              '/authentications/register',
+              '/authentications/registeration',
               queryParameters: queryParameters,
               data: _data,
             )

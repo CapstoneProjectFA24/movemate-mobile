@@ -100,8 +100,8 @@ class OtpController extends _$OtpController {
         roleName: user.payload.roleName,
         roleId: user.payload.roleId,
         name: user.payload.name,
-        avatarUrl: user.payload.avatarUrl,
-        gender: user.payload.gender,
+        avatarUrl: user.payload.avatarUrl,   
+        gender: user.payload.gender,  
         phone: user.payload.phone,
         tokens: user.payload.tokens,
       );
