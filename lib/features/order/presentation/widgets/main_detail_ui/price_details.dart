@@ -35,18 +35,16 @@ class PriceDetails extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
-    OrderEntity? orderCurent;
+
     String formatPrice(int price) {
       final formatter = NumberFormat('#,###', 'vi_VN');
       return '${formatter.format(price)} đ';
     }
 
+    final stateBooking = ref.watch(bookingControllerProvider);
+    final stateOldBooking = ref.watch(orderControllerProvider);
     final currentprice =
         ref.watch(bookingStreamProvider(order.id.toString())).value;
-
-    print("updating current price ${currentprice?.totalReal.toString()}");
-
-    print("checking price ${bookingStatus.isCompleted}");
 
     final orderEntity = useFetchObject<OrderEntity>(
         function: (context) async {
@@ -76,7 +74,19 @@ class PriceDetails extends HookConsumerWidget {
     }, [bookingStatus.canReviewSuggestion]);
 
 // Kiểm tra điều kiện và gán giá trị cho biến orderData
+    // final orderData = bookingStatus.canReviewSuggestion ? orderObj : orderOld;
+
     final orderData = bookingStatus.canReviewSuggestion ? orderObj : orderOld;
+
+    if (orderData == null) {
+      return const Center(
+        child: LabelText(
+          content: 'Không có dữ liệu đơn hàng',
+          size: 16,
+          color: Colors.red,
+        ),
+      );
+    }
 
     void handleActionPress() async {
       if (order.isReviewOnline) {
@@ -164,326 +174,289 @@ class PriceDetails extends HookConsumerWidget {
       // bookingStatus.canConfirmCompletion;
     }
 
-    // Lấy danh sách inverseParentService từ serviceAll
-    // final List<SubServiceEntity> inverseParentServiceList =
-    //     serviceAll.expand((service) => service.inverseParentService).toList();
-
-    // Lấy danh sách serviceId từ bookingDetails
-    // final List<int> getServices = order.bookingDetails
-    //     .where((detail) => detail.type == "TRUCK")
-    //     .map((truckDetail) => truckDetail.serviceId)
-    //     .whereType<int>()
-    //     .toList();
-
-    // Hàm tìm imageUrl từ truckCategory dựa trên serviceId
-    // String? findImageUrl(int serviceId) {
-    //   final matchingService = inverseParentServiceList.firstWhere(
-    //     (subService) => subService.id == serviceId,
-    //     orElse: () => SubServiceEntity(
-    //       id: -1,
-    //       name: 'Unknown',
-    //       truckCategory: null,
-    //       isQuantity: false,
-    //       amount: 0,
-    //       description: '',
-    //       discountRate: 0,
-    //       imageUrl: '',
-    //       isActived: false,
-    //       quantityMax: 0,
-    //       tier: 0,
-    //       type: '',
-    //     ),
-    //   );
-
-    //   return matchingService.truckCategory?.imageUrl;
-    // }
-
-    // print("tìm ảnh  ${orderObj}");
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15), // Increased border radius
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 15,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(24), // Increased padding
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              LabelText(
-                content: 'Chi tiết đơn hàng',
-                size: 16, // Increased font size
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              // You can add more widgets here if needed
-            ],
-          ),
-
-          // Truck details
-          ...orderData!.bookingDetails
-              .where((detail) => detail.type == "TRUCK")
-              .map((truckDetail) {
-            // Tìm imageUrl cho truckDetail này
-            // String imageUrl = findImageUrl(truckDetail.serviceId) ??
-            //     'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg';
-
-            return buildItem(
-              imageUrl: serviceData?.imageUrl ??
-                  'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg',
-              title: truckDetail.name ?? 'Xe Tải',
-              description: truckDetail.description ?? 'Không có mô tả',
-            );
-          }),
-
-          // Price details
-          ...orderData.bookingDetails.map<Widget>((detail) {
-            return buildPriceItem(
-              detail.name ?? '',
-              formatPrice(detail.price.toInt()),
-            );
-          }),
-
-          const SizedBox(height: 12),
-          buildSummary(
-              'Tiền đặt cọc', formatPrice(orderData.deposit.toInt() ?? 0)),
-          // Hiển thị các fee từ feeDetails
-          ...orderData.feeDetails.map((fee) {
-            return buildSummary(
-              fee.name,
-              formatPrice(fee.amount.toInt()),
-            );
-          }),
-
-          const Divider(
-            color: Colors.grey,
-            thickness: 1.5,
-            height: 32,
-          ),
-
-          // Total amount
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: LabelText(
-                  content: 'Tổng giá',
-                  size: 16,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: LabelText(
-                  content: formatPrice(orderData.total.toInt() ?? 0),
-                  size: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(10),
+    return LoadingOverlay(
+      isLoading: stateBooking.isLoading && stateOldBooking.isLoading,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15), // Increased border radius
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 15,
+              offset: const Offset(0, 2),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        padding: const EdgeInsets.all(24), // Increased padding
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 LabelText(
-                  content: (order.note?.isEmpty ?? true) ? '' : 'Ghi chú',
-                  size: 14,
+                  content: 'Chi tiết đơn hàng',
+                  size: 16, // Increased font size
                   color: Colors.black,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 8),
-                LabelText(
-                  content: (order.note?.isEmpty ?? true) ? '' : order.note!,
-                  size: 15,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w400,
-                  maxLine: 3,
+                // You can add more widgets here if needed
+              ],
+            ),
+
+            // Truck details
+            ...orderData.bookingDetails
+                .where((detail) => detail.type == "TRUCK")
+                .map((truckDetail) {
+              return buildItem(
+                imageUrl: serviceData?.imageUrl ??
+                    'https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728489912/movemate/vs174go4uz7uw1g9js2e.jpg',
+                title: truckDetail.name ?? 'Xe Tải',
+                description: truckDetail.description ?? 'Không có mô tả',
+              );
+            }),
+
+            // Price details
+            ...orderData.bookingDetails.map<Widget>((detail) {
+              return buildPriceItem(
+                detail.name ?? '',
+                formatPrice(detail.price.toInt()),
+              );
+            }),
+
+            const SizedBox(height: 12),
+            buildSummary(
+                'Tiền đặt cọc', formatPrice(orderData.deposit.toInt() ?? 0)),
+            // Hiển thị các fee từ feeDetails
+            ...orderData.feeDetails.map((fee) {
+              return buildSummary(
+                fee.name,
+                formatPrice(fee.amount.toInt()),
+              );
+            }),
+
+            const Divider(
+              color: Colors.grey,
+              thickness: 1.5,
+              height: 32,
+            ),
+
+            // Total amount
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: LabelText(
+                    content: 'Tổng giá',
+                    size: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: LabelText(
+                    content: formatPrice(orderData.total.toInt() ?? 0),
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ],
             ),
-          ),
 
-          const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LabelText(
+                    content: (order.note?.isEmpty ?? true) ? '' : 'Ghi chú',
+                    size: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(height: 8),
+                  LabelText(
+                    content: (order.note?.isEmpty ?? true) ? '' : order.note!,
+                    size: 15,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w400,
+                    maxLine: 3,
+                  ),
+                ],
+              ),
+            ),
 
-          // Status button
-          if (bookingAsync.hasValue && isActionEnabled())
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: isActionEnabled() ? handleActionPress : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isActionEnabled()
-                      ? const Color(0xFFFF9900)
-                      : Colors.grey[300],
-                  elevation: isActionEnabled() ? 2 : 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+            const SizedBox(height: 24),
+
+            // Status button
+            if (bookingAsync.hasValue && isActionEnabled())
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  onPressed: isActionEnabled() ? handleActionPress : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isActionEnabled()
+                        ? const Color(0xFFFF9900)
+                        : Colors.grey[300],
+                    elevation: isActionEnabled() ? 2 : 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: LabelText(
+                    content: getActionButtonText(),
+                    size: 16,
+                    color: isActionEnabled() ? Colors.white : Colors.grey[600],
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+            const SizedBox(height: 16),
+
+            // Cancel button
+            if (bookingAsync.hasValue)
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  onPressed: isCancelEnabled()
+                      ? () {
+                          // Handle cancel action
+                          showDialog(
+                            context: context,
+                            // barrierColor: Colors.grey.shade100.withOpacity(0.5),
+                            builder: (BuildContext context) => AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: const LabelText(
+                                size: 16,
+                                content: 'Xác nhận hủy',
+                                fontWeight: FontWeight.w500,
+                              ),
+                              content: const LabelText(
+                                size: 14,
+                                content: 'Bạn có chắc chắn muốn hủy đơn hàng?',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const LabelText(
+                                    size: 14,
+                                    content: 'Không',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Perform cancel logic here
+                                    Navigator.pop(context);
+                                  },
+                                  child: const LabelText(
+                                    size: 14,
+                                    content: 'Có',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      : () {
+                          // Show dialog when cancel is not enabled
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              backgroundColor: Colors.grey.shade100,
+                              title: const Text('Không thể hủy'),
+                              content: const Text(
+                                  'Bạn không thể hủy đơn hàng ở trạng thái này.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const LabelText(
+                                    content: 'Đóng',
+                                    size: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isCancelEnabled() ? Colors.red : Colors.grey[300],
+                    elevation: isCancelEnabled() ? 2 : 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const LabelText(
+                    content: 'Hủy đơn hàng',
+                    size: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            else if (bookingAsync.isLoading)
+              const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
+                ),
+              )
+            else if (bookingAsync.hasError)
+              const Center(
                 child: LabelText(
-                  content: getActionButtonText(),
-                  size: 16,
-                  color: isActionEnabled() ? Colors.white : Colors.grey[600],
-                  fontWeight: FontWeight.bold,
+                  content: 'Đã có lỗi xảy ra',
+                  size: 14,
+                  color: Colors.red,
+                ),
+              )
+            else if (bookingAsync.isLoading)
+              const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
+                ),
+              )
+            else if (bookingAsync.hasError)
+              const Center(
+                child: LabelText(
+                  content: 'Đã có lỗi xảy ra',
+                  size: 14,
+                  color: Colors.red,
                 ),
               ),
-            ),
-          const SizedBox(height: 16),
 
-// Cancel button
-          if (bookingAsync.hasValue)
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: isCancelEnabled()
-                    ? () {
-                        // Handle cancel action
-                        showDialog(
-                          context: context,
-                          // barrierColor: Colors.grey.shade100.withOpacity(0.5),
-                          builder: (BuildContext context) => AlertDialog(
-                            backgroundColor: Colors.white,
-                            title: const LabelText(
-                              size: 16,
-                              content: 'Xác nhận hủy',
-                              fontWeight: FontWeight.w500,
-                            ),
-                            content: const LabelText(
-                              size: 14,
-                              content: 'Bạn có chắc chắn muốn hủy đơn hàng?',
-                              fontWeight: FontWeight.w400,
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const LabelText(
-                                  size: 14,
-                                  content: 'Không',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  // Perform cancel logic here
-                                  Navigator.pop(context);
-                                },
-                                child: const LabelText(
-                                  size: 14,
-                                  content: 'Có',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    : () {
-                        // Show dialog when cancel is not enabled
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            backgroundColor: Colors.grey.shade100,
-                            title: const Text('Không thể hủy'),
-                            content: const Text(
-                                'Bạn không thể hủy đơn hàng ở trạng thái này.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const LabelText(
-                                  content: 'Đóng',
-                                  size: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isCancelEnabled() ? Colors.red : Colors.grey[300],
-                  elevation: isCancelEnabled() ? 2 : 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const LabelText(
-                  content: 'Hủy đơn hàng',
-                  size: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            // Show progress indicators if needed
+            if (bookingStatus.isReviewerMoving ||
+                bookingStatus.isReviewerAssessing ||
+                bookingStatus.isSuggestionReady ||
+                bookingStatus.isMovingInProgress)
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: LinearProgressIndicator(
+                  backgroundColor: Colors.grey[200],
+                  valueColor:
+                      const AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
                 ),
               ),
-            )
-          else if (bookingAsync.isLoading)
-            const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
-              ),
-            )
-          else if (bookingAsync.hasError)
-            const Center(
-              child: LabelText(
-                content: 'Đã có lỗi xảy ra',
-                size: 14,
-                color: Colors.red,
-              ),
-            )
-          else if (bookingAsync.isLoading)
-            const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
-              ),
-            )
-          else if (bookingAsync.hasError)
-            const Center(
-              child: LabelText(
-                content: 'Đã có lỗi xảy ra',
-                size: 14,
-                color: Colors.red,
-              ),
-            ),
-
-          // Show progress indicators if needed
-          if (bookingStatus.isReviewerMoving ||
-              bookingStatus.isReviewerAssessing ||
-              bookingStatus.isSuggestionReady ||
-              bookingStatus.isMovingInProgress)
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: LinearProgressIndicator(
-                backgroundColor: Colors.grey[200],
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
