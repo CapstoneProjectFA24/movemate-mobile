@@ -315,10 +315,10 @@ class ReviewOnline extends HookConsumerWidget {
                               .description,
                           style: const TextStyle(fontSize: 15)),
                       const SizedBox(height: 8),
-                      Text(
-                          'Giá: ${formatPrice(order.bookingDetails.firstWhere((e) => e.type == 'TRUCK').price.toInt())}',
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
+                      // Text(
+                      //     'Giá: ${formatPrice(order.bookingDetails.firstWhere((e) => e.type == 'TRUCK').price.toInt())}',
+                      //     style: const TextStyle(
+                      //         fontSize: 15, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
