@@ -148,6 +148,12 @@ class PriceDetails extends HookConsumerWidget {
       return '';
     }
 
+    bool isCancelEnabled() {
+      return bookingStatus.canReviewSuggestion ||
+          bookingStatus.canAcceptSchedule ||
+          bookingStatus.canMakePayment;
+    }
+
     bool isActionEnabled() {
       return bookingStatus.canMakePayment ||
           bookingStatus.canReviewSuggestion ||
@@ -341,6 +347,112 @@ class PriceDetails extends HookConsumerWidget {
                   color: isActionEnabled() ? Colors.white : Colors.grey[600],
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+            ),
+          const SizedBox(height: 16),
+
+// Cancel button
+          if (bookingAsync.hasValue)
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton(
+                onPressed: isCancelEnabled()
+                    ? () {
+                        // Handle cancel action
+                        showDialog(
+                          context: context,
+                          // barrierColor: Colors.grey.shade100.withOpacity(0.5),
+                          builder: (BuildContext context) => AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: const LabelText(
+                              size: 16,
+                              content: 'Xác nhận hủy',
+                              fontWeight: FontWeight.w500,
+                            ),
+                            content: const LabelText(
+                              size: 14,
+                              content: 'Bạn có chắc chắn muốn hủy đơn hàng?',
+                              fontWeight: FontWeight.w400,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const LabelText(
+                                  size: 14,
+                                  content: 'Không',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Perform cancel logic here
+                                  Navigator.pop(context);
+                                },
+                                child: const LabelText(
+                                  size: 14,
+                                  content: 'Có',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    : () {
+                        // Show dialog when cancel is not enabled
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            backgroundColor: Colors.grey.shade100,
+                            title: const Text('Không thể hủy'),
+                            content: const Text(
+                                'Bạn không thể hủy đơn hàng ở trạng thái này.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const LabelText(
+                                  content: 'Đóng',
+                                  size: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      isCancelEnabled() ? Colors.red : Colors.grey[300],
+                  elevation: isCancelEnabled() ? 2 : 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const LabelText(
+                  content: 'Hủy đơn hàng',
+                  size: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          else if (bookingAsync.isLoading)
+            const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
+              ),
+            )
+          else if (bookingAsync.hasError)
+            const Center(
+              child: LabelText(
+                content: 'Đã có lỗi xảy ra',
+                size: 14,
+                color: Colors.red,
               ),
             )
           else if (bookingAsync.isLoading)
