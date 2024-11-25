@@ -92,7 +92,7 @@ class Header extends HookConsumerWidget {
                     child: Text(
                       'Chào mừng ${user?.name ?? "PI"}!',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -111,7 +111,7 @@ class Header extends HookConsumerWidget {
                             child: const Text(
                               'Vị trí hiện tại',
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 8,
                                 color: Colors.white,
                               ),
                             ),
@@ -122,7 +122,7 @@ class Header extends HookConsumerWidget {
                         child: Text(
                           currentAddress,
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
