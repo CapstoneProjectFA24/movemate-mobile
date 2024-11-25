@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/utils/commons/widgets/snack_bar.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/extensions/status_code_dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,6 +48,7 @@ class PaymentController extends _$PaymentController {
         request: request,
       );
       print("createPaymentBooking: ${res.payload}");
+
       await launchUrl(Uri.parse(res.payload),
           mode: LaunchMode.externalApplication);
     });
@@ -65,10 +68,10 @@ class PaymentController extends _$PaymentController {
           );
 
           // if refresh token expired
-          if (state.hasError) {
-            await ref.read(signInControllerProvider.notifier).signOut(context);
-            return;
-          }
+          // if (state.hasError) {
+          //   await ref.read(signInControllerProvider.notifier).signOut(context);
+          //   return;
+          // }
 
           if (statusCode != StatusCodeType.unauthentication.type) {
             return;
@@ -123,10 +126,10 @@ class PaymentController extends _$PaymentController {
           );
 
           // if refresh token expired
-          if (state.hasError) {
-            await ref.read(signInControllerProvider.notifier).signOut(context);
-            return;
-          }
+          // if (state.hasError) {
+          //   await ref.read(signInControllerProvider.notifier).signOut(context);
+          //   return;
+          // }
 
           if (statusCode != StatusCodeType.unauthentication.type) {
             return;
@@ -204,7 +207,6 @@ class PaymentController extends _$PaymentController {
     state = const AsyncLoading();
     final paymentRepository = ref.read(paymentRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-    final authRepository = ref.read(authRepositoryProvider);
 
     final request = PaymentRequest(
       bookingId: bookingId.toString(),
@@ -212,44 +214,37 @@ class PaymentController extends _$PaymentController {
     );
 
     state = await AsyncValue.guard(() async {
-      final res = await paymentRepository.createPaymentBooking(
+      await paymentRepository.createPaymentBooking(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
-      print("tuan createPaymentBookingByWallet: ${res.payload}");
     });
 
-    context.router.push(TransactionResultScreenByWalletRoute(
-      bookingId: bookingId,
-    ));
-    print("tuan createPaymentBookingByWallet 3:");
+    if (!state.hasError) {
+      await context.router.push(TransactionResultScreenByWalletRoute(
+        bookingId: bookingId,
+      ));
+    }
 
-    // print("createPaymentBookingByWallet 2:");
     if (state.hasError) {
-      state = await AsyncValue.guard(
-        () async {
-          final statusCode = (state.error as DioException).onStatusDio();
-          await handleAPIError(
-            statusCode: statusCode,
-            stateError: state.error!,
-            context: context,
-            onCallBackGenerateToken: () async => await reGenerateToken(
-              authRepository,
-              context,
-            ),
-          );
+      final error = state.error!;
+      if (error is DioException) {
+        final statusCode = error.response?.statusCode ?? error.onStatusDio();
 
-          // if refresh token expired
-          if (state.hasError) {
-            await ref.read(signInControllerProvider.notifier).signOut(context);
-            return;
-          }
-
-          if (statusCode != StatusCodeType.unauthentication.type) {
-            return;
-          }
-        },
-      );
+        handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+        );
+      } else {
+        showSnackBar(
+          context: context,
+          content: error.toString(),
+          icon: AssetsConstants.iconError,
+          backgroundColor: Colors.red,
+          textColor: AssetsConstants.whiteColor,
+        );
+      }
     }
   }
 
@@ -268,46 +263,37 @@ class PaymentController extends _$PaymentController {
       selectedMethod: selectedMethod,
     );
     state = await AsyncValue.guard(() async {
-      final res = await paymentRepository.createPaymentBooking(
+      await paymentRepository.createPaymentBooking(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         request: request,
       );
     });
 
-    context.router.push(LastTransactionResultScreenByWalletRoute(
-      bookingId: bookingId,
-    ));
+    if (!state.hasError) {
+      await context.router.push(LastTransactionResultScreenByWalletRoute(
+        bookingId: bookingId,
+      ));
+    }
 
     if (state.hasError) {
-      state = await AsyncValue.guard(
-        () async {
-          final statusCode = (state.error as DioException).onStatusDio();
-          await handleAPIError(
-            statusCode: statusCode,
-            stateError: state.error!,
-            context: context,
-            onCallBackGenerateToken: () async => await reGenerateToken(
-              authRepository,
-              context,
-            ),
-          );
+      final error = state.error!;
+      if (error is DioException) {
+        final statusCode = error.response?.statusCode ?? error.onStatusDio();
 
-          // if refresh token expired
-          if (state.hasError) {
-            await ref.read(signInControllerProvider.notifier).signOut(context);
-            return;
-          }
-
-          if (statusCode != StatusCodeType.unauthentication.type) {
-            return;
-          }
-
-          // await createPaymentBookingByWallet(
-          //     context: context,
-          //     selectedMethod: selectedMethod,
-          //     bookingId: bookingId);
-        },
-      );
+        handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+        );
+      } else {
+        showSnackBar(
+          context: context,
+          content: error.toString(),
+          icon: AssetsConstants.iconError,
+          backgroundColor: Colors.red,
+          textColor: AssetsConstants.whiteColor,
+        );
+      }
     }
   }
 }
