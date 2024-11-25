@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
@@ -27,11 +28,12 @@ class ServiceInfoCard extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userdata = ref.read(authProvider);
-
+    final currentBookingAt =
+        ref.watch(bookingStreamProvider(order.id.toString())).value;
     final formattedDate = DateFormat('dd-MM-yyyy')
-        .format(DateTime.parse(order.createdAt.toString()));
+        .format(DateTime.parse(currentBookingAt.toString()));
     final formattedTime =
-        DateFormat('hh:mm').format(DateTime.parse(order.createdAt.toString()));
+        DateFormat('hh:mm').format(DateTime.parse(currentBookingAt.toString()));
 
     return FadeInUp(
       child: Center(
@@ -121,7 +123,7 @@ Số điện thoại: ${userdata?.phone}
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const LabelText(
-                          content: 'Ngày tạo:',
+                          content: 'Ngày chuyển nhà:',
                           size: 10,
                           fontFamily: 'bold',
                           color: AssetsConstants.greyColor,

@@ -41,47 +41,52 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBquGjA3fx_RlGcDupTtNFwUctoFXj-zAY',
-    appId: '1:708811505333:web:ac5c28e6b14ef594f508fc',
-    messagingSenderId: '708811505333',
-    projectId: 'movemate-bb487',
-    authDomain: 'movemate-bb487.firebaseapp.com',
-    storageBucket: 'movemate-bb487.appspot.com',
+    apiKey: 'AIzaSyBmTzwsa9AYKit0984cHmSR4xGLkmuKA9U',
+    appId: '1:739539035350:web:1559840d705631a508d577',
+    messagingSenderId: '739539035350',
+    projectId: 'movemate-firebase',
+    authDomain: 'movemate-firebase.firebaseapp.com',
+    databaseURL: 'https://movemate-firebase-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'movemate-firebase.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyClEBLwLjSXE9N3e4eaa0VmqfAk0PxomMw',
-    appId: '1:739539035350:android:b47131be51a511d708d577',
+    appId: '1:739539035350:android:ac85fd0b6f2940ba08d577',
     messagingSenderId: '739539035350',
     projectId: 'movemate-firebase',
+    databaseURL: 'https://movemate-firebase-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'movemate-firebase.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDkY04sXx3lx5sNbKnkL48kQC8fkKJdpyk',
-    appId: '1:708811505333:ios:8322c52cbdbfbc1ff508fc',
-    messagingSenderId: '708811505333',
-    projectId: 'movemate-bb487',
-    storageBucket: 'movemate-bb487.appspot.com',
+    apiKey: 'AIzaSyDGsA_TFLZkjI4LbI494mgnN1JIyJ3vtNE',
+    appId: '1:739539035350:ios:74a22b1e3efde3ee08d577',
+    messagingSenderId: '739539035350',
+    projectId: 'movemate-firebase',
+    databaseURL: 'https://movemate-firebase-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'movemate-firebase.firebasestorage.app',
     iosBundleId: 'com.example.test',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDkY04sXx3lx5sNbKnkL48kQC8fkKJdpyk',
-    appId: '1:708811505333:ios:8322c52cbdbfbc1ff508fc',
-    messagingSenderId: '708811505333',
-    projectId: 'movemate-bb487',
-    storageBucket: 'movemate-bb487.appspot.com',
+    apiKey: 'AIzaSyDGsA_TFLZkjI4LbI494mgnN1JIyJ3vtNE',
+    appId: '1:739539035350:ios:74a22b1e3efde3ee08d577',
+    messagingSenderId: '739539035350',
+    projectId: 'movemate-firebase',
+    databaseURL: 'https://movemate-firebase-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'movemate-firebase.firebasestorage.app',
     iosBundleId: 'com.example.test',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBquGjA3fx_RlGcDupTtNFwUctoFXj-zAY',
-    appId: '1:708811505333:web:ac5c28e6b14ef594f508fc',
-    messagingSenderId: '708811505333',
-    projectId: 'movemate-bb487',
-    authDomain: 'movemate-bb487.firebaseapp.com',
-    storageBucket: 'movemate-bb487.appspot.com',
+    apiKey: 'AIzaSyBmTzwsa9AYKit0984cHmSR4xGLkmuKA9U',
+    appId: '1:739539035350:web:edc268bbe739390908d577',
+    messagingSenderId: '739539035350',
+    projectId: 'movemate-firebase',
+    authDomain: 'movemate-firebase.firebaseapp.com',
+    databaseURL: 'https://movemate-firebase-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'movemate-firebase.firebasestorage.app',
   );
 
 }
