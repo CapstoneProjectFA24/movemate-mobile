@@ -8,6 +8,7 @@ import 'package:movemate/features/booking/data/models/response/service_truck_res
 import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/models/response/success_model.dart';
@@ -122,6 +123,13 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Body() ReviewerStatusRequest request,
+    @Path('id') int id,
+  );
+  @PUT('${APIConstants.cancel_booking}/{id}')
+  Future<HttpResponse<SuccessModel>> cancelBooking(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Body() CancelBooking request,
     @Path('id') int id,
   );
 }

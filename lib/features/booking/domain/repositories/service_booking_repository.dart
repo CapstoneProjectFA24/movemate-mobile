@@ -11,6 +11,7 @@ import 'package:movemate/features/booking/data/models/response/services_response
 import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
@@ -33,8 +34,8 @@ abstract class ServiceBookingRepository {
     required int id,
   });
 
-  // Truck Services 
-    Future<ServiceTruckResponse> getServicesTruck({
+  // Truck Services
+  Future<ServiceTruckResponse> getServicesTruck({
     required String accessToken,
     required PagingModel request,
   });
@@ -44,12 +45,12 @@ abstract class ServiceBookingRepository {
     required PagingModel request,
     required String accessToken,
   });
-  // Services Methods by id 
+  // Services Methods by id
   Future<ServiceObjResponse> getServicesById({
     required String accessToken,
     required int id,
   });
-  // Services Methods by id 
+  // Services Methods by id
   Future<TruckCateResponse> getTruckDetailById({
     required String accessToken,
     required int id,
@@ -87,9 +88,14 @@ abstract class ServiceBookingRepository {
     required String accessToken,
   });
 
-    Future<SuccessModel> confirmReviewBooking({
+  Future<SuccessModel> confirmReviewBooking({
     required String accessToken,
     required ReviewerStatusRequest request,
+    required int id,
+  });
+  Future<SuccessModel> cancelBooking({
+    required String accessToken,
+    required CancelBooking request,
     required int id,
   });
 }

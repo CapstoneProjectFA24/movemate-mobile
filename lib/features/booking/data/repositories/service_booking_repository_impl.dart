@@ -12,6 +12,7 @@ import 'package:movemate/features/booking/data/models/response/services_response
 import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
+import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
@@ -197,6 +198,7 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
       ),
     );
   }
+
   @override
   Future<BookingResponse> postValuationPriceOneOfSystemService({
     required ValuationPriceOneOfSystemServiceRequest request,
@@ -220,6 +222,23 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
     // print('vinh log repo : ${request.toJson()} + $id');
     return getDataOf(
       request: () => _serviceBookingSource.confirmReviewBooking(
+        APIConstants.contentType,
+        accessToken,
+        request,
+        id,
+      ),
+    );
+  }
+
+  @override
+  Future<SuccessModel> cancelBooking({
+    required String accessToken,
+    required CancelBooking request,
+    required int id,
+  }) async {
+    // print('vinh log repo : ${request.toJson()} + $id');
+    return getDataOf(
+      request: () => _serviceBookingSource.cancelBooking(
         APIConstants.contentType,
         accessToken,
         request,
