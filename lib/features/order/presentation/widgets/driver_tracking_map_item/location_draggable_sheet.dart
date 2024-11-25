@@ -48,20 +48,23 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
         minChildSize: 0.25,
         maxChildSize: 0.8,
         builder: (context, scrollController) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            child: Column(
-              children: [
-                _buildDeliveryStatusCard(job: job, status: bookingStatus),
-                _buildTrackingInfoCard(
-                    job: job, status: bookingStatus, context: context),
-                _buildDetailsSheet(
-                    context: context,
-                    job: job,
-                    houseTypeById: houseTypeById,
-                    profile: userdata,
-                    status: bookingStatus),
-              ],
+          return Container(
+            color: Colors.transparent, // Màu nền tránh lỗi render
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                children: [
+                  // _buildDeliveryStatusCard(job: job, status: bookingStatus),
+                  _buildTrackingInfoCard(
+                      job: job, status: bookingStatus, context: context),
+                  _buildDetailsSheet(
+                      context: context,
+                      job: job,
+                      houseTypeById: houseTypeById,
+                      profile: userdata,
+                      status: bookingStatus),
+                ],
+              ),
             ),
           );
         },
