@@ -201,6 +201,46 @@ class BookingController extends _$BookingController {
     }
   }
 
+  Future<void> changeBookingAt({
+    required ReviewerStatusRequest request,
+    required OrderEntity order,
+    required BuildContext context,
+  }) async {
+    state = const AsyncLoading();
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(serviceBookingRepositoryProvider).confirmReviewBooking(
+            accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+            request: request,
+            id: order.id,
+          );
+
+      ref
+          .read(refreshOrderList.notifier)
+          .update((state) => !ref.read(refreshOrderList));
+    });
+    context.router.replace(OrderDetailsScreenRoute(order: order));
+    if (state.hasError) {
+      final statusCode = (state.error as DioException).onStatusDio();
+
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: state.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (state.hasError) {
+        await ref.read(signInControllerProvider.notifier).signOut(context);
+      }
+    }
+  }
+
   Future<void> confirmReviewedToComingBooking({
     required ReviewerStatusRequest request,
     required OrderEntity order,

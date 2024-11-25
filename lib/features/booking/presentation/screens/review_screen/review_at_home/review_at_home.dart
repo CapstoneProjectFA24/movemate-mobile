@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 //widgets
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/chat_services/models/chat_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
@@ -88,48 +90,152 @@ class Buttons extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // ActionButton(
-        //   text: 'Thay đổi lịch hẹn',
-        //   color: Colors.white,
-        //   borderColor: const Color(0xFFFF6600),
-        //   textColor: const Color(0xFFFF6600),
-        //   onPressed: () {
-        //     // Handle event when 'Thay đổi lịch hẹn' button is pressed
-        //   },
-        // ),
-        const SizedBox(height: 8),
-        ActionButton(
-          text: 'Xác nhận',
-          color: const Color(0xFFFF6600),
-          textColor: Colors.white,
-          onPressed: () async {
-            final reviewerStatusRequest = ReviewerStatusRequest(
-              status: BookingStatusType.depositing,
-            );
-            await ref
-                .read(bookingControllerProvider.notifier)
-                .confirmReviewBooking(
-                  request: reviewerStatusRequest,
-                  order: order,
-                  context: context,
-                );
-          },
-        ),
-        const SizedBox(height: 8),
-        ActionButton(
-          text: 'Hủy',
-          color: Colors.white,
-          borderColor: const Color(0xFF666666),
-          textColor: const Color(0xFF666666),
-          onPressed: () {
-            // Handle event when 'Hủy' button is pressed
-            context.router.pop();
-          },
-        ),
-      ],
+    final state = ref.watch(profileControllerProvider);
+    final reviewrInAssigmentId =
+        order.assignments.firstWhere((e) => e.staffType == "REVIEWER").userId;
+
+    final useFetchUserInfo = useFetchObject<ProfileEntity>(
+      function: (context) async {
+        return ref
+            .read(profileControllerProvider.notifier)
+            .getProfileInforById(reviewrInAssigmentId, context);
+      },
+      context: context,
+    );
+    final profileStaffReviewer = useFetchUserInfo.data;
+    return LoadingOverlay(
+      isLoading: state.isLoading,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ActionButton(
+            text: 'Thay đổi lịch hẹn',
+            color: Colors.white,
+            borderColor: const Color(0xFFFF6600),
+            textColor: const Color(0xFFFF6600),
+            onPressed: () async {
+              // Show confirmation modal
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    title: const Text(
+                      'Thay đổi lịch hẹn',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    backgroundColor: Colors.white,
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                            'Bạn có chắc chắn muốn thay đổi lịch hẹn không.'),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            const Icon(Icons.chat_bubble_outline,
+                                color: Color(0xFFFF6600)),
+                            const SizedBox(width: 8),
+                            GestureDetector(
+                              onTap: () {
+                                // Handle chat with staff action
+                                Navigator.of(context).pop();
+                                // Redirect to chat screen or open chat
+                                // openChatWithStaff(context);
+                                context.router.push(ChatWithStaffScreenRoute(
+                                    staffId:
+                                        profileStaffReviewer?.id.toString() ??
+                                            "2",
+                                    staffName:
+                                        profileStaffReviewer?.name ?? "vinh",
+                                    staffRole: StaffRole.reviewer,
+                                    staffImageAvatar:
+                                        profileStaffReviewer?.avatarUrl ?? "",
+                                    bookingId: order.id.toString()));
+                              },
+                              child: const Text(
+                                'Chat với nhân viên',
+                                style: TextStyle(
+                                  color: Color(0xFFFF6600),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close modal
+                        },
+                        child: const Text(
+                          'Hủy',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          // Proceed with updating the booking
+                          final reviewerStatusRequest = ReviewerStatusRequest(
+                            status: BookingStatusType.assigned,
+                          );
+                          await ref
+                              .read(bookingControllerProvider.notifier)
+                              .changeBookingAt(
+                                request: reviewerStatusRequest,
+                                order: order,
+                                context: context,
+                              );
+                          Navigator.of(context).pop(); // Close modal
+                        },
+                        child: const Text(
+                          'Xác nhận',
+                          style: TextStyle(color: Color(0xFFFF6600)),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          ActionButton(
+            text: 'Xác nhận',
+            color: const Color(0xFFFF6600),
+            textColor: Colors.white,
+            onPressed: () async {
+              final reviewerStatusRequest = ReviewerStatusRequest(
+                status: BookingStatusType.depositing,
+              );
+              await ref
+                  .read(bookingControllerProvider.notifier)
+                  .confirmReviewBooking(
+                    request: reviewerStatusRequest,
+                    order: order,
+                    context: context,
+                  );
+            },
+          ),
+          const SizedBox(height: 8),
+          ActionButton(
+            text: 'Hủy',
+            color: Colors.white,
+            borderColor: const Color(0xFF666666),
+            textColor: const Color(0xFF666666),
+            onPressed: () {
+              // Handle event when 'Hủy' button is pressed
+              context.router.pop();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -281,6 +387,12 @@ class ContactInfo extends HookConsumerWidget {
                 size: 18, color: Color(0xFF666666)),
             onPressed: () {
               // Xử lý sự kiện khi nhấn vào biểu tượng tin nhắn
+              context.router.push(ChatWithStaffScreenRoute(
+                  staffId: profileStaffReviewer?.id.toString() ?? "2",
+                  staffName: profileStaffReviewer?.name ?? "vinh",
+                  staffRole: StaffRole.reviewer,
+                  staffImageAvatar: profileStaffReviewer?.avatarUrl ?? "",
+                  bookingId: order.id.toString()));
             },
           ),
         ],
