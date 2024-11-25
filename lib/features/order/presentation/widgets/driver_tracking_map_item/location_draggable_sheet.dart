@@ -72,18 +72,18 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     final bookingAssignment =
         bookingAsync.value?.assignments.firstWhere((e) => e.userId == stadffId);
 
-    // final bookingTruck =
-    //     bookingAsync.value?.bookingDetails.firstWhere((e) => e.type == 'TRUCK');
+    final bookingTruck =
+        bookingAsync.value?.bookingDetails.firstWhere((e) => e.type == 'TRUCK');
 
     if (bookingAssignment == null ||
-        // bookingTruck == null ||
+        bookingTruck == null ||
         profileUserAssign == null) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
     print("check current bookingAssignment $bookingAssignment");
-    // print("check current bookingTruck $bookingTruck");
+    print("check current bookingTruck $bookingTruck");
     return LoadingOverlay(
       isLoading: state.isLoading || stateProfile.isLoading,
       child: DraggableScrollableSheet(
@@ -103,8 +103,8 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                     status: bookingStatus,
                     context: context,
                     profileUserAssign: profileUserAssign,
-                    Assignments: bookingAssignment,
-                    // bookingTruck: bookingTruck,
+                    assignments: bookingAssignment,
+                    bookingTruck: bookingTruck,
                   ),
                   _buildDetailsSheet(
                       context: context,
@@ -126,33 +126,33 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     required BookingStatusResult status,
     required BuildContext context,
     required StaffProfileEntity? profileUserAssign,
-    required AssignmentsRealtimeEntity? Assignments,
-    // required BookingDetailRealTimeEntity? bookingTruck,
+    required AssignmentsRealtimeEntity? assignments,
+    required BookingDetailRealTimeEntity? bookingTruck,
   }) {
-    // print("check status ${bookingStatus.statusMessage}");
     //PORTER
     //REVIEWER
     String getDriverRole() {
       try {
         // Xác định vai trò và loại nhân viên dựa trên `Assignments`
-        final checkRole =
-            Assignments?.isResponsible == true ? "Trưởng" : "Nhân viên";
+        final isResponsible = assignments?.isResponsible == true;
+        final checkRole = isResponsible ? 'Trưởng' : 'Nhân viên';
 
+        final staffType = assignments?.staffType;
         final checkType = () {
-          if (Assignments?.staffType == 'DRIVER') {
-            return "Tài xế ${checkRole == 'Trưởng' ? 'Trưởng ' : ''}";
-          } else if (Assignments?.staffType == 'PORTER') {
-            return "Bốc vác ${checkRole == 'Trưởng' ? 'Trưởng ' : ''}";
-          } else if (Assignments?.staffType == 'REVIEWER') {
-            return "Người đánh giá";
+          if (staffType == 'DRIVER') {
+            return 'Tài xế ${isResponsible ? 'Trưởng ' : ''}';
+          } else if (staffType == 'PORTER') {
+            return 'Bốc vác ${isResponsible ? 'Trưởng ' : ''}';
+          } else if (staffType == 'REVIEWER') {
+            return 'Người đánh giá';
           } else {
-            return "Nhân viên"; // Giá trị mặc định nếu không xác định được loại nhân viên
+            return 'Nhân viên'; // Giá trị mặc định nếu không xác định được loại nhân viên
           }
         }();
 
         return checkType;
       } catch (e) {
-        return "Bốc vác"; // Giá trị mặc định nếu không tìm thấy Driver
+        return 'Bốc vác'; // Giá trị mặc định nếu không tìm thấy Driver
       }
     }
 
@@ -181,62 +181,74 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
-              child: const Icon(Icons.local_shipping),
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(8), // Giữ bo góc cho hình ảnh
+                child: Image.network(
+                  profileUserAssign?.avatarUrl ??
+                      'https://e7.pngegg.com/pngimages/705/224/png-clipart-user-computer-icons-avatar-miscellaneous-heroes.png',
+                  fit: BoxFit
+                      .cover, // Đảm bảo hình ảnh được cắt để vừa với khung
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.error), // Hiển thị icon lỗi nếu tải ảnh thất bại
+                ),
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        getDriverRole(),
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "${profileUserAssign?.name}",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      Text(
-                        "${profileUserAssign?.phone}",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          getDriverRole(),
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${profileUserAssign?.name}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        Text(
+                          '${profileUserAssign?.phone}',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        // '${bookingTruck?.name}',
-                        '',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                    ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${bookingTruck?.name}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            // const Spacer(),
-            // TextButton(
-            //   onPressed: () {},
-            //   child: const Text('Sao chép'),
-            // ),
           ],
         ),
       ),

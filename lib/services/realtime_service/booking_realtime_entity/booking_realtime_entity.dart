@@ -122,31 +122,31 @@ class BookingDetailRealTimeEntity {
 
   factory BookingDetailRealTimeEntity.fromMap(Map<String, dynamic> data) {
     return BookingDetailRealTimeEntity(
-      id: data['id'] ?? 0,
-      serviceId: data['serviceId'] ?? 0,
-      bookingId: data['bookingId'] ?? 0,
-      quantity: data['quantity'] ?? 0,
-      price: (data['price'] as num?)?.toDouble() ?? 0.0,
-      status: data['status'] ?? '',
-      type: data['type'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'],
-      imageUrl: data['imageUrl'],
+      id: data['Id'] ?? 0,
+      serviceId: data['ServiceId'] ?? 0,
+      bookingId: data['BookingId'] ?? 0,
+      quantity: data['Quantity'] ?? 0,
+      price: (data['Price'] as num?)?.toDouble() ?? 0.0,
+      status: data['Status'] ?? '',
+      type: data['Type'] ?? '',
+      name: data['Name'] ?? '',
+      description: data['Description'] ?? '',
+      imageUrl: data['ImageUrl'] ?? '',
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'serviceId': serviceId,
-      'bookingId': bookingId,
-      'quantity': quantity,
-      'price': price,
-      'status': status,
-      'type': type,
-      'name': name,
-      'description': description,
-      'imageUrl': imageUrl,
+      'Id': id,
+      'ServiceId': serviceId,
+      'BookingId': bookingId,
+      'Quantity': quantity,
+      'Price': price,
+      'Status': status,
+      'Type': type,
+      'Name': name,
+      'Description': description,
+      'ImageUrl': imageUrl,
     };
   }
 
