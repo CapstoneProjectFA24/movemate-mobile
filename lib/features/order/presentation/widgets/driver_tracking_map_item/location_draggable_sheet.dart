@@ -32,20 +32,20 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(job.id.toString()));
     // final bookingStatus =
     //     useBookingStatus(bookingAsync.value, job.isReviewOnline);
-    final state = ref.watch(servicePackageControllerProvider);
-    final stateProfile = ref.watch(profileControllerProvider);
+    // final state = ref.watch(servicePackageControllerProvider);
+    // final stateProfile = ref.watch(profileControllerProvider);
 
-    final bookingControllerHouse =
-        ref.read(servicePackageControllerProvider.notifier);
+    // final bookingControllerHouse =
+    //     ref.read(servicePackageControllerProvider.notifier);
 
     // Sử dụng useFetchObject để gọi getHouseDetails
-    final useFetchResult = useFetchObject<HouseTypeEntity>(
-      function: (context) => ref
-          .read(servicePackageControllerProvider.notifier)
-          .getHouseTypeById(job.houseTypeId, context),
-      context: context,
-    );
-    final houseTypeById = useFetchResult.data;
+    // final useFetchResult = useFetchObject<HouseTypeEntity>(
+    //   function: (context) => ref
+    //       .read(servicePackageControllerProvider.notifier)
+    //       .getHouseTypeById(job.houseTypeId, context),
+    //   context: context,
+    // );
+    // final houseTypeById = useFetchResult.data;
     final userdata = ref.read(authProvider);
 
     final useFetchResultProfileAssign = useFetchObject<StaffProfileEntity>(
@@ -72,41 +72,38 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
       );
     }
 
-    return LoadingOverlay(
-      isLoading: state.isLoading || stateProfile.isLoading,
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        minChildSize: 0.25,
-        maxChildSize: 0.8,
-        builder: (context, scrollController) {
-          return Container(
-            color: Colors.transparent, // Màu nền tránh lỗi render
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: [
-                  // _buildDeliveryStatusCard(job: job, status: bookingStatus),
-                  _buildTrackingInfoCard(
-                    job: job,
-                    // status: bookingStatus,
-                    context: context,
-                    profileUserAssign: profileUserAssign,
-                    assignments: bookingAssignment,
-                    bookingTruck: bookingTruck,
-                  ),
-                  _buildDetailsSheet(
-                    context: context,
-                    job: job,
-                    houseTypeById: houseTypeById,
-                    profile: userdata,
-                    // status: bookingStatus
-                  ),
-                ],
-              ),
+    return DraggableScrollableSheet(
+      initialChildSize: 0.4,
+      minChildSize: 0.25,
+      maxChildSize: 0.8,
+      builder: (context, scrollController) {
+        return Container(
+          color: Colors.transparent, // Màu nền tránh lỗi render
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              children: [
+                // _buildDeliveryStatusCard(job: job, status: bookingStatus),
+                _buildTrackingInfoCard(
+                  job: job,
+                  // status: bookingStatus,
+                  context: context,
+                  profileUserAssign: profileUserAssign,
+                  assignments: bookingAssignment,
+                  bookingTruck: bookingTruck,
+                ),
+                _buildDetailsSheet(
+                  context: context,
+                  job: job,
+                  // houseTypeById: houseTypeById,
+                  profile: userdata,
+                  // status: bookingStatus
+                ),
+              ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -228,6 +225,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                       children: [
                         Text(
                           bookingTruck?.name ?? '',
+                          // '',
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -247,7 +245,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
   Widget _buildDetailsSheet({
     required BuildContext context,
     required OrderEntity job,
-    required HouseTypeEntity? houseTypeById,
+    // required HouseTypeEntity? houseTypeById,
     required UserModel? profile,
     // required BookingStatusResult status,
   }) {
