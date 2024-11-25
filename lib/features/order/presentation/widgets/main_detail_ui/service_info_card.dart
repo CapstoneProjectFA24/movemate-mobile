@@ -31,9 +31,9 @@ class ServiceInfoCard extends HookConsumerWidget {
     final currentBookingAt =
         ref.watch(bookingStreamProvider(order.id.toString())).value;
     final formattedDate = DateFormat('dd-MM-yyyy')
-        .format(DateTime.parse(currentBookingAt.toString()));
+        .format(DateTime.parse(order.bookingAt.toString()));
     final formattedTime =
-        DateFormat('hh:mm').format(DateTime.parse(currentBookingAt.toString()));
+        DateFormat('hh:mm').format(DateTime.parse(order.bookingAt.toString()));
 
     return FadeInUp(
       child: Center(
