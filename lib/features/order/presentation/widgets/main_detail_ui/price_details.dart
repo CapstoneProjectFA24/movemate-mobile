@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -16,6 +17,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/presentation/widgets/details/item.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PriceDetails extends HookConsumerWidget {
   final OrderEntity order;
@@ -159,6 +161,10 @@ class PriceDetails extends HookConsumerWidget {
     bool isCancelEnabled() {
       return bookingStatus.canReviewSuggestion ||
           bookingStatus.canAcceptSchedule ||
+          bookingStatus.isWaitingStaffSchedule ||
+          bookingStatus.isProcessingRequest ||
+          bookingStatus.isOnlineReviewing ||
+          bookingStatus.isOnlineSuggestionReady ||
           bookingStatus.canMakePayment;
     }
 
@@ -322,7 +328,9 @@ class PriceDetails extends HookConsumerWidget {
             const SizedBox(height: 16),
 
             // Cancel button
-            if (bookingAsync.hasValue)
+            if (bookingAsync.hasValue &&
+                !bookingStatus.isCompleted &&
+                !bookingStatus.isCancelled)
               SizedBox(
                 width: double.infinity,
                 height: 54,
@@ -333,42 +341,203 @@ class PriceDetails extends HookConsumerWidget {
                           showDialog(
                             context: context,
                             // barrierColor: Colors.grey.shade100.withOpacity(0.5),
-                            builder: (BuildContext context) => AlertDialog(
-                              backgroundColor: Colors.white,
-                              title: const LabelText(
-                                size: 16,
-                                content: 'Xác nhận hủy',
-                                fontWeight: FontWeight.w500,
-                              ),
-                              content: const LabelText(
-                                size: 14,
-                                content: 'Bạn có chắc chắn muốn hủy đơn hàng?',
-                                fontWeight: FontWeight.w400,
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const LabelText(
-                                    size: 14,
-                                    content: 'Không',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    // Perform cancel logic here
-                                    Navigator.pop(context);
-                                  },
-                                  child: const LabelText(
-                                    size: 14,
-                                    content: 'Có',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
+                            builder: (BuildContext context) {
+                              String? selectedReason;
+
+                              print('Selected Reason: $selectedReason');
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    title: const LabelText(
+                                      size: 16,
+                                      content:
+                                          'Vui lòng chọn lý do hủy đơn hàng',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const LabelText(
+                                          size: 12,
+                                          color: Colors.grey,
+                                          content:
+                                              'Lưu ý: Thao tác này sẽ hủy tất cả dịch vụ có trong đơn hàng và không thể hoàn tác.',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Column(
+                                          children: [
+                                            ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                              title: const LabelText(
+                                                size: 12,
+                                                content:
+                                                    'Muốn thay đổi dịch vụ trong đơn hàng',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              leading: Radio<String>(
+                                                value:
+                                                    'Muốn thay đổi dịch vụ trong đơn hàng',
+                                                groupValue: selectedReason,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedReason = value;
+                                                  });
+                                                },
+                                                activeColor: Colors
+                                                    .orange, // Change color when selected
+                                              ),
+                                            ),
+                                            ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                              title: const LabelText(
+                                                size: 12,
+                                                content:
+                                                    'Thủ tục thanh toán quá rắc rối',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              leading: Radio<String>(
+                                                value:
+                                                    'Thủ tục thanh toán quá rắc rối',
+                                                groupValue: selectedReason,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedReason = value;
+                                                  });
+                                                },
+                                                activeColor: Colors
+                                                    .orange, // Change color when selected
+                                              ),
+                                            ),
+                                            ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                              title: const LabelText(
+                                                size: 12,
+                                                content:
+                                                    'Tìm thấy giá rẻ hơn ở chỗ khác',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              leading: Radio<String>(
+                                                value:
+                                                    'Tìm thấy giá rẻ hơn ở chỗ khác',
+                                                groupValue: selectedReason,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedReason = value;
+                                                  });
+                                                },
+                                                activeColor: Colors
+                                                    .orange, // Change color when selected
+                                              ),
+                                            ),
+                                            ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                              title: const LabelText(
+                                                size: 12,
+                                                content:
+                                                    'Đổi ý không muốn đặt dịch vụ nữa',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              leading: Radio<String>(
+                                                value:
+                                                    'Đổi ý không muốn đặt dịch vụ nữa',
+                                                groupValue: selectedReason,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedReason = value;
+                                                  });
+                                                },
+                                                activeColor: Colors
+                                                    .orange, // Change color when selected
+                                              ),
+                                            ),
+                                            ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                              title: const LabelText(
+                                                size: 12,
+                                                content: 'Lý do khác',
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                              leading: Radio<String>(
+                                                value: 'Lý do khác',
+                                                groupValue: selectedReason,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedReason = value;
+                                                  });
+                                                },
+                                                activeColor: Colors
+                                                    .orange, // Change color when selected
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const LabelText(
+                                          size: 14,
+                                          content: 'Hủy',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: selectedReason != null
+                                            ? () async {
+                                                // Perform cancel logic here with `selectedReason`
+                                                final cancelRequest =
+                                                    CancelBooking(
+                                                  id: order.id,
+                                                  cancelReason:
+                                                      selectedReason ??
+                                                          "String",
+                                                );
+                                                print(
+                                                    'Selected Reason: $selectedReason');
+
+                                                await ref
+                                                    .read(
+                                                        bookingControllerProvider
+                                                            .notifier)
+                                                    .cancelBooking(
+                                                      request: cancelRequest,
+                                                      id: order.id,
+                                                      context: context,
+                                                    );
+                                                Navigator.pop(context);
+                                              }
+                                            : null, // Disable button if no reason is selected
+                                        child: const LabelText(
+                                          size: 14,
+                                          content: 'Xác nhận',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
                           );
                         }
                       : () {
@@ -377,16 +546,28 @@ class PriceDetails extends HookConsumerWidget {
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               backgroundColor: Colors.grey.shade100,
-                              title: const Text('Không thể hủy'),
                               content: const Text(
-                                  'Bạn không thể hủy đơn hàng ở trạng thái này.'),
+                                'Rất tiếc bạn không thể hủy đơn hàng lúc này. Vui lòng liên hệ bộ phận Chăm sóc Khách hàng nếu cần hỗ trợ.',
+                                style: TextStyle(fontSize: 14),
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    Navigator.pop(context); // Close the dialog
                                   },
                                   child: const LabelText(
-                                    content: 'Đóng',
+                                    content: 'OK',
+                                    size: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    launch('tel:0382703625');
+                                  },
+                                  child: const LabelText(
+                                    content: 'Hỗ trợ',
                                     size: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -396,17 +577,26 @@ class PriceDetails extends HookConsumerWidget {
                           );
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isCancelEnabled() ? Colors.red : Colors.grey[300],
-                    elevation: isCancelEnabled() ? 2 : 0,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(
+                        color: isCancelEnabled()
+                            ? Colors.orange
+                            : Colors.grey[300]!, // Correct color handling
+                        width:
+                            1, // Uniform width, as it's the same for both conditions
+                      ),
                     ),
                   ),
-                  child: const LabelText(
+                  child: LabelText(
                     content: 'Hủy đơn hàng',
-                    size: 16,
-                    color: Colors.white,
+                    size: 14,
+                    color: isCancelEnabled()
+                        ? Colors.orange
+                        : Colors.grey[
+                            600], // Color dynamically changes based on state
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -441,18 +631,18 @@ class PriceDetails extends HookConsumerWidget {
               ),
 
             // Show progress indicators if needed
-            if (bookingStatus.isReviewerMoving ||
-                bookingStatus.isReviewerAssessing ||
-                bookingStatus.isSuggestionReady ||
-                bookingStatus.isMovingInProgress)
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: LinearProgressIndicator(
-                  backgroundColor: Colors.grey[200],
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
-                ),
-              ),
+            // if (bookingStatus.isReviewerMoving ||
+            //     bookingStatus.isReviewerAssessing ||
+            //     bookingStatus.isSuggestionReady ||
+            //     bookingStatus.isMovingInProgress)
+            //   Padding(
+            //     padding: const EdgeInsets.only(top: 16),
+            //     child: LinearProgressIndicator(
+            //       backgroundColor: Colors.grey[200],
+            //       valueColor:
+            //           const AlwaysStoppedAnimation<Color>(Color(0xFFFF9900)),
+            //     ),
+            //   ),
           ],
         ),
       ),

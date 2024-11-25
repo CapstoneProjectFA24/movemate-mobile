@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
@@ -223,6 +224,57 @@ class BookingController extends _$BookingController {
         backgroundColor: Colors.green,
         textColor: AssetsConstants.whiteColor,
       );
+    });
+
+    if (state.hasError) {
+      final statusCode = (state.error as DioException).onStatusDio();
+
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: state.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (state.hasError) {
+        await ref.read(signInControllerProvider.notifier).signOut(context);
+      }
+    }
+  }
+
+  Future<void> cancelBooking({
+    required CancelBooking request,
+    required int id,
+    required BuildContext context,
+  }) async {
+    state = const AsyncLoading();
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(serviceBookingRepositoryProvider).cancelBooking(
+            accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+            request: request,
+            id: id,
+          );
+
+      ref
+          .read(refreshOrderList.notifier)
+          .update((state) => !ref.read(refreshOrderList));
+      // stream realtime -> ref status
+      // case1
+      // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscrent
+
+      // case 2 online
+
+      // if (request.status.type == BookingStatusType.waiting &&
+      //     order.isReviewOnline!) {
+      // }
+
+      // TO DO MORE
     });
 
     if (state.hasError) {
