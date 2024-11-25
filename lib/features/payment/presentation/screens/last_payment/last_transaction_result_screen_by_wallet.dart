@@ -86,7 +86,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     final listServices = getListSerVices(result);
     double containerHeight = listServices.length * 108.0;
     return LoadingOverlay(
-      isLoading: state.isLoading || stateWallet.isLoading,
+      isLoading: stateWallet.isLoading,
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
@@ -311,7 +311,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                             height: 48,
                             child: ElevatedButton(
                               onPressed: () {
-                                     final tabsRouter = context.router.root
+                                final tabsRouter = context.router.root
                                     .innerRouterOf<TabsRouter>(
                                         TabViewScreenRoute.name);
                                 if (tabsRouter != null) {
