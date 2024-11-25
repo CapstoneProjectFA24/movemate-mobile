@@ -205,10 +205,16 @@ BookingStatusResult useBookingStatus(
             isDriverCompleted) {
           isDriverProcessingMoving = true;
         }
-        isStaffDriverComingToBuildRoute = isDriverWaiting ||
+        if (isDriverWaiting ||
             isDriverAssigned ||
             isDriverIncoming ||
-            (!isDriverInProgress && !isDriverCompleted);
+            (!isDriverInProgress && !isDriverCompleted && !isDriverArrived)) {
+          isStaffDriverComingToBuildRoute = true;
+        }
+        // isStaffDriverComingToBuildRoute = isDriverWaiting ||
+        //     isDriverAssigned ||
+        //     isDriverIncoming ||
+        //     (!isDriverInProgress && !isDriverCompleted && !isDriverArrived);
         break;
       case BookingStatusType.inProgress:
         if (isDriverInProgress ||
@@ -218,10 +224,13 @@ BookingStatusResult useBookingStatus(
             isDriverCompleted) {
           isDriverProcessingMoving = true;
         }
-        isStaffDriverComingToBuildRoute = isDriverWaiting ||
+        if (isDriverWaiting ||
             isDriverAssigned ||
             isDriverIncoming ||
-            (!isDriverInProgress && !isDriverCompleted);
+            (!isDriverInProgress && !isDriverCompleted && !isDriverArrived)) {
+          isStaffDriverComingToBuildRoute = true;
+        }
+        // isStaffDriverComingToBuildRoute = ;
 
         isDriverInProgressToBuildRoute = isDriverArrived || isDriverInProgress;
         break;

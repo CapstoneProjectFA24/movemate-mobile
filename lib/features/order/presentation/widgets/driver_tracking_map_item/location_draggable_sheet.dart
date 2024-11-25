@@ -30,8 +30,8 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(job.id.toString()));
-    final bookingStatus =
-        useBookingStatus(bookingAsync.value, job.isReviewOnline);
+    // final bookingStatus =
+    //     useBookingStatus(bookingAsync.value, job.isReviewOnline);
     final state = ref.watch(servicePackageControllerProvider);
     final stateProfile = ref.watch(profileControllerProvider);
 
@@ -48,13 +48,6 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     final houseTypeById = useFetchResult.data;
     final userdata = ref.read(authProvider);
 
-    // final useFetchResultProfile = useFetchObject<ProfileEntity>(
-    //   function: (context) => ref
-    //       .read(profileControllerProvider.notifier)
-    //       .getProfileInforById(stadffId, context),
-    //   context: context,
-    // );
-
     final useFetchResultProfileAssign = useFetchObject<StaffProfileEntity>(
       function: (context) async {
         return ref
@@ -64,10 +57,6 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
       context: context,
     );
     final profileUserAssign = useFetchResultProfileAssign.data;
-
-    print("check current profileUserAssign ${profileUserAssign?.id}");
-    print("check current stadffId $stadffId");
-    print("check current houseTypeById ${houseTypeById?.name}");
 
     final bookingAssignment =
         bookingAsync.value?.assignments.firstWhere((e) => e.userId == stadffId);
@@ -82,8 +71,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
         child: CircularProgressIndicator(),
       );
     }
-    print("check current bookingAssignment $bookingAssignment");
-    print("check current bookingTruck $bookingTruck");
+
     return LoadingOverlay(
       isLoading: state.isLoading || stateProfile.isLoading,
       child: DraggableScrollableSheet(
@@ -100,18 +88,19 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                   // _buildDeliveryStatusCard(job: job, status: bookingStatus),
                   _buildTrackingInfoCard(
                     job: job,
-                    status: bookingStatus,
+                    // status: bookingStatus,
                     context: context,
                     profileUserAssign: profileUserAssign,
                     assignments: bookingAssignment,
                     bookingTruck: bookingTruck,
                   ),
                   _buildDetailsSheet(
-                      context: context,
-                      job: job,
-                      houseTypeById: houseTypeById,
-                      profile: userdata,
-                      status: bookingStatus),
+                    context: context,
+                    job: job,
+                    houseTypeById: houseTypeById,
+                    profile: userdata,
+                    // status: bookingStatus
+                  ),
                 ],
               ),
             ),
@@ -123,7 +112,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
 
   Widget _buildTrackingInfoCard({
     required OrderEntity job,
-    required BookingStatusResult status,
+    // required BookingStatusResult status,
     required BuildContext context,
     required StaffProfileEntity? profileUserAssign,
     required AssignmentsRealtimeEntity? assignments,
@@ -212,7 +201,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${profileUserAssign?.name}',
+                          profileUserAssign?.name ?? '',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Colors.grey[600],
@@ -221,7 +210,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                           maxLines: 2,
                         ),
                         Text(
-                          '${profileUserAssign?.phone}',
+                          profileUserAssign?.phone ?? '',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Colors.grey[600],
@@ -238,7 +227,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${bookingTruck?.name}',
+                          bookingTruck?.name ?? '',
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                           ),
@@ -260,7 +249,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     required OrderEntity job,
     required HouseTypeEntity? houseTypeById,
     required UserModel? profile,
-    required BookingStatusResult status,
+    // required BookingStatusResult status,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -323,7 +312,10 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                   _buildCustomerInfo(profile: profile),
                   const SizedBox(height: 3),
                   _buildConfirmationImageLink(
-                      context: context, job: job, status: status),
+                    context: context, job: job,
+
+                    // status: status
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -507,7 +499,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
 
   Widget _buildConfirmationImageLink(
       {required OrderEntity job,
-      required BookingStatusResult status,
+      // required BookingStatusResult status,
       required BuildContext context}) {
     return GestureDetector(
       onTap: () {

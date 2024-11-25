@@ -125,7 +125,11 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
       } else {
         return;
       }
-
+      print(
+          "waypoints 1 : ${widget.bookingStatus.isStaffDriverComingToBuildRoute}");
+      print(
+          "waypoints 2 : ${widget.bookingStatus.isDriverInProgressToBuildRoute}");
+      print("waypoints $waypoints");
       _navigationController
           ?.buildRoute(
         waypoints: waypoints,
@@ -138,6 +142,10 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
       }).catchError((error) {
         print('Error building route: $error');
       });
+
+      print('tuan check Delivery Point: ${_getDeliveryPointLatLng()}');
+      //"10.774934,106.623477
+      print('tuan check Staff Location: $_staffLocation');
     }
   }
 
@@ -236,7 +244,10 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
                 _updateMapView();
               } else {
                 controller.buildRoute(
-                  waypoints: [_getPickupPointLatLng(), _getPickupPointLatLng()],
+                  waypoints: [
+                    _getDeliveryPointLatLng(),
+                    _getDeliveryPointLatLng()
+                  ],
                   profile: DrivingProfile.cycling,
                 );
               }
@@ -325,10 +336,13 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
             child: SizedBox(
               height: MediaQuery.of(context).size.height *
                   0.7, // Chiều cao giới hạn
-              child: DeliveryDetailsBottomSheet(
-                stadffId: int.parse(widget.staffId),
+              child: TrackingMapBottomSheet(
                 job: widget.job,
               ),
+              //  DeliveryDetailsBottomSheet(
+              //   stadffId: int.parse(widget.staffId),
+              //   job: widget.job,
+              // ),
             ),
           ),
         ],
