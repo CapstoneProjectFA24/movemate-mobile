@@ -8,7 +8,8 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
+class AddImageButton extends ConsumerWidget {
+  // Changed to ConsumerWidget
   final RoomType roomType;
   final bool hasImages;
 
@@ -21,7 +22,8 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingNotifier = ref.read(bookingProvider.notifier);
-    final isUploadingLivingRoomImage = ref.watch(bookingProvider).isUploadingLivingRoomImage;
+    final isUploadingLivingRoomImage =
+        ref.watch(bookingProvider).isUploadingLivingRoomImage;
 
     return SizedBox(
       width: 100, // Fixed width
@@ -39,9 +41,11 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
                 // Show modal when tapping the add image button
                 showModalBottomSheet(
                   context: context,
-                  backgroundColor: Colors.white, // Set white background for modal
+                  backgroundColor:
+                      Colors.white, // Set white background for modal
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16.0)),
                   ),
                   builder: (context) => Column(
                     mainAxisSize: MainAxisSize.min,
@@ -58,9 +62,12 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.image, color: AssetsConstants.primaryDark),
+                              Icon(Icons.image,
+                                  color: AssetsConstants.primaryDark),
                               SizedBox(width: 5),
-                              Text('Chọn ảnh', style: TextStyle(color: AssetsConstants.blackColor)),
+                              Text('Chọn ảnh',
+                                  style: TextStyle(
+                                      color: AssetsConstants.blackColor)),
                             ],
                           ),
                         ),
@@ -77,9 +84,12 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.camera_alt, color: AssetsConstants.primaryDark),
+                              Icon(Icons.camera_alt,
+                                  color: AssetsConstants.primaryDark),
                               SizedBox(width: 5),
-                              Text('Chụp hình', style: TextStyle(color: AssetsConstants.blackColor)),
+                              Text('Chụp hình',
+                                  style: TextStyle(
+                                      color: AssetsConstants.blackColor)),
                             ],
                           ),
                         ),
@@ -102,8 +112,10 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
                   dashPattern: const [8, 4],
                   child: Center(
                     child: hasImages
-                        ? const Icon(Icons.add, color: AssetsConstants.greyColor)
-                        : const Text('Thêm ảnh', style: TextStyle(color: AssetsConstants.greyColor)),
+                        ? const Icon(Icons.add,
+                            color: AssetsConstants.greyColor)
+                        : const Text('Thêm ảnh',
+                            style: TextStyle(color: AssetsConstants.greyColor)),
                   ),
                 ),
               ),
@@ -112,17 +124,20 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
   }
 
   // Function to choose image from gallery
-  Future<void> _chooseImage(BuildContext context, BookingNotifier bookingNotifier) async {
+  Future<void> _chooseImage(
+      BuildContext context, BookingNotifier bookingNotifier) async {
     if (roomType == RoomType.livingRoom) {
       bookingNotifier.setUploadingLivingRoomImage(true);
     }
 
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         // Upload image to Cloudinary
-        final cloudinary = CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false);
+        final cloudinary =
+            CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false);
         try {
           final CloudinaryResponse response = await cloudinary.uploadFile(
             CloudinaryFile.fromFile(
@@ -153,17 +168,20 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
   }
 
   // Function to take photo using camera
-  Future<void> _takePhoto(BuildContext context, BookingNotifier bookingNotifier) async {
+  Future<void> _takePhoto(
+      BuildContext context, BookingNotifier bookingNotifier) async {
     if (roomType == RoomType.livingRoom) {
       bookingNotifier.setUploadingLivingRoomImage(true);
     }
 
     try {
       final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.camera);
       if (pickedFile != null) {
         // Upload image to Cloudinary
-        final cloudinary = CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false);
+        final cloudinary =
+            CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false);
         try {
           final CloudinaryResponse response = await cloudinary.uploadFile(
             CloudinaryFile.fromFile(
@@ -193,4 +211,3 @@ class AddImageButton extends ConsumerWidget { // Changed to ConsumerWidget
     }
   }
 }
-

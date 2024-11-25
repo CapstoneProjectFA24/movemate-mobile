@@ -317,6 +317,7 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
                 ),
               ),
             ),
+          // if (routeProgressEvent != null)
           Positioned(
             bottom: 0,
             left: 0,

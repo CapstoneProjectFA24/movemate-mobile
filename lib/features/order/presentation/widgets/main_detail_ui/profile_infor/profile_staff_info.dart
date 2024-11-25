@@ -48,8 +48,8 @@ class ProfileStaffInfo extends HookConsumerWidget {
       },
       context: context,
     );
-
     final staff = useFetchResultProfileAssign.data;
+    print("updateing $staff");
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
     final bookingStatus =
@@ -185,13 +185,6 @@ class ProfileStaffInfo extends HookConsumerWidget {
       );
     }
 
-    final isResponsible = order.assignments
-        .firstWhere((e) => e.staffType == 'DRIVER')
-        .isResponsible;
-
-        
-
-    print("isResponsible check status profile details $isResponsible");
     return LoadingOverlay(
       isLoading: isStateController,
       child: Padding(

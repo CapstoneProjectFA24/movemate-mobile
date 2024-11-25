@@ -24,7 +24,7 @@ class ImageUploadWidget extends HookWidget {
     final picker = useMemoized(() => ImagePicker());
     final isLoading = useState(false);
     final cloudinary = useMemoized(
-        () => CloudinaryPublic('dve1zpp4s', 'movemate', cache: false));
+        () => CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false));
 
     Future<void> uploadImage() async {
       if (disabled || isLoading.value) return;
@@ -84,7 +84,7 @@ class ImageUploadWidget extends HookWidget {
               itemCount: imagePublicIds.length,
               itemBuilder: (context, index) {
                 final imageUrl =
-                    'https://res.cloudinary.com/dve1zpp4s/image/upload/${imagePublicIds[index]}';
+                    'https://res.cloudinary.com/dkpnkjnxs/image/upload/${imagePublicIds[index]}';
                 return Stack(
                   children: [
                     Container(
@@ -104,7 +104,8 @@ class ImageUploadWidget extends HookWidget {
                                 value: loadingProgress.expectedTotalBytes !=
                                         null
                                     ? loadingProgress.cumulativeBytesLoaded /
-                                        (loadingProgress.expectedTotalBytes ?? 1)
+                                        (loadingProgress.expectedTotalBytes ??
+                                            1)
                                     : null,
                               ),
                             );

@@ -26,7 +26,7 @@ void main() async {
   // check firebase anonymous user connect
   // await testFirebaseConnection();
   // await testFirebaseConnectionWithPhone('+84382703625');
-  Cloudinary.fromCloudName(cloudName: "dve1zpp4s");
+  Cloudinary.fromCloudName(cloudName: "dkpnkjnxs");
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

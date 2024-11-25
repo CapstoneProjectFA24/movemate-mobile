@@ -65,7 +65,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
-        
+
     final bookingAssignment = bookingAsync.value?.assignments.length;
 
     // TO DO for traking position
