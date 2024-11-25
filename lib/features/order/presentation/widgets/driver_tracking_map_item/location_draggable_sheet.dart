@@ -61,11 +61,11 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     final bookingAssignment =
         bookingAsync.value?.assignments.firstWhere((e) => e.userId == stadffId);
 
-    final bookingTruck =
-        bookingAsync.value?.bookingDetails.firstWhere((e) => e.type == 'TRUCK');
+    // final bookingTruck =
+    //     bookingAsync.value?.bookingDetails.firstWhere((e) => e.type == 'TRUCK');
 
     if (bookingAssignment == null ||
-        bookingTruck == null ||
+        // bookingTruck == null ||
         profileUserAssign == null) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -90,7 +90,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                   context: context,
                   profileUserAssign: profileUserAssign,
                   assignments: bookingAssignment,
-                  bookingTruck: bookingTruck,
+                  // bookingTruck: bookingTruck,
                 ),
                 _buildDetailsSheet(
                   context: context,
@@ -113,7 +113,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     required BuildContext context,
     required StaffProfileEntity? profileUserAssign,
     required AssignmentsRealtimeEntity? assignments,
-    required BookingDetailRealTimeEntity? bookingTruck,
+    // required BookingDetailRealTimeEntity? bookingTruck,
   }) {
     //PORTER
     //REVIEWER
@@ -224,7 +224,10 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          bookingTruck?.name ?? '',
+                          job.bookingDetails
+                                  .firstWhere((e) => e.type == 'TRUCK')
+                                  .name ??
+                              '',
                           // '',
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
