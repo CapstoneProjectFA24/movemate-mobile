@@ -8,6 +8,7 @@ class BookingRealtimeEntity {
   final double total;
   final double totalFee;
   final double totalReal;
+  final List<BookingDetailRealTimeEntity> bookingDetails;
 
   BookingRealtimeEntity({
     required this.id,
@@ -17,6 +18,7 @@ class BookingRealtimeEntity {
     required this.total,
     required this.totalFee,
     required this.totalReal,
+    required this.bookingDetails,
   });
 
   factory BookingRealtimeEntity.fromMap(Map<String, dynamic> data, String id) {
@@ -31,6 +33,10 @@ class BookingRealtimeEntity {
       total: (data['Total'] as num?)?.toDouble() ?? 0.0,
       totalFee: (data['TotalFee'] as num?)?.toDouble() ?? 0.0,
       totalReal: (data['TotalReal'] as num?)?.toDouble() ?? 0.0,
+      bookingDetails: (data['BookingDetails'] as List<dynamic>?)
+              ?.map((e) => BookingDetailRealTimeEntity.fromMap(e))
+              .toList() ??
+          [],
     );
   }
 
@@ -39,6 +45,7 @@ class BookingRealtimeEntity {
       'id': id,
       'Status': status,
       'Assignments': assignments.map((e) => e.toMap()).toList(),
+      'BookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
       'Deposit': deposit,
       'Total': total,
       'TotalFee': totalFee,
@@ -86,4 +93,68 @@ class AssignmentsRealtimeEntity {
   }
 
   String toJson() => json.encode(toMap());
+}
+
+class BookingDetailRealTimeEntity {
+  final int id;
+  final int serviceId;
+  final int bookingId;
+  final int quantity;
+  final double price;
+  final String status;
+  final String type;
+  final String name;
+  final String? description;
+  final String? imageUrl;
+
+  BookingDetailRealTimeEntity({
+    required this.id,
+    required this.serviceId,
+    required this.bookingId,
+    required this.quantity,
+    required this.price,
+    required this.status,
+    required this.type,
+    required this.name,
+    this.description,
+    this.imageUrl,
+  });
+
+  factory BookingDetailRealTimeEntity.fromMap(Map<String, dynamic> data) {
+    return BookingDetailRealTimeEntity(
+      id: data['id'] ?? 0,
+      serviceId: data['serviceId'] ?? 0,
+      bookingId: data['bookingId'] ?? 0,
+      quantity: data['quantity'] ?? 0,
+      price: (data['price'] as num?)?.toDouble() ?? 0.0,
+      status: data['status'] ?? '',
+      type: data['type'] ?? '',
+      name: data['name'] ?? '',
+      description: data['description'],
+      imageUrl: data['imageUrl'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'serviceId': serviceId,
+      'bookingId': bookingId,
+      'quantity': quantity,
+      'price': price,
+      'status': status,
+      'type': type,
+      'name': name,
+      'description': description,
+      'imageUrl': imageUrl,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  static List<BookingDetailRealTimeEntity> fromList(List<dynamic> list) {
+    return list
+        .map((item) => BookingDetailRealTimeEntity.fromMap(item))
+        .toList();
+  }
 }

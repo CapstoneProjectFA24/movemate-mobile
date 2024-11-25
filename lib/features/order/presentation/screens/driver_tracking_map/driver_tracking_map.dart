@@ -323,8 +323,9 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
             right: 0,
             child: SizedBox(
               height: MediaQuery.of(context).size.height *
-                  0.5, // Chiều cao giới hạn
+                  0.7, // Chiều cao giới hạn
               child: DeliveryDetailsBottomSheet(
+                stadffId: int.parse(widget.staffId),
                 job: widget.job,
               ),
             ),

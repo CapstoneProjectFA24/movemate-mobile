@@ -51,9 +51,11 @@ class ProfileStaffInfo extends HookConsumerWidget {
 
     final staff = useFetchResultProfileAssign.data;
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
     final isStateController = state.isLoading;
+
     String getCardTitle(String staffType) {
       switch (staffType.toUpperCase()) {
         case "DRIVER":
@@ -183,6 +185,13 @@ class ProfileStaffInfo extends HookConsumerWidget {
       );
     }
 
+    final isResponsible = order.assignments
+        .firstWhere((e) => e.staffType == 'DRIVER')
+        .isResponsible;
+
+        
+
+    print("isResponsible check status profile details $isResponsible");
     return LoadingOverlay(
       isLoading: isStateController,
       child: Padding(

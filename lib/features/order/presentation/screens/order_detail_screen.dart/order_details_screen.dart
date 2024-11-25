@@ -65,6 +65,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        
     final bookingAssignment = bookingAsync.value?.assignments.length;
 
     // TO DO for traking position
@@ -100,14 +101,15 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final listStaffResponsibility = getListStaffResponsibility(order);
 
-    final currentListStaff = ref
-        .watch(bookingStreamProvider(order.id.toString()))
-        .value
-        ?.assignments
-        .where((e) => e.isResponsible == true)
-        .toList();
+    // final currentListStaff = ref
+    //     .watch(bookingStreamProvider(order.id.toString()))
+    //     .value
+    //     ?.assignments
+    //     .where((e) => e.isResponsible == true)
+    //     .toList();
 
-    print("check current list $currentListStaff");
+    // print(
+    //     "check current list ${currentListStaff?.firstWhere((e) => e.isResponsible == true)}");
 
     final getServiceId = order.bookingDetails
         .firstWhere(
@@ -151,7 +153,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
       OrderStreamManager().updateJob(order);
       return null;
     }, [bookingAsync.value]);
-
+    // print(
+    //     " current listStaffResponsibility ${listStaffResponsibility?.firstWhere((e) => e.staffType == 'DRIVER').isResponsible}");
     if (listStaffResponsibility == null) {
       return const Center(
         child: CircularProgressIndicator(),

@@ -9,10 +9,13 @@ import 'package:movemate/features/booking/domain/entities/house_type_entity.dart
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
+import 'package:movemate/features/profile/domain/entities/staff_profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/features/profile/presentation/controllers/profile_driver_controller/profile_driver_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/user_model.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
@@ -20,7 +23,9 @@ import 'package:movemate/utils/providers/common_provider.dart';
 
 class DeliveryDetailsBottomSheet extends HookConsumerWidget {
   final OrderEntity job;
-  const DeliveryDetailsBottomSheet({super.key, required this.job});
+  final int stadffId;
+  const DeliveryDetailsBottomSheet(
+      {super.key, required this.job, required this.stadffId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,6 +33,7 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     final bookingStatus =
         useBookingStatus(bookingAsync.value, job.isReviewOnline);
     final state = ref.watch(servicePackageControllerProvider);
+    final stateProfile = ref.watch(profileControllerProvider);
 
     final bookingControllerHouse =
         ref.read(servicePackageControllerProvider.notifier);
@@ -41,8 +47,45 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     );
     final houseTypeById = useFetchResult.data;
     final userdata = ref.read(authProvider);
+
+    // final useFetchResultProfile = useFetchObject<ProfileEntity>(
+    //   function: (context) => ref
+    //       .read(profileControllerProvider.notifier)
+    //       .getProfileInforById(stadffId, context),
+    //   context: context,
+    // );
+
+    final useFetchResultProfileAssign = useFetchObject<StaffProfileEntity>(
+      function: (context) async {
+        return ref
+            .read(profileDriverControllerProvider.notifier)
+            .getProfileDriverInforById(stadffId, context);
+      },
+      context: context,
+    );
+    final profileUserAssign = useFetchResultProfileAssign.data;
+
+    print("check current profileUserAssign ${profileUserAssign?.id}");
+    print("check current stadffId $stadffId");
+    print("check current houseTypeById ${houseTypeById?.name}");
+
+    final bookingAssignment =
+        bookingAsync.value?.assignments.firstWhere((e) => e.userId == stadffId);
+
+    // final bookingTruck =
+    //     bookingAsync.value?.bookingDetails.firstWhere((e) => e.type == 'TRUCK');
+
+    if (bookingAssignment == null ||
+        // bookingTruck == null ||
+        profileUserAssign == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    print("check current bookingAssignment $bookingAssignment");
+    // print("check current bookingTruck $bookingTruck");
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: state.isLoading || stateProfile.isLoading,
       child: DraggableScrollableSheet(
         initialChildSize: 0.4,
         minChildSize: 0.25,
@@ -56,7 +99,13 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                 children: [
                   // _buildDeliveryStatusCard(job: job, status: bookingStatus),
                   _buildTrackingInfoCard(
-                      job: job, status: bookingStatus, context: context),
+                    job: job,
+                    status: bookingStatus,
+                    context: context,
+                    profileUserAssign: profileUserAssign,
+                    Assignments: bookingAssignment,
+                    // bookingTruck: bookingTruck,
+                  ),
                   _buildDetailsSheet(
                       context: context,
                       job: job,
@@ -72,103 +121,36 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
     );
   }
 
-  Widget _buildDeliveryStatusCard({
+  Widget _buildTrackingInfoCard({
     required OrderEntity job,
     required BookingStatusResult status,
+    required BuildContext context,
+    required StaffProfileEntity? profileUserAssign,
+    required AssignmentsRealtimeEntity? Assignments,
+    // required BookingDetailRealTimeEntity? bookingTruck,
   }) {
-    // final dateParts = job.bookingAt.split(' ')[0].split('/');
-    // final timeParts = job.bookingAt.split(' ')[1].split(':');
-    // final month = dateParts[0];
-    // final day = dateParts[1];
-    // final year = dateParts[2];
-    // final hour = timeParts[0];
-    // final minute = timeParts[1];
-
-    // Tạo chuỗi định dạng
-    // final formattedBookingAt = '$hour:$minute $day/$month/$year';
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Text(
-            //   'Thời gian dự kiến $formattedBookingAt',
-            //   style: const TextStyle(
-            //     fontSize: 14,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            SizedBox(height: 12),
-            Row(
-                //coming
-                //inProgress
-                //completed
-                children: [
-                  // if (status.isBookingComing == true) ...[
-                  //   _buildProgressDot(true),
-                  //   _buildProgressLine(false),
-                  //   _buildProgressDot(false),
-                  //   _buildProgressLine(false),
-                  //   _buildProgressDot(false),
-                  // ],
-                  // if (status.isInProgress == true) ...[
-                  //   _buildProgressDot(true),
-                  //   _buildProgressLine(true),
-                  //   _buildProgressDot(true),
-                  //   _buildProgressLine(false),
-                  //   _buildProgressDot(false),
-                  // ],
-                  // if (status.isCompleted == true) ...[
-                  //   _buildProgressDot(true),
-                  //   _buildProgressLine(true),
-                  //   _buildProgressDot(true),
-                  //   _buildProgressLine(true),
-                  //   _buildProgressDot(true),
-                  // ],
-                ]),
-            SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Sẵn sàng'),
-                Text('Đang trong tiến trình'),
-                Text('Hoàn tất'),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTrackingInfoCard(
-      {required OrderEntity job,
-      required BookingStatusResult status,
-      required BuildContext context}) {
     // print("check status ${bookingStatus.statusMessage}");
     //PORTER
     //REVIEWER
     String getDriverRole() {
       try {
-        final isResponsible = job.assignments
-            .firstWhere((e) => e.staffType == 'DRIVER')
-            .isResponsible;
+        // Xác định vai trò và loại nhân viên dựa trên `Assignments`
+        final checkRole =
+            Assignments?.isResponsible == true ? "Trưởng" : "Nhân viên";
 
-        return isResponsible == true ? "Trưởng" : "Nhân viên";
+        final checkType = () {
+          if (Assignments?.staffType == 'DRIVER') {
+            return "Tài xế ${checkRole == 'Trưởng' ? 'Trưởng ' : ''}";
+          } else if (Assignments?.staffType == 'PORTER') {
+            return "Bốc vác ${checkRole == 'Trưởng' ? 'Trưởng ' : ''}";
+          } else if (Assignments?.staffType == 'REVIEWER') {
+            return "Người đánh giá";
+          } else {
+            return "Nhân viên"; // Giá trị mặc định nếu không xác định được loại nhân viên
+          }
+        }();
+
+        return checkType;
       } catch (e) {
         return "Bốc vác"; // Giá trị mặc định nếu không tìm thấy Driver
       }
@@ -203,24 +185,50 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text(
-                    'Tài xế ${getDriverRole()}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        getDriverRole(),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "${profileUserAssign?.name}",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      Text(
+                        "${profileUserAssign?.phone}",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  // Text(
-                  //   // getDisplayStatus(status),
-                  //   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  //         color: Colors.grey[600],
-                  //       ),
-                  //   overflow: TextOverflow.ellipsis,
-                  //   maxLines: 2,
-                  // ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        // '${bookingTruck?.name}',
+                        '',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -275,10 +283,10 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('Thông tin dịch vụ'),
-                  const SizedBox(height: 16),
-                  _buildServiceInfo(job: job, house: houseTypeById),
-                  const SizedBox(height: 16),
+                  // _buildSectionTitle('Thông tin dịch vụ'),
+                  // const SizedBox(height: 16),
+                  // _buildServiceInfo(job: job, house: houseTypeById),
+                  // const SizedBox(height: 16),
                   _buildLocationInfo(job: job),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -424,17 +432,17 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: 12),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Xem thêm',
-                style: TextStyle(
-                  color: Color(0xFFFF7643),
-                  fontSize: 14,
-                ),
-              ),
-            ),
+            // const SizedBox(width: 12),
+            // TextButton(
+            //   onPressed: () {},
+            //   child: const Text(
+            //     'Xem thêm',
+            //     style: TextStyle(
+            //       color: Color(0xFFFF7643),
+            //       fontSize: 14,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ],
@@ -556,7 +564,7 @@ Widget buildPriceItem(String description, String price) {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.w400,
             color: Colors.black,
           ),
@@ -568,7 +576,7 @@ Widget buildPriceItem(String description, String price) {
           Text(
             price,
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Colors.black,
             ),
