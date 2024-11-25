@@ -311,7 +311,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                             height: 48,
                             child: ElevatedButton(
                               onPressed: () {
-                                final tabsRouter = context.router.root
+                                     final tabsRouter = context.router.root
                                     .innerRouterOf<TabsRouter>(
                                         TabViewScreenRoute.name);
                                 if (tabsRouter != null) {

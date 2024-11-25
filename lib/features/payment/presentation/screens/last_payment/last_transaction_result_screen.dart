@@ -380,9 +380,15 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                         TabViewScreenRoute.name);
                                 if (tabsRouter != null) {
                                   tabsRouter.setActiveIndex(0);
-                                  // Pop back to the TabViewScreen
                                   context.router.popUntilRouteWithName(
                                       TabViewScreenRoute.name);
+                                } else {
+                                  context.router.pushAndPopUntil(
+                                    const TabViewScreenRoute(children: [
+                                      HomeScreenRoute(),
+                                    ]),
+                                    predicate: (route) => false,
+                                  );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
