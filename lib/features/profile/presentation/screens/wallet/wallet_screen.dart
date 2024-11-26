@@ -3,11 +3,21 @@ import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'; // Import flutter_hooks
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
+import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/snack_bar.dart';
 // import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/enums/payment_method_type.dart';
 import 'package:movemate/utils/enums/price_helper.dart';
 import 'package:movemate/utils/providers/wallet_provider.dart';
+
+final paymentList = [
+  PaymentMethodType.momo,
+  PaymentMethodType.vnpay,
+  PaymentMethodType.payos,
+];
 
 @RoutePage()
 class WalletScreen extends HookConsumerWidget {
@@ -16,28 +26,24 @@ class WalletScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wallet = ref.read(walletProvider);
-    // print("check wallet ${wallet?.balance}");
+    final selectedMethod = ref.watch(paymentMethodProvider);
+    final paymentController = ref.watch(paymentControllerProvider.notifier);
 
-    final List<Map<String, dynamic>> paymentMethods = [
-      {
-        'name': 'Momo',
-        'imageUrl':
-            'https://storage.googleapis.com/a1aa/image/2zK0Cfjm5E2EPKLSMJhrSdYCobkA027b7jNfpWhMFwObN1kTA.jpg',
-      },
-      {
-        'name': 'VNpay',
-        'imageUrl':
-            'https://storage.googleapis.com/a1aa/image/AD4K9t4lzlaiFNVhKEdcKfaOPqXP3jjXtvax7ZthviwumayJA.jpg',
-      },
-      {
-        'name': 'Payos',
-        'imageUrl':
-            'https://storage.googleapis.com/a1aa/image/KeAcMxfo5OiMpUFeo8OcEDzftpe8kirzeNftegdd1MOweaqJnA.jpg',
-      },
-    ];
 
     // Use useState to store the selected payment method
-    final selectedPaymentMethod = useState<String?>(null);
+    final amount = useState<double>(0);
+
+    Future<void> handlePaymentButtonPressed() async {
+      try {
+        await paymentController.createPaymentDeposit(
+          context: context,
+          selectedMethod: selectedMethod.type,
+          amount: amount.value,
+        );
+      } catch (e) {
+        print("Payment failed: $e");
+      }
+    }
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -101,9 +107,9 @@ class WalletScreen extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 10),
                   const Padding(
-                    padding: EdgeInsets.only(right: 200.0),
+                    padding: EdgeInsets.only(right: 180.0),
                     child: Text(
-                      'Số tiền cần rút',
+                      'Số tiền cần nạp',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -147,14 +153,54 @@ class WalletScreen extends HookConsumerWidget {
           ),
           const SizedBox(height: 10),
           // Payment Methods
-          ...paymentMethods.map((method) => _buildPaymentMethod(
-                method['name'],
-                method['imageUrl'],
-                selectedPaymentMethod.value,
-                (selected) {
-                  selectedPaymentMethod.value = selected;
-                },
-              )),
+          // ...paymentMethods.map((method) => _buildPaymentMethod(
+          //       method['name'],
+          //       method['imageUrl'],
+          //       selectedPaymentMethod.value,
+          //       (selected) {
+          //         selectedPaymentMethod.value = selected;
+          //       },
+          //     )),
+
+          Column(
+            children: paymentList.map((method) {
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Row(
+                  children: [
+                    Image.network(
+                      method.imageUrl,
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      method.displayName,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const Spacer(),
+                    Radio<PaymentMethodType>(
+                      value: method,
+                      groupValue: selectedMethod,
+                      onChanged: (value) {
+                        if (value != null) {
+                          ref.read(paymentMethodProvider.notifier).state =
+                              value;
+                        }
+                      },
+                      activeColor: const Color(0xFFFF7F00),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+
           const Spacer(),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -167,9 +213,9 @@ class WalletScreen extends HookConsumerWidget {
             ),
             onPressed: () {
               // Handle confirmation logic
-              if (selectedPaymentMethod.value != null) {
-                // Handle when a payment method has been selected
-              }
+              // if (selectedPaymentMethod.value != null) {
+              //   // Handle when a payment method has been selected
+              // }
             },
             child: Container(
               decoration: BoxDecoration(
