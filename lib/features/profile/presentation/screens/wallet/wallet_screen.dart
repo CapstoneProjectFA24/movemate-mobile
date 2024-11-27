@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_hooks/flutter_hooks.dart'; // Import flutter_hooks
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/snack_bar.dart';
+import 'package:movemate/utils/commons/widgets/text_input_format_price/text_input_format_price.dart';
 // import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
@@ -28,16 +30,52 @@ class WalletScreen extends HookConsumerWidget {
     final wallet = ref.read(walletProvider);
     final selectedMethod = ref.watch(paymentMethodProvider);
     final paymentController = ref.watch(paymentControllerProvider.notifier);
+    final amountController = useTextEditingController(); // TextController
 
-    // Use useState to store the selected payment method
-    final amount = useState<double>(0);
+    // Define the maximum and minimum values
+    const int minValue = -2147483648;
+    const int maxValue = 2147483647;
+    // Method to handle user input and ensure it's within the acceptable range
+    void handleAmountInput(String value) {
+      // Remove non-numeric characters
+      String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
+
+      // Convert to integer
+      int parsedValue = int.tryParse(cleanedValue) ?? 0;
+
+      // Ensure parsed value is within the valid range
+      if (parsedValue < minValue) {
+        parsedValue = minValue;
+      } else if (parsedValue > maxValue) {
+        parsedValue = maxValue;
+      }
+
+      // Update the controller with the formatted value
+      amountController.text =
+          NumberFormat("#,###", "vi_VN").format(parsedValue);
+      amountController.selection =
+          TextSelection.collapsed(offset: amountController.text.length);
+    }
 
     Future<void> handlePaymentButtonPressed() async {
       try {
+        // Remove ' đ' from the end before parsing
+        final amountText =
+            amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
+        final amount = double.tryParse(amountText) ?? 0.0;
+
+        if (amount <= 0) {
+          // Show error or notification to the user
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Vui lòng nhập số tiền hợp lệ!')),
+          );
+          return;
+        }
+
         await paymentController.createPaymentDeposit(
           context: context,
           selectedMethod: selectedMethod.type,
-          amount: amount.value,
+          amount: amount,
         );
       } catch (e) {
         print("Payment failed: $e");
@@ -122,20 +160,29 @@ class WalletScreen extends HookConsumerWidget {
                     ),
                     padding: const EdgeInsets.only(
                         top: 2, bottom: 2, right: 10, left: 5),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: TextField(
+                            controller: amountController,
                             textAlign: TextAlign.right,
-                            decoration: InputDecoration(
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true), // Allow decimal input
+                            inputFormatters: [
+                              CurrencyTextInputFormatter(),
+                            ],
+                            onChanged:
+                                handleAmountInput, // Call this method to format and limit the input
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: '0',
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Text('đ', style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 10),
+                        // Keep the 'đ' Text as it is
+                        const Text('đ', style: TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),
@@ -144,11 +191,11 @@ class WalletScreen extends HookConsumerWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.only(right: 200.0),
+          Padding(
+            padding: const EdgeInsets.only(right: 200.0),
             child: Text(
-              'CHI TIẾT GIAO DỊCH',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              'Nạp với ví ${selectedMethod.type}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 10),
@@ -212,10 +259,7 @@ class WalletScreen extends HookConsumerWidget {
               elevation: 0,
             ),
             onPressed: () {
-              // Handle confirmation logic
-              // if (selectedPaymentMethod.value != null) {
-              //   // Handle when a payment method has been selected
-              // }
+              handlePaymentButtonPressed();
             },
             child: Container(
               decoration: BoxDecoration(

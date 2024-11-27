@@ -412,6 +412,23 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    TransactionResultScreenRechargeWalletRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args =
+          routeData.argsAs<TransactionResultScreenRechargeWalletRouteArgs>(
+              orElse: () => TransactionResultScreenRechargeWalletRouteArgs(
+                    isSuccess: pathParams.getBool('isSuccess'),
+                    allUri: pathParams.getString(''),
+                  ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TransactionResultScreenRechargeWallet(
+          key: args.key,
+          isSuccess: args.isSuccess,
+          allUri: args.allUri,
+        ),
+      );
+    },
     VehiclePriceListScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1705,6 +1722,54 @@ class TransactionResultScreenByWalletRouteArgs {
   @override
   String toString() {
     return 'TransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId, status: $status}';
+  }
+}
+
+/// generated route for
+/// [TransactionResultScreenRechargeWallet]
+class TransactionResultScreenRechargeWalletRoute
+    extends PageRouteInfo<TransactionResultScreenRechargeWalletRouteArgs> {
+  TransactionResultScreenRechargeWalletRoute({
+    Key? key,
+    required bool isSuccess,
+    required String allUri,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TransactionResultScreenRechargeWalletRoute.name,
+          args: TransactionResultScreenRechargeWalletRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+            allUri: allUri,
+          ),
+          rawPathParams: {
+            'isSuccess': isSuccess,
+            '': allUri,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionResultScreenRechargeWalletRoute';
+
+  static const PageInfo<TransactionResultScreenRechargeWalletRouteArgs> page =
+      PageInfo<TransactionResultScreenRechargeWalletRouteArgs>(name);
+}
+
+class TransactionResultScreenRechargeWalletRouteArgs {
+  const TransactionResultScreenRechargeWalletRouteArgs({
+    this.key,
+    required this.isSuccess,
+    required this.allUri,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  final String allUri;
+
+  @override
+  String toString() {
+    return 'TransactionResultScreenRechargeWalletRouteArgs{key: $key, isSuccess: $isSuccess, allUri: $allUri}';
   }
 }
 

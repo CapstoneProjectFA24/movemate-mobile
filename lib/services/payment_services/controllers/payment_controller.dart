@@ -2,6 +2,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; //import 'package:flutter_riverpod/flutter_riverpod
+import 'package:hooks_riverpod/hooks_riverpod.dart'; //import  'package:hooks_riverpod/hooks_riverpod
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
@@ -21,6 +23,10 @@ import 'package:movemate/utils/commons/functions/functions_common_export.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'payment_controller.g.dart';
+
+final refreshWallet = StateProvider.autoDispose<bool>(
+  (ref) => true,
+);
 
 @riverpod
 class PaymentController extends _$PaymentController {
@@ -158,7 +164,7 @@ class PaymentController extends _$PaymentController {
       amount: amount,
       selectedMethod: selectedMethod,
     );
-
+    print("check request for payment ${request.toString()}");
     state = await AsyncValue.guard(() async {
       final res = await paymentRepository.createPaymentDeposit(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
@@ -167,7 +173,11 @@ class PaymentController extends _$PaymentController {
 
       await launchUrl(Uri.parse(res.payload),
           mode: LaunchMode.externalApplication);
+      ref
+          .read(refreshWallet.notifier)
+          .update((state) => !ref.read(refreshWallet));
     });
+    print("object check request for payment ${state.hasValue.toString()}");
     if (state.hasError) {
       state = await AsyncValue.guard(
         () async {
@@ -296,7 +306,4 @@ class PaymentController extends _$PaymentController {
       }
     }
   }
-
-
-
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
@@ -13,9 +14,11 @@ String formatPrice(int price) {
   final formatter = NumberFormat('#,###', 'vi_VN');
   return '${formatter.format(price)} đ';
 }
+
 final refreshWallet = StateProvider.autoDispose<bool>(
   (ref) => true,
 );
+
 class BalanceIndicator extends HookConsumerWidget {
   const BalanceIndicator({super.key});
 
@@ -30,12 +33,19 @@ class BalanceIndicator extends HookConsumerWidget {
       },
       context: context,
     );
+
     final walletUser = useFetchResultWallet.isFetchingData
         ? 0
         : useFetchResultWallet.data?.balance ?? 0;
-        // final result = useFetchResultWallet.refresh;
+    // final result = useFetchResultWallet.refresh;
 
     print(" số dư : $walletUser");
+
+    useEffect(() {
+      ref.listen<bool>(
+          refreshWallet, (_, __) => useFetchResultWallet.refresh());
+      return null;
+    }, []);
 
     return LoadingOverlay(
       isLoading: state.isLoading,
