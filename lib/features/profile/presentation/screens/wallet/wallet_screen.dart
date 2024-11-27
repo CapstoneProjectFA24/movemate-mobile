@@ -29,7 +29,6 @@ class WalletScreen extends HookConsumerWidget {
     final selectedMethod = ref.watch(paymentMethodProvider);
     final paymentController = ref.watch(paymentControllerProvider.notifier);
 
-
     // Use useState to store the selected payment method
     final amount = useState<double>(0);
 
@@ -65,6 +64,7 @@ class WalletScreen extends HookConsumerWidget {
           }
         },
       ),
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Padding(
@@ -120,8 +120,8 @@ class WalletScreen extends HookConsumerWidget {
                       color: const Color(0xFFF0F0F0),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    padding:
-                        const EdgeInsets.only(top: 2, bottom: 2, right: 10),
+                    padding: const EdgeInsets.only(
+                        top: 2, bottom: 2, right: 10, left: 5),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
