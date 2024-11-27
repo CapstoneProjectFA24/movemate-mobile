@@ -43,7 +43,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double containerWidth = MediaQuery.of(context).size.width * 0.9;
+    double containerWidth = MediaQuery.of(context).size.width * 0.85;
 
     // print('allUri: $allUri');
 

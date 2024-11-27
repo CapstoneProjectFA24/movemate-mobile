@@ -104,10 +104,23 @@ class ConfirmLastPayment extends HookConsumerWidget {
                 );
               }),
               const SizedBox(height: 8),
+              const Divider(),
+              const SizedBox(height: 8),
+              _OrderItem(
+                label: 'Đặt cọc',
+                price: formatPrice(orderObj!.deposit.toInt()),
+              ),
+              const SizedBox(height: 8),
               _OrderItem(
                 label: 'Tổng giá',
-                isBold: true,
                 price: formatPrice(orderObj!.total.toInt()),
+              ),
+              const SizedBox(height: 8),
+              _OrderItem(
+                label: 'Số tiền còn lại phải thanh toán',
+                isBold: true,
+                price: formatPrice(
+                    ((orderObj!.total) - (orderObj!.deposit)).toInt()),
               ),
               const SizedBox(height: 16),
               _SummaryItem(
