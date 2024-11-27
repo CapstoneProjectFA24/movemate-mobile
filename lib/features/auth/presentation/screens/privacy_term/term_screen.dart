@@ -39,12 +39,12 @@ class TermOfUseScreen extends HookConsumerWidget with Validations {
                 '3. Trách Nhiệm của Người Dùng',
                 '- Người dùng cam kết cung cấp thông tin chính xác, đầy đủ và chịu trách nhiệm về hoạt động diễn ra dưới tài khoản của mình.\n'
                     '- Người dùng có quyền chỉnh sửa hoặc đổi ngày đặt dịch vụ trước khi xác nhận đặt dịch vụ.\n'
-                    '- Việc đổi ngày đặt dịch vụ sau xác nhận chỉ được thực hiện miễn phí một lần. Các thay đổi tiếp theo sẽ áp dụng phí theo quy định.'),
+                    '- Việc đổi ngày đặt dịch vụ sau xác nhận đánh giá chỉ được thực hiện miễn phí một lần. Các thay đổi tiếp theo sẽ áp dụng phí theo quy định.'),
             _buildSection(
                 '4. Đặt Dịch Vụ và Chỉnh Sửa',
                 'Đặt dịch vụ bằng cách nhập thông tin về loại nhà, loại xe, và các dịch vụ bổ sung trên ứng dụng.\n'
                     '- Trước khi được gán cho nhân viên đánh giá, người dùng có thể chỉnh sửa hoặc hủy đơn đặt.\n'
-                    '- Sau khi thanh toán tiền cọc, người dùng không được hủy dịch vụ nếu đã gán tài xế hoặc nhân viên bốc vác.'),
+                    '- Sau khi đã hoàn thành đánh giá và trước khi nhân viên đến thực hiện vận chuyển, người dùng không được hủy đơn vận chuyển.'),
             _buildSection(
                 '5. Thanh Toán',
                 '- Người dùng thanh toán qua các phương thức: thẻ tín dụng, thẻ ghi nợ, ví điện tử hoặc tiền mặt.\n'
@@ -60,7 +60,7 @@ class TermOfUseScreen extends HookConsumerWidget with Validations {
             _buildSection(
                 '7. Xử Lý Sự Cố và Bồi Thường',
                 '- Trong quá trình vận chuyển, nếu xảy ra sự cố, tài xế hoặc nhân viên bốc vác phải thông báo ngay cho hệ thống và khách hàng.\n'
-                    '- Bồi thường dựa trên giá trị thực tế của đồ vật trên thị trường tại thời điểm vận chuyển.\n'
+                    '- Bồi thường 100% dựa trên giá trị thực tế của đồ vật trên thị trường tại thời điểm vận chuyển.\n'
                     '- Các tranh chấp sẽ được giải quyết sau khi hoàn tất dịch vụ.'),
             _buildSection(
                 '8. Theo Dõi Trực Tiếp và Liên Lạc',
