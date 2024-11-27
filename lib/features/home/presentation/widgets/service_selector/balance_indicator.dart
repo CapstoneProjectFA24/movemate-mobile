@@ -35,6 +35,8 @@ class BalanceIndicator extends HookConsumerWidget {
       context: context,
     );
 
+    ref.listen<bool>(refreshWallet, (_, __) => useFetchResultWallet.refresh());
+
     useEffect(() {
       ref.listen<bool>(
           refreshWallet, (_, __) => useFetchResultWallet.refresh());

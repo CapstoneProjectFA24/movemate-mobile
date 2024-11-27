@@ -9,7 +9,6 @@ import 'package:movemate/services/payment_services/controllers/payment_controlle
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/snack_bar.dart';
 import 'package:movemate/utils/commons/widgets/text_input_format_price/text_input_format_price.dart';
-// import 'package:movemate/features/profile/presentation/widgets/custom_app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
 import 'package:movemate/utils/enums/price_helper.dart';
@@ -35,22 +34,24 @@ class WalletScreen extends HookConsumerWidget {
     // Define the maximum and minimum values
     const int minValue = -2147483648;
     const int maxValue = 2147483647;
+
+    // Method to handle user input and ensure it's within the acceptable range
+
+    // Use the useState hook for error message
+    final errorMessage = useState<String?>(null);
+
     // Method to handle user input and ensure it's within the acceptable range
     void handleAmountInput(String value) {
-      // Remove non-numeric characters
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
-
-      // Convert to integer
       int parsedValue = int.tryParse(cleanedValue) ?? 0;
 
-      // Ensure parsed value is within the valid range
-      if (parsedValue < minValue) {
-        parsedValue = minValue;
-      } else if (parsedValue > maxValue) {
-        parsedValue = maxValue;
+      // Validate if the value is less than 10,000
+      if (parsedValue < 10000) {
+        errorMessage.value = "Giá phải lớn hơn 10,000 đ";
+      } else {
+        errorMessage.value = null; // Clear the error if value is valid
       }
 
-      // Update the controller with the formatted value
       amountController.text =
           NumberFormat("#,###", "vi_VN").format(parsedValue);
       amountController.selection =
@@ -59,16 +60,13 @@ class WalletScreen extends HookConsumerWidget {
 
     Future<void> handlePaymentButtonPressed() async {
       try {
-        // Remove ' đ' from the end before parsing
         final amountText =
             amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
         final amount = double.tryParse(amountText) ?? 0.0;
 
-        if (amount <= 0) {
-          // Show error or notification to the user
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Vui lòng nhập số tiền hợp lệ!')),
-          );
+        // Validate amount before proceeding
+        if (amount < 10000) {
+          errorMessage.value = "Giá phải lớn hơn 10,000 đ";
           return;
         }
 
@@ -181,11 +179,24 @@ class WalletScreen extends HookConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        // Keep the 'đ' Text as it is
                         const Text('đ', style: TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),
+
+                  // Error Message (if any)
+                  if (errorMessage.value != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        errorMessage.value!,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
