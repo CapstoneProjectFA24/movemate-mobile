@@ -323,8 +323,6 @@ class TransactionResultScreenRechargeWallet extends HookConsumerWidget {
                             height: 48,
                             child: ElevatedButton(
                               onPressed: () {
-                                resultWallet();
-
                                 final tabsRouter = context.router.root
                                     .innerRouterOf<TabsRouter>(
                                         TabViewScreenRoute.name);
