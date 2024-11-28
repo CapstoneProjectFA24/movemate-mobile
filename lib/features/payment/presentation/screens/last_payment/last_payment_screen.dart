@@ -310,7 +310,7 @@ class LastPaymentScreen extends HookConsumerWidget {
                                   children: [
                                     LabelText(
                                       content: formatPrice(
-                                          bookingResponse.totalReal.toInt()),
+                                          (bookingResponse.totalReal).toInt()),
                                       size: AssetsConstants.labelFontSize * 1.3,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,

@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 // Hàm hỗ trợ để định dạng giá
@@ -54,7 +57,7 @@ final paymentList = [
 ];
 
 @RoutePage()
-class TransactionResultScreen extends ConsumerWidget {
+class TransactionResultScreen extends HookConsumerWidget {
   final String bookingId;
   final bool isSuccess;
   final String allUri;
@@ -104,8 +107,18 @@ class TransactionResultScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
-    double containerHeight = MediaQuery.of(context).size.height * 0.5;
+    double containerHeight = MediaQuery.of(context).size.height * 0.465;
     print('allUri: $allUri');
+
+    final useFetchResultOrder = useFetchObject<OrderEntity>(
+      function: (context) async {
+        return ref
+            .read(bookingControllerProvider.notifier)
+            .getOrderEntityById(int.parse(bookingId));
+      },
+      context: context,
+    );
+    final result = useFetchResultOrder.data;
 
     // Phân tích allUri thành Map
     Map<String, dynamic> allUriMap;
@@ -216,34 +229,22 @@ class TransactionResultScreen extends ConsumerWidget {
                               ),
                             ),
                             // Thông tin giao dịch
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 24),
-                              child: Column(
-                                children: [
-                                  buildTransactionDetailRow('Số tiền',
-                                      formatPrice(amount), containerWidth),
-                                  const SizedBox(height: 8),
-                                  buildTransactionDetailRow('Phí giao dịch',
-                                      'Miễn phí', containerWidth),
-                                ],
-                              ),
-                            ),
-                            // Đường kẻ nét đứt
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 16),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 24),
-                              child: DashedLine(color: Colors.grey.shade300),
-                            ),
+
+                            // // Đường kẻ nét đứt
+                            // Container(
+                            //   margin: const EdgeInsets.symmetric(vertical: 16),
+                            //   padding:
+                            //       const EdgeInsets.symmetric(horizontal: 24),
+                            //   child: DashedLine(color: Colors.grey.shade300),
+                            // ),
                             // Chi tiết mã giao dịch
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 24),
                               child: Column(
                                 children: [
-                                  buildTransactionDetailRow('Mã giao dịch',
-                                      transactionCode, containerWidth),
+                                  buildTransactionDetailRow('Mã đơn hàng',
+                                      '${result?.id}', containerWidth),
                                   const SizedBox(height: 8),
                                   buildTransactionDetailRow('Nguồn tiền',
                                       paymentMethod, containerWidth),
@@ -261,7 +262,41 @@ class TransactionResultScreen extends ConsumerWidget {
                                 ],
                               ),
                             ),
-                            const SizedBox(height: 24),
+                            // Đường kẻ nét đứt
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: DashedLine(color: Colors.grey.shade300),
+                            ),
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Column(
+                                children: [
+                                  buildTransactionDetailPriceRow(
+                                      'Đặt cọc',
+                                      formatPrice(
+                                          ((result?.deposit ?? 0)).toInt()),
+                                      containerWidth,
+                                      true),
+                                  const SizedBox(height: 2),
+                                  buildTransactionDetailPriceRow(
+                                      'Tổng tiền',
+                                      formatPrice((result?.total ?? 0).toInt()),
+                                      containerWidth * 0.80,
+                                      false),
+                                  buildTransactionDetailPriceRow(
+                                      'Số tiền còn lại phải thanh toán',
+                                      formatPrice(((result?.total ?? 0) -
+                                              (result?.deposit ?? 0))
+                                          .toInt()),
+                                      containerWidth * 0.80,
+                                      false),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -428,22 +463,62 @@ class TransactionResultScreen extends ConsumerWidget {
 
   Widget buildTransactionDetailRow(
       String title, String value, double containerWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: containerWidth * 0.045),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: containerWidth * 0.045,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 0.1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade500,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget buildTransactionDetailPriceRow(
+      String title, String value, double containerWidth, bool isBold) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isBold ? Colors.black : Colors.grey.shade500,
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }
 

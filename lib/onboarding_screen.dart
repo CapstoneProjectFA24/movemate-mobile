@@ -20,14 +20,12 @@ class OnboardingScreen extends ConsumerWidget {
       imageUrl: "assets/images/onboarding/onboarding1.png",
       title: "Chào Mừng Bạn Đến Với MoveMate!",
       subTitle:
-          "Bất cứ nơi nào bạn đang ở, chuyển nhà dễ dàng với sự trợ giúp của MoveMate! Chúng tôi ở đây để làm cho việc chuyển nhà trở nên đơn giản và thuận tiện hơn bao giờ hết.",
+          "MoveMate không chỉ làm cho việc chuyển nhà trở nên thuận tiện, mà còn hơn thế nữa chúng tôi cung cấp sự AN TÂM khi chuyển nhà.",
       titleTextStyle: TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
-      subTitleTextStyle: TextStyle(
-        fontSize: 12,
-      ),
+      subTitleTextStyle: TextStyle(fontSize: 12, color: Colors.grey),
     ),
     const Introduction(
       imageUrl: "assets/images/onboarding/onboarding2.png",
@@ -38,9 +36,7 @@ class OnboardingScreen extends ConsumerWidget {
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
-      subTitleTextStyle: TextStyle(
-        fontSize: 12,
-      ),
+      subTitleTextStyle: TextStyle(fontSize: 12, color: Colors.grey),
     ),
     const Introduction(
       imageUrl: "assets/images/onboarding/onboarding3.png",
@@ -51,9 +47,7 @@ class OnboardingScreen extends ConsumerWidget {
         fontSize: 16,
         fontWeight: FontWeight.bold,
       ),
-      subTitleTextStyle: TextStyle(
-        fontSize: 12,
-      ),
+      subTitleTextStyle: TextStyle(fontSize: 12, color: Colors.grey),
     ),
   ];
 

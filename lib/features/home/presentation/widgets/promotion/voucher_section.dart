@@ -9,11 +9,10 @@ class DiscountCodesWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      // padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.orange.shade200,
+            const Color.fromARGB(125, 255, 204, 128),
             Colors.orange.shade700,
           ],
           begin: Alignment.bottomLeft,
@@ -21,24 +20,59 @@ class DiscountCodesWidget extends ConsumerWidget {
         ),
       ),
       child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 2),
-            SizedBox(
-              height: 160, // Adjust based on card height
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: const [
-                  // SizedBox(height: 10), // Spacing between cards
-                  VuochersCard(),
-                  SizedBox(width: 4), // Spacing between cards
-                  VuochersCard(),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Mã Khuyến Mãi',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 4),
-          ],
+              const SizedBox(height: 12),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: const Row(
+                        children: [
+                          VuochersCard(
+                            promoCode: 'MOVEMATESALE',
+                            description: 'Giảm ngay 99% mọi đơn',
+                            companyLogo:
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
+                          ),
+                          SizedBox(width: 12),
+                          VuochersCard(
+                            promoCode: 'FIRSTRIDE',
+                            description: 'Giảm 50% cho chuyến đi đầu tiên',
+                            companyLogo:
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
+                          ),
+                          SizedBox(width: 12),
+                          VuochersCard(
+                            promoCode: 'WEEKENDOFF',
+                            description: 'Giảm 30% vào cuối tuần',
+                            companyLogo:
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -46,92 +80,100 @@ class DiscountCodesWidget extends ConsumerWidget {
 }
 
 class VuochersCard extends StatelessWidget {
-  const VuochersCard({super.key});
+  final String promoCode;
+  final String description;
+  final String companyLogo;
+
+  const VuochersCard({
+    super.key,
+    required this.promoCode,
+    required this.description,
+    required this.companyLogo,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: 300, // Fixed width for horizontal scrolling
-
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.75,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Stack(
-          clipBehavior: Clip.none, // Allow overflow for badge
+          clipBehavior: Clip.none,
           children: [
             // Badge
             Positioned(
-              top: 0,
+              top: -10,
+              left: 0,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFF6F00),
-                  borderRadius: BorderRadius.circular(7),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Text(
-                  'Techcombank Debit',
+                  'Ưu đãi',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 12,
                   ),
                 ),
               ),
             ),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 34),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Image.network(
-                      'https://inkythuatso.com/uploads/images/2021/09/logo-techcombank-inkythuatso-10-15-11-46.jpg',
-                      width: 20,
-                      height: 20,
+                      companyLogo,
+                      width: 30,
+                      height: 30,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.image_not_supported,
+                            color: Colors.grey);
+                      },
                     ),
                     const SizedBox(width: 10),
                     const Expanded(
                       child: Text(
-                        'Giảm 200k dọn nhà nội thành',
+                        'Ưu đãi MoveMate',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: Icon(
-                        Icons.info_outlined,
-                        color: Colors.grey,
-                        size: 20,
-                        weight: 5,
-                      ),
+                    const Icon(
+                      Icons.info_outlined,
+                      color: Colors.grey,
+                      size: 20,
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                // Card Body
-                const Text(
-                  'Giảm 200k, đặt dọn nhà từ 3 triệu',
-                  style: TextStyle(
-                    fontSize: 14,
+                const SizedBox(height: 8),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 12,
                     color: Color(0xFF666666),
                   ),
                 ),
-                const SizedBox(height: 4),
-                // Card Footer
+                const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF0F4F8),
                     borderRadius: BorderRadius.circular(10),
@@ -141,38 +183,41 @@ class VuochersCard extends StatelessWidget {
                       const Icon(
                         FontAwesomeIcons.copy,
                         color: Color(0xFFFF6F00),
-                        size: 14,
+                        size: 16,
                       ),
                       const SizedBox(width: 10),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'TCBOMBAY',
-                          style: TextStyle(
-                            fontSize: 12,
+                          promoCode,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Clipboard.setData(
-                              const ClipboardData(text: 'TCBOMBAY'));
+                          Clipboard.setData(ClipboardData(text: promoCode));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Đã sao chép mã!')),
+                            SnackBar(
+                              content: Text('Đã sao chép mã $promoCode!'),
+                              duration: const Duration(seconds: 2),
+                            ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.shade200,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 2),
+                              horizontal: 16, vertical: 4),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Text(
-                          'COPY',
+                          'SAO CHÉP',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 12,
                             color: Colors.orange,
                             fontWeight: FontWeight.bold,
                           ),
