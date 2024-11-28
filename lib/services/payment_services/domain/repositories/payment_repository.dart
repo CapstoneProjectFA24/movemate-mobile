@@ -1,4 +1,5 @@
 // local
+import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/services/payment_services/data/repositories/payment_repository_impl.dart';
 import 'package:movemate/services/payment_services/data/models/request/payment_request.dart';
 import 'package:movemate/services/payment_services/data/models/response/payment_response.dart';
@@ -20,7 +21,7 @@ abstract class PaymentRepository {
     required PaymentRequest request,
   });
 
-  Future<PaymentResponse> paymentBookingCash({
+  Future<SuccessModel> paymentBookingCash({
     required String accessToken,
     required int id,
   });

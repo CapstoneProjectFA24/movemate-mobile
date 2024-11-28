@@ -48,8 +48,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
 
     // print('allUri: $allUri');
 
-
-    final result = order; 
+    final result = order;
 
 //---//
     final stateWallet = ref.watch(profileControllerProvider);
@@ -69,6 +68,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
       try {
         final listServicesDetails =
             order!.bookingDetails.where((e) => e.quantity > 0).toList();
+
         return listServicesDetails;
       } catch (e) {
         print('Error: $e');
@@ -158,7 +158,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                                         '${result?.id}', containerWidth),
                                     const SizedBox(height: 8),
                                     buildTransactionDetailRow('Nguồn tiền',
-                                        'Ví MoveMate', containerWidth),
+                                        'Tiền mặt', containerWidth),
                                     const SizedBox(height: 8),
                                     buildTransactionDetailRow(
                                         'Thời gian giao dịch',
@@ -307,59 +307,6 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                             ),
                           ),
                         ),
-                        // const SizedBox(width: 16),
-                        // Expanded(
-                        //   child: SizedBox(
-                        //     height: 48,
-                        //     child: ElevatedButton(
-                        //       // onPressed: () {
-                        //       //   context.router
-                        //       //       .push(const TransactionDetailsOrderRoute());
-                        //       // },
-
-                        //       onPressed: () async {
-                        //         // Trích xuất phần số nguyên từ bookingId để lấy id
-
-                        //         final id = bookingId;
-
-                        //         // Sử dụng BookingController để lấy OrderEntity
-                        //         final bookingController = ref
-                        //             .read(bookingControllerProvider.notifier);
-                        //         final orderEntity = await bookingController
-                        //             .getOrderEntityById(id);
-
-                        //         if (orderEntity != null) {
-                        //           // Điều hướng đến OrderDetailsScreen với orderEntity
-                        //           context.router.replaceAll([
-                        //             OrderDetailsScreenRoute(order: orderEntity)
-                        //           ]);
-                        //         } else {
-                        //           // Xử lý lỗi nếu không tìm thấy OrderEntity
-                        //           ScaffoldMessenger.of(context).showSnackBar(
-                        //             const SnackBar(
-                        //                 content: Text(
-                        //                     'Không tìm thấy thông tin đơn hàng')),
-                        //           );
-                        //         }
-                        //       },
-
-                        //       style: ElevatedButton.styleFrom(
-                        //         backgroundColor: Colors.orange.shade800,
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(8),
-                        //         ),
-                        //       ),
-                        //       child: Text(
-                        //         'Chi tiết đơn hàng',
-                        //         style: TextStyle(
-                        //           fontWeight: FontWeight.bold,
-                        //           fontSize: containerWidth * 0.045,
-                        //           color: Colors.white,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),

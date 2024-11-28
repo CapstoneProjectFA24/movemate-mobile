@@ -305,25 +305,23 @@ class PaymentController extends _$PaymentController {
     final paymentRepository = ref.read(paymentRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
     final authRepository = ref.read(authRepositoryProvider);
-    print("tuan checking 1");
+    // print("tuan checking 1");
     state = await AsyncValue.guard(() async {
-      final res = await paymentRepository.paymentBookingCash(
+      // print("tuan checking 1.1");
+      await paymentRepository.paymentBookingCash(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         id: bookingId,
       );
 
+      // print("tuan checking 2");
     });
-    print("tuan checking 2");
-    print("tuan checking 2.1 ${state.hasValue}");
-    print("tuan checking 2.2 ${state.hasError}");
-    print("tuan checking 2.3 ${state.hasValue.toString()}");
 
     if (!state.hasError) {
       await context.router.push(
         CashPaymentWaitingRoute(bookingId: bookingId),
       );
     }
-    print("tuan checking 3");
+    // print("tuan checking 3");
 
     if (state.hasError) {
       state = await AsyncValue.guard(

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -31,7 +32,7 @@ abstract class PaymentSource {
   );
 
   @PATCH('${APIConstants.paymentsBooking}/{bookingId}')
-  Future<HttpResponse<PaymentResponse>> paymentBookingCash(
+  Future<HttpResponse<SuccessModel>> paymentBookingCash(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('bookingId') int id,

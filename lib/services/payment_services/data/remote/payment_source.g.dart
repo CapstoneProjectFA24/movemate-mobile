@@ -97,7 +97,7 @@ class _PaymentSource implements PaymentSource {
   }
 
   @override
-  Future<HttpResponse<PaymentResponse>> paymentBookingCash(
+  Future<HttpResponse<SuccessModel>> paymentBookingCash(
     String contentType,
     String accessToken,
     int id,
@@ -111,7 +111,7 @@ class _PaymentSource implements PaymentSource {
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<PaymentResponse>>(Options(
+        _setStreamType<HttpResponse<SuccessModel>>(Options(
       method: 'PATCH',
       headers: _headers,
       extra: _extra,
@@ -128,7 +128,7 @@ class _PaymentSource implements PaymentSource {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = PaymentResponse.fromMap(_result.data!);
+    final _value = SuccessModel.fromMap(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }
