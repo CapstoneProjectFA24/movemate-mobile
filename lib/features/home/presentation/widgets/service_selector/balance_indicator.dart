@@ -8,6 +8,7 @@ import 'package:movemate/features/profile/presentation/controllers/profile_contr
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 
 // Hàm hỗ trợ để định dạng giá
 String formatPrice(int price) {
@@ -24,29 +25,14 @@ class BalanceIndicator extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ///
-
     final state = ref.watch(profileControllerProvider);
-    final useFetchResultWallet = useFetchObject<WalletEntity>(
-      function: (context) async {
-        print('check screen');
-        return ref.read(profileControllerProvider.notifier).getWallet(context);
-      },
-      context: context,
-    );
+    final wallet = ref.read(walletProvider);
 
-    ref.listen<bool>(refreshWallet, (_, __) => useFetchResultWallet.refresh());
+    // final walletUser = useFetchResultWallet.isFetchingData
+    //     ? 0
+    //     : useFetchResultWallet.data?.balance ?? 0;
 
-    useEffect(() {
-      ref.listen<bool>(
-          refreshWallet, (_, __) => useFetchResultWallet.refresh());
-      return null;
-    }, []);
-
-    final walletUser = useFetchResultWallet.isFetchingData
-        ? 0
-        : useFetchResultWallet.data?.balance ?? 0;
-    // final result = useFetchResultWallet.refresh;
+    final walletUser = wallet?.balance ?? 0;
 
     print(" số dư : $walletUser");
 
