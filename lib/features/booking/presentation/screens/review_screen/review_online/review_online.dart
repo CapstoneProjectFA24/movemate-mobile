@@ -150,19 +150,14 @@ class ReviewOnline extends HookConsumerWidget {
                       const SizedBox(height: 16),
                       buildServiceCard(
                         order: order,
+                        orderOld: orderOld,
                         profileUserAssign: profileUserAssign,
                         // serviceData: serviceData,
                         truckCateDetails: resultTruckCate,
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
                       buildContactCard(
                           order: order, profileUserAssign: profileUserAssign),
-                      const SizedBox(height: 24),
-                      CustomerInfo(
-                        order: orderOld,
-                        isExpanded: isExpanded,
-                        toggleDropdown: toggleDropdown,
-                      )
                     ],
                   ),
                 ),
@@ -217,8 +212,197 @@ class ReviewOnline extends HookConsumerWidget {
     );
   }
 
+//gốc
+// //
+//   Widget buildServiceCard({
+//     required OrderEntity order,
+//     required ProfileEntity? profileUserAssign,
+//     required TruckCategoryEntity? truckCateDetails,
+//   }) {
+//     return LoadingOverlay(
+//       isLoading: truckCateDetails == null,
+//       child: Container(
+//         width: double.infinity,
+//         height: 400, // Cố định chiều cao của buildServiceCard
+//         padding: const EdgeInsets.all(16),
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(8),
+//           boxShadow: [
+//             BoxShadow(
+//               color: Colors.grey.withOpacity(0.2),
+//               spreadRadius: 1,
+//               blurRadius: 5,
+//               offset: const Offset(0, 3),
+//             ),
+//           ],
+//         ),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Row(
+//               children: [
+//                 truckCateDetails?.imageUrl != null &&
+//                         truckCateDetails!.imageUrl.isNotEmpty
+//                     ? Image.network(
+//                         truckCateDetails.imageUrl,
+//                         width: 100,
+//                         height: 100,
+//                         fit: BoxFit.cover,
+//                         errorBuilder: (context, error, stackTrace) =>
+//                             const Icon(Icons.error, size: 100),
+//                       )
+//                     : Image.network(
+//                         'https://img.lovepik.com/png/20231013/Cartoon-blue-logistics-transport-truck-package-consumption-driver_196743_wh860.png',
+//                         width: 100,
+//                         height: 100,
+//                         fit: BoxFit.cover,
+//                       ),
+//                 const SizedBox(width: 16),
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                           order.bookingDetails
+//                               .firstWhere(
+//                                 (e) => e.type == 'TRUCK',
+//                                 orElse: () => BookingDetailResponseEntity(
+//                                   bookingId: 0,
+//                                   id: 0,
+//                                   type: 'TRUCK',
+//                                   serviceId: 0,
+//                                   quantity: 0,
+//                                   price: 0,
+//                                   status: "READY",
+//                                   name: "Xe Tải",
+//                                   description: "Không có mô tả",
+//                                   imageUrl: "",
+//                                 ),
+//                               )
+//                               .name,
+//                           style: const TextStyle(fontWeight: FontWeight.bold)),
+//                       const SizedBox(height: 8),
+//                       FittedBox(
+//                         child: Row(
+//                           children: [
+//                             Text(truckCateDetails?.estimatedLenght ?? '',
+//                                 style: TextStyle(
+//                                     fontSize: 13, color: Colors.grey.shade700)),
+//                             Text(' dài, ',
+//                                 style: TextStyle(
+//                                     fontSize: 13, color: Colors.grey.shade700)),
+//                             Text(truckCateDetails?.estimatedWidth ?? '',
+//                                 style: TextStyle(
+//                                     fontSize: 13, color: Colors.grey.shade700)),
+//                             Text(' rộng, ',
+//                                 style: TextStyle(
+//                                     fontSize: 13, color: Colors.grey.shade700)),
+//                             Text(truckCateDetails?.estimatedHeight ?? '',
+//                                 style: TextStyle(
+//                                     fontSize: 13, color: Colors.grey.shade700)),
+//                             Text(' cao',
+//                                 style: TextStyle(
+//                                     fontSize: 13, color: Colors.grey.shade700)),
+//                           ],
+//                         ),
+//                       ),
+//                       const SizedBox(height: 8),
+//                       Text(
+//                           order.bookingDetails
+//                               .firstWhere((e) => e.type == 'TRUCK')
+//                               .description,
+//                           style: const TextStyle(fontSize: 15)),
+//                       const SizedBox(height: 8),
+//                       // Text(
+//                       //     'Giá: ${formatPrice(order.bookingDetails.firstWhere((e) => e.type == 'TRUCK').price.toInt())}',
+//                       //     style: const TextStyle(
+//                       //         fontSize: 15, fontWeight: FontWeight.bold)),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             const SizedBox(height: 16),
+//             // Sử dụng Expanded kết hợp với ListView để có thể scroll danh sách buildPriceItem
+//             // Expanded(
+//             //   child: ListView.builder(
+//             //     itemCount: order.bookingDetails.length,
+//             //     itemBuilder: (context, index) {
+//             //       final detail = order.bookingDetails[index];
+//             //       return buildPriceItem(
+//             //         detail.name ?? '',
+//             //         formatPrice(detail.price.toInt()),
+//             //       );
+//             //     },
+//             //   ),
+//             // ),
+//             // Expanded(
+//             //   child: ListView.builder(
+//             //     itemCount: orderOld!.bookingDetails.length,
+//             //     itemBuilder: (context, index) {
+//             //       final detail = orderOld!.bookingDetails[index];
+//             //       return buildPriceItem(
+//             //         detail.name ?? '',
+//             //         formatPrice(detail.price.toInt()),
+//             //       );
+//             //     },
+//             //   ),
+//             // ),
+
+//             Expanded(
+//               child: ListView.builder(
+//                 itemCount: order.bookingDetails.length,
+//                 itemBuilder: (context, index) {
+//                   final newDetail = order.bookingDetails[index];
+
+//                   // Find matching service in old order
+//                   final oldDetail = orderOld?.bookingDetails.firstWhere(
+//                     (old) => old.id == newDetail.id,
+//                     orElse: () => BookingDetailResponseEntity(
+//                       id: 0,
+//                       serviceId: 0,
+//                       bookingId: 0,
+//                       quantity: 0,
+//                       price: 0,
+//                       status: '',
+//                       type: '',
+//                       name: '',
+//                       description: '',
+//                       imageUrl: '',
+//                     ),
+//                   );
+
+//                   return Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       buildPriceItem(
+//                         newDetail.name ?? '',
+//                         formatPrice(newDetail.price.toInt()),
+//                       ),
+//                       if (oldDetail != null &&
+//                           oldDetail.price != newDetail.price)
+//                         buildPriceItem(
+//                           oldDetail.name ?? '',
+//                           formatPrice(oldDetail.price.toInt()),
+//                           isOld: true,
+//                         ),
+//                     ],
+//                   );
+//                 },
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// //
+//test
+
   Widget buildServiceCard({
     required OrderEntity order,
+    required OrderEntity? orderOld,
     required ProfileEntity? profileUserAssign,
     required TruckCategoryEntity? truckCateDetails,
   }) {
@@ -267,24 +451,25 @@ class ReviewOnline extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          order.bookingDetails
-                              .firstWhere(
-                                (e) => e.type == 'TRUCK',
-                                orElse: () => BookingDetailResponseEntity(
-                                  bookingId: 0,
-                                  id: 0,
-                                  type: 'TRUCK',
-                                  serviceId: 0,
-                                  quantity: 0,
-                                  price: 0,
-                                  status: "READY",
-                                  name: "Xe Tải",
-                                  description: "Không có mô tả",
-                                  imageUrl: "",
-                                ),
-                              )
-                              .name,
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                        order.bookingDetails
+                            .firstWhere(
+                              (e) => e.type == 'TRUCK',
+                              orElse: () => BookingDetailResponseEntity(
+                                bookingId: 0,
+                                id: 0,
+                                type: 'TRUCK',
+                                serviceId: 0,
+                                quantity: 0,
+                                price: 0,
+                                status: "READY",
+                                name: "Xe Tải",
+                                description: "Không có mô tả",
+                                imageUrl: "",
+                              ),
+                            )
+                            .name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       FittedBox(
                         child: Row(
@@ -312,31 +497,114 @@ class ReviewOnline extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                          order.bookingDetails
-                              .firstWhere((e) => e.type == 'TRUCK')
-                              .description,
-                          style: const TextStyle(fontSize: 15)),
+                        order.bookingDetails
+                            .firstWhere((e) => e.type == 'TRUCK')
+                            .description,
+                        style: const TextStyle(fontSize: 15),
+                      ),
                       const SizedBox(height: 8),
-                      // Text(
-                      //     'Giá: ${formatPrice(order.bookingDetails.firstWhere((e) => e.type == 'TRUCK').price.toInt())}',
-                      //     style: const TextStyle(
-                      //         fontSize: 15, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            // Sử dụng Expanded kết hợp với ListView để có thể scroll danh sách buildPriceItem
+            // Compare the service details from both lists
             Expanded(
               child: ListView.builder(
                 itemCount: order.bookingDetails.length,
                 itemBuilder: (context, index) {
-                  final detail = order.bookingDetails[index];
-                  return buildPriceItem(
-                    detail.name ?? '',
-                    formatPrice(detail.price.toInt()),
-                  );
+                  final newService = order.bookingDetails[index];
+                  // Get the 'TRUCK' service from orderOld
+                  final oldService = orderOld?.bookingDetails.firstWhere(
+                    (e) => e.id == newService.id && e.type == "TRUCK",
+                    orElse: () => BookingDetailResponseEntity(
+                      bookingId: 0,
+                      id: 0,
+                      type: "TRUCK", // Ensure a valid type
+                      serviceId: 0,
+                      quantity: 0,
+                      price: 0,
+                      status: "READY",
+                      name: "No Service",
+                      description: "No description",
+                      imageUrl: "",
+                    ),
+                  ); // Default return if no matching service
+
+                  if (newService.type == "TRUCK") {
+                    if (oldService?.id != 0) {
+                      // If oldService is not the default
+                      if (newService.id == oldService?.id) {
+                        if (newService.price == oldService?.price) {
+                          return buildPriceItem(newService.name,
+                              formatPrice(newService.price.toInt()));
+                        } else {
+                          return Column(
+                            children: [
+                              buildPriceItem(newService.name,
+                                  formatPrice(newService.price.toInt())),
+                              buildPriceItem(" ${oldService?.name}",
+                                  formatPrice((oldService?.price ?? 0).toInt()),
+                                  isStrikethrough: true),
+                            ],
+                          );
+                        }
+                      } else {
+                        return Column(
+                          children: [
+                            buildPriceItem(newService.name,
+                                formatPrice(newService.price.toInt())),
+                            buildPriceItem("${oldService?.name}",
+                                formatPrice((oldService?.price ?? 0).toInt()),
+                                isStrikethrough: true),
+                          ],
+                        );
+                      }
+                    } else {
+                      // If no old service, just display the new service
+                      return buildPriceItem(newService.name,
+                          formatPrice(newService.price.toInt()));
+                    }
+                  } else {
+                    // For non-"TRUCK" services, compare id and price
+                    final oldServiceNonTruck = orderOld?.bookingDetails
+                        .firstWhere(
+                            (e) => e.id == newService.id && e.type != "TRUCK",
+                            orElse: () => BookingDetailResponseEntity(
+                                  bookingId: 0,
+                                  id: 0,
+                                  type: "TRUCK", // Default for non-TRUCK
+                                  serviceId: 0,
+                                  quantity: 0,
+                                  price: 0,
+                                  status: "READY",
+                                  name: "No Service",
+                                  description: "No description",
+                                  imageUrl: "",
+                                ));
+                    if (newService.id == oldServiceNonTruck?.id &&
+                        newService.price == oldServiceNonTruck?.price) {
+                      return buildPriceItem(newService.name,
+                          formatPrice(newService.price.toInt()));
+                    } else if (newService.id == oldServiceNonTruck?.id &&
+                        newService.price != oldServiceNonTruck?.price) {
+                      return Column(
+                        children: [
+                          buildPriceItem(newService.name,
+                              formatPrice(newService.price.toInt())),
+                          buildPriceItem(
+                              oldServiceNonTruck?.name ?? 'Unknown',
+                              formatPrice(
+                                  oldServiceNonTruck?.price.toInt() ?? 0),
+                              isStrikethrough: true),
+                        ],
+                      );
+                    } else {
+                      return buildPriceItem(newService.name,
+                          formatPrice(newService.price.toInt()));
+                    }
+                  }
                 },
               ),
             ),
@@ -346,12 +614,14 @@ class ReviewOnline extends HookConsumerWidget {
     );
   }
 
+//
+
   Widget buildContactCard({
     required OrderEntity order,
     required ProfileEntity? profileUserAssign,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
