@@ -16,9 +16,11 @@ class ServicesPackageEntity {
   final double discountRate;
   final double amount;
   final int? parentServiceId;
+  final bool isQuantity; // Thêm trường này
+  final int? quantityMax; // Thêm trường này
   final TruckCategoryEntity? truckCategory;
   final List<SubServiceEntity> inverseParentService;
-              
+
   ServicesPackageEntity({
     required this.id,
     required this.name,
@@ -33,6 +35,8 @@ class ServicesPackageEntity {
     this.parentServiceId,
     this.truckCategory,
     required this.inverseParentService,
+    required this.isQuantity, // Khởi tạo trường này
+    this.quantityMax,
   });
 
   // Added copyWith method
@@ -50,6 +54,8 @@ class ServicesPackageEntity {
     int? parentServiceId,
     TruckCategoryEntity? truckCategory,
     List<SubServiceEntity>? inverseParentService,
+    bool? isQuantity,
+    int? quantityMax,
   }) {
     return ServicesPackageEntity(
       id: id ?? this.id,
@@ -65,6 +71,8 @@ class ServicesPackageEntity {
       parentServiceId: parentServiceId ?? this.parentServiceId,
       truckCategory: truckCategory ?? this.truckCategory,
       inverseParentService: inverseParentService ?? this.inverseParentService,
+      isQuantity: isQuantity ?? this.isQuantity,
+      quantityMax: quantityMax ?? this.quantityMax,
     );
   }
 
@@ -73,7 +81,7 @@ class ServicesPackageEntity {
       id: map['id'] ?? 0,
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      isActived: map['isActived'] ?? false,
+      isActived: map['isActived'] ?? false, // Ensure non-null value
       tier: map['tier'] ?? 0,
       imageUrl: map['imageUrl'] ?? '',
       quantity: map['quantity'], // Parse quantity
@@ -88,6 +96,8 @@ class ServicesPackageEntity {
           ? List<SubServiceEntity>.from(map['inverseParentService']
               .map((x) => SubServiceEntity.fromMap(x)))
           : [],
+      isQuantity: map['isQuantity'] ?? false, // Ensure non-null value
+      quantityMax: map['quantityMax'], // Handle quantityMax
     );
   }
 
@@ -107,6 +117,8 @@ class ServicesPackageEntity {
       'truckCategory': truckCategory?.toMap(),
       'inverseParentService':
           inverseParentService.map((x) => x.toMap()).toList(),
+      'isQuantity': isQuantity, // Thêm dòng này
+      'quantityMax': quantityMax, // Thêm dòng này
     };
   }
 
@@ -117,6 +129,6 @@ class ServicesPackageEntity {
 
   @override
   String toString() {
-    return 'ServicesPackageEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, quantity: $quantity, type: $type, discountRate: $discountRate, amount: $amount, parentServiceId: $parentServiceId, truckCategory: $truckCategory, inverseParentService: $inverseParentService)';
+    return 'ServicesPackageEntity(id: $id, name: $name, description: $description, isActived: $isActived, tier: $tier, imageUrl: $imageUrl, quantity: $quantity, type: $type, discountRate: $discountRate, amount: $amount, parentServiceId: $parentServiceId, truckCategory: $truckCategory, inverseParentService: $inverseParentService, isQuantity: $isQuantity, quantityMax: $quantityMax)';
   }
 }

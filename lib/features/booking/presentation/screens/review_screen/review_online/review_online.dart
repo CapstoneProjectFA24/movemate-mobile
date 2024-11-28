@@ -401,7 +401,7 @@ class ReviewOnline extends HookConsumerWidget {
               color: Colors.orange,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Icon(Icons.phone, color: Colors.white, size: 20),
+            child: const Icon(Icons.chat, color: Colors.white, size: 20),
           ),
         ],
       ),
