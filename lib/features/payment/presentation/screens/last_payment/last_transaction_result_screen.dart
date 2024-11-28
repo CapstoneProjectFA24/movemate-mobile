@@ -182,294 +182,272 @@ class LastTransactionResultScreen extends HookConsumerWidget {
 
     final listServices = getListSerVices(result);
     double containerHeight =
-        MediaQuery.of(context).size.height * (listServices.length * 0.125);
-    return LoadingOverlay(
-      isLoading: state.isLoading,
-      child: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.orange.shade400, Colors.orange.shade500],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+        MediaQuery.of(context).size.height * (listServices.length * 0.120);
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.orange.shade400, Colors.orange.shade500],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Container chính
-                        Container(
-                          width: containerWidth,
-                          height: containerHeight,
-                          margin: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(height: 24),
-                              // Biểu tượng thành công
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.orange.shade500,
-                                  size: containerWidth *
-                                      0.1, // Tăng kích thước icon
-                                ),
-                              ),
-                              // Tiêu đề
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                child: Text(
-                                  'Thanh toán thành công',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.orange.shade500,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: containerWidth * 0.06,
-                                  ),
-                                ),
-                              ),
-                              // Thông tin giao dịch
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: Column(
-                                  children: [
-                                    buildTransactionDetailRow('Số tiền',
-                                        formatPrice(amount), containerWidth),
-                                  ],
-                                ),
-                              ),
-                              // Đường kẻ nét đứt
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: DashedLine(color: Colors.grey.shade300),
-                              ),
-                              // Chi tiết mã giao dịch
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: Column(
-                                  children: [
-                                    buildTransactionDetailRow('Mã giao dịch',
-                                        transactionCode, containerWidth),
-                                    const SizedBox(height: 8),
-                                    buildTransactionDetailRow('Nguồn tiền',
-                                        paymentMethod, containerWidth),
-                                    const SizedBox(height: 8),
-                                    buildTransactionDetailRow(
-                                        'Thời gian giao dịch',
-                                        formattedDate,
-                                        containerWidth),
-                                    const SizedBox(height: 2),
-                                    buildTransactionDetailRow(
-                                      '',
-                                      formattedTime,
-                                      containerWidth * 0.89,
-                                    ),
-                                    ListView.builder(
-                                        shrinkWrap: true,
-                                        physics:
-                                            const AlwaysScrollableScrollPhysics(),
-                                        itemCount: listServices.length,
-                                        itemBuilder: (context, index) {
-                                          final serviceDetails =
-                                              listServices[index];
-                                          return buildTransactionDetailRow(
-                                            serviceDetails.name,
-                                            formatPrice(
-                                                (serviceDetails.price ?? 0)
-                                                    .toInt()),
-                                            containerWidth * 0.80,
-                                          );
-                                        }),
-                                  ],
-                                ),
-                              ),
-                              // const SizedBox(height: 24),
-                            ],
-                          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Container chính
+                      Container(
+                        width: containerWidth,
+                        height: containerHeight,
+                        margin: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10,
+                              spreadRadius: 2,
+                            ),
+                          ],
                         ),
-                        // Thông tin số dư ví - Đặt bên dưới container chính
-                        Container(
-                          width: containerWidth,
-                          margin: const EdgeInsets.symmetric(horizontal: 24),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 40,
-                                height: 40,
-                                margin: const EdgeInsets.only(right: 8),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(paymentImageUrl),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 24),
+                            // Biểu tượng thành công
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade100,
+                                shape: BoxShape.circle,
                               ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Thanh toán ví điện tử',
-                                      style: TextStyle(
-                                        fontSize: containerWidth * 0.045,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    // Bạn có thể thêm các thông tin khác ở đây nếu cần
-                                  ],
-                                ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.orange.shade500,
+                                size: containerWidth *
+                                    0.1, // Tăng kích thước icon
                               ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
-                  ),
-                ),
-                // Buttons container at bottom
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade500,
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 48,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                final tabsRouter = context.router.root
-                                    .innerRouterOf<TabsRouter>(
-                                        TabViewScreenRoute.name);
-                                if (tabsRouter != null) {
-                                  tabsRouter.setActiveIndex(0);
-                                  context.router.popUntilRouteWithName(
-                                      TabViewScreenRoute.name);
-                                } else {
-                                  context.router.pushAndPopUntil(
-                                    const TabViewScreenRoute(children: [
-                                      HomeScreenRoute(),
-                                    ]),
-                                    predicate: (route) => false,
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                side: const BorderSide(color: Colors.white),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
+                            ),
+                            // Tiêu đề
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 16),
                               child: Text(
-                                'Màn hình chính',
+                                'Thanh toán thành công',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.orange.shade500,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: containerWidth * 0.045,
+                                  fontSize: containerWidth * 0.06,
                                 ),
+                              ),
+                            ),
+                            // Thông tin giao dịch
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Column(
+                                children: [
+                                  buildTransactionDetailRow('Mã đơn hàng',
+                                      '${result?.id}', containerWidth * 0.89),
+                                  const SizedBox(height: 4),
+                                  buildTransactionDetailRow('Nguồn tiền',
+                                      paymentMethod, containerWidth * 0.89),
+                                  const SizedBox(height: 4),
+                                  buildTransactionDetailRow(
+                                      'Thời gian giao dịch',
+                                      formattedDate,
+                                      containerWidth * 0.89),
+                                  const SizedBox(height: 2),
+                                  buildTransactionDetailRow(
+                                    '',
+                                    formattedTime,
+                                    containerWidth * 0.89,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Đường kẻ nét đứt
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 12),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: DashedLine(color: Colors.grey.shade300),
+                            ),
+                            // Chi tiết mã giao dịch
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Column(
+                                children: [
+                                  // Đường kẻ nét đứt
+
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: listServices.length,
+                                      itemBuilder: (context, index) {
+                                        final serviceDetails =
+                                            listServices[index];
+                                        return buildListService(
+                                          serviceDetails.name,
+                                          formatPrice(
+                                              (serviceDetails.price ?? 0)
+                                                  .toInt()),
+                                          containerWidth * 0.80,
+                                        );
+                                      }),
+                                ],
+                              ),
+                            ),
+                            // const SizedBox(height: 24),
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 12),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: DashedLine(color: Colors.grey.shade300),
+                            ),
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Column(
+                                children: [
+                                  buildTransactionDetailPriceRow(
+                                      'Tổng tiền',
+                                      formatPrice(
+                                          ((result?.total ?? 0)).toInt()),
+                                      containerWidth,
+                                      false),
+                                  const SizedBox(height: 2),
+                                  buildTransactionDetailPriceRow(
+                                      'Tiền đã đặt cọc',
+                                      formatPrice(
+                                          (result?.deposit ?? 0).toInt()),
+                                      containerWidth,
+                                      false),
+                                  const SizedBox(height: 2),
+                                  buildTransactionDetailPriceRow(
+                                      'Số tiền còn lại đã thanh toán',
+                                      formatPrice(((result?.total ?? 0) -
+                                              (result?.deposit ?? 0))
+                                          .toInt()),
+                                      containerWidth,
+                                      true),
+                                ],
+                              ),
+                            ),
+                            // const SizedBox(height: 4),
+                          ],
+                        ),
+                      ),
+                      // Thông tin số dư ví - Đặt bên dưới container chính
+                      Container(
+                        width: containerWidth,
+                        margin: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              margin: const EdgeInsets.only(right: 8),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(paymentImageUrl),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Thanh toán ví điện tử',
+                                    style: TextStyle(
+                                      fontSize: containerWidth * 0.045,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  // Bạn có thể thêm các thông tin khác ở đây nếu cần
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+              // Buttons container at bottom
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade500,
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              final tabsRouter = context.router.root
+                                  .innerRouterOf<TabsRouter>(
+                                      TabViewScreenRoute.name);
+                              if (tabsRouter != null) {
+                                tabsRouter.setActiveIndex(0);
+                                context.router.popUntilRouteWithName(
+                                    TabViewScreenRoute.name);
+                              } else {
+                                context.router.pushAndPopUntil(
+                                  const TabViewScreenRoute(children: [
+                                    HomeScreenRoute(),
+                                  ]),
+                                  predicate: (route) => false,
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Màn hình chính',
+                              style: TextStyle(
+                                color: Colors.orange.shade500,
+                                fontWeight: FontWeight.bold,
+                                fontSize: containerWidth * 0.045,
                               ),
                             ),
                           ),
                         ),
-                        // const SizedBox(width: 16),
-                        // Expanded(
-                        //   child: SizedBox(
-                        //     height: 48,
-                        //     child: ElevatedButton(
-                        //       onPressed: () async {
-                        //         // Trích xuất phần số nguyên từ bookingId để lấy id
-                        //         final idPart = bookingId.split('-').first;
-                        //         final id = int.tryParse(idPart);
-
-                        //         if (id != null) {
-                        //           // Sử dụng BookingController để lấy OrderEntity
-                        //           final bookingController = ref
-                        //               .read(bookingControllerProvider.notifier);
-                        //           final orderEntity = await bookingController
-                        //               .getOrderEntityById(id);
-
-                        //           if (orderEntity != null) {
-                        //             // Điều hướng đến OrderDetailsScreen với orderEntity
-                        //             context.router.push(OrderDetailsScreenRoute(
-                        //                 order: orderEntity));
-                        //           } else {
-                        //             // Xử lý lỗi nếu không tìm thấy OrderEntity
-                        //             ScaffoldMessenger.of(context).showSnackBar(
-                        //               const SnackBar(
-                        //                   content: Text(
-                        //                       'Không tìm thấy thông tin đơn hàng')),
-                        //             );
-                        //           }
-                        //         } else {
-                        //           // Xử lý lỗi nếu không thể trích xuất id
-                        //           ScaffoldMessenger.of(context).showSnackBar(
-                        //             const SnackBar(
-                        //                 content: Text(
-                        //                     'Không thể lấy id từ bookingId')),
-                        //           );
-                        //         }
-                        //       },
-                        //       style: ElevatedButton.styleFrom(
-                        //         backgroundColor: Colors.orange.shade800,
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(8),
-                        //         ),
-                        //       ),
-                        //       child: Text(
-                        //         'Chi tiết đơn hàng',
-                        //         style: TextStyle(
-                        //           fontWeight: FontWeight.bold,
-                        //           fontSize: containerWidth * 0.045,
-                        //           color: Colors.white,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -478,21 +456,100 @@ class LastTransactionResultScreen extends HookConsumerWidget {
 
   Widget buildTransactionDetailRow(
       String title, String value, double containerWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: containerWidth * 0.045),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: containerWidth * 0.045,
-            fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0.1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+              fontWeight: FontWeight.w300,
+            ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade500,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTransactionDetailPriceRow(
+      String title, String value, double containerWidth, bool isBold) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 12,
+                color: isBold ? Colors.black : Colors.grey.shade500,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildListService(String title, String value, double containerWidth) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
+
+        children: [
+          Expanded(
+            flex: 5, // Allocate space for the title
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[700],
+              ),
+              softWrap: true, // Allow wrapping
+              overflow: TextOverflow.visible, // Ensure text is not clipped
+            ),
+          ),
+          const SizedBox(width: 10), // Add spacing between title and value
+          Expanded(
+            flex: 2, // Allocate space for the value
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color.fromARGB(255, 174, 178, 183),
+              ),
+              softWrap: true, // Allow wrapping
+              overflow: TextOverflow.visible, // Ensure text is not clipped
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
