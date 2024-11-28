@@ -29,6 +29,13 @@ abstract class PaymentSource {
     @Header(APIConstants.authHeader) String accessToken,
     @Queries() PaymentRequest request,
   );
+
+  @PATCH('${APIConstants.paymentsBooking}/{bookingId}')
+  Future<HttpResponse<PaymentResponse>> paymentBookingCash(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('bookingId') int id,
+  );
 }
 
 @riverpod

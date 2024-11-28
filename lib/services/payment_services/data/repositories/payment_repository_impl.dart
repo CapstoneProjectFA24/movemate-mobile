@@ -48,4 +48,14 @@ class PaymentRepositoryImpl extends RemoteBaseRepository
           APIConstants.contentType, accessToken, request),
     );
   }
+  @override
+  Future<PaymentResponse> paymentBookingCash({
+    required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _paymentSource.paymentBookingCash(
+          APIConstants.contentType, accessToken, id),
+    );
+  }
 }

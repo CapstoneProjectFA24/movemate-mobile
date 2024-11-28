@@ -19,6 +19,11 @@ abstract class PaymentRepository {
     required String accessToken,
     required PaymentRequest request,
   });
+
+  Future<PaymentResponse> paymentBookingCash({
+    required String accessToken,
+    required int id,
+  });
 }
 
 @Riverpod(keepAlive: true)

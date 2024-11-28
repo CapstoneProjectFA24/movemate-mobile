@@ -296,4 +296,62 @@ class PaymentController extends _$PaymentController {
       }
     }
   }
+
+  Future<void> paymentBookingCash({
+    required BuildContext context,
+    required int bookingId,
+  }) async {
+    state = const AsyncLoading();
+    final paymentRepository = ref.read(paymentRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    final authRepository = ref.read(authRepositoryProvider);
+    print("tuan checking 1");
+    state = await AsyncValue.guard(() async {
+      final res = await paymentRepository.paymentBookingCash(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: bookingId,
+      );
+
+    });
+    print("tuan checking 2");
+    print("tuan checking 2.1 ${state.hasValue}");
+    print("tuan checking 2.2 ${state.hasError}");
+    print("tuan checking 2.3 ${state.hasValue.toString()}");
+
+    if (!state.hasError) {
+      await context.router.push(
+        CashPaymentWaitingRoute(bookingId: bookingId),
+      );
+    }
+    print("tuan checking 3");
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(
+        () async {
+          final statusCode = (state.error as DioException).onStatusDio();
+          await handleAPIError(
+            statusCode: statusCode,
+            stateError: state.error!,
+            context: context,
+            onCallBackGenerateToken: () async => await reGenerateToken(
+              authRepository,
+              context,
+            ),
+          );
+
+          // if refresh token expired
+          // if (state.hasError) {
+          //   await ref.read(signInControllerProvider.notifier).signOut(context);
+          //   return;
+          // }
+
+          if (statusCode != StatusCodeType.unauthentication.type) {
+            return;
+          }
+
+          await paymentBookingCash(context: context, bookingId: bookingId);
+        },
+      );
+    }
+  }
 }
