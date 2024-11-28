@@ -294,7 +294,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                     ListView.builder(
                                         shrinkWrap: true,
                                         physics:
-                                            const NeverScrollableScrollPhysics(),
+                                            const AlwaysScrollableScrollPhysics(),
                                         itemCount: listServices.length,
                                         itemBuilder: (context, index) {
                                           final serviceDetails =
@@ -310,7 +310,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 24),
+                              // const SizedBox(height: 24),
                             ],
                           ),
                         ),

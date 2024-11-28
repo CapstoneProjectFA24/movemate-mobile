@@ -131,7 +131,7 @@ class VehicleCarouselState extends State<VehicleCarousel> {
             child: const Text(
               'Xem tất cả',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 10,
                 color: Colors.orange,
                 fontWeight: FontWeight.bold,
               ),
@@ -147,7 +147,7 @@ class VehicleCarouselState extends State<VehicleCarousel> {
       children: [
         SizedBox(
           width: double.infinity,
-          height: 295,
+          height: 300,
           child: PageView.builder(
             controller: pageController,
             itemCount: vehicleData.length,
@@ -155,7 +155,7 @@ class VehicleCarouselState extends State<VehicleCarousel> {
             itemBuilder: (_, index) => VehicleCard(vehicle: vehicleData[index]),
           ),
         ),
-        const SizedBox(height: 8),
+        // const SizedBox(height: 8),
         buildPageIndicator(),
       ],
     );
@@ -215,7 +215,7 @@ class VehicleCard extends StatelessWidget {
         width: double.infinity,
         height: 253,
         child: Padding(
-          padding: const EdgeInsets.only(left: 24, bottom: 5),
+          padding: const EdgeInsets.only(left: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -230,7 +230,7 @@ class VehicleCard extends StatelessWidget {
               Text(
                 vehicle.title,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -238,7 +238,7 @@ class VehicleCard extends StatelessWidget {
               Text(
                 vehicle.description,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
@@ -263,11 +263,11 @@ class VehicleCard extends StatelessWidget {
   Widget buildInfoItem(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.grey),
+        Icon(icon, size: 12, color: Colors.grey),
         const SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(fontSize: 16, color: Colors.grey),
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
         ),
       ],
     );
