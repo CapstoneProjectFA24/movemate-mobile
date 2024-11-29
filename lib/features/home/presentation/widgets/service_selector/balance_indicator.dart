@@ -27,15 +27,29 @@ class BalanceIndicator extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileControllerProvider);
     final wallet = ref.read(walletProvider);
+    final useFetchResultWallet = useFetchObject<WalletEntity>(
+      function: (context) async {
+        print('check screen');
+        return ref.read(profileControllerProvider.notifier).getWallet(context);
+      },
+      context: context,
+    );
+    ref.listen<bool>(refreshWallet, (_, __) => useFetchResultWallet.refresh());
 
+    useEffect(() {
+      ref.listen<bool>(
+          refreshWallet, (_, __) => useFetchResultWallet.refresh());
+      return null;
+    }, []);
     // final walletUser = useFetchResultWallet.isFetchingData
     //     ? 0
     //     : useFetchResultWallet.data?.balance ?? 0;
 
-    final walletUser = wallet?.balance ?? 0;
+    final walletUser =
+        useFetchResultWallet.isFetchingData ? 0 : wallet?.balance ?? 0;
+    // final result = useFetchResultWallet.refresh;
 
     print(" số dư : $walletUser");
-
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: FadeInLeft(
