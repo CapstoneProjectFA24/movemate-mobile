@@ -1294,7 +1294,7 @@ class ReviewOnlineRoute extends PageRouteInfo<ReviewOnlineRouteArgs> {
   ReviewOnlineRoute({
     Key? key,
     required OrderEntity order,
-    required OrderEntity? orderOld,
+    required OrderEntity orderOld,
     List<PageRouteInfo>? children,
   }) : super(
           ReviewOnlineRoute.name,
@@ -1323,7 +1323,7 @@ class ReviewOnlineRouteArgs {
 
   final OrderEntity order;
 
-  final OrderEntity? orderOld;
+  final OrderEntity orderOld;
 
   @override
   String toString() {

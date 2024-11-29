@@ -25,7 +25,7 @@ import 'package:movemate/utils/enums/enums_export.dart';
 @RoutePage()
 class ReviewOnline extends HookConsumerWidget {
   final OrderEntity order;
-  final OrderEntity? orderOld;
+  final OrderEntity orderOld;
 
   const ReviewOnline({super.key, required this.order, required this.orderOld});
 
@@ -402,7 +402,7 @@ class ReviewOnline extends HookConsumerWidget {
 
   Widget buildServiceCard({
     required OrderEntity order,
-    required OrderEntity? orderOld,
+    required OrderEntity orderOld,
     required ProfileEntity? profileUserAssign,
     required TruckCategoryEntity? truckCateDetails,
   }) {
@@ -514,97 +514,42 @@ class ReviewOnline extends HookConsumerWidget {
               child: ListView.builder(
                 itemCount: order.bookingDetails.length,
                 itemBuilder: (context, index) {
-                  final newService = order.bookingDetails[index];
-                  // Get the 'TRUCK' service from orderOld
-                  final oldService = orderOld?.bookingDetails.firstWhere(
-                    (e) => e.id == newService.id && e.type == "TRUCK",
+                  final newDetail = order.bookingDetails[index];
+
+                  // Find matching service in old order
+                  final oldDetail = orderOld.bookingDetails.firstWhere(
+                    (old) =>
+                        old.serviceId == newDetail.serviceId &&
+                        old.type == newDetail.type,
                     orElse: () => BookingDetailResponseEntity(
                       bookingId: 0,
                       id: 0,
-                      type: "TRUCK", // Ensure a valid type
+                      type: 'TRUCK',
                       serviceId: 0,
                       quantity: 0,
                       price: 0,
                       status: "READY",
-                      name: "No Service",
-                      description: "No description",
+                      name: "Xe Tải",
+                      description: "Không có mô tả",
                       imageUrl: "",
                     ),
-                  ); // Default return if no matching service
+                  );
 
-                  if (newService.type == "TRUCK") {
-                    if (oldService?.id != 0) {
-                      // If oldService is not the default
-                      if (newService.id == oldService?.id) {
-                        if (newService.price == oldService?.price) {
-                          return buildPriceItem(newService.name,
-                              formatPrice(newService.price.toInt()));
-                        } else {
-                          return Column(
-                            children: [
-                              buildPriceItem(newService.name,
-                                  formatPrice(newService.price.toInt())),
-                              buildPriceItem(" ${oldService?.name}",
-                                  formatPrice((oldService?.price ?? 0).toInt()),
-                                  isStrikethrough: true),
-                            ],
-                          );
-                        }
-                      } else {
-                        return Column(
-                          children: [
-                            buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt())),
-                            buildPriceItem("${oldService?.name}",
-                                formatPrice((oldService?.price ?? 0).toInt()),
-                                isStrikethrough: true),
-                          ],
-                        );
-                      }
-                    } else {
-                      // If no old service, just display the new service
-                      return buildPriceItem(newService.name,
-                          formatPrice(newService.price.toInt()));
-                    }
-                  } else {
-                    // For non-"TRUCK" services, compare id and price
-                    final oldServiceNonTruck = orderOld?.bookingDetails
-                        .firstWhere(
-                            (e) => e.id == newService.id && e.type != "TRUCK",
-                            orElse: () => BookingDetailResponseEntity(
-                                  bookingId: 0,
-                                  id: 0,
-                                  type: "TRUCK", // Default for non-TRUCK
-                                  serviceId: 0,
-                                  quantity: 0,
-                                  price: 0,
-                                  status: "READY",
-                                  name: "No Service",
-                                  description: "No description",
-                                  imageUrl: "",
-                                ));
-                    if (newService.id == oldServiceNonTruck?.id &&
-                        newService.price == oldServiceNonTruck?.price) {
-                      return buildPriceItem(newService.name,
-                          formatPrice(newService.price.toInt()));
-                    } else if (newService.id == oldServiceNonTruck?.id &&
-                        newService.price != oldServiceNonTruck?.price) {
-                      return Column(
-                        children: [
-                          buildPriceItem(newService.name,
-                              formatPrice(newService.price.toInt())),
-                          buildPriceItem(
-                              oldServiceNonTruck?.name ?? 'Unknown',
-                              formatPrice(
-                                  oldServiceNonTruck?.price.toInt() ?? 0),
-                              isStrikethrough: true),
-                        ],
-                      );
-                    } else {
-                      return buildPriceItem(newService.name,
-                          formatPrice(newService.price.toInt()));
-                    }
-                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildPriceItem(
+                        newDetail.name ?? '',
+                        formatPrice(newDetail.price.toInt()),
+                      ),
+                      if (oldDetail.price != newDetail.price)
+                        buildPriceItem(
+                          oldDetail.name ?? '',
+                          formatPrice(oldDetail.price.toInt()),
+                          isStrikethrough: true,
+                        ),
+                    ],
+                  );
                 },
               ),
             ),
