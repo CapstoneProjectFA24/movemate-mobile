@@ -82,8 +82,8 @@ class ReviewOnline extends HookConsumerWidget {
     final truckBookingDetail = getTruckBookingDetail(order);
     final getServiceId = truckBookingDetail.serviceId;
 
-    print('getIdAssignment: $getAssID');
-    print('getServiceId: $getServiceId');
+    // print('getIdAssignment: $getAssID');
+    // print('getServiceId: $getServiceId');
 
     final useFetchResultProfile = useFetchObject<ProfileEntity>(
       function: (context) async {
@@ -95,15 +95,15 @@ class ReviewOnline extends HookConsumerWidget {
     );
     final profileUserAssign = useFetchResultProfile.data;
 
-    final useFetchResultService = useFetchObject<ServicesPackageEntity>(
-      function: (context) async {
-        return ref
-            .read(serviceControllerProvider.notifier)
-            .getServicesById(getServiceId, context);
-      },
-      context: context,
-    );
-    final serviceData = useFetchResultService.data;
+    // final useFetchResultService = useFetchObject<ServicesPackageEntity>(
+    //   function: (context) async {
+    //     return ref
+    //         .read(serviceControllerProvider.notifier)
+    //         .getServicesById(getServiceId, context);
+    //   },
+    //   context: context,
+    // );
+    // final serviceData = useFetchResultService.data;
 
     final useFetchResultTruckCate = useFetchObject<TruckCategoryEntity>(
       function: (context) => ref
@@ -113,8 +113,8 @@ class ReviewOnline extends HookConsumerWidget {
     );
     final resultTruckCate = useFetchResultTruckCate.data;
 
-    print(
-        'order  truckNumber check xe : ${resultTruckCate?.estimatedHeight} x ${resultTruckCate?.estimatedLenght} ');
+    // print(
+    //     'order  truckNumber check xe : ${resultTruckCate?.estimatedHeight} x ${resultTruckCate?.estimatedLenght} ');
 
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
@@ -511,101 +511,150 @@ class ReviewOnline extends HookConsumerWidget {
             const SizedBox(height: 16),
             // Compare the service details from both lists
             Expanded(
-              child: ListView.builder(
-                itemCount: order.bookingDetails.length,
-                itemBuilder: (context, index) {
-                  final newService = order.bookingDetails[index];
-                  // Get the 'TRUCK' service from orderOld
-                  final oldService = orderOld?.bookingDetails.firstWhere(
-                    (e) => e.id == newService.id && e.type == "TRUCK",
-                    orElse: () => BookingDetailResponseEntity(
-                      bookingId: 0,
-                      id: 0,
-                      type: "TRUCK", // Ensure a valid type
-                      serviceId: 0,
-                      quantity: 0,
-                      price: 0,
-                      status: "READY",
-                      name: "No Service",
-                      description: "No description",
-                      imageUrl: "",
-                    ),
-                  ); // Default return if no matching service
+              child: Scrollbar(
+                thumbVisibility: true,
+                thickness: 5,
+                // interactive: true,
+                child: ListView.builder(
+                  itemCount: order.bookingDetails.length,
+                  itemBuilder: (context, index) {
+                    final newService = order.bookingDetails[index];
+                    // final oldService = order.bookingDetails[index];
+                    // Get the 'TRUCK' service from orderOld
+                    final oldService = orderOld?.bookingDetails.firstWhere(
+                      (e) =>
+                          e.serviceId == newService.serviceId &&
+                          e.type == "TRUCK",
+                      orElse: () => BookingDetailResponseEntity(
+                        bookingId: 0,
+                        id: 0,
+                        type: "TRUCK", // Ensure a valid type
+                        serviceId: 0,
+                        quantity: 0,
+                        price: 0,
+                        status: "READY",
+                        name: "No Service",
+                        description: "No description",
+                        imageUrl: "",
+                      ),
+                    ); // Default return if no matching service
+                    final oldServiceTruck = orderOld?.bookingDetails.firstWhere(
+                      (e) => e.type == "TRUCK",
+                    ); // Default return if no matching service
 
-                  if (newService.type == "TRUCK") {
-                    if (oldService?.id != 0) {
-                      // If oldService is not the default
-                      if (newService.id == oldService?.id) {
-                        if (newService.price == oldService?.price) {
-                          return buildPriceItem(newService.name,
-                              formatPrice(newService.price.toInt()));
+                    if (newService.type == "TRUCK") {
+                      if (oldServiceTruck?.serviceId != 0) {
+                        // If oldService is not the default
+                        if (newService.serviceId == oldService?.serviceId) {
+                          if (newService.price == oldService?.price) {
+                            return buildPriceItem(newService.name,
+                                formatPrice(newService.price.toInt()));
+                          } else {
+                            return Column(
+                              children: [
+                                buildPriceItem(newService.name,
+                                    formatPrice(newService.price.toInt())),
+                                buildPriceItem(
+                                    " ${oldService?.name}",
+                                    formatPrice(
+                                        (oldService?.price ?? 0).toInt()),
+                                    isStrikethrough: true),
+                              ],
+                            );
+                          }
                         } else {
                           return Column(
                             children: [
                               buildPriceItem(newService.name,
                                   formatPrice(newService.price.toInt())),
-                              buildPriceItem(" ${oldService?.name}",
-                                  formatPrice((oldService?.price ?? 0).toInt()),
+                              buildPriceItem(
+                                  "${oldServiceTruck?.name}",
+                                  formatPrice(
+                                      (oldServiceTruck?.price ?? 0).toInt()),
                                   isStrikethrough: true),
                             ],
                           );
                         }
                       } else {
+                        // If no old service, just display the new service
+                        return buildPriceItem(newService.name,
+                            formatPrice(newService.price.toInt()));
+                      }
+                    } else {
+                      // For non-"TRUCK" services, compare id and price
+                      final oldServiceNonTruck = orderOld?.bookingDetails
+                          .firstWhere(
+                              (e) =>
+                                  e.serviceId == newService.serviceId &&
+                                  e.type != "TRUCK",
+                              orElse: () => BookingDetailResponseEntity(
+                                    bookingId: 0,
+                                    id: 0,
+                                    type: "TRUCK", // Default for non-TRUCK
+                                    serviceId: 0,
+                                    quantity: 0,
+                                    price: 0,
+                                    status: "READY",
+                                    name: "No Service",
+                                    description: "No description",
+                                    imageUrl: "",
+                                  ));
+                      final oldServicesNonTruck = orderOld?.bookingDetails
+                          .firstWhere((e) => e.type != "TRUCK",
+                              orElse: () => BookingDetailResponseEntity(
+                                    bookingId: 0,
+                                    id: 0,
+                                    type: "TRUCK", // Default for non-TRUCK
+                                    serviceId: 0,
+                                    quantity: 0,
+                                    price: 0,
+                                    status: "READY",
+                                    name: "No Service",
+                                    description: "No description",
+                                    imageUrl: "",
+                                  ));
+
+                      if (newService.serviceId ==
+                              oldServiceNonTruck?.serviceId &&
+                          newService.price == oldServiceNonTruck?.price) {
+                        return buildPriceItem(newService.name,
+                            formatPrice(newService.price.toInt()));
+                      } else if (newService.serviceId ==
+                              oldServiceNonTruck?.serviceId &&
+                          newService.price != oldServiceNonTruck?.price) {
                         return Column(
                           children: [
                             buildPriceItem(newService.name,
                                 formatPrice(newService.price.toInt())),
-                            buildPriceItem("${oldService?.name}",
-                                formatPrice((oldService?.price ?? 0).toInt()),
+                            buildPriceItem(
+                                oldServiceNonTruck?.name ?? 'Unknown',
+                                formatPrice(
+                                    oldServiceNonTruck?.price.toInt() ?? 0),
                                 isStrikethrough: true),
                           ],
                         );
+                      } else if (newService.serviceId !=
+                              oldServiceNonTruck?.serviceId &&
+                          newService.price != oldServiceNonTruck?.price &&
+                          newService.type == oldServicesNonTruck?.type) {
+                        return Column(
+                          children: [
+                            buildPriceItem(newService.name,
+                                formatPrice(newService.price.toInt())),
+                            buildPriceItem(
+                                oldServicesNonTruck?.name ?? 'Unknown',
+                                formatPrice(
+                                    oldServicesNonTruck?.price.toInt() ?? 0),
+                                isStrikethrough: true),
+                          ],
+                        );
+                      } else {
+                        return buildPriceItem(newService.name,
+                            formatPrice(newService.price.toInt()));
                       }
-                    } else {
-                      // If no old service, just display the new service
-                      return buildPriceItem(newService.name,
-                          formatPrice(newService.price.toInt()));
                     }
-                  } else {
-                    // For non-"TRUCK" services, compare id and price
-                    final oldServiceNonTruck = orderOld?.bookingDetails
-                        .firstWhere(
-                            (e) => e.id == newService.id && e.type != "TRUCK",
-                            orElse: () => BookingDetailResponseEntity(
-                                  bookingId: 0,
-                                  id: 0,
-                                  type: "TRUCK", // Default for non-TRUCK
-                                  serviceId: 0,
-                                  quantity: 0,
-                                  price: 0,
-                                  status: "READY",
-                                  name: "No Service",
-                                  description: "No description",
-                                  imageUrl: "",
-                                ));
-                    if (newService.id == oldServiceNonTruck?.id &&
-                        newService.price == oldServiceNonTruck?.price) {
-                      return buildPriceItem(newService.name,
-                          formatPrice(newService.price.toInt()));
-                    } else if (newService.id == oldServiceNonTruck?.id &&
-                        newService.price != oldServiceNonTruck?.price) {
-                      return Column(
-                        children: [
-                          buildPriceItem(newService.name,
-                              formatPrice(newService.price.toInt())),
-                          buildPriceItem(
-                              oldServiceNonTruck?.name ?? 'Unknown',
-                              formatPrice(
-                                  oldServiceNonTruck?.price.toInt() ?? 0),
-                              isStrikethrough: true),
-                        ],
-                      );
-                    } else {
-                      return buildPriceItem(newService.name,
-                          formatPrice(newService.price.toInt()));
-                    }
-                  }
-                },
+                  },
+                ),
               ),
             ),
           ],
