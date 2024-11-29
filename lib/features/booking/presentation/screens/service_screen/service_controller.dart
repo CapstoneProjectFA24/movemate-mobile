@@ -1,13 +1,13 @@
 // service_controller.dart
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
-import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/domain/repositories/auth_repositories/auth_repository.dart';
+import 'package:movemate/controllers/auth_controllers/sign_in_controller/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';

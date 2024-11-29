@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
-import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
-import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/domain/entities/profile_entities/wallet_entity.dart';
+import 'package:movemate/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 

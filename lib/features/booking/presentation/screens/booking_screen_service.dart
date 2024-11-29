@@ -14,7 +14,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_2t
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/summary_section.dart';
 //hook & extentions
 import 'package:movemate/hooks/use_fetch.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 

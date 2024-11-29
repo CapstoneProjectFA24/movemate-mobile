@@ -8,7 +8,7 @@ import 'package:movemate/features/order/data/models/ressponse/truck_category_obj
 import 'package:movemate/features/order/data/models/ressponse/truck_categorys_response.dart';
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
 import 'package:movemate/features/order/domain/repositories/order_repository.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';

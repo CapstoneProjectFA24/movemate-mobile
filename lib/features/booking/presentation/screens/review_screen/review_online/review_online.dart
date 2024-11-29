@@ -13,8 +13,8 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
-import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
-import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/domain/entities/profile_entities/profile_entity.dart';
+import 'package:movemate/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';

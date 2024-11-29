@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 
-import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
-import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/domain/entities/profile_entities/wallet_entity.dart';
+import 'package:movemate/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';

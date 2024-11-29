@@ -1,7 +1,7 @@
-import 'package:movemate/models/user_model.dart';
+import 'package:movemate/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
+import 'package:movemate/data/models/request/auth_request/sign_up_request.dart';
 
 class SharedPreferencesUtils {
   // onboarding

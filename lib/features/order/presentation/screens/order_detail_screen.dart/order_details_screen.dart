@@ -22,7 +22,7 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/prof
 
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/service_info_card.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
-import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';

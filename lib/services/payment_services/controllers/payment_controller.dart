@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; //import 'package:flutter_riverpod/flutter_riverpod
 import 'package:hooks_riverpod/hooks_riverpod.dart'; //import  'package:hooks_riverpod/hooks_riverpod
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
-import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/domain/repositories/auth_repositories/auth_repository.dart';
+import 'package:movemate/controllers/auth_controllers/sign_in_controller/sign_in_controller.dart';
 import 'package:movemate/utils/commons/widgets/snack_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';

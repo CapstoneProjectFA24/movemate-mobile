@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/controllers/auth_controllers/sign_in_controller/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/domain/entites/truck_categories_entity.dart';
 
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/functions/shared_preference_utils.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -14,7 +14,7 @@ import 'package:dio/dio.dart';
 // config
 
 // domain - data
-import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/domain/repositories/auth_repositories/auth_repository.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/domain/repositories/order_repository.dart';
 

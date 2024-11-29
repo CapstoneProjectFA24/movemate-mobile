@@ -16,8 +16,8 @@ import 'package:movemate/features/booking/data/models/resquest/reviewer_status_r
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/data/repositories/service_booking_repository_impl.dart';
-import 'package:movemate/models/request/paging_model.dart';
-import 'package:movemate/models/response/success_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
+import 'package:movemate/data/models/response/success_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'service_booking_repository.g.dart';

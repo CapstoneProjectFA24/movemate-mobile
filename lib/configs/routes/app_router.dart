@@ -21,25 +21,25 @@ import 'package:movemate/features/payment/presentation/screens/transaction_detai
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen_by_wallet.dart';
 
-import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
+import 'package:movemate/presetations/profile/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
-import 'package:movemate/models/loading_screen/loading_screen.dart';
-import 'package:movemate/models/result_register_booking_screen/confirm_service_booking.dart';
-import 'package:movemate/models/result_register_booking_screen/register_success.dart';
+import 'package:movemate/data/models/loading_screen/loading_screen.dart';
+import 'package:movemate/data/models/result_register_booking_screen/confirm_service_booking.dart';
+import 'package:movemate/data/models/result_register_booking_screen/register_success.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
 
 // guard
 import 'guard/onboarding_guard.dart';
 
 // screen-auth
-import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_screen.dart';
-import 'package:movemate/features/auth/presentation/screens/sign_up/sign_up_screen.dart';
-import 'package:movemate/features/auth/presentation/screens/privacy_term/privacy_screen.dart';
-import 'package:movemate/features/auth/presentation/screens/privacy_term/term_screen.dart';
-import 'package:movemate/features/auth/presentation/screens/otp_verification/otp_verification_screen.dart';
+import 'package:movemate/presetations/auth/screens/sign_in/sign_in_screen.dart';
+import 'package:movemate/presetations/auth/screens/sign_up/sign_up_screen.dart';
+import 'package:movemate/presetations/auth/screens/privacy_term/privacy_screen.dart';
+import 'package:movemate/presetations/auth/screens/privacy_term/term_screen.dart';
+import 'package:movemate/presetations/auth/screens/otp_verification/otp_verification_screen.dart';
 
 // screen-home
 import 'package:movemate/features/home/presentation/screens/location_selection_screen.dart';
@@ -55,13 +55,13 @@ import 'package:movemate/features/booking/presentation/screens/vehicles_list_pri
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/order_details_screen.dart';
 import 'package:movemate/features/order/presentation/screens/order_screen/order_screen.dart';
 
-import 'package:movemate/features/profile/presentation/screens/wallet/wallet_screen.dart';
+import 'package:movemate/presetations/profile/screens/wallet/wallet_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_screen/promotion_screen.dart';
 import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/promotion_details.dart';
-import 'package:movemate/features/profile/presentation/screens/profile_detail_screen/profile_detail_screen.dart';
-import 'package:movemate/features/profile/presentation/screens/info_screen/info_screen.dart';
+import 'package:movemate/presetations/profile/screens/profile_detail_screen/profile_detail_screen.dart';
+import 'package:movemate/presetations/profile/screens/info_screen/info_screen.dart';
 import 'package:movemate/features/package/presentation/package_detail_screen/package_detail_screen.dart';
-import 'package:movemate/features/profile/presentation/screens/profile_screen/profile_screen.dart';
+import 'package:movemate/presetations/profile/screens/profile_screen/profile_screen.dart';
 import 'package:movemate/splash_screen.dart';
 import 'package:movemate/tab_screen.dart';
 import 'package:movemate/onboarding_screen.dart';

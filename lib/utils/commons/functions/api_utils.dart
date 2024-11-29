@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
+import 'package:movemate/domain/repositories/auth_repositories/auth_repository.dart';
 import 'package:movemate/utils/commons/functions/functions_common_export.dart';
-import '../../../models/response/error_model.dart';
+import '../../../data/models/response/error_model.dart';
 import '../../constants/api_constant.dart';
 import '../../enums/enums_export.dart';
 import '../widgets/widgets_common_export.dart';

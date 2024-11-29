@@ -7,7 +7,7 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/services_fee_system_controller.dart';
 import 'package:movemate/hooks/use_fetch.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 
 import 'ServiceFeeWidget.dart';

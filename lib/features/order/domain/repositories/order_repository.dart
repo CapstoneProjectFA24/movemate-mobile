@@ -8,7 +8,7 @@ import 'package:movemate/features/order/data/remote/order_remote/order_source.da
 
 // system
 import 'package:movemate/features/order/data/repositories/order_repository_impl.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_repository.g.dart';

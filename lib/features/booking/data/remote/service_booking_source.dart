@@ -11,7 +11,7 @@ import 'package:movemate/features/booking/data/models/resquest/booking_valuation
 import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
-import 'package:movemate/models/response/success_model.dart';
+import 'package:movemate/data/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

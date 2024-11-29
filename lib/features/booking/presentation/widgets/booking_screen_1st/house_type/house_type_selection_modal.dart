@@ -11,7 +11,7 @@ import 'package:movemate/features/booking/presentation/widgets/booking_screen_1s
 import 'package:movemate/hooks/use_fetch.dart';
 
 // Import your entities and widgets
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 

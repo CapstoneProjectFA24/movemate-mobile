@@ -12,7 +12,7 @@ import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/commons/widgets/home_shimmer.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/data/models/request/paging_model.dart';
 
 // Hooks
 import 'package:flutter_hooks/flutter_hooks.dart'; // useScrollController
