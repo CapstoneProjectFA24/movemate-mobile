@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
+import 'package:movemate/features/order/data/models/request/incident_request.dart';
 import 'package:movemate/features/order/presentation/provider/order_provider.dart';
 import 'package:movemate/features/order/presentation/widgets/image_button/room_media_section_incident.dart';
+import 'package:movemate/utils/commons/widgets/cloudinary/cloudinary_camera_upload_widget.dart';
 import 'package:movemate/utils/commons/widgets/cloudinary/cloudinary_upload_widget.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -20,8 +22,11 @@ class IncidentsScreen extends HookConsumerWidget {
     final orderIdController = useTextEditingController();
     final descriptionController = useTextEditingController();
     // Track which tab is active (Request Support or Sent Request)
+    final request = useState(IncidentRequest(resourceList: []));
+
     final isRequestSent = useState<bool>(false);
     final images = useState<List<String>>([]);
+    final fullScreenImage = useState<String?>(null);
 
     print("tuan checking 1 ${images.toString()}");
 
@@ -224,45 +229,38 @@ class IncidentsScreen extends HookConsumerWidget {
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold)),
 
-                // const RoomMediaSectionIncident(
-                //   roomTitle: "",
-                //   roomType: RoomType.livingRoom,
-                // ),
-                ImageUploadWidget(
-                  imagePublicIds: imagePublicIds.value,
-                  onImageUploaded: (url, publicId) {
-                    // print('Uploaded successfully: $url');
-                    // print('Uploaded successfully: $publicId');
-                    // Cập nhật danh sách images bằng URL trả về
-                    images.value = [...images.value, url];
+                buildConfirmationSection(
+                    // title: 'Thêm hình ảnh',
+                    imagePublicIds: imagePublicIds.value,
+                    onImageUploaded: (url, publicId) {
+                      images.value = [...images.value, url];
+                      imagePublicIds.value = [
+                        ...imagePublicIds.value,
+                        publicId
+                      ];
+                    },
+                    onImageRemoved: (publicId) {
+                      // Xóa URL ảnh và publicId từ danh sách images và imagePublicIds
+                      images.value = images.value
+                          .where((url) => !url.contains(publicId))
+                          .toList();
+                      imagePublicIds.value = imagePublicIds.value
+                          .where((id) => id != publicId)
+                          .toList();
 
-                    // Cập nhật danh sách publicIds
-                    imagePublicIds.value = [...imagePublicIds.value, publicId];
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Image uploaded successfully'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                  onImageRemoved: (publicId) {
-                    // Remove the image URL and public ID simultaneously
-                    images.value = images.value
-                        .where((url) => !url.contains(publicId))
-                        .toList();
-                    imagePublicIds.value = imagePublicIds.value
-                        .where((id) => id != publicId)
-                        .toList();
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Image removed'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                ),
+                      // Cập nhật lại resourceList trong IncidentRequest
+                      request.value.resourceList =
+                          request.value.resourceList.where((resource) {
+                        // Loại bỏ resource có publicId tương ứng
+                        return resource.resourceCode != publicId;
+                      }).toList();
+                    },
+                    onImageTapped: (url) => fullScreenImage.value = url,
+                    actionIcon: Icons.location_on,
+                    isEnabled: !isRequestSent.value,
+                    showCameraButton: true,
+                    request: request.value),
+                const SizedBox(height: 16),
 
                 const Text('Dung lượng không vượt quá 5Mb',
                     style: TextStyle(color: Colors.grey, fontSize: 12)),
@@ -311,7 +309,10 @@ class IncidentsScreen extends HookConsumerWidget {
                   SizedBox(
                     width: double.infinity, // Chiều ngang toàn màn hình
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        print(
+                            "tuan checking ${request.value.resourceList.toString()}");
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
                         padding: const EdgeInsets.symmetric(
@@ -333,6 +334,101 @@ class IncidentsScreen extends HookConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildConfirmationSection({
+    // required String title,
+    required List<String> imagePublicIds,
+    required Function(String, String) onImageUploaded,
+    required Function(String) onImageRemoved,
+    required Function(String) onImageTapped,
+    required IconData actionIcon,
+    required bool isEnabled,
+    required bool showCameraButton,
+    required IncidentRequest request,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Row(
+          //   children: [
+          //     Container(
+          //       width: 4,
+          //       height: 24,
+          //       decoration: const BoxDecoration(
+          //         color: Colors.orange,
+          //         borderRadius: BorderRadius.all(Radius.circular(2)),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 8),
+          //     Expanded(
+          //       child: Text(
+          //         title,
+          //         style: const TextStyle(
+          //           fontSize: 18,
+          //           fontWeight: FontWeight.bold,
+          //           color: Colors.grey,
+          //         ),
+          //       ),
+          //     ),
+          //     Container(
+          //       padding:
+          //           const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          //       decoration: BoxDecoration(
+          //         color: Colors.orangeAccent,
+          //         borderRadius: BorderRadius.circular(20),
+          //       ),
+          //       child: Text(
+          //         '${imagePublicIds.length} ảnh',
+          //         style: const TextStyle(
+          //           color: Colors.orangeAccent,
+          //           fontWeight: FontWeight.w600,
+          //           fontSize: 14,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          CloudinaryCameraUploadWidget(
+              disabled: !isEnabled,
+              imagePublicIds: imagePublicIds,
+              onImageUploaded: isEnabled
+                  ? (url, publicId) {
+                      // Add the uploaded image URL and public ID to the lists
+                      onImageUploaded(url, publicId);
+                      // Create Resource for the uploaded image
+                      final newResource = Resource(
+                        type: 'image', // Or dynamically determine the type
+                        resourceUrl: url,
+                        resourceCode: publicId, // Or generate unique code
+                      );
+                      // Add the Resource to the request's resourceList
+                      request.resourceList.add(newResource);
+                    }
+                  : (_, __) {},
+              onImageRemoved: isEnabled ? onImageRemoved : (_) {},
+              onImageTapped: onImageTapped,
+              showCameraButton: showCameraButton,
+              onUploadComplete: (resource) {
+                request.resourceList.add(resource);
+              }),
+        ],
       ),
     );
   }

@@ -5,7 +5,7 @@ import '../../../../booking/domain/entities/booking_request/resource.dart';
 class IncidentRequest {
   final double? price;
   final String? reason;
-  final List<Resource> resourceList;
+  List<Resource> resourceList;
 
   IncidentRequest({
     required this.resourceList,
