@@ -522,18 +522,24 @@ class ReviewOnline extends HookConsumerWidget {
                         // If oldService is not the default
                         if (newService.serviceId == oldService?.serviceId) {
                           if (newService.price == oldService?.price) {
-                            return buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt()));
+                            return buildPriceItem(
+                              newService.name,
+                              formatPrice(newService.price.toInt()),
+                            );
                           } else {
                             return Column(
                               children: [
                                 buildPriceItem(
-                                    " ${oldService?.name}",
-                                    formatPrice(
-                                        (oldService?.price ?? 0).toInt()),
-                                    isStrikethrough: true),
-                                buildPriceItem(newService.name,
-                                    formatPrice(newService.price.toInt())),
+                                  " ${oldService?.name}",
+                                  formatPrice((oldService?.price ?? 0).toInt()),
+                                  isStrikethrough: true,
+                                  isBackground: true,
+                                ),
+                                buildPriceItem(
+                                  newService.name,
+                                  formatPrice(newService.price.toInt()),
+                                  isBackground: false,
+                                ),
                               ],
                             );
                           }
@@ -541,12 +547,17 @@ class ReviewOnline extends HookConsumerWidget {
                           return Column(
                             children: [
                               buildPriceItem(
-                                  "${oldServiceTruck?.name}",
-                                  formatPrice(
-                                      (oldServiceTruck?.price ?? 0).toInt()),
-                                  isStrikethrough: true),
-                              buildPriceItem(newService.name,
-                                  formatPrice(newService.price.toInt())),
+                                "${oldServiceTruck?.name}",
+                                formatPrice(
+                                    (oldServiceTruck?.price ?? 0).toInt()),
+                                isStrikethrough: true,
+                                isBackground: true,
+                              ),
+                              buildPriceItem(
+                                newService.name,
+                                formatPrice(newService.price.toInt()),
+                                isBackground: false,
+                              ),
                             ],
                           );
                         }
@@ -608,11 +619,13 @@ class ReviewOnline extends HookConsumerWidget {
                                   oldServiceNonTruck?.price.toInt() ?? 0),
                               isStrikethrough: true,
                               quantity: oldServicesNonTruck?.quantity ?? 0,
+                              isBackground: true,
                             ),
                             buildPriceItem(
                               newService.name,
                               formatPrice(newService.price.toInt()),
                               quantity: newService.quantity,
+                              isBackground: false,
                             ),
                           ],
                         );
@@ -628,11 +641,13 @@ class ReviewOnline extends HookConsumerWidget {
                                   oldServicesNonTruck?.price.toInt() ?? 0),
                               isStrikethrough: true,
                               quantity: oldServicesNonTruck?.quantity ?? 0,
+                              isBackground: true,
                             ),
                             buildPriceItem(
                               newService.name,
                               formatPrice(newService.price.toInt()),
                               quantity: newService.quantity,
+                              isBackground: false,
                             ),
                           ],
                         );
@@ -662,10 +677,12 @@ class ReviewOnline extends HookConsumerWidget {
                   'Tiền đặt cọc cũ',
                   formatPrice(orderOld.deposit.toInt()),
                   isStrikethrough: true,
+                  isBackground: true,
                 ),
                 buildPriceItem(
                   'Tiền đặt cọc mới',
                   formatPrice(order.deposit.toInt()),
+                  isBackground: false,
                 ),
               ]
             ] else ...[
@@ -697,11 +714,13 @@ class ReviewOnline extends HookConsumerWidget {
                   'Tổng giá cũ',
                   formatPrice(orderOld.total.toInt()),
                   isStrikethrough: true,
+                  isBackground: true,
                 ),
                 buildSummary(
                   'Tổng giá mới',
                   formatPrice(order.total.toInt()),
                   fontWeight: FontWeight.w600,
+                  isBackground: false,
                 ),
               ]
             ] else ...[
