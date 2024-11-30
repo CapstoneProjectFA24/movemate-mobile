@@ -1,5 +1,14 @@
 // lib/features/booking/domain/entities/booking_detail_response_entity.dart
-
+//  "id": 143,
+//         "serviceId": 12,
+//         "bookingId": 34,
+//         "quantity": 1,
+//         "price": 148500,
+//         "status": "AVAILABLE",
+//         "type": "TRUCK",
+//         "name": "Xe tải 1000kg",
+//         "description": "Cấm tải 6-9h & 16-20h",
+//         "imageUrl": "https://utfs.io/f/yYv3QHy7AjsNa1n5qlcN0WIECY7qV85KdQoXSGufv9LwUlHF"
 import 'dart:convert';
 
 class BookingDetailResponseEntity {

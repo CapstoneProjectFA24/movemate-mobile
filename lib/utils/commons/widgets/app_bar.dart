@@ -14,6 +14,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData? iconSecond;
   final bool showBackButton;
   final PreferredSize? bottom;
+  final Color? iconFirstColor; // Optional color for the first icon
+  final Color?
+      iconFirstBackgroundColor; // Optional background color for the first icon
 
   const CustomAppBar({
     super.key,
@@ -27,6 +30,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.iconSecond,
     this.showBackButton = false,
     this.bottom,
+    this.iconFirstColor, // Initialize optional color
+    this.iconFirstBackgroundColor, // Initialize optional background color
   });
 
   @override
@@ -62,10 +67,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (iconFirst != null)
           IconButton(
             onPressed: onCallBackFirst,
+
             icon: Icon(
               iconFirst,
-              color: AssetsConstants.whiteColor,
+              color: iconFirstColor ??
+                  AssetsConstants
+                      .whiteColor, // Use provided color or default to white
             ),
+            // Optional background color for the first icon
+            splashColor: iconFirstBackgroundColor ?? Colors.transparent,
+            highlightColor: iconFirstBackgroundColor ?? Colors.transparent,
           ),
         if (iconSecond != null)
           IconButton(

@@ -1,39 +1,50 @@
+// File: cloudinary_camera_upload_widget.dart
+
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'dart:io';
+import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
 
-class ImageUploadWidget extends HookWidget {
+
+class CloudinaryCameraUploadWidget extends HookConsumerWidget {
   final bool disabled;
   final Function(String url, String publicId) onImageUploaded;
   final Function(String publicId) onImageRemoved;
   final List<String> imagePublicIds;
+  final Function(String) onImageTapped;
+  final Widget? optionalButton;
+  final bool showCameraButton;
+  final Function(Resource)? onUploadComplete;
 
-  const ImageUploadWidget({
+  const CloudinaryCameraUploadWidget({
     super.key,
     this.disabled = false,
     required this.onImageUploaded,
     required this.onImageRemoved,
     required this.imagePublicIds,
+    required this.onImageTapped,
+    this.optionalButton,
+    this.showCameraButton = true,
+    this.onUploadComplete,
   });
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final picker = useMemoized(() => ImagePicker());
     final isLoading = useState(false);
     final cloudinary = useMemoized(
         () => CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false));
-
-    Future<void> uploadImage() async {
+    Future<void> uploadImageFromCamera() async {
       if (disabled || isLoading.value) return;
 
       try {
         isLoading.value = true;
 
         final XFile? pickedFile = await picker.pickImage(
-          source: ImageSource.gallery,
+          source: ImageSource.camera,
           maxWidth: 1920,
           maxHeight: 1080,
           imageQuality: 85,
@@ -51,11 +62,13 @@ class ImageUploadWidget extends HookWidget {
           ),
         );
 
-        print('Upload success: ${response.secureUrl}');
+        print('check 1 2 Upload success: ${response.secureUrl}');
+
         onImageUploaded(
           response.secureUrl,
           response.publicId,
         );
+ 
       } catch (e) {
         if (e is DioException) {
           print('Failed to upload image: ${e.response?.data}');
@@ -75,7 +88,6 @@ class ImageUploadWidget extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Hiển thị hình ảnh đã upload
         if (imagePublicIds.isNotEmpty)
           SizedBox(
             height: 200,
@@ -127,7 +139,7 @@ class ImageUploadWidget extends HookWidget {
                         child: IconButton(
                           icon: const Icon(Icons.delete, color: Colors.white),
                           onPressed: () =>
-                              onImageRemoved(imagePublicIds[index] , ),
+                              onImageRemoved(imagePublicIds[index]),
                         ),
                       ),
                     ),
@@ -137,7 +149,6 @@ class ImageUploadWidget extends HookWidget {
             ),
           )
         else
-          // Hiển thị thông báo khi chưa upload ảnh
           Container(
             height: 200,
             alignment: Alignment.center,
@@ -150,21 +161,42 @@ class ImageUploadWidget extends HookWidget {
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ),
-
         const SizedBox(height: 16),
-        ElevatedButton.icon(
-          onPressed: disabled ? null : uploadImage,
-          icon: isLoading.value
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        Row(
+          children: [
+            if (showCameraButton) ...[
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: disabled ? null : uploadImageFromCamera,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF6B00),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                )
-              : const Icon(Icons.add_photo_alternate),
-          label: Text(isLoading.value ? 'Uploading...' : 'Upload an Image'),
+                  icon: isLoading.value
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Icon(Icons.camera_alt),
+                  label: Text(isLoading.value ? 'Đang đợi...' : 'Chụp hình'),
+                ),
+              ),
+            ],
+            if (optionalButton != null) ...[
+              if (showCameraButton) const SizedBox(width: 8),
+              Expanded(child: optionalButton!),
+            ],
+          ],
         ),
       ],
     );

@@ -3,21 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-Widget buildPriceItem(String description, String price) {
+Widget buildPriceItem(String description, String price,
+    {bool isStrikethrough = false}) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-    // decoration: BoxDecoration(
-    //   color: Colors.white,
-    //   borderRadius: BorderRadius.circular(8),
-    //   boxShadow: [
-    //     BoxShadow(
-    //       color: Colors.grey.withOpacity(0.2),
-    //       spreadRadius: 2,
-    //       blurRadius: 4,
-    //       offset: const Offset(0, 2),
-    //     ),
-    //   ],
-    // ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -26,10 +15,13 @@ Widget buildPriceItem(String description, String price) {
             description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w400,
               color: Colors.black,
+              decoration: isStrikethrough
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none,
             ),
           ),
         ),
@@ -38,10 +30,13 @@ Widget buildPriceItem(String description, String price) {
             const SizedBox(width: 12),
             Text(
               price,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w400,
                 color: Colors.grey,
+                decoration: isStrikethrough
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none,
               ),
             ),
             const SizedBox(width: 12),

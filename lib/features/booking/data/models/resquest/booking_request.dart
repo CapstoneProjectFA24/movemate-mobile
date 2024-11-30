@@ -206,11 +206,11 @@ class BookingRequest {
     }
 
     addImagesToResourceList(booking.livingRoomImages, 'living_room');
+    addVideosToResourceList(booking.livingRoomVideos, 'living_room');
     addImagesToResourceList(booking.bedroomImages, 'bedroom');
     addImagesToResourceList(booking.diningRoomImages, 'dining_room');
     addImagesToResourceList(booking.officeRoomImages, 'office_room');
     addImagesToResourceList(booking.bathroomImages, 'bathroom');
-    addVideosToResourceList(booking.livingRoomVideos, 'living_room');
 
     // Tính toán khoảng cách ước tính (ví dụ)
     String estimatedDistance =

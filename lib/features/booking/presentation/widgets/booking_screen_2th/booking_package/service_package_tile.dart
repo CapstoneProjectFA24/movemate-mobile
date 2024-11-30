@@ -159,7 +159,8 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             ),
             trailing: ServiceTrailingWidget(
               quantity: quantity,
-              addService: true,
+              addService: !currentPackage.isQuantity,
+              quantityMax: currentPackage.quantityMax,
               onQuantityChanged: (newQuantity) async {
                 bookingNotifier.updateServicePackageQuantity(
                     widget.servicePackage, newQuantity);

@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 class PaymentRequest {
-  final String? bookingId;        // cần bookingId khi tạo booking -> đặt cọc hoặc thanh toán 
-  final double? amount;           // cần amount khi nạp tiền
+  final String?
+      bookingId; // cần bookingId khi tạo booking -> đặt cọc hoặc thanh toán
+  final double? amount; // cần amount khi nạp tiền
   final String returnUrl;
   final String selectedMethod;
 
@@ -16,7 +17,7 @@ class PaymentRequest {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-    
+
     if (bookingId != null) {
       result.addAll({'bookingId': bookingId});
     }
@@ -39,6 +40,10 @@ class PaymentRequest {
   }
 
   String toJson() => json.encode(toMap());
+  @override
+  String toString() {
+    return 'PaymentRequest(bookingId: $bookingId, amount: $amount, returnUrl: $returnUrl, selectedMethod: $selectedMethod)';
+  }
 
   factory PaymentRequest.fromJson(String source) =>
       PaymentRequest.fromMap(json.decode(source));

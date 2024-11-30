@@ -76,9 +76,10 @@ void handleDeepLink(String link, WidgetRef ref) {
             allUri: allUri.toString(),
           ));
     } else if (category == 'PAYMENT_WALLET') {
-      ref.read(appRouterProvider).push(TransactionResultScreenRoute(
+      ref
+          .read(appRouterProvider)
+          .push(TransactionResultScreenRechargeWalletRoute(
             isSuccess: isSuccess,
-            bookingId: bookingId ?? '',
             allUri: allUri.toString(),
           ));
     } else if (category == 'PAYMENT_TOTAL') {

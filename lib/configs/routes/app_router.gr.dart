@@ -96,6 +96,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
+    IncidentsScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const IncidentsScreen(),
+      );
+    },
     InfoScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -434,6 +440,23 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    TransactionResultScreenRechargeWalletRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args =
+          routeData.argsAs<TransactionResultScreenRechargeWalletRouteArgs>(
+              orElse: () => TransactionResultScreenRechargeWalletRouteArgs(
+                    isSuccess: pathParams.getBool('isSuccess'),
+                    allUri: pathParams.getString(''),
+                  ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TransactionResultScreenRechargeWallet(
+          key: args.key,
+          isSuccess: args.isSuccess,
+          allUri: args.allUri,
+        ),
+      );
+    },
     VehiclePriceListScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -716,6 +739,20 @@ class HomeScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [IncidentsScreen]
+class IncidentsScreenRoute extends PageRouteInfo<void> {
+  const IncidentsScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          IncidentsScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'IncidentsScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1810,6 +1847,54 @@ class TransactionResultScreenByWalletRouteArgs {
   @override
   String toString() {
     return 'TransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId, status: $status}';
+  }
+}
+
+/// generated route for
+/// [TransactionResultScreenRechargeWallet]
+class TransactionResultScreenRechargeWalletRoute
+    extends PageRouteInfo<TransactionResultScreenRechargeWalletRouteArgs> {
+  TransactionResultScreenRechargeWalletRoute({
+    Key? key,
+    required bool isSuccess,
+    required String allUri,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TransactionResultScreenRechargeWalletRoute.name,
+          args: TransactionResultScreenRechargeWalletRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+            allUri: allUri,
+          ),
+          rawPathParams: {
+            'isSuccess': isSuccess,
+            '': allUri,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionResultScreenRechargeWalletRoute';
+
+  static const PageInfo<TransactionResultScreenRechargeWalletRouteArgs> page =
+      PageInfo<TransactionResultScreenRechargeWalletRouteArgs>(name);
+}
+
+class TransactionResultScreenRechargeWalletRouteArgs {
+  const TransactionResultScreenRechargeWalletRouteArgs({
+    this.key,
+    required this.isSuccess,
+    required this.allUri,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  final String allUri;
+
+  @override
+  String toString() {
+    return 'TransactionResultScreenRechargeWalletRouteArgs{key: $key, isSuccess: $isSuccess, allUri: $allUri}';
   }
 }
 

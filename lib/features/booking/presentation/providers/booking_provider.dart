@@ -261,7 +261,6 @@ class BookingNotifier extends StateNotifier<Booking> {
     switch (roomType) {
       case RoomType.livingRoom:
         return state.livingRoomVideos;
-      // Nếu muốn mở rộng cho các loại phòng khác, thêm vào đây
       default:
         return [];
     }
