@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
@@ -26,7 +28,7 @@ import 'package:movemate/utils/enums/enums_export.dart';
 class ReviewOnline extends HookConsumerWidget {
   final OrderEntity order;
   final OrderEntity? orderOld;
-
+  static const double spacing = 10.0;
   const ReviewOnline({super.key, required this.order, required this.orderOld});
 
   // Helper method to get reviewer assignment with a default value
@@ -112,7 +114,8 @@ class ReviewOnline extends HookConsumerWidget {
       context: context,
     );
     final resultTruckCate = useFetchResultTruckCate.data;
-
+    print("tuan checking 1 ${order.houseTypeId} ");
+    print("tuan checking 2 ${orderOld?.houseTypeId} ");
     // print(
     //     'order  truckNumber check xe : ${resultTruckCate?.estimatedHeight} x ${resultTruckCate?.estimatedLenght} ');
 
@@ -135,7 +138,7 @@ class ReviewOnline extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
                         'Chọn xe không hợp lý',
@@ -152,8 +155,9 @@ class ReviewOnline extends HookConsumerWidget {
                         order: order,
                         orderOld: orderOld,
                         profileUserAssign: profileUserAssign,
-                        // serviceData: serviceData,
                         truckCateDetails: resultTruckCate,
+                        ref: ref,
+                        context: context,
                       ),
                       const SizedBox(height: 12),
                       buildContactCard(
@@ -212,192 +216,217 @@ class ReviewOnline extends HookConsumerWidget {
     );
   }
 
-//gốc
-// //
-//   Widget buildServiceCard({
-//     required OrderEntity order,
-//     required ProfileEntity? profileUserAssign,
-//     required TruckCategoryEntity? truckCateDetails,
-//   }) {
-//     return LoadingOverlay(
-//       isLoading: truckCateDetails == null,
-//       child: Container(
-//         width: double.infinity,
-//         height: 400, // Cố định chiều cao của buildServiceCard
-//         padding: const EdgeInsets.all(16),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(8),
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.grey.withOpacity(0.2),
-//               spreadRadius: 1,
-//               blurRadius: 5,
-//               offset: const Offset(0, 3),
-//             ),
-//           ],
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               children: [
-//                 truckCateDetails?.imageUrl != null &&
-//                         truckCateDetails!.imageUrl.isNotEmpty
-//                     ? Image.network(
-//                         truckCateDetails.imageUrl,
-//                         width: 100,
-//                         height: 100,
-//                         fit: BoxFit.cover,
-//                         errorBuilder: (context, error, stackTrace) =>
-//                             const Icon(Icons.error, size: 100),
-//                       )
-//                     : Image.network(
-//                         'https://img.lovepik.com/png/20231013/Cartoon-blue-logistics-transport-truck-package-consumption-driver_196743_wh860.png',
-//                         width: 100,
-//                         height: 100,
-//                         fit: BoxFit.cover,
-//                       ),
-//                 const SizedBox(width: 16),
-//                 Expanded(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                           order.bookingDetails
-//                               .firstWhere(
-//                                 (e) => e.type == 'TRUCK',
-//                                 orElse: () => BookingDetailResponseEntity(
-//                                   bookingId: 0,
-//                                   id: 0,
-//                                   type: 'TRUCK',
-//                                   serviceId: 0,
-//                                   quantity: 0,
-//                                   price: 0,
-//                                   status: "READY",
-//                                   name: "Xe Tải",
-//                                   description: "Không có mô tả",
-//                                   imageUrl: "",
-//                                 ),
-//                               )
-//                               .name,
-//                           style: const TextStyle(fontWeight: FontWeight.bold)),
-//                       const SizedBox(height: 8),
-//                       FittedBox(
-//                         child: Row(
-//                           children: [
-//                             Text(truckCateDetails?.estimatedLenght ?? '',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(' dài, ',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(truckCateDetails?.estimatedWidth ?? '',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(' rộng, ',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(truckCateDetails?.estimatedHeight ?? '',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(' cao',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                           ],
-//                         ),
-//                       ),
-//                       const SizedBox(height: 8),
-//                       Text(
-//                           order.bookingDetails
-//                               .firstWhere((e) => e.type == 'TRUCK')
-//                               .description,
-//                           style: const TextStyle(fontSize: 15)),
-//                       const SizedBox(height: 8),
-//                       // Text(
-//                       //     'Giá: ${formatPrice(order.bookingDetails.firstWhere((e) => e.type == 'TRUCK').price.toInt())}',
-//                       //     style: const TextStyle(
-//                       //         fontSize: 15, fontWeight: FontWeight.bold)),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 16),
-//             // Sử dụng Expanded kết hợp với ListView để có thể scroll danh sách buildPriceItem
-//             // Expanded(
-//             //   child: ListView.builder(
-//             //     itemCount: order.bookingDetails.length,
-//             //     itemBuilder: (context, index) {
-//             //       final detail = order.bookingDetails[index];
-//             //       return buildPriceItem(
-//             //         detail.name ?? '',
-//             //         formatPrice(detail.price.toInt()),
-//             //       );
-//             //     },
-//             //   ),
-//             // ),
-//             // Expanded(
-//             //   child: ListView.builder(
-//             //     itemCount: orderOld!.bookingDetails.length,
-//             //     itemBuilder: (context, index) {
-//             //       final detail = orderOld!.bookingDetails[index];
-//             //       return buildPriceItem(
-//             //         detail.name ?? '',
-//             //         formatPrice(detail.price.toInt()),
-//             //       );
-//             //     },
-//             //   ),
-//             // ),
+  Widget buildHouseInformation(
+      {required WidgetRef ref, required BuildContext context}) {
+    // Format date and time for new order
+    final formattedDateNew = DateFormat('dd-MM-yyyy')
+        .format(DateTime.parse(order.bookingAt.toString()));
+    final formattedTimeNew =
+        DateFormat('hh:mm').format(DateTime.parse(order.bookingAt.toString()));
 
-//             Expanded(
-//               child: ListView.builder(
-//                 itemCount: order.bookingDetails.length,
-//                 itemBuilder: (context, index) {
-//                   final newDetail = order.bookingDetails[index];
+    // Format date and time for old order
+    final formattedDateOld = orderOld != null
+        ? DateFormat('dd-MM-yyyy')
+            .format(DateTime.parse(orderOld!.bookingAt.toString()))
+        : null;
+    final formattedTimeOld = orderOld != null
+        ? DateFormat('hh:mm')
+            .format(DateTime.parse(orderOld!.bookingAt.toString()))
+        : null;
 
-//                   // Find matching service in old order
-//                   final oldDetail = orderOld?.bookingDetails.firstWhere(
-//                     (old) => old.id == newDetail.id,
-//                     orElse: () => BookingDetailResponseEntity(
-//                       id: 0,
-//                       serviceId: 0,
-//                       bookingId: 0,
-//                       quantity: 0,
-//                       price: 0,
-//                       status: '',
-//                       type: '',
-//                       name: '',
-//                       description: '',
-//                       imageUrl: '',
-//                     ),
-//                   );
+    final useFetchResultOld = useFetchObject<HouseTypeEntity>(
+      function: (context) => ref
+          .read(servicePackageControllerProvider.notifier)
+          .getHouseTypeById(order.houseTypeId, context),
+      context: context,
+    );
+    final useFetchResultNew = useFetchObject<HouseTypeEntity>(
+      function: (context) => ref
+          .read(servicePackageControllerProvider.notifier)
+          .getHouseTypeById(orderOld!.houseTypeId, context),
+      context: context,
+    );
 
-//                   return Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       buildPriceItem(
-//                         newDetail.name ?? '',
-//                         formatPrice(newDetail.price.toInt()),
-//                       ),
-//                       if (oldDetail != null &&
-//                           oldDetail.price != newDetail.price)
-//                         buildPriceItem(
-//                           oldDetail.name ?? '',
-//                           formatPrice(oldDetail.price.toInt()),
-//                           isOld: true,
-//                         ),
-//                     ],
-//                   );
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// //
+    final houseTypeDataOld = useFetchResultOld.data;
+    final houseTypeDataNew = useFetchResultNew.data;
+
+    // Get house type, floor and room information for both old and new orders
+    final houseTypeNew = houseTypeDataNew?.name ?? "Unknown";
+    final floorNumberNew = order.floorsNumber.toString() ?? "Unknown";
+    final roomNumberNew = order.roomNumber.toString() ?? "Unknown";
+
+    final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
+    final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
+    final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
+
+    print("tuan checking ${order.houseType?.name} ");
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Compare house type for old and new orders
+            Column(
+              children: [
+                const LabelText(
+                  content: 'Loại nhà : ',
+                  size: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+                if (houseTypeNew == houseTypeOld)
+                  LabelText(
+                    content: houseTypeNew,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  )
+                else ...[
+                  LabelText(
+                    content: houseTypeOld,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 5),
+                  LabelText(
+                    content: houseTypeNew,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(width: 16),
+
+            // Compare floor number for old and new orders
+            Column(
+              children: [
+                const LabelText(
+                  content: 'Tầng : ',
+                  size: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+                if (floorNumberNew == floorNumberOld)
+                  LabelText(
+                    content: floorNumberNew,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  )
+                else ...[
+                  LabelText(
+                    content: floorNumberOld,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 5),
+                  LabelText(
+                    content: floorNumberNew,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(width: 16),
+
+            // Compare room number for old and new orders
+            Column(
+              children: [
+                const LabelText(
+                  content: 'Phòng : ',
+                  size: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+                if (roomNumberNew == roomNumberOld)
+                  LabelText(
+                    content: roomNumberNew,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  )
+                else ...[
+                  LabelText(
+                    content: roomNumberOld,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  const SizedBox(height: 5),
+                  LabelText(
+                    content: roomNumberNew,
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: spacing),
+
+        // Row for displaying moving date and time
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                Row(
+                  children: [
+                    const LabelText(
+                      content: 'Ngày dọn nhà : ',
+                      size: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    // Compare dates: If same, show only new, if different, show both
+                    if (formattedDateNew == formattedDateOld)
+                      LabelText(
+                        content: formattedDateNew ?? "label",
+                        size: 14,
+                        fontWeight: FontWeight.bold,
+                      )
+                    else ...[
+                      // Display old date first, if different
+                      LabelText(
+                        content: formattedDateOld ?? "label",
+                        size: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      const SizedBox(height: 5),
+                      LabelText(
+                        content: formattedDateNew ?? "label",
+                        size: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+            // Display time
+            if (formattedTimeNew == formattedTimeOld)
+              LabelText(
+                content: '  ${formattedTimeNew ?? "label"}',
+                size: 14,
+                fontWeight: FontWeight.bold,
+              )
+            else ...[
+              // Display both old and new time if they are different
+              LabelText(
+                content: '  ${formattedTimeOld ?? "label"}',
+                size: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 5),
+              LabelText(
+                content: '  ${formattedTimeNew ?? "label"}',
+                size: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
+  }
+
 //test
 
   Widget buildServiceCard({
@@ -405,12 +434,14 @@ class ReviewOnline extends HookConsumerWidget {
     required OrderEntity? orderOld,
     required ProfileEntity? profileUserAssign,
     required TruckCategoryEntity? truckCateDetails,
+    required WidgetRef ref,
+    required BuildContext context,
   }) {
     return LoadingOverlay(
       isLoading: truckCateDetails == null,
       child: Container(
         width: double.infinity,
-        height: 400, // Cố định chiều cao của buildServiceCard
+        height: 500, // Cố định chiều cao của buildServiceCard
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -429,80 +460,11 @@ class ReviewOnline extends HookConsumerWidget {
           children: [
             Row(
               children: [
-                truckCateDetails?.imageUrl != null &&
-                        truckCateDetails!.imageUrl.isNotEmpty
-                    ? Image.network(
-                        truckCateDetails.imageUrl,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.error, size: 100),
-                      )
-                    : Image.network(
-                        'https://img.lovepik.com/png/20231013/Cartoon-blue-logistics-transport-truck-package-consumption-driver_196743_wh860.png',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        order.bookingDetails
-                            .firstWhere(
-                              (e) => e.type == 'TRUCK',
-                              orElse: () => BookingDetailResponseEntity(
-                                bookingId: 0,
-                                id: 0,
-                                type: 'TRUCK',
-                                serviceId: 0,
-                                quantity: 0,
-                                price: 0,
-                                status: "READY",
-                                name: "Xe Tải",
-                                description: "Không có mô tả",
-                                imageUrl: "",
-                              ),
-                            )
-                            .name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      FittedBox(
-                        child: Row(
-                          children: [
-                            Text(truckCateDetails?.estimatedLenght ?? '',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey.shade700)),
-                            Text(' dài, ',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey.shade700)),
-                            Text(truckCateDetails?.estimatedWidth ?? '',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey.shade700)),
-                            Text(' rộng, ',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey.shade700)),
-                            Text(truckCateDetails?.estimatedHeight ?? '',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey.shade700)),
-                            Text(' cao',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey.shade700)),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        order.bookingDetails
-                            .firstWhere((e) => e.type == 'TRUCK')
-                            .description,
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                      const SizedBox(height: 8),
+                      buildHouseInformation(ref: ref, context: context),
                     ],
                   ),
                 ),
@@ -617,20 +579,28 @@ class ReviewOnline extends HookConsumerWidget {
                       if (newService.serviceId ==
                               oldServiceNonTruck?.serviceId &&
                           newService.price == oldServiceNonTruck?.price) {
-                        return buildPriceItem(newService.name,
-                            formatPrice(newService.price.toInt()));
+                        return buildPriceItem(
+                          newService.name,
+                          formatPrice(newService.price.toInt()),
+                          quantity: newService.quantity,
+                        );
                       } else if (newService.serviceId ==
                               oldServiceNonTruck?.serviceId &&
                           newService.price != oldServiceNonTruck?.price) {
                         return Column(
                           children: [
-                            buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt())),
                             buildPriceItem(
-                                oldServiceNonTruck?.name ?? 'Unknown',
-                                formatPrice(
-                                    oldServiceNonTruck?.price.toInt() ?? 0),
-                                isStrikethrough: true),
+                              oldServiceNonTruck?.name ?? 'Unknown',
+                              formatPrice(
+                                  oldServiceNonTruck?.price.toInt() ?? 0),
+                              isStrikethrough: true,
+                              quantity: oldServicesNonTruck?.quantity ?? 0,
+                            ),
+                            buildPriceItem(
+                              newService.name,
+                              formatPrice(newService.price.toInt()),
+                              quantity: newService.quantity,
+                            ),
                           ],
                         );
                       } else if (newService.serviceId !=
@@ -639,24 +609,96 @@ class ReviewOnline extends HookConsumerWidget {
                           newService.type == oldServicesNonTruck?.type) {
                         return Column(
                           children: [
-                            buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt())),
                             buildPriceItem(
-                                oldServicesNonTruck?.name ?? 'Unknown',
-                                formatPrice(
-                                    oldServicesNonTruck?.price.toInt() ?? 0),
-                                isStrikethrough: true),
+                              oldServicesNonTruck?.name ?? 'Unknown',
+                              formatPrice(
+                                  oldServicesNonTruck?.price.toInt() ?? 0),
+                              isStrikethrough: true,
+                              quantity: oldServicesNonTruck?.quantity ?? 0,
+                            ),
+                            buildPriceItem(
+                              newService.name,
+                              formatPrice(newService.price.toInt()),
+                              quantity: newService.quantity,
+                            ),
                           ],
                         );
                       } else {
-                        return buildPriceItem(newService.name,
-                            formatPrice(newService.price.toInt()));
+                        return buildPriceItem(
+                          newService.name,
+                          formatPrice(newService.price.toInt()),
+                          quantity: newService.quantity,
+                        );
                       }
                     }
                   },
                 ),
               ),
             ),
+
+            const SizedBox(height: 8),
+            // Deposit display logic
+            if (orderOld != null) ...[
+              // If the deposit from the old and new order are the same, only show new order's deposit
+              if (order.deposit == orderOld.deposit)
+                buildPriceItem(
+                    'Tiền đặt cọc', formatPrice(order.deposit.toInt()))
+              else ...[
+                // If the deposit is different, show both old and new order's deposit
+                buildPriceItem(
+                  'Tiền đặt cọc cũ',
+                  formatPrice(orderOld.deposit.toInt()),
+                  isStrikethrough: true,
+                ),
+                buildPriceItem(
+                  'Tiền đặt cọc mới',
+                  formatPrice(order.deposit.toInt()),
+                ),
+              ]
+            ] else ...[
+              // If no old order, just show the new order's deposit
+              buildPriceItem(
+                  'Tiền đặt cọc', formatPrice(order.deposit.toInt())),
+            ],
+
+            // Hiển thị các fee từ feeDetails
+            ...order.feeDetails.map((fee) {
+              return buildPriceItem(
+                fee.name,
+                formatPrice(fee.amount.toInt()),
+              );
+            }),
+
+            // Total Price display logic
+            if (orderOld != null) ...[
+              // If the total from the old and new order are the same, only show new order's total
+              if (order.total == orderOld.total)
+                buildSummary(
+                  'Tổng giá',
+                  formatPrice(order.total.toInt()),
+                  fontWeight: FontWeight.w600,
+                )
+              else ...[
+                // If the total is different, show both old and new order's totals
+                buildPriceItem(
+                  'Tổng giá cũ',
+                  formatPrice(orderOld.total.toInt()),
+                  isStrikethrough: true,
+                ),
+                buildSummary(
+                  'Tổng giá mới',
+                  formatPrice(order.total.toInt()),
+                  fontWeight: FontWeight.w600,
+                ),
+              ]
+            ] else ...[
+              // If no old order, just show the new order's total
+              buildSummary(
+                'Tổng giá',
+                formatPrice(order.total.toInt()),
+                fontWeight: FontWeight.w600,
+              ),
+            ],
           ],
         ),
       ),

@@ -124,16 +124,16 @@ Số điện thoại: ${userdata?.phone}
                       children: [
                         const LabelText(
                           content: 'Ngày chuyển nhà:',
-                          size: 10,
+                          size: 14,
                           fontFamily: 'bold',
-                          color: AssetsConstants.greyColor,
-                          fontWeight: FontWeight.w400,
+                          color: AssetsConstants.blackColor,
+                          fontWeight: FontWeight.w600,
                         ),
                         LabelText(
                           content: "$formattedDate  $formattedTime",
-                          size: 10,
-                          color: AssetsConstants.greyColor,
-                          fontWeight: FontWeight.w400,
+                          size: 14,
+                          color: AssetsConstants.blackColor,
+                          fontWeight: FontWeight.w600,
                         ),
                       ],
                     ),

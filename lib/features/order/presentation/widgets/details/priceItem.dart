@@ -3,63 +3,92 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-Widget buildPriceItem(String description, String price,
-    {bool isStrikethrough = false}) {
+Widget buildPriceItem(
+  String description,
+  String price, {
+  bool isStrikethrough = false,
+  int? quantity,
+}) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(8),
+    ),
     child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        const SizedBox(
+          height: 8,
+        ),
         Expanded(
           child: Text(
             description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w400,
-              color: Colors.black,
-              decoration: isStrikethrough
-                  ? TextDecoration.lineThrough
-                  : TextDecoration.none,
+              fontSize: 12,
+              fontWeight: isStrikethrough ? FontWeight.w400 : FontWeight.w500,
+              color: isStrikethrough ? Colors.red : Colors.black,
             ),
           ),
         ),
-        Row(
-          children: [
-            const SizedBox(width: 12),
-            Text(
-              price,
+        const SizedBox(
+          width: 8,
+        ),
+        if (quantity != null && quantity > 0)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              'x$quantity',
               style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
-                decoration: isStrikethrough
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: isStrikethrough ? Colors.red : Colors.black,
               ),
             ),
-            const SizedBox(width: 12),
-            // IconButton(
-            //   icon: const Icon(Icons.more_horiz_outlined, color: Colors.black),
-            //   onPressed: () {
-            //     // Xử lý sự kiện khi nhấp vào biểu tượng 3 chấm
-            //   },
-            //   tooltip: 'More options',
-            // ),
-          ],
+          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Text(
+            price,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isStrikethrough ? Colors.red : Colors.black,
+            ),
+          ),
         ),
       ],
     ),
   );
 }
 
-Widget buildSummary(String label, String value) {
+Widget buildSummary(
+  String label,
+  String value, {
+  FontWeight fontWeight = FontWeight.normal, // Default value for fontWeight
+  double textSize = 14.0, // Default value for textSize
+  Color textColor = Colors.black, // Default value for textColor
+}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(label, style: const TextStyle(color: AssetsConstants.blackColor)),
-      Text(value, style: const TextStyle(color: Colors.black)),
+      Text(
+        label,
+        style: TextStyle(
+          color: AssetsConstants.blackColor,
+          fontWeight: fontWeight, // Apply custom fontWeight
+          fontSize: textSize, // Apply custom textSize
+        ),
+      ),
+      Text(
+        value,
+        style: TextStyle(
+          color: textColor, // Apply custom textColor
+          fontWeight: fontWeight, // Apply custom fontWeight
+          fontSize: textSize, // Apply custom textSize
+        ),
+      ),
     ],
   );
 }
