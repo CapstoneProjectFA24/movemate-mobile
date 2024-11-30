@@ -1,6 +1,8 @@
 // import local
+import 'package:movemate/features/profile/data/models/queries/transations_queries.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
 import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 import 'package:movemate/features/profile/domain/repositories/profile_repository.dart';
@@ -41,6 +43,7 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
       ),
     );
   }
+
   @override
   Future<StaffProfileResponse> getProfileDriverInforById({
     required String accessToken,
@@ -66,6 +69,18 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
       ),
+    );
+  }
+
+  @override
+  Future<TransactionResponse> getTransaction({
+    required TransationsQueries queries,
+    required String accessToken,
+  }) async {
+    print("check repo");
+    return getDataOf(
+      request: () => _profileSource.getTransaction(
+          APIConstants.contentType, accessToken, queries),
     );
   }
 }

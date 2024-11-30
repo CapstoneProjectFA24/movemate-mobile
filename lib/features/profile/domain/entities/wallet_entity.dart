@@ -1,8 +1,4 @@
-// "id": 4,
-// "userId": 3,
-// "balance": 996134850,
-// "createdAt": "2024-10-25T23:46:49.703",
-// "updatedAt": "2024-11-11T12:15:44.91"
+
 
 import 'dart:convert';
 

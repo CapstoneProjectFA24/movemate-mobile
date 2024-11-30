@@ -38,7 +38,7 @@ class RoomMediaSectionIncident extends ConsumerWidget {
     final bool canAddMoreVideos = bookingNotifier.canAddVideo(roomType);
 
     // Retrieve the loading states
-//thông báo đến màn hình là có hình ảnh hoặc video vừa cập nhật
+// Thông báo đến màn hình là có hình ảnh hoặc video vừa cập nhật
     bookingState.isUploadingLivingRoomImage;
     bookingState.isUploadingLivingRoomVideo;
 

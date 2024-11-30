@@ -212,192 +212,6 @@ class ReviewOnline extends HookConsumerWidget {
     );
   }
 
-//gốc
-// //
-//   Widget buildServiceCard({
-//     required OrderEntity order,
-//     required ProfileEntity? profileUserAssign,
-//     required TruckCategoryEntity? truckCateDetails,
-//   }) {
-//     return LoadingOverlay(
-//       isLoading: truckCateDetails == null,
-//       child: Container(
-//         width: double.infinity,
-//         height: 400, // Cố định chiều cao của buildServiceCard
-//         padding: const EdgeInsets.all(16),
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(8),
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.grey.withOpacity(0.2),
-//               spreadRadius: 1,
-//               blurRadius: 5,
-//               offset: const Offset(0, 3),
-//             ),
-//           ],
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               children: [
-//                 truckCateDetails?.imageUrl != null &&
-//                         truckCateDetails!.imageUrl.isNotEmpty
-//                     ? Image.network(
-//                         truckCateDetails.imageUrl,
-//                         width: 100,
-//                         height: 100,
-//                         fit: BoxFit.cover,
-//                         errorBuilder: (context, error, stackTrace) =>
-//                             const Icon(Icons.error, size: 100),
-//                       )
-//                     : Image.network(
-//                         'https://img.lovepik.com/png/20231013/Cartoon-blue-logistics-transport-truck-package-consumption-driver_196743_wh860.png',
-//                         width: 100,
-//                         height: 100,
-//                         fit: BoxFit.cover,
-//                       ),
-//                 const SizedBox(width: 16),
-//                 Expanded(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                           order.bookingDetails
-//                               .firstWhere(
-//                                 (e) => e.type == 'TRUCK',
-//                                 orElse: () => BookingDetailResponseEntity(
-//                                   bookingId: 0,
-//                                   id: 0,
-//                                   type: 'TRUCK',
-//                                   serviceId: 0,
-//                                   quantity: 0,
-//                                   price: 0,
-//                                   status: "READY",
-//                                   name: "Xe Tải",
-//                                   description: "Không có mô tả",
-//                                   imageUrl: "",
-//                                 ),
-//                               )
-//                               .name,
-//                           style: const TextStyle(fontWeight: FontWeight.bold)),
-//                       const SizedBox(height: 8),
-//                       FittedBox(
-//                         child: Row(
-//                           children: [
-//                             Text(truckCateDetails?.estimatedLenght ?? '',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(' dài, ',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(truckCateDetails?.estimatedWidth ?? '',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(' rộng, ',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(truckCateDetails?.estimatedHeight ?? '',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                             Text(' cao',
-//                                 style: TextStyle(
-//                                     fontSize: 13, color: Colors.grey.shade700)),
-//                           ],
-//                         ),
-//                       ),
-//                       const SizedBox(height: 8),
-//                       Text(
-//                           order.bookingDetails
-//                               .firstWhere((e) => e.type == 'TRUCK')
-//                               .description,
-//                           style: const TextStyle(fontSize: 15)),
-//                       const SizedBox(height: 8),
-//                       // Text(
-//                       //     'Giá: ${formatPrice(order.bookingDetails.firstWhere((e) => e.type == 'TRUCK').price.toInt())}',
-//                       //     style: const TextStyle(
-//                       //         fontSize: 15, fontWeight: FontWeight.bold)),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             const SizedBox(height: 16),
-//             // Sử dụng Expanded kết hợp với ListView để có thể scroll danh sách buildPriceItem
-//             // Expanded(
-//             //   child: ListView.builder(
-//             //     itemCount: order.bookingDetails.length,
-//             //     itemBuilder: (context, index) {
-//             //       final detail = order.bookingDetails[index];
-//             //       return buildPriceItem(
-//             //         detail.name ?? '',
-//             //         formatPrice(detail.price.toInt()),
-//             //       );
-//             //     },
-//             //   ),
-//             // ),
-//             // Expanded(
-//             //   child: ListView.builder(
-//             //     itemCount: orderOld!.bookingDetails.length,
-//             //     itemBuilder: (context, index) {
-//             //       final detail = orderOld!.bookingDetails[index];
-//             //       return buildPriceItem(
-//             //         detail.name ?? '',
-//             //         formatPrice(detail.price.toInt()),
-//             //       );
-//             //     },
-//             //   ),
-//             // ),
-
-//             Expanded(
-//               child: ListView.builder(
-//                 itemCount: order.bookingDetails.length,
-//                 itemBuilder: (context, index) {
-//                   final newDetail = order.bookingDetails[index];
-
-//                   // Find matching service in old order
-//                   final oldDetail = orderOld?.bookingDetails.firstWhere(
-//                     (old) => old.id == newDetail.id,
-//                     orElse: () => BookingDetailResponseEntity(
-//                       id: 0,
-//                       serviceId: 0,
-//                       bookingId: 0,
-//                       quantity: 0,
-//                       price: 0,
-//                       status: '',
-//                       type: '',
-//                       name: '',
-//                       description: '',
-//                       imageUrl: '',
-//                     ),
-//                   );
-
-//                   return Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       buildPriceItem(
-//                         newDetail.name ?? '',
-//                         formatPrice(newDetail.price.toInt()),
-//                       ),
-//                       if (oldDetail != null &&
-//                           oldDetail.price != newDetail.price)
-//                         buildPriceItem(
-//                           oldDetail.name ?? '',
-//                           formatPrice(oldDetail.price.toInt()),
-//                           isOld: true,
-//                         ),
-//                     ],
-//                   );
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// //
 //test
 
   Widget buildServiceCard({
@@ -511,149 +325,239 @@ class ReviewOnline extends HookConsumerWidget {
             const SizedBox(height: 16),
             // Compare the service details from both lists
             Expanded(
-              child: Scrollbar(
-                thumbVisibility: true,
-                thickness: 5,
-                // interactive: true,
-                child: ListView.builder(
-                  itemCount: order.bookingDetails.length,
-                  itemBuilder: (context, index) {
-                    final newService = order.bookingDetails[index];
-                    // final oldService = order.bookingDetails[index];
-                    // Get the 'TRUCK' service from orderOld
-                    final oldService = orderOld?.bookingDetails.firstWhere(
-                      (e) =>
-                          e.serviceId == newService.serviceId &&
-                          e.type == "TRUCK",
-                      orElse: () => BookingDetailResponseEntity(
-                        bookingId: 0,
-                        id: 0,
-                        type: "TRUCK", // Ensure a valid type
-                        serviceId: 0,
-                        quantity: 0,
-                        price: 0,
-                        status: "READY",
-                        name: "No Service",
-                        description: "No description",
-                        imageUrl: "",
+              child: SingleChildScrollView(
+                child: Table(
+                  border: TableBorder.all(
+                    color: Colors.grey.shade300,
+                    width: 1,
+                  ),
+                  columnWidths: const {
+                    0: FlexColumnWidth(2), // Service name
+                    1: FlexColumnWidth(1), // Quantity
+                    2: FlexColumnWidth(1.5), // Price
+                  },
+                  children: [
+                    // Table header
+                    TableRow(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
                       ),
-                    ); // Default return if no matching service
-                    final oldServiceTruck = orderOld?.bookingDetails.firstWhere(
-                      (e) => e.type == "TRUCK",
-                    ); // Default return if no matching service
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Dịch vụ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('SL',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('Giá',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                    // Generate table rows for services
+                    ...order.bookingDetails.map((newService) {
+                      final oldService = orderOld?.bookingDetails.firstWhere(
+                        (e) =>
+                            e.serviceId == newService.serviceId &&
+                            e.type == newService.type,
+                        orElse: () => BookingDetailResponseEntity(
+                          bookingId: 0,
+                          id: 0,
+                          type: newService.type,
+                          serviceId: 0,
+                          quantity: 0,
+                          price: 0,
+                          status: "READY",
+                          name: "No Service",
+                          description: "No description",
+                          imageUrl: "",
+                        ),
+                      );
 
-                    if (newService.type == "TRUCK") {
-                      if (oldServiceTruck?.serviceId != 0) {
-                        // If oldService is not the default
-                        if (newService.serviceId == oldService?.serviceId) {
-                          if (newService.price == oldService?.price) {
-                            return buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt()));
+                      // For non-TRUCK services, find the old service of the same type
+                      final oldServiceSameType = newService.type != "TRUCK"
+                          ? orderOld?.bookingDetails.firstWhere(
+                              (e) => e.type == newService.type,
+                              orElse: () => BookingDetailResponseEntity(
+                                bookingId: 0,
+                                id: 0,
+                                type: newService.type,
+                                serviceId: 0,
+                                quantity: 0,
+                                price: 0,
+                                status: "READY",
+                                name: "No Service",
+                                description: "No description",
+                                imageUrl: "",
+                              ),
+                            )
+                          : null;
+
+                      // Build row content based on comparison logic
+                      Widget nameCell;
+                      Widget quantityCell;
+                      Widget priceCell;
+
+                      if (newService.type == "TRUCK") {
+                        if (oldService?.serviceId != 0) {
+                          // Nếu có old service
+                          if (newService.serviceId == oldService?.serviceId &&
+                              newService.price == oldService?.price) {
+                            // Nếu trùng serviceId và price thì chỉ hiển thị service mới
+                            nameCell = Text(newService.name);
+                            quantityCell = const Text('1');
+                            priceCell =
+                                Text(formatPrice(newService.price.toInt()));
                           } else {
-                            return Column(
+                            // Nếu khác serviceId hoặc price thì hiển thị cả cũ và mới
+                            nameCell = Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                buildPriceItem(newService.name,
-                                    formatPrice(newService.price.toInt())),
-                                buildPriceItem(
-                                    " ${oldService?.name}",
-                                    formatPrice(
-                                        (oldService?.price ?? 0).toInt()),
-                                    isStrikethrough: true),
+                                Text(
+                                  oldService?.name ?? '',
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                Text(newService.name),
+                              ],
+                            );
+                            quantityCell = const Text('1');
+                            priceCell = Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  formatPrice((oldService?.price ?? 0).toInt()),
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                Text(formatPrice(newService.price.toInt())),
                               ],
                             );
                           }
                         } else {
-                          return Column(
-                            children: [
-                              buildPriceItem(newService.name,
-                                  formatPrice(newService.price.toInt())),
-                              buildPriceItem(
-                                  "${oldServiceTruck?.name}",
-                                  formatPrice(
-                                      (oldServiceTruck?.price ?? 0).toInt()),
-                                  isStrikethrough: true),
-                            ],
-                          );
+                          // Nếu không có old service
+                          nameCell = Text(newService.name);
+                          quantityCell = const Text('1');
+                          priceCell =
+                              Text(formatPrice(newService.price.toInt()));
                         }
                       } else {
-                        // If no old service, just display the new service
-                        return buildPriceItem(newService.name,
-                            formatPrice(newService.price.toInt()));
+                        // Non-truck service comparison logic
+                        if (oldService?.serviceId != 0) {
+                          // Nếu có old service cùng serviceId
+                          if (newService.serviceId == oldService?.serviceId &&
+                              newService.price == oldService?.price &&
+                              newService.quantity == oldService?.quantity) {
+                            // Nếu trùng serviceId, price và quantity thì chỉ hiển thị service mới
+                            nameCell = Text(newService.name);
+                            quantityCell = Text('${newService.quantity}');
+                            priceCell =
+                                Text(formatPrice(newService.price.toInt()));
+                          } else {
+                            // Nếu khác price hoặc quantity thì hiển thị cả cũ và mới
+                            nameCell = Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  oldService?.name ?? '',
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                Text(newService.name),
+                              ],
+                            );
+                            quantityCell = Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${oldService?.quantity ?? 0}',
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                Text('${newService.quantity}'),
+                              ],
+                            );
+                            priceCell = Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  formatPrice((oldService?.price ?? 0).toInt()),
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.lineThrough),
+                                ),
+                                Text(formatPrice(newService.price.toInt())),
+                              ],
+                            );
+                          }
+                        } else if (oldServiceSameType?.serviceId != 0) {
+                          // Nếu có old service cùng type nhưng khác serviceId
+                          nameCell = Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                oldServiceSameType?.name ?? '',
+                                style: const TextStyle(
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                              Text(newService.name),
+                            ],
+                          );
+                          quantityCell = Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${oldServiceSameType?.quantity ?? 0}',
+                                style: const TextStyle(
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                              Text('${newService.quantity}'),
+                            ],
+                          );
+                          priceCell = Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                formatPrice(
+                                    (oldServiceSameType?.price ?? 0).toInt()),
+                                style: const TextStyle(
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                              Text(formatPrice(newService.price.toInt())),
+                            ],
+                          );
+                        } else {
+                          // Nếu không có old service
+                          nameCell = Text(newService.name);
+                          quantityCell = Text('${newService.quantity}');
+                          priceCell =
+                              Text(formatPrice(newService.price.toInt()));
+                        }
                       }
-                    } else {
-                      // For non-"TRUCK" services, compare id and price
-                      final oldServiceNonTruck = orderOld?.bookingDetails
-                          .firstWhere(
-                              (e) =>
-                                  e.serviceId == newService.serviceId &&
-                                  e.type != "TRUCK",
-                              orElse: () => BookingDetailResponseEntity(
-                                    bookingId: 0,
-                                    id: 0,
-                                    type: "TRUCK", // Default for non-TRUCK
-                                    serviceId: 0,
-                                    quantity: 0,
-                                    price: 0,
-                                    status: "READY",
-                                    name: "No Service",
-                                    description: "No description",
-                                    imageUrl: "",
-                                  ));
-                      final oldServicesNonTruck = orderOld?.bookingDetails
-                          .firstWhere((e) => e.type != "TRUCK",
-                              orElse: () => BookingDetailResponseEntity(
-                                    bookingId: 0,
-                                    id: 0,
-                                    type: "TRUCK", // Default for non-TRUCK
-                                    serviceId: 0,
-                                    quantity: 0,
-                                    price: 0,
-                                    status: "READY",
-                                    name: "No Service",
-                                    description: "No description",
-                                    imageUrl: "",
-                                  ));
 
-                      if (newService.serviceId ==
-                              oldServiceNonTruck?.serviceId &&
-                          newService.price == oldServiceNonTruck?.price) {
-                        return buildPriceItem(newService.name,
-                            formatPrice(newService.price.toInt()));
-                      } else if (newService.serviceId ==
-                              oldServiceNonTruck?.serviceId &&
-                          newService.price != oldServiceNonTruck?.price) {
-                        return Column(
-                          children: [
-                            buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt())),
-                            buildPriceItem(
-                                oldServiceNonTruck?.name ?? 'Unknown',
-                                formatPrice(
-                                    oldServiceNonTruck?.price.toInt() ?? 0),
-                                isStrikethrough: true),
-                          ],
-                        );
-                      } else if (newService.serviceId !=
-                              oldServiceNonTruck?.serviceId &&
-                          newService.price != oldServiceNonTruck?.price &&
-                          newService.type == oldServicesNonTruck?.type) {
-                        return Column(
-                          children: [
-                            buildPriceItem(newService.name,
-                                formatPrice(newService.price.toInt())),
-                            buildPriceItem(
-                                oldServicesNonTruck?.name ?? 'Unknown',
-                                formatPrice(
-                                    oldServicesNonTruck?.price.toInt() ?? 0),
-                                isStrikethrough: true),
-                          ],
-                        );
-                      } else {
-                        return buildPriceItem(newService.name,
-                            formatPrice(newService.price.toInt()));
-                      }
-                    }
-                  },
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: nameCell,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(child: quantityCell),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: priceCell,
+                          ),
+                        ],
+                      );
+                    }),
+                  ],
                 ),
               ),
             ),

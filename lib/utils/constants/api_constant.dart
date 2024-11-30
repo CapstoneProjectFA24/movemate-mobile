@@ -42,6 +42,8 @@ class APIConstants {
   static const paymentsDeposit = '/wallets/recharge';
   //wallet
   static const get_wallet = '/wallets/balance';
+  //transaction
+  static const get_transaction = '/transactions';
 
 //get user
   static const get_user = '/users';

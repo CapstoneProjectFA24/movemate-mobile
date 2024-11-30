@@ -1,6 +1,8 @@
 // local
+import 'package:movemate/features/profile/data/models/queries/transations_queries.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
 import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 
@@ -31,6 +33,11 @@ abstract class ProfileRepository {
   //wallet
   Future<WalletResponse> getWallet({
     //  PagingModel request,
+    required String accessToken,
+  });
+  //getTransaction
+  Future<TransactionResponse> getTransaction({
+    required TransationsQueries queries,
     required String accessToken,
   });
 }

@@ -13,6 +13,7 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 import '../../../../../../utils/commons/widgets/widgets_common_export.dart';
 
+@RoutePage()
 class IncidentsScreen extends HookConsumerWidget {
   const IncidentsScreen({super.key});
 
