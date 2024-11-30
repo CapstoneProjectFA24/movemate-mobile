@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
@@ -18,6 +19,9 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/cust
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/chat_services/models/chat_model.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
@@ -114,10 +118,15 @@ class ReviewOnline extends HookConsumerWidget {
       context: context,
     );
     final resultTruckCate = useFetchResultTruckCate.data;
-    print("tuan checking 1 ${order.houseTypeId} ");
-    print("tuan checking 2 ${orderOld?.houseTypeId} ");
-    // print(
-    //     'order  truckNumber check xe : ${resultTruckCate?.estimatedHeight} x ${resultTruckCate?.estimatedLenght} ');
+
+    final staffResponsibility =
+        // order.assignments.where((e) => e.isResponsible == true).toList();
+        ref
+            .watch(bookingStreamProvider(order.id.toString()))
+            .value
+            ?.assignments
+            .where((e) => e.staffType == 'REVIEWER')
+            .first;
 
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
@@ -161,7 +170,11 @@ class ReviewOnline extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 12),
                       buildContactCard(
-                          order: order, profileUserAssign: profileUserAssign),
+                        order: order,
+                        profileUserAssign: profileUserAssign,
+                        context: context,
+                        staffAssignment: staffResponsibility,
+                      ),
                     ],
                   ),
                 ),
@@ -514,26 +527,26 @@ class ReviewOnline extends HookConsumerWidget {
                           } else {
                             return Column(
                               children: [
-                                buildPriceItem(newService.name,
-                                    formatPrice(newService.price.toInt())),
                                 buildPriceItem(
                                     " ${oldService?.name}",
                                     formatPrice(
                                         (oldService?.price ?? 0).toInt()),
                                     isStrikethrough: true),
+                                buildPriceItem(newService.name,
+                                    formatPrice(newService.price.toInt())),
                               ],
                             );
                           }
                         } else {
                           return Column(
                             children: [
-                              buildPriceItem(newService.name,
-                                  formatPrice(newService.price.toInt())),
                               buildPriceItem(
                                   "${oldServiceTruck?.name}",
                                   formatPrice(
                                       (oldServiceTruck?.price ?? 0).toInt()),
                                   isStrikethrough: true),
+                              buildPriceItem(newService.name,
+                                  formatPrice(newService.price.toInt())),
                             ],
                           );
                         }
@@ -710,7 +723,18 @@ class ReviewOnline extends HookConsumerWidget {
   Widget buildContactCard({
     required OrderEntity order,
     required ProfileEntity? profileUserAssign,
+    required BuildContext context,
+    required AssignmentsRealtimeEntity? staffAssignment,
   }) {
+    StaffRole convertToStaffRole(String staffType) {
+      switch (staffType.toUpperCase()) {
+        case 'REVIEWER':
+          return StaffRole.reviewer;
+        default:
+          return StaffRole.manager;
+      }
+    }
+
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -756,19 +780,45 @@ class ReviewOnline extends HookConsumerWidget {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.orange,
-              borderRadius: BorderRadius.circular(20),
+          IconButton(
+            onPressed: () {
+              context.router.push(
+                ChatWithStaffScreenRoute(
+                  staffId: staffAssignment!.userId.toString(),
+                  staffName: profileUserAssign?.name ?? 'Nhân viên',
+                  staffRole: convertToStaffRole(staffAssignment.staffType),
+                  staffImageAvatar: profileUserAssign?.avatarUrl ?? '',
+                  bookingId: order.id.toString(),
+                ),
+              );
+            },
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.orange,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(8),
             ),
-            child: const Icon(Icons.chat, color: Colors.white, size: 20),
-          ),
+            icon: const Icon(
+              Icons.chat,
+              color: Colors.white,
+              size: 16,
+            ),
+          )
         ],
       ),
     );
   }
 
+//  context.router.push(
+//                     ChatWithStaffScreenRoute(
+//                       staffId: staffAssignment.userId.toString(),
+//                       staffName: staff?.name ?? 'Nhân viên',
+//                       staffRole: _convertToStaffRole(staffAssignment.staffType),
+//                       staffImageAvatar: staff?.avatarUrl ?? '',
+//                       bookingId: order.id.toString(),
+//                     ),
+//                   );
   Widget buildButton(
     String text,
     Color color, {
