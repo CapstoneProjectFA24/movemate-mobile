@@ -2,23 +2,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/booking/domain/entities/booking_enities.dart';
+import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
+import '../../provider/order_provider.dart';
 import 'room_image_incident.dart';
 import 'room_video_incident.dart';
 import 'add_image_button_incident.dart';
 import 'add_video_button_incident.dart';
 
-class RoomMediaSection extends ConsumerWidget {
+class RoomMediaSectionIncident extends ConsumerWidget {
   // Changed to ConsumerWidget
   final String roomTitle;
   final RoomType roomType;
 
-  const RoomMediaSection({
+  const RoomMediaSectionIncident({
     super.key,
     required this.roomTitle,
     required this.roomType,
@@ -36,13 +38,34 @@ class RoomMediaSection extends ConsumerWidget {
     final bool canAddMoreVideos = bookingNotifier.canAddVideo(roomType);
 
     // Retrieve the loading states
-    final bool isUploadingLivingRoomImage =
-        bookingState.isUploadingLivingRoomImage;
-    final bool isUploadingLivingRoomVideo =
-        bookingState.isUploadingLivingRoomVideo;
+//thông báo đến màn hình là có hình ảnh hoặc video vừa cập nhật
+    bookingState.isUploadingLivingRoomImage;
+    bookingState.isUploadingLivingRoomVideo;
 
     // print('check tải ảnh $isUploadingLivingRoomImage');
 
+    // Chuyển đổi hình ảnh thành Resource
+    List<Resource> resourceList = [];
+
+    void addImagesToResourceList(List<ImageData> images, String resourceCode) {
+      resourceList.addAll(images.map((imageData) => Resource(
+            type: 'IMG',
+            resourceUrl: imageData.url,
+            resourceCode: resourceCode,
+          )));
+    }
+
+    void addVideosToResourceList(List<VideoData> videos, String resourceCode) {
+      resourceList.addAll(videos.map((imageData) => Resource(
+            type: 'VIDEO',
+            resourceUrl: imageData.url,
+            resourceCode: resourceCode,
+          )));
+    }
+
+    addImagesToResourceList(bookingState.livingRoomImages, 'living_room');
+    addVideosToResourceList(bookingState.livingRoomVideos, 'living_room');
+    print("tuan checking ${resourceList.toString()} ");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -72,7 +95,7 @@ class RoomMediaSection extends ConsumerWidget {
             // Display images
             if (index < imageCount) {
               final image = images[index];
-              return RoomImage(
+              return RoomImageIncident(
                 imageData: image,
                 roomType: roomType,
               );
@@ -81,7 +104,7 @@ class RoomMediaSection extends ConsumerWidget {
             // Display videos
             if (index < imageCount + videoCount) {
               final video = videos[index - imageCount];
-              return RoomVideo(
+              return RoomVideoIncident(
                 videoData: video,
                 roomType: roomType,
               );
@@ -92,7 +115,7 @@ class RoomMediaSection extends ConsumerWidget {
 
             // Display Add Image button or loader
             if (canAddMoreImages && additionalIndex == 0) {
-              return AddImageButton(
+              return AddImageButtonIncident(
                 roomType: roomType,
                 hasImages: images.isNotEmpty,
               );
@@ -101,7 +124,7 @@ class RoomMediaSection extends ConsumerWidget {
             // Display Add Video button or loader
             if (canAddMoreVideos &&
                 (additionalIndex == (canAddMoreImages ? 1 : 0))) {
-              return AddVideoButton(
+              return AddVideoButtonIncident(
                 roomType: roomType,
                 hasVideos: videos.isNotEmpty,
               );
@@ -112,8 +135,8 @@ class RoomMediaSection extends ConsumerWidget {
           },
         ),
         // Display a message if the limits are reached
-        if (images.length >= BookingNotifier.maxImages ||
-            videos.length >= BookingNotifier.maxVideos)
+        if (images.length >= OrderNotifier.maxImages ||
+            videos.length >= OrderNotifier.maxVideos)
           const Padding(
             padding: EdgeInsets.only(top: 0),
             child: Text(

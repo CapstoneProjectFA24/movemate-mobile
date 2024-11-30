@@ -4,12 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/order/presentation/provider/order_provider.dart';
+import 'package:movemate/features/order/presentation/widgets/image_button/room_media_section_incident.dart';
+import 'package:movemate/utils/commons/widgets/cloudinary/cloudinary_upload_widget.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 import '../../../../../../utils/commons/widgets/widgets_common_export.dart';
-import '../../../widgets/image_button/room_image_section_incident.dart';
-import '../../../widgets/image_button/room_media_section.dart';
 
 class IncidentsScreen extends HookConsumerWidget {
   const IncidentsScreen({super.key});
@@ -19,9 +19,21 @@ class IncidentsScreen extends HookConsumerWidget {
     final supportType = useState<String?>(null);
     final orderIdController = useTextEditingController();
     final descriptionController = useTextEditingController();
-    final bookingNotifier = ref.read(bookingProvider.notifier);
     // Track which tab is active (Request Support or Sent Request)
     final isRequestSent = useState<bool>(false);
+    final images = useState<List<String>>([]);
+
+    print("tuan checking 1 ${images.toString()}");
+
+    final imagePublicIds = useState<List<String>>(
+      images.value.map((url) {
+        final uri = Uri.parse(url);
+        final pathSegments = uri.pathSegments;
+        return pathSegments.length > 1
+            ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last.split('.').first}'
+            : '';
+      }).toList(),
+    );
 
     List<String> supportTypes = [
       'Vấn đề về tài khoản',
@@ -211,56 +223,87 @@ class IncidentsScreen extends HookConsumerWidget {
                 const Text('Thêm hình ảnh',
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold)),
-                // const RoomMediaSection(
-                //   roomTitle: 'Tải ảnh lên',
+
+                // const RoomMediaSectionIncident(
+                //   roomTitle: "",
                 //   roomType: RoomType.livingRoom,
                 // ),
-                RoomImageSection(
-                  bookingNotifier: bookingNotifier,
-                  images: const [],
-                  roomTitle: "test",
-                  roomType: RoomType.livingRoom,
+                ImageUploadWidget(
+                  imagePublicIds: imagePublicIds.value,
+                  onImageUploaded: (url, publicId) {
+                    // print('Uploaded successfully: $url');
+                    // print('Uploaded successfully: $publicId');
+                    // Cập nhật danh sách images bằng URL trả về
+                    images.value = [...images.value, url];
+
+                    // Cập nhật danh sách publicIds
+                    imagePublicIds.value = [...imagePublicIds.value, publicId];
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Image uploaded successfully'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  onImageRemoved: (publicId) {
+                    // Remove the image URL and public ID simultaneously
+                    images.value = images.value
+                        .where((url) => !url.contains(publicId))
+                        .toList();
+                    imagePublicIds.value = imagePublicIds.value
+                        .where((id) => id != publicId)
+                        .toList();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Image removed'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
                 ),
+
                 const Text('Dung lượng không vượt quá 5Mb',
                     style: TextStyle(color: Colors.grey, fontSize: 12)),
-                GestureDetector(
-                  onTap: isRequestSent.value
-                      ? null // Disable tap in "Yêu cầu đã gửi" tab
-                      : () {},
-                  child: Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!, width: 1.5),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: FaIcon(FontAwesomeIcons.plus,
-                          color: Colors.grey[400], size: 30),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text('Thêm video',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
-                const Text('Dung lượng không vượt quá 5Mb',
-                    style: TextStyle(color: Colors.grey, fontSize: 12)),
-                GestureDetector(
-                  onTap: isRequestSent.value
-                      ? null // Disable tap in "Yêu cầu đã gửi" tab
-                      : () {},
-                  child: Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!, width: 1.5),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: FaIcon(FontAwesomeIcons.plus,
-                          color: Colors.grey[400], size: 30),
-                    ),
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: isRequestSent.value
+                //       ? null // Disable tap in "Yêu cầu đã gửi" tab
+                //       : () {},
+                //   child: Container(
+                //     height: 120,
+                //     decoration: BoxDecoration(
+                //       border: Border.all(color: Colors.grey[300]!, width: 1.5),
+                //       borderRadius: BorderRadius.circular(8),
+                //     ),
+                //     child: Center(
+                //       child: FaIcon(FontAwesomeIcons.plus,
+                //           color: Colors.grey[400], size: 30),
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
+                // const Text('Thêm video',
+                //     style: TextStyle(
+                //         color: Colors.black, fontWeight: FontWeight.bold)),
+                // const Text('Dung lượng không vượt quá 5Mb',
+                //     style: TextStyle(color: Colors.grey, fontSize: 12)),
+                // GestureDetector(
+                //   onTap: isRequestSent.value
+                //       ? null // Disable tap in "Yêu cầu đã gửi" tab
+                //       : () {},
+                //   child: Container(
+                //     height: 120,
+                //     decoration: BoxDecoration(
+                //       border: Border.all(color: Colors.grey[300]!, width: 1.5),
+                //       borderRadius: BorderRadius.circular(8),
+                //     ),
+                //     child: Center(
+                //       child: FaIcon(FontAwesomeIcons.plus,
+                //           color: Colors.grey[400], size: 30),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 16),
 
                 // Show "Send Request" button only for "Yêu cầu hỗ trợ"

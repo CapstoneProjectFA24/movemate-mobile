@@ -3,17 +3,18 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddImageButton extends ConsumerWidget {
+import '../../provider/order_provider.dart';
+
+class AddImageButtonIncident extends ConsumerWidget {
   // Changed to ConsumerWidget
   final RoomType roomType;
   final bool hasImages;
 
-  const AddImageButton({
+  const AddImageButtonIncident({
     super.key,
     required this.roomType,
     required this.hasImages,
@@ -125,7 +126,7 @@ class AddImageButton extends ConsumerWidget {
 
   // Function to choose image from gallery
   Future<void> _chooseImage(
-      BuildContext context, BookingNotifier bookingNotifier) async {
+      BuildContext context, OrderNotifier bookingNotifier) async {
     if (roomType == RoomType.livingRoom) {
       bookingNotifier.setUploadingLivingRoomImage(true);
     }
@@ -169,7 +170,7 @@ class AddImageButton extends ConsumerWidget {
 
   // Function to take photo using camera
   Future<void> _takePhoto(
-      BuildContext context, BookingNotifier bookingNotifier) async {
+      BuildContext context, OrderNotifier bookingNotifier) async {
     if (roomType == RoomType.livingRoom) {
       bookingNotifier.setUploadingLivingRoomImage(true);
     }

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RoomImage extends ConsumerWidget {
+import '../../provider/order_provider.dart';
+
+class RoomImageIncident extends ConsumerWidget {
   // Changed to ConsumerWidget
   final ImageData imageData;
   final RoomType roomType;
 
-  const RoomImage({
+  const RoomImageIncident({
     super.key,
     required this.imageData,
     required this.roomType,

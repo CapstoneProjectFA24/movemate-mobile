@@ -127,7 +127,7 @@ class ImageUploadWidget extends HookWidget {
                         child: IconButton(
                           icon: const Icon(Icons.delete, color: Colors.white),
                           onPressed: () =>
-                              onImageRemoved(imagePublicIds[index]),
+                              onImageRemoved(imagePublicIds[index] , ),
                         ),
                       ),
                     ),

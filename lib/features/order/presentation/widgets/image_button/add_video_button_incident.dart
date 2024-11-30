@@ -2,18 +2,19 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddVideoButton extends ConsumerWidget {
+import '../../provider/order_provider.dart';
+
+class AddVideoButtonIncident extends ConsumerWidget {
   // Changed to ConsumerWidget
   final RoomType roomType;
   final bool hasVideos;
 
-  const AddVideoButton({
+  const AddVideoButtonIncident({
     super.key,
     required this.roomType,
     required this.hasVideos,
@@ -125,7 +126,7 @@ class AddVideoButton extends ConsumerWidget {
 
   // Function to choose video from gallery
   Future<void> _chooseVideo(
-      BuildContext context, BookingNotifier bookingNotifier) async {
+      BuildContext context, OrderNotifier bookingNotifier) async {
     if (roomType == RoomType.livingRoom) {
       bookingNotifier.setUploadingLivingRoomVideo(true);
     }
@@ -137,7 +138,7 @@ class AddVideoButton extends ConsumerWidget {
       if (pickedFile != null) {
         // Check video size
         final int fileSize = await pickedFile.length();
-        if (fileSize > BookingNotifier.maxVideoSize) {
+        if (fileSize > OrderNotifier.maxVideoSize) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Dung lượng video không được vượt quá 25 MB.'),
@@ -165,7 +166,7 @@ class AddVideoButton extends ConsumerWidget {
             size: fileSize,
           );
           // Add video to booking state
-          // await bookingNotifier.addVideoToRoom(roomType, videoData);
+          await bookingNotifier.addVideoToRoom(roomType, videoData);
         } catch (e) {
           // Handle error
           ScaffoldMessenger.of(context).showSnackBar(
@@ -182,7 +183,7 @@ class AddVideoButton extends ConsumerWidget {
 
   // Function to record video using camera
   Future<void> _recordVideo(
-      BuildContext context, BookingNotifier bookingNotifier) async {
+      BuildContext context, OrderNotifier bookingNotifier) async {
     if (roomType == RoomType.livingRoom) {
       bookingNotifier.setUploadingLivingRoomVideo(true);
     }
@@ -194,7 +195,7 @@ class AddVideoButton extends ConsumerWidget {
       if (pickedFile != null) {
         // Check video size
         final int fileSize = await pickedFile.length();
-        if (fileSize > BookingNotifier.maxVideoSize) {
+        if (fileSize > OrderNotifier.maxVideoSize) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Dung lượng video không được vượt quá 25 MB.'),
@@ -222,7 +223,7 @@ class AddVideoButton extends ConsumerWidget {
             size: fileSize,
           );
           // Add video to booking state
-          // await bookingNotifier.addVideoToRoom(roomType, videoData);
+          await bookingNotifier.addVideoToRoom(roomType, videoData);
         } catch (e) {
           // Handle error
           ScaffoldMessenger.of(context).showSnackBar(
