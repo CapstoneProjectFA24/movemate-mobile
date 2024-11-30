@@ -6,9 +6,15 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 Widget buildPriceItem(
   String description,
   String price, {
-  bool isStrikethrough = false,
+  bool? isStrikethrough,
   int? quantity,
 }) {
+  Color textColor = Colors.black; // Mặc định màu đen
+  if (isStrikethrough == true) {
+    textColor = Colors.red; // Nếu có isStrikethrough thì màu đỏ
+  } else if (isStrikethrough == false) {
+    textColor = Colors.green; // Nếu không có isStrikethrough thì màu xanh lá
+  }
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
     decoration: BoxDecoration(
@@ -27,8 +33,9 @@ Widget buildPriceItem(
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 12,
-              fontWeight: isStrikethrough ? FontWeight.w400 : FontWeight.w500,
-              color: isStrikethrough ? Colors.red : Colors.black,
+              fontWeight:
+                  isStrikethrough == true ? FontWeight.w400 : FontWeight.w500,
+              color: textColor,
             ),
           ),
         ),
@@ -43,7 +50,7 @@ Widget buildPriceItem(
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: isStrikethrough ? Colors.red : Colors.black,
+                color: textColor,
               ),
             ),
           ),
@@ -54,7 +61,7 @@ Widget buildPriceItem(
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: isStrikethrough ? Colors.red : Colors.black,
+              color: textColor,
             ),
           ),
         ),
