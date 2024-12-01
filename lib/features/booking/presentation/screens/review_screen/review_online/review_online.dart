@@ -299,12 +299,14 @@ class ReviewOnline extends HookConsumerWidget {
                     content: houseTypeOld,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                   const SizedBox(height: 5),
                   LabelText(
                     content: houseTypeNew,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                 ],
               ],
@@ -330,12 +332,14 @@ class ReviewOnline extends HookConsumerWidget {
                     content: floorNumberOld,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                   const SizedBox(height: 5),
                   LabelText(
                     content: floorNumberNew,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                 ],
               ],
@@ -361,12 +365,14 @@ class ReviewOnline extends HookConsumerWidget {
                     content: roomNumberOld,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                   const SizedBox(height: 5),
                   LabelText(
                     content: roomNumberNew,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                 ],
               ],
@@ -397,17 +403,23 @@ class ReviewOnline extends HookConsumerWidget {
                       )
                     else ...[
                       // Display old date first, if different
-                      LabelText(
-                        content: formattedDateOld ?? "label",
-                        size: 14,
-                        fontWeight: FontWeight.bold,
+                      Column(
+                        children: [
+                          LabelText(
+                            content: formattedDateOld ?? "label",
+                            size: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                          LabelText(
+                            content: formattedDateNew ?? "label",
+                            size: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 5),
-                      LabelText(
-                        content: formattedDateNew ?? "label",
-                        size: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
                     ],
                   ],
                 ),
@@ -422,17 +434,23 @@ class ReviewOnline extends HookConsumerWidget {
               )
             else ...[
               // Display both old and new time if they are different
-              LabelText(
-                content: '  ${formattedTimeOld ?? "label"}',
-                size: 14,
-                fontWeight: FontWeight.bold,
+              Column(
+                children: [
+                  LabelText(
+                    content: '  ${formattedTimeOld ?? "label"}',
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                  LabelText(
+                    content: '  ${formattedTimeNew ?? "label"}',
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ],
               ),
               const SizedBox(height: 5),
-              LabelText(
-                content: '  ${formattedTimeNew ?? "label"}',
-                size: 14,
-                fontWeight: FontWeight.bold,
-              ),
             ],
           ],
         ),
