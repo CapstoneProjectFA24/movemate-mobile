@@ -175,6 +175,11 @@ class ReviewOnline extends HookConsumerWidget {
                         context: context,
                         staffAssignment: staffResponsibility,
                       ),
+                      const SizedBox(height: 10),
+                      _buildConfirmationImageLink(
+                        context: context,
+                      ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -200,6 +205,7 @@ class ReviewOnline extends HookConsumerWidget {
                           final bookingStatus =
                               order.status.toBookingTypeEnum();
                           final reviewerStatusRequest = ReviewerStatusRequest(
+                            
                             status: BookingStatusType.depositing,
                           );
                           print('order: $reviewerStatusRequest');
@@ -225,6 +231,29 @@ class ReviewOnline extends HookConsumerWidget {
                 ),
               )
             : const SizedBox.shrink(),
+      ),
+    );
+  }
+
+  Widget _buildConfirmationImageLink({required BuildContext context}) {
+    final List<String> vouchers = [];
+    return GestureDetector(
+      onTap: () {
+        context.router.push(
+          CartVoucherScreenRoute(vouchers: vouchers),
+        );
+      },
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Phiếu giảm giá có trong đơn hàng',
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 14,
+            ),
+          ),
+        ],
       ),
     );
   }
