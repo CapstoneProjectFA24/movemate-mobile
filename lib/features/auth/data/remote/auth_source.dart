@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movemate/features/auth/data/models/request/register_token_request.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -55,6 +56,13 @@ abstract class AuthSource {
   @POST(APIConstants.reGenerateToken)
   Future<HttpResponse<TokenModel>> generateToken(
     @Body() TokenModel request,
+    @Header(APIConstants.contentHeader) String contentType,
+  );
+
+  @POST(APIConstants.regiseterFcm)
+  Future<HttpResponse<SuccessModel>> registerFcmToken(
+    @Body() RegisterTokenRequest request,
+    @Header(APIConstants.authHeader) String accessToken,
     @Header(APIConstants.contentHeader) String contentType,
   );
 }
