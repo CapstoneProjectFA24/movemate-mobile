@@ -69,8 +69,6 @@ class SignInController extends _$SignInController {
           accessToken: APIConstants.prefixToken + userModel.tokens.accessToken,
         );
 
-        print("vinh check register token FCM");
-
         ref.read(authProvider.notifier).update(
               (state) => userModel,
             );
@@ -106,15 +104,15 @@ class SignInController extends _$SignInController {
 
     state = await AsyncValue.guard(
       () async {
-        // final userDevice = user!.userTokens!.firstWhere(
-        //   (element) => element.fcmToken == user.fcmToken,
-        // );
+        final userDevice = user!.userTokens!.firstWhere(
+          (element) => element.fcmToken == user.fcmToken,
+        );
 
         ref.read(authProvider.notifier).update((state) => null);
         await authRepository.signOut();
-        // await authRepository.deleteToken(
-        //   id: userDevice.userDeviceId!,
-        // );
+        await authRepository.deleteFcmToken(
+          id: userDevice.userDeviceId!,
+        );
 
         ref.read(modifyProfiver.notifier).update((state) => false);
         context.router.replaceAll([SignInScreenRoute()]);

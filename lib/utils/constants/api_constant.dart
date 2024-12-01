@@ -12,6 +12,7 @@ class APIConstants {
   static const verifyToken = '/authentications/verify-token';
   static const reGenerateToken = '/authentications/re';
   static const regiseterFcm = '/authentications/fcmtoken';
+  static const authen = '/authentications';
 
   // Booking endpoints
   // static const get_truck_category = '/truckcategorys';

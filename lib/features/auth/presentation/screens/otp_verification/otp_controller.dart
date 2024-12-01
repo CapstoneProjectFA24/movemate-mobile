@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/data/models/request/register_token_request.dart';
 import 'package:movemate/features/auth/data/models/request/sign_up_request.dart';
 import 'package:movemate/models/user_model.dart';
+import 'package:movemate/utils/commons/functions/firebase_utils.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
@@ -93,17 +96,24 @@ class OtpController extends _$OtpController {
           request: OTPVerifyRequest(idToken: idToken));
 
       final user = await authRepository.signUpAndRes(request: requestRegister);
-
+      final deviceToken = await getDeviceToken();
       final userModel = UserModel(
         id: user.payload.id,
         email: user.payload.email,
         roleName: user.payload.roleName,
         roleId: user.payload.roleId,
         name: user.payload.name,
-        avatarUrl: user.payload.avatarUrl,   
-        gender: user.payload.gender,  
+        avatarUrl: user.payload.avatarUrl,
+        gender: user.payload.gender,
         phone: user.payload.phone,
         tokens: user.payload.tokens,
+        fcmToken: deviceToken,
+      );
+
+      // register FCM token
+      await authRepository.registerFcmToken(
+        request: RegisterTokenRequest(fcmToken: deviceToken),
+        accessToken: APIConstants.prefixToken + userModel.tokens.accessToken,
       );
 
       ref.read(authProvider.notifier).update(

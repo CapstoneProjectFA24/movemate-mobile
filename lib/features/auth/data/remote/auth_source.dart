@@ -65,6 +65,12 @@ abstract class AuthSource {
     @Header(APIConstants.authHeader) String accessToken,
     @Header(APIConstants.contentHeader) String contentType,
   );
+
+  @DELETE('${APIConstants.authen}/{id}')
+  Future<HttpResponse<SuccessModel>> deleteFcmToken(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Path('id') int id,
+  );
 }
 
 @riverpod

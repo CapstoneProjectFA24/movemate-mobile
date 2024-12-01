@@ -31,6 +31,8 @@ abstract class AuthRepository {
   Future<SuccessModel> registerFcmToken(
       {required RegisterTokenRequest request, required String accessToken});
 
+  Future<SuccessModel> deleteFcmToken({required int id});
+
   Future<void> signOut();
 }
 

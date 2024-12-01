@@ -76,10 +76,18 @@ class AuthRepositoryImpl extends RemoteBaseRepository
     required RegisterTokenRequest request,
     required String accessToken,
   }) {
-    print("WORK");
     return getDataOf(
       request: () => _authSource.registerFcmToken(
           request, accessToken, APIConstants.contentType),
+    );
+  }
+
+  @override
+  Future<SuccessModel> deleteFcmToken({
+    required int id,
+  }) {
+    return getDataOf(
+      request: () => _authSource.deleteFcmToken(APIConstants.contentType, id),
     );
   }
 
