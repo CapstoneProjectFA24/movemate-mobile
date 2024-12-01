@@ -728,7 +728,7 @@ class ReviewOnline extends HookConsumerWidget {
                   color: Colors.red,
                 ),
                 const SizedBox(width: 8),
-                const Text('Dịch vụ cũ', style: TextStyle(fontSize: 10)),
+                const Text('Thông tin cũ', style: TextStyle(fontSize: 10)),
                 const SizedBox(width: 16),
                 Container(
                   width: 12,
@@ -736,7 +736,8 @@ class ReviewOnline extends HookConsumerWidget {
                   color: Colors.green,
                 ),
                 const SizedBox(width: 8),
-                const Text('Dịch vụ cập nhật', style: TextStyle(fontSize: 10)),
+                const Text('Thông tin cập nhật',
+                    style: TextStyle(fontSize: 10)),
                 const SizedBox(width: 16),
                 Container(
                   width: 12,
@@ -744,8 +745,7 @@ class ReviewOnline extends HookConsumerWidget {
                   color: Colors.black,
                 ),
                 const SizedBox(width: 8),
-                const Text('Dịch vụ không thay đổi',
-                    style: TextStyle(fontSize: 10)),
+                const Text('Không thay đổi', style: TextStyle(fontSize: 10)),
               ],
             ),
           ],
