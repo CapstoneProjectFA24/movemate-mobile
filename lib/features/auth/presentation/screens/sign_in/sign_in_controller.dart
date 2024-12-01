@@ -49,7 +49,7 @@ class SignInController extends _$SignInController {
 
         // get FCM token
         final deviceToken = await getDeviceToken();
-        // print(" token fcm : $deviceToken");
+        print(" token fcm : $deviceToken");
         final userModel = UserModel(
           id: user.payload.id,
           email: user.payload.email,
@@ -104,15 +104,15 @@ class SignInController extends _$SignInController {
 
     state = await AsyncValue.guard(
       () async {
-        final userDevice = user!.userTokens!.firstWhere(
-          (element) => element.fcmToken == user.fcmToken,
-        );
+        // final userDevice = user!.userTokens!.firstWhere(
+        //   (element) => element.fcmToken == user.fcmToken,
+        // );
 
         ref.read(authProvider.notifier).update((state) => null);
         await authRepository.signOut();
-        await authRepository.deleteFcmToken(
-          id: userDevice.userDeviceId!,
-        );
+        // await authRepository.deleteFcmToken(
+        //   id: userDevice.userDeviceId!,
+        // );
 
         ref.read(modifyProfiver.notifier).update((state) => false);
         context.router.replaceAll([SignInScreenRoute()]);
