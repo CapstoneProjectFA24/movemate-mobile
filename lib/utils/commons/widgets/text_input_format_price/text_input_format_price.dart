@@ -13,7 +13,7 @@ class CurrencyTextInputFormatter extends TextInputFormatter {
 
     // If the string is empty, return it as is
     if (newText.isEmpty) {
-      return TextEditingValue();
+      return const TextEditingValue();
     }
 
     // Format the number

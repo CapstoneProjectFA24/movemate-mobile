@@ -7,7 +7,6 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
-import 'package:movemate/utils/commons/widgets/snack_bar.dart';
 import 'package:movemate/utils/commons/widgets/text_input_format_price/text_input_format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';

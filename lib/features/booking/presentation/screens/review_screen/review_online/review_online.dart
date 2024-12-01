@@ -1,21 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
-import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
@@ -272,6 +268,8 @@ class ReviewOnline extends HookConsumerWidget {
     final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
     final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
 
+    final bool checkDateTime = formattedDateNew == formattedDateOld &&
+        formattedTimeOld == formattedTimeNew;
     print("tuan checking ${order.houseType?.name} ");
 
     return Column(
@@ -395,7 +393,7 @@ class ReviewOnline extends HookConsumerWidget {
                       fontWeight: FontWeight.w400,
                     ),
                     // Compare dates: If same, show only new, if different, show both
-                    if (formattedDateNew == formattedDateOld)
+                    if (checkDateTime)
                       LabelText(
                         content: formattedDateNew ?? "label",
                         size: 14,
@@ -409,13 +407,13 @@ class ReviewOnline extends HookConsumerWidget {
                             content: formattedDateOld ?? "label",
                             size: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.red,
+                            color: !checkDateTime ? Colors.red : Colors.black,
                           ),
                           LabelText(
                             content: formattedDateNew ?? "label",
                             size: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green,
+                            color: !checkDateTime ? Colors.green : Colors.black,
                           ),
                         ],
                       ),
@@ -426,7 +424,7 @@ class ReviewOnline extends HookConsumerWidget {
               ],
             ),
             // Display time
-            if (formattedTimeNew == formattedTimeOld)
+            if (checkDateTime)
               LabelText(
                 content: '  ${formattedTimeNew ?? "label"}',
                 size: 14,
@@ -440,13 +438,13 @@ class ReviewOnline extends HookConsumerWidget {
                     content: '  ${formattedTimeOld ?? "label"}',
                     size: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                    color: !checkDateTime ? Colors.red : Colors.black,
                   ),
                   LabelText(
                     content: '  ${formattedTimeNew ?? "label"}',
                     size: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: !checkDateTime ? Colors.green : Colors.black,
                   ),
                 ],
               ),

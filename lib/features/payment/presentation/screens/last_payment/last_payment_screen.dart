@@ -404,7 +404,6 @@ class _OrderItem extends StatelessWidget {
   final bool isBold;
 
   const _OrderItem({
-    super.key,
     required this.label,
     required this.price,
     this.isBold = false,

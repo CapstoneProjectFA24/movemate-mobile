@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:movemate/utils/enums/enums_export.dart';
 
 class CancelBooking {
   final int id;
