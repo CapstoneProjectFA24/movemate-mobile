@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 
@@ -18,7 +17,7 @@ class IncidentsContentModal extends HookConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      height: screenHeight * 0.9, // Chiều cao 90% màn hình
+      height: screenHeight * 0.8, // Chiều cao 90% màn hình
       child: Stack(
         children: [
           // Nội dung của modal
@@ -27,23 +26,21 @@ class IncidentsContentModal extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header section with icons and title
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment
                       .start, // Giữ phần tử đầu tiên ở bên trái
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Báo cáo sự cố vỡ bể đồ',
+                        'Báo cáo sự cố hư hỏng/mất cắp',
                         textAlign:
                             TextAlign.center, // Đảm bảo văn bản nằm ở giữa
                         style: TextStyle(
-                          fontSize: 22, // Thu nhỏ một chút
+                          fontSize: 18, // Thu nhỏ một chút
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    Icon(Icons.info,
-                        color: Colors.red[500], size: 26), // Thu nhỏ icon
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -80,7 +77,7 @@ class IncidentsContentModal extends HookConsumerWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.grey[600],
-                          fontSize: 16, // Thu nhỏ kích thước chữ
+                          fontSize: 14, // Thu nhỏ kích thước chữ
                         ),
                       ),
                     ],
@@ -90,9 +87,9 @@ class IncidentsContentModal extends HookConsumerWidget {
 
                 // Declaration section
                 Text(
-                  'Vui lòng xác nhận bạn đã khai báo các sự cố sau:',
+                  'Vui lòng xác nhận sự cố bạn báo cáo đảm bảo:',
                   style: TextStyle(
-                    fontSize: 18, // Thu nhỏ kích thước chữ
+                    fontSize: 16, // Thu nhỏ kích thước chữ
                     fontWeight: FontWeight.bold,
                     color: Colors.grey[600],
                   ),
@@ -102,12 +99,10 @@ class IncidentsContentModal extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildCheckListItem(
-                        'Tất cả các sự cố xảy ra với đồ đạc cá nhân'),
-                    _buildCheckListItem('Các sự cố do người khác gây ra'),
+                        'Khai báo tất cả thông tin về đồ vật có giá trị'),
+                    _buildCheckListItem('Các sự cố do nhân viên gây ra'),
                     _buildCheckListItem(
-                        'Các sự cố liên quan đến cháy, cướp hoặc phá hoại'),
-                    _buildCheckListItem(
-                        'Các sự cố liên quan đến cửa kính hoặc màn hình'),
+                        'Các sự cố liên quan đến đổ vỡ, mất cắp hoặc phá hoại'),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -136,21 +131,23 @@ class IncidentsContentModal extends HookConsumerWidget {
                     // Add logic for when the user selects this option
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // Nền màu trắng
-                    foregroundColor: Colors.orange[700], // Màu chữ
-                    side: BorderSide(
-                        color: Colors.orange[700]!, width: 1), // Viền màu cam
+                    backgroundColor: Colors.orange[500],
+                    foregroundColor:
+                        Colors.white, // Use foregroundColor for text color
+                    textStyle: const TextStyle(
+                        color:
+                            Colors.white), // Optional: additional text styling
                     padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 20), // Thu nhỏ padding
+                        vertical: 14, horizontal: 20),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // Bo góc
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: const Text(
-                    'Tôi đã tham gia vào sự cố này',
+                    'Đi đến báo cáo',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18, // Thu nhỏ kích thước chữ
+                      fontSize: 16, // Thu nhỏ kích thước chữ
                     ),
                   ),
                 ),
@@ -160,21 +157,25 @@ class IncidentsContentModal extends HookConsumerWidget {
                     // Add logic for when the user selects this option
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[500],
-                    iconColor: Colors.white,
+                    backgroundColor: Colors.white, // White background
+                    foregroundColor: Colors.orange[700], // Orange text color
+                    side: BorderSide(
+                        color: Colors.orange[700]!, // Orange border
+                        width: 1),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 20), // Thu nhỏ padding
+                        vertical: 14, horizontal: 20),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius:
+                          BorderRadius.circular(12), // Rounded corners
                     ),
                   ),
                   child: const FittedBox(
                     child: Text(
-                      'Tôi không có sự cố nào khác để báo cáo',
+                      'Hủy',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 18, // Thu nhỏ kích thước chữ
+                        color: Colors.orange,
+                        fontSize: 14, // Thu nhỏ kích thước chữ
                       ),
                     ),
                   ),

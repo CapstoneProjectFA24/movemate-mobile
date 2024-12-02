@@ -251,8 +251,10 @@ class AppointmentTime extends StatelessWidget {
 // hàm để định dạng ngày tháng
     final formattedDateReviewAt = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.reviewAt.toString()));
+
     final formattedTimeReviewAt =
-        DateFormat('hh:mm').format(DateTime.parse(order.reviewAt.toString()));
+        DateFormat('HH:mm').format(DateTime.parse(order.reviewAt.toString()));
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -261,14 +263,14 @@ class AppointmentTime extends StatelessWidget {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Color(0xFFFF6600),
-            fontSize: 18,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 5),
         LabelText(
           content: '$formattedDateReviewAt  $formattedTimeReviewAt ',
-          size: 18,
+          size: 14,
           color: AssetsConstants.primaryMain,
           fontWeight: FontWeight.bold,
         ),

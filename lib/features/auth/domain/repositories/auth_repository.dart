@@ -1,3 +1,4 @@
+import 'package:movemate/features/auth/data/models/request/register_token_request.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // data impl
@@ -26,6 +27,11 @@ abstract class AuthRepository {
   Future<SuccessModel> verifyToken({required OTPVerifyRequest request});
 
   Future<AccountReponse> signUpAndRes({required SignUpRequest request});
+
+  Future<SuccessModel> registerFcmToken(
+      {required RegisterTokenRequest request, required String accessToken});
+
+  Future<SuccessModel> deleteFcmToken({required int id});
 
   Future<void> signOut();
 }

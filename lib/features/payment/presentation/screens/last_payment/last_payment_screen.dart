@@ -92,18 +92,15 @@ class LastPaymentScreen extends HookConsumerWidget {
             bookingId: id,
           );
         } else if (selectedMethod == PaymentMethodType.cash) {
-          // await paymentController.createPaymentBooking(
+          await paymentController.paymentBookingCash(
+              context: context, bookingId: id);
+          // showSnackBar(
           //   context: context,
-          //   selectedMethod: selectedMethod.type,
-          //   bookingId: bookingResponse.id.toString(),
+          //   content: 'Phương thứ này đang bảo trì',
+          //   icon: const Icon(Icons.close),
+          //   backgroundColor: AssetsConstants.mainColor,
+          //   textColor: AssetsConstants.whiteColor,
           // );
-          showSnackBar(
-            context: context,
-            content: 'Phương thứ này đang bảo trì',
-            icon: const Icon(Icons.close),
-            backgroundColor: AssetsConstants.mainColor,
-            textColor: AssetsConstants.whiteColor,
-          );
         } else {
           await paymentController.createPaymentBooking(
             context: context,
@@ -407,7 +404,6 @@ class _OrderItem extends StatelessWidget {
   final bool isBold;
 
   const _OrderItem({
-    super.key,
     required this.label,
     required this.price,
     this.isBold = false,

@@ -1,21 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
-import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
@@ -152,12 +148,12 @@ class ReviewOnline extends HookConsumerWidget {
                       const Text(
                         'Chọn xe không hợp lý',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       const Text(
                         'Chúng tôi đề xuất cho bạn như sau',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                       const SizedBox(height: 16),
                       buildServiceCard(
@@ -264,7 +260,7 @@ class ReviewOnline extends HookConsumerWidget {
     final formattedDateNew = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.bookingAt.toString()));
     final formattedTimeNew =
-        DateFormat('hh:mm').format(DateTime.parse(order.bookingAt.toString()));
+        DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
 
     // Format date and time for old order
     final formattedDateOld = orderOld != null
@@ -301,6 +297,8 @@ class ReviewOnline extends HookConsumerWidget {
     final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
     final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
 
+    final bool checkDateTime = formattedDateNew == formattedDateOld &&
+        formattedTimeOld == formattedTimeNew;
     print("tuan checking ${order.houseType?.name} ");
 
     return Column(
@@ -328,12 +326,14 @@ class ReviewOnline extends HookConsumerWidget {
                     content: houseTypeOld,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                   const SizedBox(height: 5),
                   LabelText(
                     content: houseTypeNew,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                 ],
               ],
@@ -359,12 +359,14 @@ class ReviewOnline extends HookConsumerWidget {
                     content: floorNumberOld,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                   const SizedBox(height: 5),
                   LabelText(
                     content: floorNumberNew,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                 ],
               ],
@@ -390,12 +392,14 @@ class ReviewOnline extends HookConsumerWidget {
                     content: roomNumberOld,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                   const SizedBox(height: 5),
                   LabelText(
                     content: roomNumberNew,
                     size: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
                 ],
               ],
@@ -418,7 +422,7 @@ class ReviewOnline extends HookConsumerWidget {
                       fontWeight: FontWeight.w400,
                     ),
                     // Compare dates: If same, show only new, if different, show both
-                    if (formattedDateNew == formattedDateOld)
+                    if (checkDateTime)
                       LabelText(
                         content: formattedDateNew ?? "label",
                         size: 14,
@@ -426,24 +430,30 @@ class ReviewOnline extends HookConsumerWidget {
                       )
                     else ...[
                       // Display old date first, if different
-                      LabelText(
-                        content: formattedDateOld ?? "label",
-                        size: 14,
-                        fontWeight: FontWeight.bold,
+                      Column(
+                        children: [
+                          LabelText(
+                            content: formattedDateOld ?? "label",
+                            size: 14,
+                            fontWeight: FontWeight.bold,
+                            color: !checkDateTime ? Colors.red : Colors.black,
+                          ),
+                          LabelText(
+                            content: formattedDateNew ?? "label",
+                            size: 14,
+                            fontWeight: FontWeight.bold,
+                            color: !checkDateTime ? Colors.green : Colors.black,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 5),
-                      LabelText(
-                        content: formattedDateNew ?? "label",
-                        size: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
                     ],
                   ],
                 ),
               ],
             ),
             // Display time
-            if (formattedTimeNew == formattedTimeOld)
+            if (checkDateTime)
               LabelText(
                 content: '  ${formattedTimeNew ?? "label"}',
                 size: 14,
@@ -451,17 +461,23 @@ class ReviewOnline extends HookConsumerWidget {
               )
             else ...[
               // Display both old and new time if they are different
-              LabelText(
-                content: '  ${formattedTimeOld ?? "label"}',
-                size: 14,
-                fontWeight: FontWeight.bold,
+              Column(
+                children: [
+                  LabelText(
+                    content: '  ${formattedTimeOld ?? "label"}',
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                    color: !checkDateTime ? Colors.red : Colors.black,
+                  ),
+                  LabelText(
+                    content: '  ${formattedTimeNew ?? "label"}',
+                    size: 14,
+                    fontWeight: FontWeight.bold,
+                    color: !checkDateTime ? Colors.green : Colors.black,
+                  ),
+                ],
               ),
               const SizedBox(height: 5),
-              LabelText(
-                content: '  ${formattedTimeNew ?? "label"}',
-                size: 14,
-                fontWeight: FontWeight.bold,
-              ),
             ],
           ],
         ),
@@ -739,7 +755,7 @@ class ReviewOnline extends HookConsumerWidget {
                   color: Colors.red,
                 ),
                 const SizedBox(width: 8),
-                const Text('Dịch vụ cũ', style: TextStyle(fontSize: 10)),
+                const Text('Thông tin cũ', style: TextStyle(fontSize: 10)),
                 const SizedBox(width: 16),
                 Container(
                   width: 12,
@@ -747,7 +763,8 @@ class ReviewOnline extends HookConsumerWidget {
                   color: Colors.green,
                 ),
                 const SizedBox(width: 8),
-                const Text('Dịch vụ cập nhật', style: TextStyle(fontSize: 10)),
+                const Text('Thông tin cập nhật',
+                    style: TextStyle(fontSize: 10)),
                 const SizedBox(width: 16),
                 Container(
                   width: 12,
@@ -755,8 +772,7 @@ class ReviewOnline extends HookConsumerWidget {
                   color: Colors.black,
                 ),
                 const SizedBox(width: 8),
-                const Text('Dịch vụ không thay đổi',
-                    style: TextStyle(fontSize: 10)),
+                const Text('Không thay đổi', style: TextStyle(fontSize: 10)),
               ],
             ),
           ],

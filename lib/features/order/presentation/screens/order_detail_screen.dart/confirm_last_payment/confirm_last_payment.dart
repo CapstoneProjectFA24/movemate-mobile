@@ -181,7 +181,6 @@ class _OrderItem extends StatelessWidget {
   final bool isBold;
 
   const _OrderItem({
-    super.key,
     required this.label,
     required this.price,
     this.isBold = false,
@@ -218,7 +217,6 @@ class _SummaryItem extends StatelessWidget {
   final bool isGrey;
   final bool isBold;
   const _SummaryItem({
-    super.key,
     required this.label,
     required this.value,
     this.isGrey = false,

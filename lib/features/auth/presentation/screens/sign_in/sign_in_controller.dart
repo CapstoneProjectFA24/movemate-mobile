@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/features/auth/data/models/request/register_token_request.dart';
+import 'package:movemate/utils/commons/functions/firebase_utils.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:dio/dio.dart';
 import 'package:auto_route/auto_route.dart';
@@ -45,8 +48,8 @@ class SignInController extends _$SignInController {
         final user = await authRepository.signIn(request: request);
 
         // get FCM token
-        // final deviceToken = await getDeviceToken();
-        // print(" token fcm : $deviceToken");
+        final deviceToken = await getDeviceToken();
+        print(" token fcm : $deviceToken");
         final userModel = UserModel(
           id: user.payload.id,
           email: user.payload.email,
@@ -57,6 +60,13 @@ class SignInController extends _$SignInController {
           gender: user.payload.gender,
           phone: user.payload.phone,
           tokens: user.payload.tokens,
+          fcmToken: deviceToken,
+        );
+
+        // register FCM token
+        await authRepository.registerFcmToken(
+          request: RegisterTokenRequest(fcmToken: deviceToken),
+          accessToken: APIConstants.prefixToken + userModel.tokens.accessToken,
         );
 
         ref.read(authProvider.notifier).update(
@@ -100,7 +110,7 @@ class SignInController extends _$SignInController {
 
         ref.read(authProvider.notifier).update((state) => null);
         await authRepository.signOut();
-        // await authRepository.deleteToken(
+        // await authRepository.deleteFcmToken(
         //   id: userDevice.userDeviceId!,
         // );
 

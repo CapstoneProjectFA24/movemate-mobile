@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
-import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/domain/entites/truck_categories_entity.dart';
 
 import 'package:movemate/models/request/paging_model.dart';

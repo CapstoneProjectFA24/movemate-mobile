@@ -1,15 +1,8 @@
 // booking_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
-import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
-import 'package:movemate/features/booking/domain/entities/service_truck/inverse_parent_service_entity.dart';
-import 'package:movemate/features/booking/domain/entities/services_fee_system_entity.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
-import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
-import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
-import 'package:movemate/features/booking/domain/entities/sub_service_entity.dart';
 import '/features/booking/domain/entities/booking_enities.dart';
 
 class OrderNotifier extends StateNotifier<Booking> {

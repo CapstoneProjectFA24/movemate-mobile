@@ -1,5 +1,6 @@
 // import local
 
+import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/services/payment_services/data/models/request/payment_request.dart';
 import 'package:movemate/services/payment_services/data/models/response/payment_response.dart';
 import 'package:movemate/services/payment_services/data/remote/payment_source.dart';
@@ -49,5 +50,15 @@ class PaymentRepositoryImpl extends RemoteBaseRepository
     );
   }
 
-
+  @override
+  Future<SuccessModel> paymentBookingCash({
+    required String accessToken,
+    required int id,
+  }) async {
+    print("tuan checking repo id : $id");
+    return getDataOf(
+      request: () => _paymentSource.paymentBookingCash(
+          APIConstants.contentType, accessToken, id),
+    );
+  }
 }

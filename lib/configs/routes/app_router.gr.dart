@@ -43,6 +43,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CashPaymentWaitingRoute.name: (routeData) {
+      final args = routeData.argsAs<CashPaymentWaitingRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CashPaymentWaiting(
+          key: args.key,
+          bookingId: args.bookingId,
+        ),
+      );
+    },
     ChatWithStaffScreenRoute.name: (routeData) {
       final args = routeData.argsAs<ChatWithStaffScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -115,6 +125,18 @@ abstract class _$AppRouter extends RootStackRouter {
         child: LastPaymentScreen(
           key: args.key,
           id: args.id,
+        ),
+      );
+    },
+    LastTransactionResultCashPaymentRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<LastTransactionResultCashPaymentRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LastTransactionResultCashPayment(
+          key: args.key,
+          order: args.order,
+          status: args.status,
         ),
       );
     },
@@ -547,6 +569,45 @@ class CartVoucherScreenRouteArgs {
 }
 
 /// generated route for
+/// [CashPaymentWaiting]
+class CashPaymentWaitingRoute
+    extends PageRouteInfo<CashPaymentWaitingRouteArgs> {
+  CashPaymentWaitingRoute({
+    Key? key,
+    required int bookingId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CashPaymentWaitingRoute.name,
+          args: CashPaymentWaitingRouteArgs(
+            key: key,
+            bookingId: bookingId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CashPaymentWaitingRoute';
+
+  static const PageInfo<CashPaymentWaitingRouteArgs> page =
+      PageInfo<CashPaymentWaitingRouteArgs>(name);
+}
+
+class CashPaymentWaitingRouteArgs {
+  const CashPaymentWaitingRouteArgs({
+    this.key,
+    required this.bookingId,
+  });
+
+  final Key? key;
+
+  final int bookingId;
+
+  @override
+  String toString() {
+    return 'CashPaymentWaitingRouteArgs{key: $key, bookingId: $bookingId}';
+  }
+}
+
+/// generated route for
 /// [ChatWithStaffScreen]
 class ChatWithStaffScreenRoute
     extends PageRouteInfo<ChatWithStaffScreenRouteArgs> {
@@ -793,6 +854,50 @@ class LastPaymentScreenRouteArgs {
   @override
   String toString() {
     return 'LastPaymentScreenRouteArgs{key: $key, id: $id}';
+  }
+}
+
+/// generated route for
+/// [LastTransactionResultCashPayment]
+class LastTransactionResultCashPaymentRoute
+    extends PageRouteInfo<LastTransactionResultCashPaymentRouteArgs> {
+  LastTransactionResultCashPaymentRoute({
+    Key? key,
+    required OrderEntity? order,
+    bool? status,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LastTransactionResultCashPaymentRoute.name,
+          args: LastTransactionResultCashPaymentRouteArgs(
+            key: key,
+            order: order,
+            status: status,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LastTransactionResultCashPaymentRoute';
+
+  static const PageInfo<LastTransactionResultCashPaymentRouteArgs> page =
+      PageInfo<LastTransactionResultCashPaymentRouteArgs>(name);
+}
+
+class LastTransactionResultCashPaymentRouteArgs {
+  const LastTransactionResultCashPaymentRouteArgs({
+    this.key,
+    required this.order,
+    this.status,
+  });
+
+  final Key? key;
+
+  final OrderEntity? order;
+
+  final bool? status;
+
+  @override
+  String toString() {
+    return 'LastTransactionResultCashPaymentRouteArgs{key: $key, order: $order, status: $status}';
   }
 }
 

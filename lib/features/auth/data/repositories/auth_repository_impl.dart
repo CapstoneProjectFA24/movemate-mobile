@@ -1,5 +1,6 @@
 // import local
 
+import 'package:movemate/features/auth/data/models/request/register_token_request.dart';
 import 'package:movemate/features/auth/data/models/response/account_response.dart';
 import 'package:movemate/features/auth/data/models/request/sign_in_request.dart';
 import 'package:movemate/utils/commons/functions/functions_common_export.dart';
@@ -67,6 +68,26 @@ class AuthRepositoryImpl extends RemoteBaseRepository
     return getDataOf(
       request: () =>
           _authSource.generateToken(request, APIConstants.contentType),
+    );
+  }
+
+  @override
+  Future<SuccessModel> registerFcmToken({
+    required RegisterTokenRequest request,
+    required String accessToken,
+  }) {
+    return getDataOf(
+      request: () => _authSource.registerFcmToken(
+          request, accessToken, APIConstants.contentType),
+    );
+  }
+
+  @override
+  Future<SuccessModel> deleteFcmToken({
+    required int id,
+  }) {
+    return getDataOf(
+      request: () => _authSource.deleteFcmToken(APIConstants.contentType, id),
     );
   }
 
