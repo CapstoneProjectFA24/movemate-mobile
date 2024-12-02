@@ -1,28 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
-import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
-import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
+
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
-import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
+
 import 'package:movemate/features/order/presentation/widgets/review_online/confirmation_link.dart';
 import 'package:movemate/features/order/presentation/widgets/review_online/contact_card.dart';
-import 'package:movemate/features/order/presentation/widgets/review_online/house_information.dart';
+
 import 'package:movemate/features/order/presentation/widgets/review_online/services_card.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
-import 'package:movemate/features/promotion/presentation/widgets/cart_voucher.dart';
+
 import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-import 'package:movemate/services/chat_services/models/chat_model.dart';
-import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
+
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
@@ -76,12 +73,6 @@ class ReviewOnline extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isExpanded = useState(false);
-    final expandedIndex = useState<int>(-1);
-    void toggleDropdown() {
-      isExpanded.value = !isExpanded.value;
-    }
-
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
     final stateServicePackage = ref.watch(servicePackageControllerProvider);
@@ -102,22 +93,12 @@ class ReviewOnline extends HookConsumerWidget {
     );
     final profileUserAssign = useFetchResultProfile.data;
 
-    final useFetchResultTruckCate = useFetchObject<TruckCategoryEntity>(
-      function: (context) => ref
-          .read(servicePackageControllerProvider.notifier)
-          .getTruckDetailById(order.truckNumber, context),
-      context: context,
-    );
-    final resultTruckCate = useFetchResultTruckCate.data;
-
-    final staffResponsibility =
-        // order.assignments.where((e) => e.isResponsible == true).toList();
-        ref
-            .watch(bookingStreamProvider(order.id.toString()))
-            .value
-            ?.assignments
-            .where((e) => e.staffType == 'REVIEWER')
-            .first;
+    final staffResponsibility = ref
+        .watch(bookingStreamProvider(order.id.toString()))
+        .value
+        ?.assignments
+        .where((e) => e.staffType == 'REVIEWER')
+        .first;
 
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
@@ -150,14 +131,11 @@ class ReviewOnline extends HookConsumerWidget {
                         style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                       const SizedBox(height: 16),
-                  
-
                       ServiceCard(
                         order: order,
                         orderOld: orderOld,
                       ),
                       const SizedBox(height: 12),
-                 
                       ContactCard(
                         order: order,
                         profileUserAssign: profileUserAssign,
@@ -259,10 +237,4 @@ class ReviewOnline extends HookConsumerWidget {
       ),
     );
   }
-}
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }

@@ -23,7 +23,7 @@ class PromotionScreen extends HookConsumerWidget {
     final tabController = useTabController(initialLength: 3);
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
-    final fetchReslut = useFetch<PromotionEntity>(
+    final fetchResult = useFetch<PromotionEntity>(
       function: (model, context) => ref
           .read(promotionControllerProvider.notifier)
           .getPromotions(model, context),
@@ -39,79 +39,68 @@ class PromotionScreen extends HookConsumerWidget {
       context: context,
     );
 
-    print("checking promition ${fetchReslut.toString()}");
-    final List<PromotionModel> fakePromotions = [
-      PromotionModel(
-        id: '1',
-        title: 'Winter Sale',
-        discount: '50%',
-        description: 'Dịch vụ dọn nhà nội thành',
-        code: 'DONNAI50',
-        imagePath:
-            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg',
-        bgcolor: Colors.deepOrangeAccent,
-        propromoPeriod: "31/05/2024",
-        minTransaction: "500,000 VND",
-        type: "Nội thành",
-        destination: "Hà Nội",
-      ),
-      PromotionModel(
-        id: '1',
-        title: 'Winter Sale',
-        discount: '37%',
-        description: 'Dịch vụ dọn nhà ngoại thành',
-        code: 'DONNGOAI37',
-        imagePath:
-            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
-        bgcolor: Colors.tealAccent,
-        propromoPeriod: " 30/06/2024",
-        minTransaction: "1,000,000 VND",
-        type: "Ngoại thành",
-        destination: "Hồ Chí Minh",
-      ),
-      PromotionModel(
-        id: '2',
-        title: 'Winter Sale',
-        discount: '30%',
-        description: 'Dọn dẹp văn phòng',
-        code: 'VANPHONG30',
-        imagePath:
-            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
-        bgcolor: Colors.deepPurple,
-        propromoPeriod: "31/07/2024",
-        minTransaction: "2,000,000 VND",
-        type: "Văn phòng",
-        destination: "Đà Nẵng",
-      ),
-      PromotionModel(
-        id: '3',
-        title: 'Winter Sale',
-        discount: '25%',
-        description: 'Dọn dẹp sau xây dựng',
-        code: 'XAYDUNG25',
-        imagePath:
-            'https://cdn.thuvienphapluat.vn/uploads/tintuc/%E1%BA%A2NH%20TIN%20TUC/chuyen-nha.jpg', // URL hình ảnh mạng
-        bgcolor: Colors.lightGreenAccent,
-        propromoPeriod: " 31/08/2024",
-        minTransaction: "3,000,000 VND",
-        type: "Sau xây dựng",
-        destination: "Cần Thơ",
-      ),
-    ];
+    // print("checking promition ${fetchResult.toString()}");
 
     List<String> tabs = [
       "Tất cả",
-      "Khuyến mãi 1",
-      "Khuyến mãi 2",
+      "Hiện tại",
+      "Sắp tới",
       // "Khuyến mãi 3"
     ];
 
-    // useEffect(() {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     FocusScope.of(context).unfocus();
-    //   });
-    //   return null;
-    // }, []);
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusScope.of(context).unfocus();
+      });
+      return null;
+    }, []);
+    List<PromotionEntity> allPromotions = fetchResult.items;
+
+// Lấy ngày và giờ hiện tại
+    DateTime now = DateTime.now();
+
+// Lọc danh sách các promotions thỏa mãn điều kiện ngày hiện tại nằm trong khoảng startDate và endDate
+    List<PromotionEntity> activePromotions = fetchResult.items.where((p) {
+      // Kiểm tra xem ngày hiện tại có nằm trong khoảng từ startDate đến endDate hay không
+      return (now.isAfter(p.startDate) || now.isAtSameMomentAs(p.startDate)) &&
+          (now.isBefore(p.endDate) || now.isAtSameMomentAs(p.endDate));
+    }).toList();
+// Lọc danh sách các promotions thỏa mãn điều kiện ngày hiện tại +30 nằm trong khoảng startDate và endDate
+    List<PromotionEntity> activePromotionsFuture = fetchResult.items.where((p) {
+      // Kiểm tra xem ngày hiện tại có nằm trong khoảng từ startDate đến endDate hay không
+      return (now.isAfter(p.startDate) || now.isAtSameMomentAs(p.startDate)) &&
+          (now.isBefore(p.endDate) || now.isAtSameMomentAs(p.endDate));
+    }).toList();
+
+// Hàm để lấy ngày đầu tiên và cuối cùng của tháng sau
+    DateTime getNextMonthStart(DateTime date) {
+      int year = date.month == 12 ? date.year + 1 : date.year;
+      int month = date.month == 12 ? 1 : date.month + 1;
+      return DateTime(year, month, 1);
+    }
+
+    DateTime getNextMonthEnd(DateTime date) {
+      DateTime nextMonthStart = getNextMonthStart(date);
+      DateTime followingMonthStart = DateTime(
+        nextMonthStart.month == 12
+            ? nextMonthStart.year + 1
+            : nextMonthStart.year,
+        nextMonthStart.month == 12 ? 1 : nextMonthStart.month + 1,
+        1,
+      );
+      return followingMonthStart.subtract(const Duration(seconds: 1));
+    }
+
+// Xác định khoảng thời gian của tháng sau
+    DateTime nextMonthStart = getNextMonthStart(now);
+    DateTime nextMonthEnd = getNextMonthEnd(now);
+
+// Lọc danh sách các promotions thỏa mãn điều kiện có giao với tháng sau
+    List<PromotionEntity> nextMonthPromotions = fetchResult.items.where((p) {
+      // Kiểm tra xem khoảng thời gian promotion có giao với tháng sau không
+      return p.startDate.isBefore(nextMonthEnd) &&
+          p.endDate.isAfter(nextMonthStart);
+    }).toList();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -137,14 +126,12 @@ class PromotionScreen extends HookConsumerWidget {
       body: TabBarView(
         controller: tabController,
         children: [
-          PromotionList(promotions: fetchReslut.items),
+          PromotionList(promotions: fetchResult.items),
           PromotionList(
-            promotions:
-                fetchReslut.items.where((p) => p.startDate == 50).toList(),
+            promotions: activePromotions,
           ),
           PromotionList(
-            promotions:
-                fetchReslut.items.where((p) => p.discountMin == 10).toList(),
+            promotions: nextMonthPromotions,
           ),
         ],
       ),
@@ -163,7 +150,7 @@ class _TabContent extends StatelessWidget {
       child: Text(
         content,
         style: const TextStyle(
-          fontSize: 18,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
       ),
