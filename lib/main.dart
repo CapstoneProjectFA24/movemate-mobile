@@ -23,7 +23,8 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // await initFirebaseMessaging();
 
-  // check firebase anonymous user connect
+  // check firebase anonymous user connect 
+  
   // await testFirebaseConnection();
   // await testFirebaseConnectionWithPhone('+84382703625');
   Cloudinary.fromCloudName(cloudName: "dkpnkjnxs");
