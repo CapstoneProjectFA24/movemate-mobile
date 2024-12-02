@@ -33,7 +33,7 @@ class ServiceInfoCard extends HookConsumerWidget {
     final formattedDate = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.bookingAt.toString()));
     final formattedTime =
-        DateFormat('hh:mm').format(DateTime.parse(order.bookingAt.toString()));
+        DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
 
     return FadeInUp(
       child: Center(
@@ -123,17 +123,16 @@ Số điện thoại: ${userdata?.phone}
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const LabelText(
-                          content: 'Ngày chuyển nhà:',
-                          size: 14,
-                          fontFamily: 'bold',
-                          color: AssetsConstants.blackColor,
-                          fontWeight: FontWeight.w600,
+                          content: 'Ngày chuyển nhà: ',
+                          size: 12,
+                          color: AssetsConstants.greyColor,
+                          fontWeight: FontWeight.w400,
                         ),
                         LabelText(
-                          content: "$formattedDate  $formattedTime",
-                          size: 14,
-                          color: AssetsConstants.blackColor,
-                          fontWeight: FontWeight.w600,
+                          content: "$formattedTime $formattedDate",
+                          size: 12,
+                          color: AssetsConstants.greyColor,
+                          fontWeight: FontWeight.w400,
                         ),
                       ],
                     ),

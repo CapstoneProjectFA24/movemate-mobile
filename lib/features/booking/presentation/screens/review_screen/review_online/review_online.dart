@@ -148,12 +148,12 @@ class ReviewOnline extends HookConsumerWidget {
                       const Text(
                         'Chọn xe không hợp lý',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       const Text(
                         'Chúng tôi đề xuất cho bạn như sau',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                       const SizedBox(height: 16),
                       buildServiceCard(
@@ -231,7 +231,7 @@ class ReviewOnline extends HookConsumerWidget {
     final formattedDateNew = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.bookingAt.toString()));
     final formattedTimeNew =
-        DateFormat('hh:mm').format(DateTime.parse(order.bookingAt.toString()));
+        DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
 
     // Format date and time for old order
     final formattedDateOld = orderOld != null
