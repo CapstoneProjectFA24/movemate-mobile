@@ -12,8 +12,13 @@ import 'package:movemate/features/booking/presentation/screens/controller/servic
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
+import 'package:movemate/features/order/presentation/widgets/review_online/confirmation_link.dart';
+import 'package:movemate/features/order/presentation/widgets/review_online/house_information.dart';
+import 'package:movemate/features/order/presentation/widgets/review_online/services_card.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/features/promotion/presentation/widgets/cart_voucher.dart';
+import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
@@ -30,6 +35,8 @@ class ReviewOnline extends HookConsumerWidget {
   final OrderEntity? orderOld;
   static const double spacing = 10.0;
   const ReviewOnline({super.key, required this.order, required this.orderOld});
+
+  get vouchers => null;
 
   // Helper method to get reviewer assignment with a default value
   AssignmentResponseEntity getReviewerAssignment(OrderEntity order) {
@@ -84,9 +91,6 @@ class ReviewOnline extends HookConsumerWidget {
     final truckBookingDetail = getTruckBookingDetail(order);
     final getServiceId = truckBookingDetail.serviceId;
 
-    // print('getIdAssignment: $getAssID');
-    // print('getServiceId: $getServiceId');
-
     final useFetchResultProfile = useFetchObject<ProfileEntity>(
       function: (context) async {
         return ref
@@ -96,16 +100,6 @@ class ReviewOnline extends HookConsumerWidget {
       context: context,
     );
     final profileUserAssign = useFetchResultProfile.data;
-
-    // final useFetchResultService = useFetchObject<ServicesPackageEntity>(
-    //   function: (context) async {
-    //     return ref
-    //         .read(serviceControllerProvider.notifier)
-    //         .getServicesById(getServiceId, context);
-    //   },
-    //   context: context,
-    // );
-    // final serviceData = useFetchResultService.data;
 
     final useFetchResultTruckCate = useFetchObject<TruckCategoryEntity>(
       function: (context) => ref
@@ -126,7 +120,6 @@ class ReviewOnline extends HookConsumerWidget {
 
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
-
     return LoadingOverlay(
       isLoading: stateProfile.isLoading ||
           stateService.isLoading ||
@@ -164,6 +157,13 @@ class ReviewOnline extends HookConsumerWidget {
                         ref: ref,
                         context: context,
                       ),
+
+                      // ServiceCard(
+                      //   order: order,
+                      //   orderOld: orderOld,
+                      //   profileUserAssign: profileUserAssign,
+                      //   truckCateDetails: resultTruckCate,
+                      // ),
                       const SizedBox(height: 12),
                       buildContactCard(
                         order: order,
@@ -172,8 +172,19 @@ class ReviewOnline extends HookConsumerWidget {
                         staffAssignment: staffResponsibility,
                       ),
                       const SizedBox(height: 10),
-                      _buildConfirmationImageLink(
-                        context: context,
+                      ConfirmationLink(
+                        vouchers: const [],
+                        onTap: () {
+                          // Xử lý khi người dùng nhấn vào "Phiếu giảm giá có trong đơn hàng"
+                          // Ví dụ: Hiển thị modal bottom sheet chứa danh sách phiếu giảm giá
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return VoucherModal(vouchers: vouchers);
+                            },
+                          );
+                        },
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -201,7 +212,6 @@ class ReviewOnline extends HookConsumerWidget {
                           final bookingStatus =
                               order.status.toBookingTypeEnum();
                           final reviewerStatusRequest = ReviewerStatusRequest(
-                            
                             status: BookingStatusType.depositing,
                           );
                           print('order: $reviewerStatusRequest');
@@ -231,259 +241,236 @@ class ReviewOnline extends HookConsumerWidget {
     );
   }
 
-  Widget _buildConfirmationImageLink({required BuildContext context}) {
-    final List<String> vouchers = [];
-    return GestureDetector(
-      onTap: () {
-        context.router.push(
-          CartVoucherScreenRoute(vouchers: vouchers),
-        );
-      },
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Phiếu giảm giá có trong đơn hàng',
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget buildHouseInformation(
+  //     {required WidgetRef ref, required BuildContext context}) {
+  //   // Format date and time for new order
+  //   final formattedDateNew = DateFormat('dd-MM-yyyy')
+  //       .format(DateTime.parse(order.bookingAt.toString()));
+  //   final formattedTimeNew =
+  //       DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
 
-  Widget buildHouseInformation(
-      {required WidgetRef ref, required BuildContext context}) {
-    // Format date and time for new order
-    final formattedDateNew = DateFormat('dd-MM-yyyy')
-        .format(DateTime.parse(order.bookingAt.toString()));
-    final formattedTimeNew =
-        DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
+  //   // Format date and time for old order
+  //   final formattedDateOld = orderOld != null
+  //       ? DateFormat('dd-MM-yyyy')
+  //           .format(DateTime.parse(orderOld!.bookingAt.toString()))
+  //       : null;
+  //   final formattedTimeOld = orderOld != null
+  //       ? DateFormat('hh:mm')
+  //           .format(DateTime.parse(orderOld!.bookingAt.toString()))
+  //       : null;
 
-    // Format date and time for old order
-    final formattedDateOld = orderOld != null
-        ? DateFormat('dd-MM-yyyy')
-            .format(DateTime.parse(orderOld!.bookingAt.toString()))
-        : null;
-    final formattedTimeOld = orderOld != null
-        ? DateFormat('hh:mm')
-            .format(DateTime.parse(orderOld!.bookingAt.toString()))
-        : null;
+  //   final useFetchResultOld = useFetchObject<HouseTypeEntity>(
+  //     function: (context) => ref
+  //         .read(servicePackageControllerProvider.notifier)
+  //         .getHouseTypeById(order.houseTypeId, context),
+  //     context: context,
+  //   );
+  //   final useFetchResultNew = useFetchObject<HouseTypeEntity>(
+  //     function: (context) => ref
+  //         .read(servicePackageControllerProvider.notifier)
+  //         .getHouseTypeById(orderOld!.houseTypeId, context),
+  //     context: context,
+  //   );
 
-    final useFetchResultOld = useFetchObject<HouseTypeEntity>(
-      function: (context) => ref
-          .read(servicePackageControllerProvider.notifier)
-          .getHouseTypeById(order.houseTypeId, context),
-      context: context,
-    );
-    final useFetchResultNew = useFetchObject<HouseTypeEntity>(
-      function: (context) => ref
-          .read(servicePackageControllerProvider.notifier)
-          .getHouseTypeById(orderOld!.houseTypeId, context),
-      context: context,
-    );
+  //   final houseTypeDataOld = useFetchResultOld.data;
+  //   final houseTypeDataNew = useFetchResultNew.data;
 
-    final houseTypeDataOld = useFetchResultOld.data;
-    final houseTypeDataNew = useFetchResultNew.data;
+  //   // Get house type, floor and room information for both old and new orders
+  //   final houseTypeNew = houseTypeDataNew?.name ?? "Unknown";
+  //   final floorNumberNew = order.floorsNumber.toString() ?? "Unknown";
+  //   final roomNumberNew = order.roomNumber.toString() ?? "Unknown";
 
-    // Get house type, floor and room information for both old and new orders
-    final houseTypeNew = houseTypeDataNew?.name ?? "Unknown";
-    final floorNumberNew = order.floorsNumber.toString() ?? "Unknown";
-    final roomNumberNew = order.roomNumber.toString() ?? "Unknown";
+  //   final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
+  //   final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
+  //   final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
 
-    final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
-    final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
-    final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
+  //   final bool checkDateTime = formattedDateNew == formattedDateOld &&
+  //       formattedTimeOld == formattedTimeNew;
+  //   print("tuan checking ${order.houseType?.name} ");
 
-    final bool checkDateTime = formattedDateNew == formattedDateOld &&
-        formattedTimeOld == formattedTimeNew;
-    print("tuan checking ${order.houseType?.name} ");
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           // Compare house type for old and new orders
+  //           Column(
+  //             children: [
+  //               const LabelText(
+  //                 content: 'Loại nhà : ',
+  //                 size: 14,
+  //                 fontWeight: FontWeight.w400,
+  //               ),
+  //               if (houseTypeNew == houseTypeOld)
+  //                 LabelText(
+  //                   content: houseTypeNew,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                 )
+  //               else ...[
+  //                 LabelText(
+  //                   content: houseTypeOld,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.red,
+  //                 ),
+  //                 const SizedBox(height: 5),
+  //                 LabelText(
+  //                   content: houseTypeNew,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.green,
+  //                 ),
+  //               ],
+  //             ],
+  //           ),
+  //           const SizedBox(width: 16),
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Compare house type for old and new orders
-            Column(
-              children: [
-                const LabelText(
-                  content: 'Loại nhà : ',
-                  size: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                if (houseTypeNew == houseTypeOld)
-                  LabelText(
-                    content: houseTypeNew,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                  )
-                else ...[
-                  LabelText(
-                    content: houseTypeOld,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 5),
-                  LabelText(
-                    content: houseTypeNew,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(width: 16),
+  //           // Compare floor number for old and new orders
+  //           Column(
+  //             children: [
+  //               const LabelText(
+  //                 content: 'Tầng : ',
+  //                 size: 14,
+  //                 fontWeight: FontWeight.w400,
+  //               ),
+  //               if (floorNumberNew == floorNumberOld)
+  //                 LabelText(
+  //                   content: floorNumberNew,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                 )
+  //               else ...[
+  //                 LabelText(
+  //                   content: floorNumberOld,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.red,
+  //                 ),
+  //                 const SizedBox(height: 5),
+  //                 LabelText(
+  //                   content: floorNumberNew,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.green,
+  //                 ),
+  //               ],
+  //             ],
+  //           ),
+  //           const SizedBox(width: 16),
 
-            // Compare floor number for old and new orders
-            Column(
-              children: [
-                const LabelText(
-                  content: 'Tầng : ',
-                  size: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                if (floorNumberNew == floorNumberOld)
-                  LabelText(
-                    content: floorNumberNew,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                  )
-                else ...[
-                  LabelText(
-                    content: floorNumberOld,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 5),
-                  LabelText(
-                    content: floorNumberNew,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(width: 16),
+  //           // Compare room number for old and new orders
+  //           Column(
+  //             children: [
+  //               const LabelText(
+  //                 content: 'Phòng : ',
+  //                 size: 14,
+  //                 fontWeight: FontWeight.w400,
+  //               ),
+  //               if (roomNumberNew == roomNumberOld)
+  //                 LabelText(
+  //                   content: roomNumberNew,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                 )
+  //               else ...[
+  //                 LabelText(
+  //                   content: roomNumberOld,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.red,
+  //                 ),
+  //                 const SizedBox(height: 5),
+  //                 LabelText(
+  //                   content: roomNumberNew,
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.green,
+  //                 ),
+  //               ],
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //       const SizedBox(height: spacing),
 
-            // Compare room number for old and new orders
-            Column(
-              children: [
-                const LabelText(
-                  content: 'Phòng : ',
-                  size: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                if (roomNumberNew == roomNumberOld)
-                  LabelText(
-                    content: roomNumberNew,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                  )
-                else ...[
-                  LabelText(
-                    content: roomNumberOld,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 5),
-                  LabelText(
-                    content: roomNumberNew,
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: spacing),
-
-        // Row for displaying moving date and time
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    const LabelText(
-                      content: 'Ngày dọn nhà : ',
-                      size: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    // Compare dates: If same, show only new, if different, show both
-                    if (checkDateTime)
-                      LabelText(
-                        content: formattedDateNew ?? "label",
-                        size: 14,
-                        fontWeight: FontWeight.bold,
-                      )
-                    else ...[
-                      // Display old date first, if different
-                      Column(
-                        children: [
-                          LabelText(
-                            content: formattedDateOld ?? "label",
-                            size: 14,
-                            fontWeight: FontWeight.bold,
-                            color: !checkDateTime ? Colors.red : Colors.black,
-                          ),
-                          LabelText(
-                            content: formattedDateNew ?? "label",
-                            size: 14,
-                            fontWeight: FontWeight.bold,
-                            color: !checkDateTime ? Colors.green : Colors.black,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 5),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-            // Display time
-            if (checkDateTime)
-              LabelText(
-                content: '  ${formattedTimeNew ?? "label"}',
-                size: 14,
-                fontWeight: FontWeight.bold,
-              )
-            else ...[
-              // Display both old and new time if they are different
-              Column(
-                children: [
-                  LabelText(
-                    content: '  ${formattedTimeOld ?? "label"}',
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: !checkDateTime ? Colors.red : Colors.black,
-                  ),
-                  LabelText(
-                    content: '  ${formattedTimeNew ?? "label"}',
-                    size: 14,
-                    fontWeight: FontWeight.bold,
-                    color: !checkDateTime ? Colors.green : Colors.black,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-            ],
-          ],
-        ),
-      ],
-    );
-  }
+  //       // Row for displaying moving date and time
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.start,
+  //         children: [
+  //           Column(
+  //             children: [
+  //               Row(
+  //                 children: [
+  //                   const LabelText(
+  //                     content: 'Ngày dọn nhà : ',
+  //                     size: 14,
+  //                     fontWeight: FontWeight.w400,
+  //                   ),
+  //                   // Compare dates: If same, show only new, if different, show both
+  //                   if (checkDateTime)
+  //                     LabelText(
+  //                       content: formattedDateNew ?? "label",
+  //                       size: 14,
+  //                       fontWeight: FontWeight.bold,
+  //                     )
+  //                   else ...[
+  //                     // Display old date first, if different
+  //                     Column(
+  //                       children: [
+  //                         LabelText(
+  //                           content: formattedDateOld ?? "label",
+  //                           size: 14,
+  //                           fontWeight: FontWeight.bold,
+  //                           color: !checkDateTime ? Colors.red : Colors.black,
+  //                         ),
+  //                         LabelText(
+  //                           content: formattedDateNew ?? "label",
+  //                           size: 14,
+  //                           fontWeight: FontWeight.bold,
+  //                           color: !checkDateTime ? Colors.green : Colors.black,
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 5),
+  //                   ],
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //           // Display time
+  //           if (checkDateTime)
+  //             LabelText(
+  //               content: '  ${formattedTimeNew ?? "label"}',
+  //               size: 14,
+  //               fontWeight: FontWeight.bold,
+  //             )
+  //           else ...[
+  //             // Display both old and new time if they are different
+  //             Column(
+  //               children: [
+  //                 LabelText(
+  //                   content: '  ${formattedTimeOld ?? "label"}',
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: !checkDateTime ? Colors.red : Colors.black,
+  //                 ),
+  //                 LabelText(
+  //                   content: '  ${formattedTimeNew ?? "label"}',
+  //                   size: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   color: !checkDateTime ? Colors.green : Colors.black,
+  //                 ),
+  //               ],
+  //             ),
+  //             const SizedBox(height: 5),
+  //           ],
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
 //test
 
@@ -522,7 +509,10 @@ class ReviewOnline extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildHouseInformation(ref: ref, context: context),
+                      HouseInformation(
+                        order: order,
+                        orderOld: orderOld,
+                      ),
                     ],
                   ),
                 ),
@@ -873,15 +863,6 @@ class ReviewOnline extends HookConsumerWidget {
     );
   }
 
-//  context.router.push(
-//                     ChatWithStaffScreenRoute(
-//                       staffId: staffAssignment.userId.toString(),
-//                       staffName: staff?.name ?? 'Nhân viên',
-//                       staffRole: _convertToStaffRole(staffAssignment.staffType),
-//                       staffImageAvatar: staff?.avatarUrl ?? '',
-//                       bookingId: order.id.toString(),
-//                     ),
-//                   );
   Widget buildButton(
     String text,
     Color color, {
