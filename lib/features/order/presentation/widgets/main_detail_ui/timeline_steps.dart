@@ -89,7 +89,6 @@ class TimelineSteps extends HookConsumerWidget {
           !status.isSuggestionReady;
       final hasPassedSuggestion =
           hasPassedReview && !status.canReviewSuggestion;
-
       return [
         {
           'title': 'Xử lý yêu cầu',
@@ -130,14 +129,9 @@ class TimelineSteps extends HookConsumerWidget {
         },
         {
           'title': 'Xác nhận đề xuất',
-          'isActive': status.canReviewSuggestion
-          || hasPassedSuggestion
-          ,
+          'isActive': status.canReviewSuggestion || hasPassedSuggestion,
           'details': ['Vui lòng xác nhận đề xuất dịch vụ'],
-          'detailsStatus': [
-            status.canReviewSuggestion
-            || hasPassedSuggestion
-          ]
+          'detailsStatus': [status.canReviewSuggestion || hasPassedSuggestion]
         },
         {
           'title': 'Vận chuyển',
@@ -162,6 +156,7 @@ class TimelineSteps extends HookConsumerWidget {
       if (status.canReviewSuggestion) return 2;
       if (status.isOnlineReviewing || status.isOnlineSuggestionReady) return 1;
       if (status.isProcessingRequest) return 0;
+      if (status.isCancelled) return 0;
       return 0;
     } else {
       if (status.isMovingInProgress) return 5;
@@ -172,6 +167,7 @@ class TimelineSteps extends HookConsumerWidget {
       if (status.canMakePayment) return 2;
       if (status.canAcceptSchedule) return 1;
       if (status.isWaitingStaffSchedule) return 0;
+      if (status.isCancelled) return 0;
       return 0;
     }
   }
