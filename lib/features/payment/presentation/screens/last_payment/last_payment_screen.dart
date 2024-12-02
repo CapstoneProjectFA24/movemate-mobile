@@ -8,6 +8,7 @@ import 'package:movemate/features/booking/presentation/screens/controller/bookin
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -44,6 +45,9 @@ class LastPaymentScreen extends HookConsumerWidget {
     void toggleDropdown() {
       isExpanded.value = !isExpanded.value;
     }
+
+    final bookingAsync = ref.watch(bookingStreamProvider(id.toString()));
+    final checkIsCredit = bookingAsync.value?.isCredit;
 
     final bookingController = ref.read(bookingControllerProvider.notifier);
 
@@ -83,6 +87,17 @@ class LastPaymentScreen extends HookConsumerWidget {
     final paymentController = ref.watch(paymentControllerProvider.notifier);
     final state = ref.watch(paymentControllerProvider);
 
+    // Nếu checkIsCredit là true và phương thức thanh toán hiện tại không phải là cash, chuyển sang cash
+    useEffect(() {
+      if (checkIsCredit == true && selectedMethod != PaymentMethodType.cash) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(paymentMethodProvider.notifier).state =
+              PaymentMethodType.cash;
+        });
+      }
+      return null;
+    }, [checkIsCredit, selectedMethod]);
+
     Future<void> handlePaymentButtonPressed() async {
       try {
         if (selectedMethod == PaymentMethodType.wallet) {
@@ -94,13 +109,6 @@ class LastPaymentScreen extends HookConsumerWidget {
         } else if (selectedMethod == PaymentMethodType.cash) {
           await paymentController.paymentBookingCash(
               context: context, bookingId: id);
-          // showSnackBar(
-          //   context: context,
-          //   content: 'Phương thứ này đang bảo trì',
-          //   icon: const Icon(Icons.close),
-          //   backgroundColor: AssetsConstants.mainColor,
-          //   textColor: AssetsConstants.whiteColor,
-          // );
         } else {
           await paymentController.createPaymentBooking(
             context: context,
@@ -137,35 +145,9 @@ class LastPaymentScreen extends HookConsumerWidget {
                           margin: const EdgeInsets.symmetric(vertical: 30),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Text(
-                              //   'Thông tin đơn hàng',
-                              //   style: TextStyle(
-                              //       fontSize: 16, color: Colors.black87),
-                              // ),
-                              // const Text(
-                              //   'số lượng 1',
-                              //   style: TextStyle(
-                              //       fontSize: 16, color: Colors.black87),
-                              // ),
-                              // Text(
-                              //   bookingResponse.status ?? "",
-                              //   style: const TextStyle(
-                              //       fontSize: 16, color: Colors.black87),
-                              // ),
-                            ],
+                            children: [],
                           ),
                         ),
-
-                        // Date
-                        // Container(
-                        //   margin: const EdgeInsets.only(bottom: 10),
-                        //   child: Text(
-                        //     bookingResponse.createdAt ?? "",
-                        //     style: const TextStyle(
-                        //         fontSize: 16, color: Colors.black87),
-                        //   ),
-                        // ),
 
                         // Payment Method Section
                         const Row(
@@ -181,90 +163,64 @@ class LastPaymentScreen extends HookConsumerWidget {
 
                         Column(
                           children: paymentList.map((method) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 5),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.network(
-                                    method.imageUrl,
-                                    width: 40,
-                                    height: 40,
+                            // Xác định xem phương thức này có được phép chọn hay không
+                            bool isDisabled = checkIsCredit == true &&
+                                method != PaymentMethodType.cash;
+
+                            return Opacity(
+                              opacity: isDisabled ? 0.5 : 1.0,
+                              child: IgnorePointer(
+                                ignoring: isDisabled,
+                                child: Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    method.displayName,
-                                    style: const TextStyle(fontSize: 16),
+                                  child: Row(
+                                    children: [
+                                      Image.network(
+                                        method.imageUrl,
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        method.displayName,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: isDisabled
+                                              ? Colors.grey
+                                              : Colors.black87,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Radio<PaymentMethodType>(
+                                        value: method,
+                                        groupValue: selectedMethod,
+                                        onChanged: isDisabled
+                                            ? null
+                                            : (value) {
+                                                if (value != null) {
+                                                  ref
+                                                      .read(
+                                                          paymentMethodProvider
+                                                              .notifier)
+                                                      .state = value;
+                                                }
+                                              },
+                                        activeColor: const Color(0xFFFF7F00),
+                                      ),
+                                    ],
                                   ),
-                                  const Spacer(),
-                                  Radio<PaymentMethodType>(
-                                    value: method,
-                                    groupValue: selectedMethod,
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        ref
-                                            .read(
-                                                paymentMethodProvider.notifier)
-                                            .state = value;
-                                      }
-                                    },
-                                    activeColor: const Color(0xFFFF7F00),
-                                  ),
-                                ],
+                                ),
                               ),
                             );
                           }).toList(),
                         ),
-
-                        // Coupon Section
-                        // Row(
-                        //   children: [
-                        //     Expanded(
-                        //       child: TextField(
-                        //         decoration: InputDecoration(
-                        //           hintText: 'Bạn có 7 mã coupons',
-                        //           border: OutlineInputBorder(
-                        //             borderRadius: BorderRadius.circular(5),
-                        //           ),
-                        //           contentPadding: const EdgeInsets.symmetric(
-                        //             horizontal: 10,
-                        //             vertical: 10,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(width: 10),
-                        //     OutlinedButton(
-                        //       onPressed: () {},
-                        //       style: OutlinedButton.styleFrom(
-                        //         side:
-                        //             const BorderSide(color: Color(0xFFFF7F00)),
-                        //         padding: const EdgeInsets.symmetric(
-                        //           horizontal: 20,
-                        //           vertical: 10,
-                        //         ),
-                        //       ),
-                        //       child: const Text(
-                        //         'Thêm',
-                        //         style: TextStyle(color: Color(0xFFFF7F00)),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-
-                        // Note
-                        // Container(
-                        //   margin: const EdgeInsets.symmetric(vertical: 10),
-                        //   child: const Text(
-                        //     'Đơn hàng của quý khách đã được giao đến địa chỉ mà quý khách đã cung cấp. Quý khách vui lòng kiểm tra kỹ số lượng, tình trạng của hàng hóa. \n\nMoveMate xin cảm ơn.',
-                        //     style:
-                        //         TextStyle(fontSize: 14, color: Colors.black87),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),

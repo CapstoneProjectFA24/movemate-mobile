@@ -33,6 +33,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BookingScreenService(),
       );
     },
+    CartVoucherScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<CartVoucherScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CartVoucherScreen(
+          key: args.key,
+          vouchers: args.vouchers,
+        ),
+      );
+    },
     CashPaymentWaitingRoute.name: (routeData) {
       final args = routeData.argsAs<CashPaymentWaitingRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -518,6 +528,44 @@ class BookingScreenServiceRoute extends PageRouteInfo<void> {
   static const String name = 'BookingScreenServiceRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CartVoucherScreen]
+class CartVoucherScreenRoute extends PageRouteInfo<CartVoucherScreenRouteArgs> {
+  CartVoucherScreenRoute({
+    Key? key,
+    required List<String> vouchers,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CartVoucherScreenRoute.name,
+          args: CartVoucherScreenRouteArgs(
+            key: key,
+            vouchers: vouchers,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CartVoucherScreenRoute';
+
+  static const PageInfo<CartVoucherScreenRouteArgs> page =
+      PageInfo<CartVoucherScreenRouteArgs>(name);
+}
+
+class CartVoucherScreenRouteArgs {
+  const CartVoucherScreenRouteArgs({
+    this.key,
+    required this.vouchers,
+  });
+
+  final Key? key;
+
+  final List<String> vouchers;
+
+  @override
+  String toString() {
+    return 'CartVoucherScreenRouteArgs{key: $key, vouchers: $vouchers}';
+  }
 }
 
 /// generated route for

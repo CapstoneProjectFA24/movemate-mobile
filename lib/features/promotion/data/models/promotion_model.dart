@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 class PromotionModel {
+  final String id; 
   final String title;
   final String discount;
   final String description;
   final String code;
   final String imagePath;
   final Color bgcolor;
-
-  final String? propromoPeriod;
-  final String? minTransaction;
-  final String? type;
-  final String? destination;
+  final String propromoPeriod;
+  final String minTransaction;
+  final String type;
+  final String destination;
 
   PromotionModel({
+    required this.id, 
     required this.title,
     required this.discount,
     required this.description,
@@ -26,3 +27,4 @@ class PromotionModel {
     required this.destination,
   });
 }
+

@@ -26,6 +26,8 @@ import 'package:movemate/features/payment/presentation/screens/deposite_payment/
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
+// import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
+import 'package:movemate/features/promotion/presentation/widgets/cart_voucher.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
 import 'package:movemate/features/test_cloudinary/test_cloudinary_screen.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
@@ -224,7 +226,9 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: IncidentsScreenRoute.page,
         ),
-
+        AutoRoute(
+          page: CartVoucherScreenRoute.page,
+        ),
         //loading screen
         AutoRoute(
           // initial: true,

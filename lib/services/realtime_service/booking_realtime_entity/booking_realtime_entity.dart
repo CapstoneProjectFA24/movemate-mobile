@@ -8,6 +8,7 @@ class BookingRealtimeEntity {
   final double total;
   final double totalFee;
   final double totalReal;
+  final bool isCredit;
   final List<BookingDetailRealTimeEntity> bookingDetails;
 
   BookingRealtimeEntity({
@@ -18,6 +19,7 @@ class BookingRealtimeEntity {
     required this.total,
     required this.totalFee,
     required this.totalReal,
+    required this.isCredit,
     required this.bookingDetails,
   });
 
@@ -33,6 +35,7 @@ class BookingRealtimeEntity {
       total: (data['Total'] as num?)?.toDouble() ?? 0.0,
       totalFee: (data['TotalFee'] as num?)?.toDouble() ?? 0.0,
       totalReal: (data['TotalReal'] as num?)?.toDouble() ?? 0.0,
+      isCredit: data['IsCredit'] as bool,
       bookingDetails: (data['BookingDetails'] as List<dynamic>?)
               ?.map((e) => BookingDetailRealTimeEntity.fromMap(e))
               .toList() ??
@@ -49,6 +52,7 @@ class BookingRealtimeEntity {
       'Deposit': deposit,
       'Total': total,
       'TotalFee': totalFee,
+      'IsCredit': isCredit,
       'TotalReal': totalReal,
     };
   }

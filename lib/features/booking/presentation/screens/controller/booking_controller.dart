@@ -330,9 +330,9 @@ class BookingController extends _$BookingController {
         ),
       );
 
-      if (state.hasError) {
-        await ref.read(signInControllerProvider.notifier).signOut(context);
-      }
+      // if (state.hasError) {
+      //   await ref.read(signInControllerProvider.notifier).signOut(context);
+      // }
     }
   }
 }

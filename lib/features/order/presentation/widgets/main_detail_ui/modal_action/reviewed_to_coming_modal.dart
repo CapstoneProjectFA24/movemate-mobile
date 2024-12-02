@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 class ReviewedToComingModal extends HookConsumerWidget {
@@ -57,7 +58,11 @@ class ReviewedToComingModal extends HookConsumerWidget {
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color(0xFFFF9900), Color(0xFFFFB446)],
+                  // colors: [Color(0xFFFF9900), Color(0xFFFFB446)],
+                  colors: [
+                    AssetsConstants.mainColor,
+                    AssetsConstants.mainColor
+                  ],
                 ),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(24),
@@ -65,7 +70,7 @@ class ReviewedToComingModal extends HookConsumerWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFFF9900).withOpacity(0.3),
+                    color: const Color(0xFFFF9900).withOpacity(0.7),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -97,12 +102,12 @@ class ReviewedToComingModal extends HookConsumerWidget {
                     },
                     child: Container(
                       padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFFF9900).withOpacity(0.3),
+                            color: AssetsConstants.mainColor,
                             blurRadius: 12,
                             spreadRadius: 2,
                           ),
@@ -111,7 +116,7 @@ class ReviewedToComingModal extends HookConsumerWidget {
                       child: const Icon(
                         Icons.rate_review_rounded,
                         size: 32,
-                        color: Color(0xFFFF9900),
+                        color: AssetsConstants.mainColor,
                       ),
                     ),
                   ),
@@ -181,7 +186,10 @@ class ReviewedToComingModal extends HookConsumerWidget {
                         gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [Color(0xFFFF9900), Color(0xFFFFB446)],
+                          colors: [
+                            AssetsConstants.mainColor,
+                            AssetsConstants.mainColor
+                          ],
                         ),
                         boxShadow: [
                           BoxShadow(

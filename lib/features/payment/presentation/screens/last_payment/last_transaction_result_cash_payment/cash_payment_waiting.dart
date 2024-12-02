@@ -38,10 +38,10 @@ class CashPaymentWaiting extends HookConsumerWidget {
     final checkCashPayment = bookingStatus.isCompleted;
 
     if (checkCashPayment && orderEntity.data != null) {
-      context.router.push(
-        LastTransactionResultCashPaymentRoute(order: orderEntity.data),
-      );
+      context.router
+          .push(LastTransactionResultCashPaymentRoute(order: orderEntity.data));
     }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -61,7 +61,6 @@ class CashPaymentWaiting extends HookConsumerWidget {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xFFF57C00),
-                // .withOpacity(0.8), // Add some transparency
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -69,15 +68,13 @@ class CashPaymentWaiting extends HookConsumerWidget {
                 children: [
                   // Icon similar to the Font Awesome 'check'
                   Container(
-                    // padding: const EdgeInsets.all(10),
                     decoration: const BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(100)), // Bo góc hình ảnh
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
                     ),
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                          Radius.circular(100)), // Bo góc hình ảnh bên trong
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(100)),
                       child: Image.asset(
                         'assets/images/background/giphy.webp',
                         width: 200,
@@ -86,7 +83,6 @@ class CashPaymentWaiting extends HookConsumerWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
                   // Text message
                   Text(
@@ -98,6 +94,33 @@ class CashPaymentWaiting extends HookConsumerWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+          // Home Icon Button at the top-right corner
+          Positioned(
+            top: 20,
+            right: 20,
+            child: IconButton(
+              icon: const Icon(
+                Icons.home_outlined,
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {
+                final tabsRouter = context.router.root
+                    .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+                if (tabsRouter != null) {
+                  tabsRouter.setActiveIndex(0);
+                  context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+                } else {
+                  context.router.pushAndPopUntil(
+                    const TabViewScreenRoute(children: [
+                      HomeScreenRoute(),
+                    ]),
+                    predicate: (route) => false,
+                  );
+                }
+              },
             ),
           ),
         ],
