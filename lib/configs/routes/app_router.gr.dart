@@ -100,6 +100,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ContactScreen(),
       );
     },
+    CouponDetailScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<CouponDetailScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CouponDetailScreen(
+          key: args.key,
+          promotion: args.promotion,
+        ),
+      );
+    },
     HomeScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -778,6 +788,45 @@ class ContactScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [CouponDetailScreen]
+class CouponDetailScreenRoute
+    extends PageRouteInfo<CouponDetailScreenRouteArgs> {
+  CouponDetailScreenRoute({
+    Key? key,
+    required PromotionEntity promotion,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CouponDetailScreenRoute.name,
+          args: CouponDetailScreenRouteArgs(
+            key: key,
+            promotion: promotion,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CouponDetailScreenRoute';
+
+  static const PageInfo<CouponDetailScreenRouteArgs> page =
+      PageInfo<CouponDetailScreenRouteArgs>(name);
+}
+
+class CouponDetailScreenRouteArgs {
+  const CouponDetailScreenRouteArgs({
+    this.key,
+    required this.promotion,
+  });
+
+  final Key? key;
+
+  final PromotionEntity promotion;
+
+  @override
+  String toString() {
+    return 'CouponDetailScreenRouteArgs{key: $key, promotion: $promotion}';
+  }
+}
+
+/// generated route for
 /// [HomeScreen]
 class HomeScreenRoute extends PageRouteInfo<void> {
   const HomeScreenRoute({List<PageRouteInfo>? children})
@@ -1337,7 +1386,7 @@ class PromotionDetailScreenRoute
     extends PageRouteInfo<PromotionDetailScreenRouteArgs> {
   PromotionDetailScreenRoute({
     Key? key,
-    required PromotionModel promotion,
+    required PromotionEntity promotion,
     List<PageRouteInfo>? children,
   }) : super(
           PromotionDetailScreenRoute.name,
@@ -1362,7 +1411,7 @@ class PromotionDetailScreenRouteArgs {
 
   final Key? key;
 
-  final PromotionModel promotion;
+  final PromotionEntity promotion;
 
   @override
   String toString() {

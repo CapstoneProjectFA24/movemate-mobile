@@ -16,7 +16,6 @@ import 'package:dio/dio.dart';
 // domain - data
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 
-
 // utils
 import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
@@ -74,7 +73,44 @@ class PromotionController extends _$PromotionController {
     return promotions;
   }
 
+  Future<void> postVouherForUser(BuildContext context, int id) async {
+    // List<PromotionEntity> promotions = [];
 
+    state = const AsyncLoading();
+    final promotionRepository = ref.read(promotionRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
 
+    state = await AsyncValue.guard(() async {
+      final response = await promotionRepository.postVouherForUser(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+    });
 
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        // if (state.hasError) {
+        //   await ref.read(signInControllerProvider.notifier).signOut(context);
+        // }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+
+        await postVouherForUser(context, id);
+      });
+    }
+
+    // return promotions;
+  }
 }

@@ -12,6 +12,7 @@ import 'package:movemate/features/promotion/data/models/response/promotion_respo
 import 'package:movemate/features/promotion/data/remote/promotion_source.dart';
 import 'package:movemate/features/promotion/domain/repositories/promotion_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -34,7 +35,7 @@ class PromotionRespositoryImpl extends RemoteBaseRepository
       search: request.searchContent,
       page: request.pageNumber,
       perPage: request.pageSize,
-        //  sortColumn: request.sortColumn,
+      //  sortColumn: request.sortColumn,
       // UserId: userId,
     );
 
@@ -48,6 +49,18 @@ class PromotionRespositoryImpl extends RemoteBaseRepository
     );
   }
 
-
-
+  //post voucher for user by promotion id
+  @override
+  Future<SuccessModel> postVouherForUser({
+    required String accessToken,
+    required int id,
+  }) async {
+    return getDataOf(
+      request: () => _promotionSource.postVouherForUser(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
 }

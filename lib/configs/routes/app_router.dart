@@ -26,6 +26,8 @@ import 'package:movemate/features/payment/presentation/screens/deposite_payment/
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
+import 'package:movemate/features/promotion/presentation/screens/promotion_detail_screen/coupon_detail_screen.dart';
 // import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 import 'package:movemate/features/promotion/presentation/widgets/cart_voucher.dart';
 import 'package:movemate/features/test-payment/test_payment_screen.dart';
@@ -126,8 +128,15 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: PromotionScreenRoute.page,
         ),
+        AutoRoute(
+          page: PromotionDetailScreenRoute.page,
+        ),
+        AutoRoute(
+          page: CouponDetailScreenRoute.page,
+        ),
 
         AutoRoute(page: ProfileScreenRoute.page),
+
         AutoRoute(
           page: ProfileDetailScreenRoute.page,
         ),

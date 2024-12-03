@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/promotion/data/models/request/promotion_request.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_response.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 // data impl
@@ -20,6 +21,13 @@ abstract class PromotionSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Queries() PromotionQueryRequest request,
+  );
+  //post voucher for user by promotion id
+  @POST('${APIConstants.post_voucher_for_user}/{id}')
+  Future<HttpResponse<SuccessModel>> postVouherForUser(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
   );
 }
 

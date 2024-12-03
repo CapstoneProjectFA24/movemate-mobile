@@ -11,6 +11,7 @@ import 'package:movemate/features/promotion/data/models/response/promotion_respo
 import 'package:movemate/features/promotion/data/remote/promotion_source.dart';
 import 'package:movemate/features/promotion/data/repositories/promotion_respository_impl.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'promotion_repository.g.dart';
@@ -20,6 +21,11 @@ abstract class PromotionRepository {
     required PagingModel request,
     required String accessToken,
     // required int userId,
+  });
+  //post voucher for user by promotion id
+  Future<SuccessModel> postVouherForUser({
+    required String accessToken,
+    required int id,
   });
 }
 

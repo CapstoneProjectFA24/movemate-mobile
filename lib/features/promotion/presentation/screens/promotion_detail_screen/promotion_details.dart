@@ -2,12 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movemate/features/promotion/data/models/promotion_model.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 @RoutePage()
 class PromotionDetailScreen extends StatelessWidget {
-  final PromotionModel promotion;
+  final PromotionEntity promotion;
 
   const PromotionDetailScreen({
     super.key,
@@ -34,7 +35,7 @@ class PromotionDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               // Promotion Description
               Text(
-                "Get a Discount up to ${promotion.discount} on domestic flights, maximum discount \$30.",
+                "Get a Discount up to ${promotion.discountRate} on domestic flights, maximum discount \$30.",
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -59,13 +60,14 @@ class PromotionDetailScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(promotion.code,
+                    Text(promotion.id.toString(),
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
                     IconButton(
                       icon: const Icon(Icons.copy),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(text: promotion.code));
+                        Clipboard.setData(
+                            ClipboardData(text: promotion.id.toString()));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Promo code copied to clipboard!')),
@@ -81,14 +83,16 @@ class PromotionDetailScreen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Clipboard.setData(ClipboardData(text: promotion.code));
+                    Clipboard.setData(
+                        ClipboardData(text: promotion.id.toString()));
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Promo code copied to clipboard!')),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: promotion.bgcolor,
+                    backgroundColor:
+                        promotion.isPublic ? Colors.orange : Colors.blueAccent,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -123,7 +127,7 @@ class PromotionDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  promotion.title,
+                  promotion.name,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
@@ -132,7 +136,7 @@ class PromotionDetailScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  promotion.discount,
+                  promotion.discountRate.toString(),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -163,7 +167,7 @@ class PromotionDetailScreen extends StatelessWidget {
                           size: 14, color: Colors.blue),
                       const SizedBox(width: 4),
                       Text(
-                        promotion.code,
+                        promotion.id.toString(),
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.blue,
@@ -176,18 +180,18 @@ class PromotionDetailScreen extends StatelessWidget {
             ),
           ),
           // Right side: Image
-          Expanded(
-            flex: 1,
-            child: ClipRRect(
-              borderRadius:
-                  BorderRadius.circular(8), // Rounded corners for image
-              child: Image.asset(
-                promotion.imagePath,
-                fit: BoxFit.cover,
-                height: 100, // Fixed height to maintain aspect ratio
-              ),
-            ),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: ClipRRect(
+          //     borderRadius:
+          //         BorderRadius.circular(8), // Rounded corners for image
+          //     child: Image.asset(
+          //       promotion.description,
+          //       fit: BoxFit.cover,
+          //       height: 100, // Fixed height to maintain aspect ratio
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -212,15 +216,15 @@ class PromotionDetailScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                detailItem('Promo Period', promotion.propromoPeriod!),
-                detailItem('Min. Transaction', '\$${promotion.minTransaction}'),
+                detailItem('Promo Period', promotion.isPublic.toString()),
+                detailItem('Min. Transaction', '\$${promotion.discountMin}'),
               ],
             ),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                detailItem('Type', promotion.type!),
+                detailItem('Type', promotion.type),
                 detailItem('Destination', promotion.description),
               ],
             ),

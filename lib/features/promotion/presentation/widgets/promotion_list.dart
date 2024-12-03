@@ -62,6 +62,11 @@ class _PromotionListState extends State<PromotionList> {
               final promotion = widget.promotions[index];
               return GestureDetector(
                 onTap: () => _redeemPromotion(promotion, index),
+                //optional choice 2 details
+                // onTap: () => context.router
+                //     .push(PromotionDetailScreenRoute(promotion: promotion)),
+                // onTap: () => context.router
+                //     .push(CouponDetailScreenRoute(promotion: promotion)),
                 child: PromotionCard(
                   promotion: promotion,
                 ),
