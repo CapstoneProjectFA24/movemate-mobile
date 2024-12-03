@@ -27,17 +27,7 @@ class PromotionScreen extends HookConsumerWidget {
     final tabController = useTabController(initialLength: 3);
     final size = MediaQuery.sizeOf(context);
 
-    // final scrollController = useScrollController();
-
     final state = ref.watch(promotionControllerProvider);
-
-    // final fetchResult = useFetch<PromotionEntity>(
-    //   function: (model, context) => ref
-    //       .read(promotionControllerProvider.notifier)
-    //       .getPromotions(model, context),
-    //   initialPagingModel: PagingModel(),
-    //   context: context,
-    // );
 
     final useFetchResult = useFetchObject<PromotionAboutUserEntity>(
       function: (context) => ref
@@ -48,12 +38,6 @@ class PromotionScreen extends HookConsumerWidget {
     final promotionAboutUser = useFetchResult.data;
 
     final promotionUserNotGet = promotionAboutUser?.promotionNoUser ?? [];
-    // useEffect(() {
-    //   scrollController.onScrollEndsListener(fetchResult.loadMore);
-    //   return scrollController.dispose;
-    // }, const []);
-
-    // print("checking promition ${fetchResult.toString()}");
 
     List<String> tabs = [
       "Tất cả",
@@ -62,15 +46,13 @@ class PromotionScreen extends HookConsumerWidget {
       // "Khuyến mãi 3"
     ];
 
-    // useEffect(() {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     FocusScope.of(context).unfocus();
-    //   });
-    //   return null;
-    // }, []);
-    // List<PromotionEntity> allPromotions = fetchResult.items;
+    ref.listen<bool>(refreshPromotion, (_, __) => useFetchResult.refresh());
 
-    // print("checking ${allPromotions.length}");
+    useEffect(() {
+      ref.listen<bool>(refreshPromotion, (_, __) => useFetchResult.refresh());
+      return null;
+    }, []);
+
 // Lấy ngày và giờ hiện tại
     DateTime now = DateTime.now();
 
@@ -117,11 +99,6 @@ class PromotionScreen extends HookConsumerWidget {
       return p.startDate.isBefore(nextMonthEnd) &&
           p.endDate.isAfter(nextMonthStart);
     }).toList();
-
-    // Sort the lists by startDate in ascending order
-    // promotionUserNotGet.sort((a, b) => a.startDate.compareTo(b.startDate));
-    // activePromotions.sort((a, b) => a.startDate.compareTo(b.endDate));
-    // nextMonthPromotions.sort((a, b) => a.startDate.compareTo(b.endDate));
 
     return LoadingOverlay(
       isLoading: state.isLoading,

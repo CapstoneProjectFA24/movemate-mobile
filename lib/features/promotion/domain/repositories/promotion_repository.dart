@@ -35,7 +35,7 @@ abstract class PromotionRepository {
 
 
   //post voucher for user by promotion id
-  Future<VoucherResponse> postVouherForUser({
+  Future<SuccessModel> postVouherForUser({
     required String accessToken,
     required int id,
   });

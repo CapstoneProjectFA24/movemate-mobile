@@ -97,7 +97,7 @@ class _PromotionSource implements PromotionSource {
   }
 
   @override
-  Future<HttpResponse<VoucherResponse>> postVouherForUser(
+  Future<HttpResponse<SuccessModel>> postVouherForUser(
     String contentType,
     String accessToken,
     int id,
@@ -111,7 +111,7 @@ class _PromotionSource implements PromotionSource {
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<VoucherResponse>>(Options(
+        _setStreamType<HttpResponse<SuccessModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -128,7 +128,7 @@ class _PromotionSource implements PromotionSource {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = VoucherResponse.fromMap(_result.data!);
+    final _value = SuccessModel.fromMap(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }

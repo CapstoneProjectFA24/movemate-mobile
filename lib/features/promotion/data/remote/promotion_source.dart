@@ -35,7 +35,7 @@ abstract class PromotionSource {
   );
   //post voucher for user by promotion id
   @POST('${APIConstants.post_voucher_for_user}/{id}')
-  Future<HttpResponse<VoucherResponse>> postVouherForUser(
+  Future<HttpResponse<SuccessModel>> postVouherForUser(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,

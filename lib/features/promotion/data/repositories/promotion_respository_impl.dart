@@ -57,7 +57,6 @@ class PromotionRespositoryImpl extends RemoteBaseRepository
   @override
   Future<PromotionObjectResponse> getPromotionNoUser({
     required String accessToken,
-  
   }) async {
     // Lấy thời gian hiện tại
     DateTime now = DateTime.now();
@@ -82,10 +81,11 @@ class PromotionRespositoryImpl extends RemoteBaseRepository
 
   //post voucher for user by promotion id
   @override
-  Future<VoucherResponse> postVouherForUser({
+  Future<SuccessModel> postVouherForUser({
     required String accessToken,
     required int id,
   }) async {
+    print("checking test repo $id");
     return getDataOf(
       request: () => _promotionSource.postVouherForUser(
         APIConstants.contentType,
