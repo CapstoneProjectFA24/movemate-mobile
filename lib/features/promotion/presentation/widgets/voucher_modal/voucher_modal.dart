@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart'; // Import thư viện hooks_riverpod
-import 'package:flutter_hooks/flutter_hooks.dart'; // Import thư viện flutter_hooks
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
@@ -11,11 +11,17 @@ import 'package:movemate/utils/enums/booking_status_type.dart';
 class VoucherModal extends HookConsumerWidget {
   final List<VoucherEntity> vouchers;
   final OrderEntity order;
+  final List<VoucherEntity> selectedVouchers; // Thêm danh sách đã chọn
+  final Function(VoucherEntity) onVoucherUsed;
+  final Function(VoucherEntity) onVoucherCanceled;
 
   const VoucherModal({
     super.key,
     required this.vouchers,
     required this.order,
+    required this.selectedVouchers, // Yêu cầu danh sách đã chọn
+    required this.onVoucherUsed,
+    required this.onVoucherCanceled,
   });
 
   @override
@@ -23,8 +29,18 @@ class VoucherModal extends HookConsumerWidget {
     // Sử dụng useTextEditingController để quản lý TextEditingController
     final controller = useTextEditingController();
 
+    final localSelectedVouchers =
+        useState<List<VoucherEntity>>([...selectedVouchers]);
+
     // Sử dụng useState để quản lý trạng thái của nút "Áp dụng"
     final isApplyButtonEnabled = useState<bool>(false);
+
+    // Hàm kiểm tra xem có voucher cùng promotionCategoryId đã được chọn chưa
+    bool hasExistingVoucherWithSamePromotion(VoucherEntity voucher) {
+      return localSelectedVouchers.value.any((selectedVoucher) =>
+          selectedVoucher.promotionCategoryId == voucher.promotionCategoryId &&
+          selectedVoucher.id != voucher.id);
+    }
 
     // Sử dụng useEffect để thêm và loại bỏ listener khi widget được mount và unmount
     useEffect(() {
@@ -52,6 +68,8 @@ class VoucherModal extends HookConsumerWidget {
         ),
       );
     }
+
+    print("object voucher length ${vouchers.length} ");
 
     return DraggableScrollableSheet(
       expand: false,
@@ -132,6 +150,14 @@ class VoucherModal extends HookConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: List.generate(vouchers.length, (index) {
+                  final currentVoucher = vouchers[index];
+
+                  final isSelected = localSelectedVouchers.value
+                      .any((v) => v.id == currentVoucher.id);
+
+                  final isDisabled = !isSelected &&
+                      hasExistingVoucherWithSamePromotion(currentVoucher);
+
                   return Card(
                     color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 16.0),
@@ -165,13 +191,23 @@ class VoucherModal extends HookConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 8.0),
-                                    const Text(
-                                      'Mô tả phiếu giảm giá',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14.0,
+                                    if (isDisabled)
+                                      const Text(
+                                        'Đã có voucher khác từ cùng chương trình được chọn',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 14.0,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      )
+                                    else
+                                      const Text(
+                                        'Mô tả phiếu giảm giá',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14.0,
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -182,56 +218,79 @@ class VoucherModal extends HookConsumerWidget {
                             children: [
                               const Spacer(),
                               ElevatedButton(
-                                onPressed: () {
-                                  // Lấy id và promotionCategoryId của voucher đang chọn
-                                  final selectedVoucher = vouchers[index];
-                                  final voucherId = selectedVoucher.id;
-                                  final promotionCategoryId =
-                                      selectedVoucher.promotionCategoryId;
+                                onPressed: isDisabled
+                                    ? null // Disable button nếu có voucher cùng promotion đã được chọn
+                                    : () {
+                                        if (!isSelected) {
+                                          // Thêm voucher mới
+                                          localSelectedVouchers.value = [
+                                            ...localSelectedVouchers.value,
+                                            currentVoucher
+                                          ];
+                                          onVoucherUsed(currentVoucher);
 
-                                  // Tạo một đối tượng ReviewerStatusRequest với voucher
-                                  final request = ReviewerStatusRequest(
-                                    status: BookingStatusType
-                                        .depositing, // Giả sử bạn đã có status ở đây
-                                    vouchers: [
-                                      Voucher(
-                                          id: voucherId,
-                                          promotionCategoryId:
-                                              promotionCategoryId),
-                                    ],
-                                  );
-                                  print(
-                                      "check voucher in request ${request.toJson()}");
-                                  // Gửi request (hoặc xử lý request theo cách của bạn, ví dụ gọi API)
-                                  // Nếu bạn đang sử dụng hooks_riverpod hoặc các thư viện khác, bạn có thể gọi hàm từ provider hoặc API ở đây
-                                  // Ví dụ: ref.read(orderServiceProvider).applyVoucher(request);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              backgroundColor:
+                                                  Colors.orange.shade700,
+                                              content: Text(
+                                                'Đã sử dụng phiếu giảm giá ${index + 1}',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          // Hủy voucher
+                                          localSelectedVouchers.value =
+                                              localSelectedVouchers.value
+                                                  .where((v) =>
+                                                      v.id != currentVoucher.id)
+                                                  .toList();
+                                          onVoucherCanceled(currentVoucher);
 
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Colors.orange.shade700,
-                                      content: Text(
-                                        'Đã sử dụng phiếu giảm giá ${index + 1}',
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  );
-                                },
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              backgroundColor:
+                                                  Colors.red.shade700,
+                                              content: Text(
+                                                'Đã hủy phiếu giảm giá ${index + 1}',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange, // Màu nền cam
+                                  backgroundColor: isSelected
+                                      ? Colors.red
+                                      : (isDisabled
+                                          ? Colors.grey
+                                          : Colors.orange),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20.0),
                                   ),
                                 ),
-                                child: const Text(
-                                  'Sử dụng',
-                                  style: TextStyle(
-                                    color: Colors.white, // Màu chữ trắng
+                                child: Text(
+                                  isSelected
+                                      ? 'Hủy'
+                                      : (isDisabled
+                                          ? 'Không khả dụng'
+                                          : 'Sử dụng'),
+                                  style: const TextStyle(
+                                    color: Colors.white,
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ],

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../../firebase_options.dart';
 
-
 Future<String> getDeviceToken() async {
   FirebaseMessaging firebaseMessage = FirebaseMessaging.instance;
   String? deviceToken = await firebaseMessage.getToken();
@@ -90,7 +89,8 @@ Future<void> initFirebaseMessaging() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
-  if (!kIsWeb) {
-    await setupFlutterNotifications();
-  }
+  // if (!kIsWeb) {
+  //   await setupFlutterNotifications();
+  // }
+  await setupFlutterNotifications();
 }

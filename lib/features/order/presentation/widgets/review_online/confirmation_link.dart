@@ -5,14 +5,19 @@ import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/v
 
 class ConfirmationLink extends StatelessWidget {
   final List<VoucherEntity> vouchers;
-  final VoidCallback onTap;
+  final List<VoucherEntity> selectedVouchers; // Thêm danh sách đã chọn
+  // final VoidCallback onTap;
   final OrderEntity order;
-
+  final Function(VoucherEntity) onVoucherSelected;
+  final Function(VoucherEntity) onVoucherRemoved;
   const ConfirmationLink({
     super.key,
     required this.vouchers,
-    required this.onTap,
+    required this.selectedVouchers,
+    // required this.onTap,
     required this.order,
+    required this.onVoucherSelected,
+    required this.onVoucherRemoved, // Yêu cầu callback
   });
 
   @override
@@ -26,6 +31,10 @@ class ConfirmationLink extends StatelessWidget {
             return VoucherModal(
               vouchers: vouchers,
               order: order,
+              selectedVouchers: selectedVouchers, // Truyền danh sách đã chọn
+              onVoucherUsed: onVoucherSelected,
+              onVoucherCanceled:
+                  onVoucherRemoved, // Truyền callback xuống VoucherModal
             );
           },
         );

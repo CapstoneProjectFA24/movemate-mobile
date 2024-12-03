@@ -42,9 +42,8 @@ class ReviewerStatusRequest {
   Map<String, dynamic> toMap() {
     return {
       'status': status.type,
-      'vouchers': vouchers
-          ?.map((voucher) => voucher.toMap())
-          .toList(), // Convert vouchers list to map if not null
+      'vouchers': vouchers?.map((voucher) => voucher.toMap()).toList() ??
+          [], // If vouchers is null, return an empty list
     };
   }
 
@@ -53,7 +52,7 @@ class ReviewerStatusRequest {
       status: (map['status'] as String).toBookingTypeEnum(),
       vouchers: map['vouchers'] != null
           ? List<Voucher>.from(map['vouchers'].map((x) => Voucher.fromMap(x)))
-          : null, // Handle optional vouchers
+          : [], // If vouchers is null, return an empty list
     );
   }
 

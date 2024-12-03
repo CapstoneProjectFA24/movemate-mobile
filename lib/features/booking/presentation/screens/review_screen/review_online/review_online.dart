@@ -118,6 +118,22 @@ class ReviewOnline extends HookConsumerWidget {
             .toList() ??
         [];
 
+    // Khởi tạo trạng thái để lưu các voucher được chọn
+    final selectedVouchers = useState<List<VoucherEntity>>([]);
+
+    // Hàm callback để thêm voucher vào danh sách đã chọn
+    void addVoucher(VoucherEntity voucher) {
+      if (!selectedVouchers.value.contains(voucher)) {
+        selectedVouchers.value = [...selectedVouchers.value, voucher];
+      }
+    }
+
+    // Hàm callback để loại bỏ voucher khỏi danh sách đã chọn (nếu cần)
+    void removeVoucher(VoucherEntity voucher) {
+      selectedVouchers.value =
+          selectedVouchers.value.where((v) => v.id != voucher.id).toList();
+    }
+
     List<VoucherEntity> getMatchingVouchers({
       required OrderEntity order,
       required List<PromotionEntity> promotions,
@@ -210,7 +226,10 @@ class ReviewOnline extends HookConsumerWidget {
                       ConfirmationLink(
                         order: order,
                         vouchers: matchingVouchers.value,
-                        onTap: () {},
+                        selectedVouchers:
+                            selectedVouchers.value, // Truyền danh sách đã chọn
+                        onVoucherSelected: addVoucher,
+                        onVoucherRemoved: removeVoucher,
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -231,15 +250,49 @@ class ReviewOnline extends HookConsumerWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // if (selectedVouchers.value.isNotEmpty)
+                      //   Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       const Text(
+                      //         'Các phiếu giảm giá đã chọn:',
+                      //         style: TextStyle(
+                      //             fontSize: 16, fontWeight: FontWeight.bold),
+                      //       ),
+                      //       const SizedBox(height: 8),
+                      //       ...selectedVouchers.value.map((voucher) => ListTile(
+                      //             title: Text('Voucher ID: ${voucher.id}'),
+                      //             subtitle: Text(
+                      //                 'Category ID: ${voucher.promotionCategoryId}'),
+                      //             trailing: IconButton(
+                      //               icon: const Icon(Icons.remove_circle,
+                      //                   color: Colors.red),
+                      //               onPressed: () => removeVoucher(voucher),
+                      //             ),
+                      //           )),
+                      //       const SizedBox(height: 16),
+                      //     ],
+                      //   ),
                       buildButton(
                         'Xác nhận',
                         Colors.orange,
                         onPressed: () async {
                           final bookingStatus =
                               order.status.toBookingTypeEnum();
+
                           final reviewerStatusRequest = ReviewerStatusRequest(
                             status: BookingStatusType.depositing,
+                            vouchers: selectedVouchers.value
+                                .map((v) => Voucher(
+                                      id: v.id,
+                                      promotionCategoryId:
+                                          v.promotionCategoryId,
+                                    ))
+                                .toList(),
                           );
+                          print(
+                              'ReviewerStatusRequest: ${reviewerStatusRequest.toJson()}');
+
                           print('order: $reviewerStatusRequest');
                           await ref
                               .read(bookingControllerProvider.notifier)
@@ -292,63 +345,5 @@ class ReviewOnline extends HookConsumerWidget {
         ),
       ),
     );
-  }
-}
-
-class VoucherMatcher {
-  static List<VoucherEntity> getValidVouchers({
-    required OrderEntity order,
-    required List<PromotionEntity> promotions,
-  }) {
-    final bookingServiceIds =
-        order.bookingDetails.map((detail) => detail.serviceId).toSet();
-    final matchingVouchers = <VoucherEntity>[];
-
-    for (var promotion in promotions) {
-      // Check if promotion is valid
-      final now = DateTime.now();
-      final isValidTime =
-          now.isAfter(promotion.startDate) && now.isBefore(promotion.endDate);
-
-      if (!isValidTime) continue;
-
-      // Check if service matches
-      if (bookingServiceIds.contains(promotion.serviceId)) {
-        // Add valid vouchers
-        final validVouchers = promotion.vouchers.where((voucher) =>
-                voucher.isActived && // Only active vouchers
-                voucher.bookingId == null && // Unused vouchers
-                (voucher.userId == null ||
-                    voucher.userId ==
-                        order.userId) // Check user specific vouchers
-            );
-
-        matchingVouchers.addAll(validVouchers);
-      }
-    }
-
-    return matchingVouchers;
-  }
-
-  static bool isVoucherValidForBooking({
-    required VoucherEntity voucher,
-    required OrderEntity order,
-    required PromotionEntity promotion,
-  }) {
-    // Check basic conditions
-    if (!voucher.isActived || voucher.bookingId != null) return false;
-
-    // Check service match
-    final hasMatchingService = order.bookingDetails
-        .any((detail) => detail.serviceId == promotion.serviceId);
-    if (!hasMatchingService) return false;
-
-    // Check minimum order value
-    final serviceTotal = order.bookingDetails
-        .where((detail) => detail.serviceId == promotion.serviceId)
-        .fold(0.0, (sum, detail) => sum + detail.price);
-    if (serviceTotal < promotion.requireMin) return false;
-
-    return true;
   }
 }
