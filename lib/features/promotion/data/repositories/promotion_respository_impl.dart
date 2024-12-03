@@ -1,4 +1,5 @@
 // import local
+import 'package:intl/intl.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/request/service_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
@@ -8,7 +9,11 @@ import 'package:movemate/features/order/data/models/ressponse/truck_categorys_re
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
 import 'package:movemate/features/order/domain/repositories/order_repository.dart';
 import 'package:movemate/features/promotion/data/models/request/promotion_request.dart';
+import 'package:movemate/features/promotion/data/models/request/promotion_sort_request.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_object_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_response.dart';
+import 'package:movemate/features/promotion/data/models/response/voucher_response.dart';
 import 'package:movemate/features/promotion/data/remote/promotion_source.dart';
 import 'package:movemate/features/promotion/domain/repositories/promotion_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -49,9 +54,35 @@ class PromotionRespositoryImpl extends RemoteBaseRepository
     );
   }
 
+  @override
+  Future<PromotionObjectResponse> getPromotionNoUser({
+    required String accessToken,
+  
+  }) async {
+    // Lấy thời gian hiện tại
+    DateTime now = DateTime.now();
+
+    // Định dạng thời gian theo dạng mm/dd/yyyy
+    String dateNow = DateFormat('MM/dd/yyyy').format(now);
+
+    // Tạo request với thời gian hiện tại
+    final request = PromotionSortRequest(
+      dateNow: dateNow, // Truyền thời gian đã được định dạng vào request
+    );
+
+    // Gọi API để lấy dữ liệu
+    return getDataOf(
+      request: () => _promotionSource.getPromotionNoUser(
+        APIConstants.contentType,
+        accessToken,
+        request,
+      ),
+    );
+  }
+
   //post voucher for user by promotion id
   @override
-  Future<SuccessModel> postVouherForUser({
+  Future<VoucherResponse> postVouherForUser({
     required String accessToken,
     required int id,
   }) async {

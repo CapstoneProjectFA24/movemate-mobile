@@ -35,7 +35,7 @@ class PromotionDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               // Promotion Description
               Text(
-                "Get a Discount up to ${promotion.discountRate} on domestic flights, maximum discount \$30.",
+                "Get a Discount up to ${promotion.discountRate.toString()} on domestic flights, maximum discount \$30.",
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -217,7 +217,8 @@ class PromotionDetailScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 detailItem('Promo Period', promotion.isPublic.toString()),
-                detailItem('Min. Transaction', '\$${promotion.discountMin}'),
+                detailItem('Min. Transaction',
+                    '\$${promotion.discountMin.toString()}'),
               ],
             ),
             const SizedBox(height: 8),

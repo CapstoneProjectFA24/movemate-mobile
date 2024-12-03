@@ -1,38 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
+import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 
 @RoutePage()
-class CartVoucherScreen extends StatelessWidget {
+class CartVoucherScreen extends HookConsumerWidget {
   final List<String> vouchers;
 
   const CartVoucherScreen({super.key, required this.vouchers});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFF3E0), // Light orange background
-      appBar: AppBar(
-        title: Text(
-          'Mã Voucher Của Tôi',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.orange[900],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(promotionControllerProvider);
+    final useFetchResult = useFetchObject<PromotionAboutUserEntity>(
+      function: (context) => ref
+          .read(promotionControllerProvider.notifier)
+          .getPromotionNoUser(context),
+      context: context,
+    );
+    final promotionAboutUser = useFetchResult.data;
+
+    final promotionUserGot = promotionAboutUser?.promotionUser ?? [];
+
+    return LoadingOverlay(
+      isLoading: state.isLoading,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFFFF3E0), // Light orange background
+        appBar: AppBar(
+          title: Text(
+            'Mã Voucher Của Tôi',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.orange[900],
+            ),
           ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.orange[900]),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.orange[900]),
+        body: promotionUserGot.isEmpty
+            ? _buildEmptyVoucherState(context)
+            : _buildVoucherGrid(
+                context: context, promotionUserGot: promotionUserGot),
       ),
-      body: vouchers.isEmpty
-          ? _buildEmptyVoucherState(context)
-          : _buildVoucherGrid(context),
     );
   }
 
-  Widget _buildEmptyVoucherState(BuildContext context) {
+  Widget _buildEmptyVoucherState(
+    BuildContext context,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,26 +102,31 @@ class CartVoucherScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVoucherGrid(BuildContext context) {
+  Widget _buildVoucherGrid(
+      {required BuildContext context,
+      required List<PromotionEntity> promotionUserGot}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListView.separated(
-        itemCount: vouchers.length,
+        itemCount: promotionUserGot.length,
         separatorBuilder: (context, index) => const SizedBox(height: 16),
         itemBuilder: (context, index) {
-          return _buildVoucherCard(context, vouchers[index]);
+          return _buildVoucherCard(
+              context: context, promotionUserGot: promotionUserGot[index]);
         },
       ),
     );
   }
 
-  Widget _buildVoucherCard(BuildContext context, String voucherCode) {
+  Widget _buildVoucherCard(
+      {required BuildContext context,
+      required PromotionEntity promotionUserGot}) {
     return GestureDetector(
       onTap: () {
-        Clipboard.setData(ClipboardData(text: voucherCode));
+        Clipboard.setData(ClipboardData(text: promotionUserGot.id.toString()));
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Đã sao chép mã: $voucherCode'),
+            content: Text('Đã sao chép mã: ${promotionUserGot.id}'),
             backgroundColor: Colors.orange[700],
           ),
         );
@@ -229,7 +259,7 @@ class CartVoucherScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            voucherCode,
+                            promotionUserGot.id.toString(),
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

@@ -46,6 +46,8 @@ class APIConstants {
   static const get_wallet = '/wallets/balance';
 // promotions
   static const promotions = '/promotions';
+// getPromotionNoUser 
+  static const promotions_no_user = '/promotions/promotions';
 // get voucher for user by  promotions id
   static const post_voucher_for_user = '/vouchers';
 

@@ -7,7 +7,10 @@ import 'package:movemate/features/order/data/remote/order_remote/order_source.da
 
 // system
 import 'package:movemate/features/order/data/repositories/order_repository_impl.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_object_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_response.dart';
+import 'package:movemate/features/promotion/data/models/response/voucher_response.dart';
 import 'package:movemate/features/promotion/data/remote/promotion_source.dart';
 import 'package:movemate/features/promotion/data/repositories/promotion_respository_impl.dart';
 import 'package:movemate/models/request/paging_model.dart';
@@ -22,8 +25,17 @@ abstract class PromotionRepository {
     required String accessToken,
     // required int userId,
   });
+
+
+  Future<PromotionObjectResponse> getPromotionNoUser({
+   
+    required String accessToken,
+    // required int userId,
+  });
+
+
   //post voucher for user by promotion id
-  Future<SuccessModel> postVouherForUser({
+  Future<VoucherResponse> postVouherForUser({
     required String accessToken,
     required int id,
   });

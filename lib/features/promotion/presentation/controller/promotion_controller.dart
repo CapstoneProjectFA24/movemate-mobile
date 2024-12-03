@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_object_response.dart';
 import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 
 import 'package:movemate/features/promotion/domain/repositories/promotion_repository.dart';
 
@@ -73,8 +76,59 @@ class PromotionController extends _$PromotionController {
     return promotions;
   }
 
-  Future<void> postVouherForUser(BuildContext context, int id) async {
-    // List<PromotionEntity> promotions = [];
+  Future<PromotionAboutUserEntity?> getPromotionNoUser(
+    BuildContext context,
+  ) async {
+    PromotionAboutUserEntity? promotionAboutUser;
+    state = const AsyncLoading();
+    final promotionRepository = ref.read(promotionRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    print("tuan checking controller 1");
+    final result = await AsyncValue.guard(() async {
+      final response = await promotionRepository.getPromotionNoUser(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      );
+      print("tuan checking controller 2  ${response.payload}");
+
+      return response.payload;
+    });
+    print("tuan checking controller 3 $result");
+
+    state = result;
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+
+        await getPromotionNoUser(context);
+      });
+    }
+    if (result is AsyncData<PromotionAboutUserEntity>) {
+      return result.value;
+    } else {
+      print("bị null ở controller checking");
+      return null;
+    } // Trả về đối tượng đầy đủ
+  }
+
+  Future<VoucherEntity?> postVouherForUser(BuildContext context, int id) async {
+    VoucherEntity? vouchers;
 
     state = const AsyncLoading();
     final promotionRepository = ref.read(promotionRepositoryProvider);
@@ -86,6 +140,7 @@ class PromotionController extends _$PromotionController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         id: id,
       );
+      vouchers = response.payload;
     });
 
     if (state.hasError) {
@@ -104,13 +159,12 @@ class PromotionController extends _$PromotionController {
         // if (state.hasError) {
         //   await ref.read(signInControllerProvider.notifier).signOut(context);
         // }
-
         if (statusCode != StatusCodeType.unauthentication.type) {}
 
         await postVouherForUser(context, id);
       });
     }
 
-    // return promotions;
+    return vouchers;
   }
 }

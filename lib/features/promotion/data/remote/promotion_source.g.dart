@@ -59,7 +59,45 @@ class _PromotionSource implements PromotionSource {
   }
 
   @override
-  Future<HttpResponse<SuccessModel>> postVouherForUser(
+  Future<HttpResponse<PromotionObjectResponse>> getPromotionNoUser(
+    String contentType,
+    String accessToken,
+    PromotionSortRequest request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(request.toMap());
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<PromotionObjectResponse>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/promotions/promotions',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final _value = PromotionObjectResponse.fromMap(_result.data!);
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<VoucherResponse>> postVouherForUser(
     String contentType,
     String accessToken,
     int id,
@@ -73,7 +111,7 @@ class _PromotionSource implements PromotionSource {
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<SuccessModel>>(Options(
+        _setStreamType<HttpResponse<VoucherResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -90,7 +128,7 @@ class _PromotionSource implements PromotionSource {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final _value = SuccessModel.fromMap(_result.data!);
+    final _value = VoucherResponse.fromMap(_result.data!);
     final httpResponse = HttpResponse(_value, _result);
     return httpResponse;
   }

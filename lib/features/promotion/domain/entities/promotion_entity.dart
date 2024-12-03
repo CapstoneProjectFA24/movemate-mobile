@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 // import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 
 class PromotionEntity {
@@ -7,10 +8,10 @@ class PromotionEntity {
   final bool isPublic;
   final DateTime startDate;
   final DateTime endDate;
-  final int discountRate;
-  final int discountMax;
-  final int requireMin;
-  final int discountMin;
+  final double discountRate;
+  final double discountMax;
+  final double requireMin;
+  final double discountMin;
   final String name;
   final String description;
   final String type;
@@ -19,7 +20,7 @@ class PromotionEntity {
   final DateTime endBookingTime;
   final bool isInfinite;
   final int serviceId;
-  // final List<VoucherEntity> vouchers;
+  final List<VoucherEntity> vouchers;
 
   PromotionEntity({
     required this.id,
@@ -38,29 +39,38 @@ class PromotionEntity {
     required this.endBookingTime,
     required this.isInfinite,
     required this.serviceId,
-    // required this.vouchers,
+    required this.vouchers,
   });
-
   factory PromotionEntity.fromMap(Map<String, dynamic> map) {
     final dateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss");
+
     return PromotionEntity(
       id: map['id'] ?? 0,
       isPublic: map['isPublic'] ?? false,
       startDate: dateFormat.parse(map['startDate']),
       endDate: dateFormat.parse(map['endDate']),
-      discountRate: map['discountRate'] ?? 0,
-      discountMax: map['discountMax'] ?? 0,
-      requireMin: map['requireMin'] ?? 0,
-      discountMin: map['discountMin'] ?? 0,
+      // Convert int to double if necessary
+
+      discountRate:
+          (map['discountRate'] != null) ? map['discountRate']?.toDouble() : 0.0,
+      discountMax:
+          (map['discountMax'] != null) ? map['discountMax']?.toDouble() : 0.0,
+      requireMin:
+          (map['requireMin'] != null) ? map['requireMin']?.toDouble() : 0.0,
+      discountMin:
+          (map['discountMin'] != null) ? map['discountMin']?.toDouble() : 0.0,
+
+      quantity: map['quantity'] ?? 0,
+
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       type: map['type'] ?? '',
-      quantity: map['quantity'] ?? 0,
       startBookingTime: dateFormat.parse(map['startBookingTime']),
       endBookingTime: dateFormat.parse(map['endBookingTime']),
       isInfinite: map['isInfinite'] ?? false,
       serviceId: map['serviceId'] ?? 0,
-      // vouchers: map['vouchers'] ?? [],
+      vouchers: List<VoucherEntity>.from(
+          map['vouchers']?.map((x) => VoucherEntity.fromMap(x)) ?? []),
     );
   }
 
@@ -83,6 +93,7 @@ class PromotionEntity {
       'isInfinite': isInfinite,
       'serviceId': serviceId,
       // 'vouchers': vouchers,
+      'vouchers': vouchers.map((x) => x.toMap()).toList(),
     };
   }
 
