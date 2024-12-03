@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
@@ -70,7 +71,7 @@ class VoucherModal extends HookConsumerWidget {
     }
 
     print("object voucher length ${vouchers.length} ");
-
+    final filteredVouchers = vouchers.where((v) => v.userId != null).toList();
     return DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.75,
@@ -149,12 +150,11 @@ class VoucherModal extends HookConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                children: List.generate(vouchers.length, (index) {
-                  final currentVoucher = vouchers[index];
-
+                // Sử dụng filteredVouchers thay vì vouchers
+                children: List.generate(filteredVouchers.length, (index) {
+                  final currentVoucher = filteredVouchers[index];
                   final isSelected = localSelectedVouchers.value
                       .any((v) => v.id == currentVoucher.id);
-
                   final isDisabled = !isSelected &&
                       hasExistingVoucherWithSamePromotion(currentVoucher);
 
@@ -183,7 +183,7 @@ class VoucherModal extends HookConsumerWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Phiếu giảm giá ${index + 1}',
+                                      'Phiếu giảm giá ${filteredVouchers[index].code}',
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 16.0,
@@ -201,9 +201,9 @@ class VoucherModal extends HookConsumerWidget {
                                         ),
                                       )
                                     else
-                                      const Text(
-                                        'Mô tả phiếu giảm giá',
-                                        style: TextStyle(
+                                      Text(
+                                        'Giảm đến ${formatPrice(filteredVouchers[index].price.toInt())}',
+                                        style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 14.0,
                                         ),
@@ -305,4 +305,10 @@ class VoucherModal extends HookConsumerWidget {
       },
     );
   }
+}
+
+// Hàm hỗ trợ để định dạng giá
+String formatPrice(int price) {
+  final formatter = NumberFormat('#,###', 'vi_VN');
+  return '${formatter.format(price)} đ';
 }

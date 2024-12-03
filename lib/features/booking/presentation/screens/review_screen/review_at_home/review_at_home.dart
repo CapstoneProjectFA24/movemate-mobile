@@ -1,7 +1,7 @@
 //route
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
+import 'package:flutter_hooks/flutter_hooks.dart';
 //widgets
 import 'package:flutter/material.dart';
 //widgets
@@ -11,8 +11,13 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/widgets/review_online/confirmation_link.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
+import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
@@ -29,9 +34,84 @@ class ReviewAtHome extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(bookingControllerProvider);
+    final statePromotion = ref.watch(promotionControllerProvider);
+
+    final useFetchResultPromotion = useFetchObject<PromotionAboutUserEntity>(
+      function: (context) => ref
+          .read(promotionControllerProvider.notifier)
+          .getPromotionNoUser(context),
+      context: context,
+    );
+
+    useEffect(() {
+      useFetchResultPromotion.refresh;
+      return null;
+    }, []); // Empty dependency array means it runs once on mount
+
+    // Khởi tạo trạng thái để lưu các voucher được chọn
+    final selectedVouchers = useState<List<VoucherEntity>>([]);
+
+    // Hàm callback để thêm voucher vào danh sách đã chọn
+    void addVoucher(VoucherEntity voucher) {
+      if (!selectedVouchers.value.contains(voucher)) {
+        selectedVouchers.value = [...selectedVouchers.value, voucher];
+      }
+    }
+
+    // Hàm callback để loại bỏ voucher khỏi danh sách đã chọn (nếu cần)
+    void removeVoucher(VoucherEntity voucher) {
+      selectedVouchers.value =
+          selectedVouchers.value.where((v) => v.id != voucher.id).toList();
+    }
+
+    List<VoucherEntity> getMatchingVouchers({
+      required OrderEntity order,
+      required List<PromotionEntity> promotions,
+    }) {
+      // Get all serviceIds from bookingDetails
+      final bookingServiceIds =
+          order.bookingDetails.map((detail) => detail.serviceId).toSet();
+      final matchingVouchers = <VoucherEntity>[];
+
+      for (var promotion in promotions) {
+        // Check if promotion's serviceId matches any booking detail's serviceId
+        if (bookingServiceIds.contains(promotion.serviceId)) {
+          // Check if promotion is currently valid
+          final now = DateTime.now();
+          if (now.isAfter(promotion.startDate) &&
+              now.isBefore(promotion.endDate)) {
+            // Add vouchers that are:
+            // 1. Active
+            // 2. Not used (bookingId is null)
+            // 3. Either not assigned to a user (userId is null) or assigned to the order's user
+            final validVouchers = promotion.vouchers.where((voucher) =>
+                voucher.isActived &&
+                voucher.bookingId == null &&
+                (voucher.userId == null || voucher.userId == order.userId));
+
+            matchingVouchers.addAll(validVouchers);
+          }
+        }
+      }
+
+      return matchingVouchers;
+    }
+
+    final matchingVouchers = useState<List<VoucherEntity>>([]);
+
+    useEffect(() {
+      if (useFetchResultPromotion.data?.promotionUser != null) {
+        final validVouchers = getMatchingVouchers(
+          order: order,
+          promotions: useFetchResultPromotion.data!.promotionUser,
+        );
+        matchingVouchers.value = validVouchers;
+      }
+      return null;
+    }, [useFetchResultPromotion.data]);
 
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: state.isLoading || statePromotion.isLoading,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         appBar: const CustomAppBar(
@@ -67,7 +147,16 @@ class ReviewAtHome extends HookConsumerWidget {
                   Description(order: order),
                   const SizedBox(height: 20),
                   ContactSection(order: order),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
+                  ConfirmationLink(
+                    order: order,
+                    vouchers: matchingVouchers.value,
+                    selectedVouchers:
+                        selectedVouchers.value, // Truyền danh sách đã chọn
+                    onVoucherSelected: addVoucher,
+                    onVoucherRemoved: removeVoucher,
+                  ),
+                  // const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -76,7 +165,10 @@ class ReviewAtHome extends HookConsumerWidget {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SafeArea(
-            child: Buttons(order: order),
+            child: Buttons(
+              order: order,
+              selectedVouchers: selectedVouchers.value,
+            ),
           ),
         ),
       ),
@@ -86,7 +178,12 @@ class ReviewAtHome extends HookConsumerWidget {
 
 class Buttons extends HookConsumerWidget {
   final OrderEntity order;
-  const Buttons({super.key, required this.order});
+  final List<VoucherEntity> selectedVouchers;
+  const Buttons({
+    super.key,
+    required this.order,
+    required this.selectedVouchers,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -213,6 +310,12 @@ class Buttons extends HookConsumerWidget {
             onPressed: () async {
               final reviewerStatusRequest = ReviewerStatusRequest(
                 status: BookingStatusType.depositing,
+                vouchers: selectedVouchers
+                    .map((v) => Voucher(
+                          id: v.id,
+                          promotionCategoryId: v.promotionCategoryId,
+                        ))
+                    .toList(),
               );
               await ref
                   .read(bookingControllerProvider.notifier)

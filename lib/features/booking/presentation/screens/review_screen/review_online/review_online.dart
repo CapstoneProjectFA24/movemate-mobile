@@ -80,6 +80,7 @@ class ReviewOnline extends HookConsumerWidget {
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
     final stateServicePackage = ref.watch(servicePackageControllerProvider);
+    final statePromotion = ref.watch(promotionControllerProvider);
 
     final reviewerAssignment = getReviewerAssignment(order);
     final getAssID = reviewerAssignment.userId;
@@ -111,12 +112,10 @@ class ReviewOnline extends HookConsumerWidget {
       context: context,
     );
 
-    final List<VoucherEntity> promotionUserGot = useFetchResultPromotion
-            .data?.promotionUser
-            .firstWhere((e) => e.serviceId != null)
-            .vouchers
-            .toList() ??
-        [];
+    useEffect(() {
+      useFetchResultPromotion.refresh;
+      return null;
+    }, []); // Empty dependency array means it runs once on mount
 
     // Khởi tạo trạng thái để lưu các voucher được chọn
     final selectedVouchers = useState<List<VoucherEntity>>([]);
@@ -186,7 +185,8 @@ class ReviewOnline extends HookConsumerWidget {
     return LoadingOverlay(
       isLoading: stateProfile.isLoading ||
           stateService.isLoading ||
-          stateServicePackage.isLoading,
+          stateServicePackage.isLoading ||
+          statePromotion.isLoading,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: const CustomAppBar(

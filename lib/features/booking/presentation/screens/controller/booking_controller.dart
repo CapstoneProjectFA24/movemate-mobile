@@ -157,7 +157,7 @@ class BookingController extends _$BookingController {
     state = const AsyncLoading();
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-
+    print("object check repuest ${request.toMap()}");
     state = await AsyncValue.guard(() async {
       await ref.read(serviceBookingRepositoryProvider).confirmReviewBooking(
             accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
@@ -195,9 +195,9 @@ class BookingController extends _$BookingController {
         ),
       );
 
-      if (state.hasError) {
-        await ref.read(signInControllerProvider.notifier).signOut(context);
-      }
+      // if (state.hasError) {
+      //   await ref.read(signInControllerProvider.notifier).signOut(context);
+      // }
     }
   }
 
