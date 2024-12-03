@@ -176,6 +176,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ListTransactionScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ListTransactionScreen(),
+      );
+    },
     LoadingScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1018,6 +1024,20 @@ class LastTransactionResultScreenByWalletRouteArgs {
   String toString() {
     return 'LastTransactionResultScreenByWalletRouteArgs{key: $key, bookingId: $bookingId, status: $status}';
   }
+}
+
+/// generated route for
+/// [ListTransactionScreen]
+class ListTransactionScreenRoute extends PageRouteInfo<void> {
+  const ListTransactionScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          ListTransactionScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ListTransactionScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

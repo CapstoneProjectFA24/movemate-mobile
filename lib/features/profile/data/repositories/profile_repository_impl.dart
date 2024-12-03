@@ -1,10 +1,13 @@
 // import local
+import 'package:movemate/features/profile/data/models/queries/transaction_queries.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
 import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
 import 'package:movemate/features/profile/data/remote/profile_source.dart';
 import 'package:movemate/features/profile/domain/repositories/profile_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:movemate/utils/constants/api_constant.dart';
 
 // utils
@@ -41,6 +44,7 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
       ),
     );
   }
+
   @override
   Future<StaffProfileResponse> getProfileDriverInforById({
     required String accessToken,
@@ -65,6 +69,32 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
       request: () => _profileSource.getWallet(
         APIConstants.contentType,
         accessToken,
+      ),
+    );
+  }
+
+  //transaction
+  @override
+  Future<TransactionResponse> getTransactionByUserId({
+    PagingModel? request,
+    required String accessToken,
+  }) async {
+    final transactionQueries = TransactionQueries(
+      // page: request.pageNumber,
+      // perPage: request.pageSize,
+      // type: request.type ?? 'truck', // Đảm bảo `type` được đặt
+      // sortColumn: request.sortColumn ?? 'truckCategoryId',
+      // sortDir: request.sortDir ?? 0,
+      userId: request?.userId ?? 0,
+      // sortColumn: 'truckCategoryId',
+      // sortDir: 0,
+    ).toMap();
+
+    return getDataOf(
+      request: () => _profileSource.getTransactionByUserId(
+        APIConstants.contentType,
+        accessToken,
+        transactionQueries,
       ),
     );
   }

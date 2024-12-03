@@ -168,6 +168,7 @@ class BookingScreenService extends HookConsumerWidget {
               ),
             ),
           ),
+        
         ],
       ),
       bottomNavigationBar: SummarySection(

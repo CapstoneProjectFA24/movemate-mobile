@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
+import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
 import 'package:movemate/features/profile/data/models/response/wallet_response.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -41,6 +43,13 @@ abstract class ProfileSource {
   Future<HttpResponse<WalletResponse>> getWallet(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
+  );
+  // get transaction
+  @GET(APIConstants.get_transaction)
+  Future<HttpResponse<TransactionResponse>> getTransactionByUserId(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+     @Queries() Map<String, dynamic> transactionQueries,
   );
 }
 

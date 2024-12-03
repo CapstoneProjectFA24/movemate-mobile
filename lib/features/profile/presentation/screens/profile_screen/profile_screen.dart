@@ -24,8 +24,8 @@ class ProfileScreen extends HookConsumerWidget {
       'wallet': 'Số dư',
       'imagePath': 'assets/images/profile/Image.png',
       'bgcolor': Colors.deepOrangeAccent,
-      'present': 'quà tặng',
-      'bill': 'Hóa Đơn',
+      'present': 'Quà tặng',
+      'Transaction': 'Giao dịch',
       'center': 'Trung tâm bảo mật',
     };
 
@@ -52,9 +52,13 @@ class ProfileScreen extends HookConsumerWidget {
         },
       ),
       ProfileMenu(
-        icon: Icons.receipt_long,
-        title: profile['bill'].toString(),
-        onTap: () {},
+        icon: Icons.attach_money,
+        title: profile['Transaction'].toString(),
+        onTap: () {
+          context.router.push(
+            const ListTransactionScreenRoute(),
+          );
+        },
       ),
       ProfileMenu(
         icon: Icons.location_on,
