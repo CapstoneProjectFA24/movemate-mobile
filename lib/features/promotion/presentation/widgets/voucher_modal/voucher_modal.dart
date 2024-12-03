@@ -1,62 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart'; // Import thư viện hooks_riverpod
+import 'package:flutter_hooks/flutter_hooks.dart'; // Import thư viện flutter_hooks
+import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
+import 'package:movemate/utils/enums/booking_status_type.dart';
 
-class VoucherModal extends StatefulWidget {
-  final List<String> vouchers;
+class VoucherModal extends HookConsumerWidget {
+  final List<VoucherEntity> vouchers;
+  final OrderEntity order;
 
-  const VoucherModal({super.key, required this.vouchers});
-
-  @override
-  _VoucherModalState createState() => _VoucherModalState();
-}
-
-class _VoucherModalState extends State<VoucherModal> {
-  final TextEditingController _controller = TextEditingController();
-  bool _isApplyButtonEnabled = false;
+  const VoucherModal({
+    super.key,
+    required this.vouchers,
+    required this.order,
+  });
 
   @override
-  void initState() {
-    super.initState();
-    // Lắng nghe sự thay đổi của TextField
-    _controller.addListener(_handleTextChanged);
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Sử dụng useTextEditingController để quản lý TextEditingController
+    final controller = useTextEditingController();
 
-  @override
-  void dispose() {
-    _controller.removeListener(_handleTextChanged);
-    _controller.dispose();
-    super.dispose();
-  }
+    // Sử dụng useState để quản lý trạng thái của nút "Áp dụng"
+    final isApplyButtonEnabled = useState<bool>(false);
 
-  void _handleTextChanged() {
-    setState(() {
-      // Nút "Áp dụng" sẽ bị disable khi độ dài > 4
-      _isApplyButtonEnabled = _controller.text.length >= 4;
-    });
-  }
+    // Sử dụng useEffect để thêm và loại bỏ listener khi widget được mount và unmount
+    useEffect(() {
+      void handleTextChanged() {
+        isApplyButtonEnabled.value = controller.text.length >= 4;
+      }
 
-  void _clearTextField() {
-    _controller.clear();
-  }
+      controller.addListener(handleTextChanged);
+      // Cleanup: loại bỏ listener khi widget bị dispose
+      return () => controller.removeListener(handleTextChanged);
+    }, [controller]);
 
-  void _applyVoucher() {
-    // Xử lý khi nhấn nút "Áp dụng"
-    String voucherCode = _controller.text;
-    // Thêm logic áp dụng voucher ở đây
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Đã áp dụng mã voucher: $voucherCode'),
-      ),
-    );
-  }
+    // Hàm để xóa TextField
+    void clearTextField() {
+      controller.clear();
+    }
 
-  @override
-  Widget build(BuildContext context) {
+    // Hàm để áp dụng voucher
+    void applyVoucher() {
+      String voucherCode = controller.text;
+      // Thêm logic áp dụng voucher ở đây
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã áp dụng mã voucher: $voucherCode'),
+        ),
+      );
+    }
+
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.9,
-      maxChildSize: 0.9,
+      initialChildSize: 0.75,
+      maxChildSize: 0.75,
       builder: (context, scrollController) {
         return Scaffold(
           appBar: AppBar(
@@ -77,14 +77,14 @@ class _VoucherModalState extends State<VoucherModal> {
                     // Expanded TextField để chiếm hết không gian còn lại
                     Expanded(
                       child: TextField(
-                        controller: _controller,
+                        controller: controller,
                         decoration: InputDecoration(
                           hintText: 'Nhập mã MoveMate voucher',
                           prefixIcon: const Icon(Icons.percent),
-                          suffixIcon: _controller.text.isNotEmpty
+                          suffixIcon: controller.text.isNotEmpty
                               ? IconButton(
                                   icon: const Icon(Icons.clear),
-                                  onPressed: _clearTextField,
+                                  onPressed: clearTextField,
                                 )
                               : null,
                           border: OutlineInputBorder(
@@ -96,9 +96,10 @@ class _VoucherModalState extends State<VoucherModal> {
                     const SizedBox(width: 8.0),
                     // Nút "Áp dụng"
                     ElevatedButton(
-                      onPressed: _isApplyButtonEnabled ? _applyVoucher : null,
+                      onPressed:
+                          isApplyButtonEnabled.value ? applyVoucher : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: !_isApplyButtonEnabled
+                        backgroundColor: !isApplyButtonEnabled.value
                             ? Colors.grey.shade500
                             : Colors.orange,
                         padding: const EdgeInsets.symmetric(
@@ -114,7 +115,7 @@ class _VoucherModalState extends State<VoucherModal> {
                       child: Text(
                         'Áp dụng',
                         style: TextStyle(
-                          color: !_isApplyButtonEnabled
+                          color: !isApplyButtonEnabled.value
                               ? Colors.grey.shade400
                               : Colors.white,
                         ),
@@ -130,7 +131,7 @@ class _VoucherModalState extends State<VoucherModal> {
             child: Container(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                children: List.generate(10, (index) {
+                children: List.generate(vouchers.length, (index) {
                   return Card(
                     color: Colors.white,
                     margin: const EdgeInsets.only(bottom: 16.0),
@@ -182,8 +183,29 @@ class _VoucherModalState extends State<VoucherModal> {
                               const Spacer(),
                               ElevatedButton(
                                 onPressed: () {
-                                  // Xử lý khi nhấn nút "Sử dụng"
-                                  // Bạn có thể thêm hành động ở đây
+                                  // Lấy id và promotionCategoryId của voucher đang chọn
+                                  final selectedVoucher = vouchers[index];
+                                  final voucherId = selectedVoucher.id;
+                                  final promotionCategoryId =
+                                      selectedVoucher.promotionCategoryId;
+
+                                  // Tạo một đối tượng ReviewerStatusRequest với voucher
+                                  final request = ReviewerStatusRequest(
+                                    status: BookingStatusType
+                                        .depositing, // Giả sử bạn đã có status ở đây
+                                    vouchers: [
+                                      Voucher(
+                                          id: voucherId,
+                                          promotionCategoryId:
+                                              promotionCategoryId),
+                                    ],
+                                  );
+                                  print(
+                                      "check voucher in request ${request.toJson()}");
+                                  // Gửi request (hoặc xử lý request theo cách của bạn, ví dụ gọi API)
+                                  // Nếu bạn đang sử dụng hooks_riverpod hoặc các thư viện khác, bạn có thể gọi hàm từ provider hoặc API ở đây
+                                  // Ví dụ: ref.read(orderServiceProvider).applyVoucher(request);
+
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.orange.shade700,
@@ -209,7 +231,7 @@ class _VoucherModalState extends State<VoucherModal> {
                                     color: Colors.white, // Màu chữ trắng
                                   ),
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ],

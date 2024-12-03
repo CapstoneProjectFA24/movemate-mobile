@@ -16,10 +16,14 @@ import 'package:movemate/features/order/presentation/widgets/review_online/conta
 import 'package:movemate/features/order/presentation/widgets/review_online/services_card.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
+import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 
 import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
-
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
@@ -100,6 +104,67 @@ class ReviewOnline extends HookConsumerWidget {
         .where((e) => e.staffType == 'REVIEWER')
         .first;
 
+    final useFetchResultPromotion = useFetchObject<PromotionAboutUserEntity>(
+      function: (context) => ref
+          .read(promotionControllerProvider.notifier)
+          .getPromotionNoUser(context),
+      context: context,
+    );
+
+    final List<VoucherEntity> promotionUserGot = useFetchResultPromotion
+            .data?.promotionUser
+            .firstWhere((e) => e.serviceId != null)
+            .vouchers
+            .toList() ??
+        [];
+
+    List<VoucherEntity> getMatchingVouchers({
+      required OrderEntity order,
+      required List<PromotionEntity> promotions,
+    }) {
+      // Get all serviceIds from bookingDetails
+      final bookingServiceIds =
+          order.bookingDetails.map((detail) => detail.serviceId).toSet();
+      final matchingVouchers = <VoucherEntity>[];
+
+      for (var promotion in promotions) {
+        // Check if promotion's serviceId matches any booking detail's serviceId
+        if (bookingServiceIds.contains(promotion.serviceId)) {
+          // Check if promotion is currently valid
+          final now = DateTime.now();
+          if (now.isAfter(promotion.startDate) &&
+              now.isBefore(promotion.endDate)) {
+            // Add vouchers that are:
+            // 1. Active
+            // 2. Not used (bookingId is null)
+            // 3. Either not assigned to a user (userId is null) or assigned to the order's user
+            final validVouchers = promotion.vouchers.where((voucher) =>
+                voucher.isActived &&
+                voucher.bookingId == null &&
+                (voucher.userId == null || voucher.userId == order.userId));
+
+            matchingVouchers.addAll(validVouchers);
+          }
+        }
+      }
+
+      return matchingVouchers;
+    }
+
+// Example usage in your widget:
+    final matchingVouchers = useState<List<VoucherEntity>>([]);
+
+    useEffect(() {
+      if (useFetchResultPromotion.data?.promotionUser != null) {
+        final validVouchers = getMatchingVouchers(
+          order: order,
+          promotions: useFetchResultPromotion.data!.promotionUser,
+        );
+        matchingVouchers.value = validVouchers;
+      }
+      return null;
+    }, [useFetchResultPromotion.data]);
+
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
     return LoadingOverlay(
@@ -143,18 +208,9 @@ class ReviewOnline extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 10),
                       ConfirmationLink(
-                        vouchers: const [],
-                        onTap: () {
-                          // Xử lý khi người dùng nhấn vào "Phiếu giảm giá có trong đơn hàng"
-                          // Ví dụ: Hiển thị modal bottom sheet chứa danh sách phiếu giảm giá
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) {
-                              return VoucherModal(vouchers: vouchers);
-                            },
-                          );
-                        },
+                        order: order,
+                        vouchers: matchingVouchers.value,
+                        onTap: () {},
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -236,5 +292,63 @@ class ReviewOnline extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class VoucherMatcher {
+  static List<VoucherEntity> getValidVouchers({
+    required OrderEntity order,
+    required List<PromotionEntity> promotions,
+  }) {
+    final bookingServiceIds =
+        order.bookingDetails.map((detail) => detail.serviceId).toSet();
+    final matchingVouchers = <VoucherEntity>[];
+
+    for (var promotion in promotions) {
+      // Check if promotion is valid
+      final now = DateTime.now();
+      final isValidTime =
+          now.isAfter(promotion.startDate) && now.isBefore(promotion.endDate);
+
+      if (!isValidTime) continue;
+
+      // Check if service matches
+      if (bookingServiceIds.contains(promotion.serviceId)) {
+        // Add valid vouchers
+        final validVouchers = promotion.vouchers.where((voucher) =>
+                voucher.isActived && // Only active vouchers
+                voucher.bookingId == null && // Unused vouchers
+                (voucher.userId == null ||
+                    voucher.userId ==
+                        order.userId) // Check user specific vouchers
+            );
+
+        matchingVouchers.addAll(validVouchers);
+      }
+    }
+
+    return matchingVouchers;
+  }
+
+  static bool isVoucherValidForBooking({
+    required VoucherEntity voucher,
+    required OrderEntity order,
+    required PromotionEntity promotion,
+  }) {
+    // Check basic conditions
+    if (!voucher.isActived || voucher.bookingId != null) return false;
+
+    // Check service match
+    final hasMatchingService = order.bookingDetails
+        .any((detail) => detail.serviceId == promotion.serviceId);
+    if (!hasMatchingService) return false;
+
+    // Check minimum order value
+    final serviceTotal = order.bookingDetails
+        .where((detail) => detail.serviceId == promotion.serviceId)
+        .fold(0.0, (sum, detail) => sum + detail.price);
+    if (serviceTotal < promotion.requireMin) return false;
+
+    return true;
   }
 }

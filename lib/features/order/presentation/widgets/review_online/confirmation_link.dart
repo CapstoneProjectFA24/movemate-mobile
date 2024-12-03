@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
 
 class ConfirmationLink extends StatelessWidget {
-  final List<String> vouchers;
+  final List<VoucherEntity> vouchers;
   final VoidCallback onTap;
+  final OrderEntity order;
 
   const ConfirmationLink({
     super.key,
     required this.vouchers,
     required this.onTap,
+    required this.order,
   });
 
   @override
@@ -19,7 +23,10 @@ class ConfirmationLink extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           builder: (context) {
-            return VoucherModal(vouchers: vouchers);
+            return VoucherModal(
+              vouchers: vouchers,
+              order: order,
+            );
           },
         );
       },
