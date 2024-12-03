@@ -12,9 +12,12 @@ import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 
 @RoutePage()
 class CartVoucherScreen extends HookConsumerWidget {
-  final List<String> vouchers;
+  // final List<String> vouchers;
 
-  const CartVoucherScreen({super.key, required this.vouchers});
+  const CartVoucherScreen({
+    super.key,
+    // required this.vouchers,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

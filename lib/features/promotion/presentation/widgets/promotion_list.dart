@@ -90,10 +90,10 @@ class PromotionList extends HookConsumerWidget {
         ElevatedButton(
           onPressed: () {
             context.router.push(
-              CartVoucherScreenRoute(vouchers: vouchers.value),
+              const CartVoucherScreenRoute(),
             );
           },
-          child: const Text('Xem giỏ hàng'),
+          child: const Text('Mã khuyến mãi đã lưu'),
         ),
       ],
     );

@@ -142,10 +142,10 @@ class PromotionController extends _$PromotionController {
     final promotionRepository = ref.read(promotionRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-    print("object checking 1");
+    // print("object checking 1");
 
     state = await AsyncValue.guard(() async {
-      print("object checking 2 $id");
+      // print("object checking 2 $id");
 
       await promotionRepository.postVouherForUser(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
