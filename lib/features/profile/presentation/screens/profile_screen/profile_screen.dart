@@ -29,11 +29,19 @@ class ProfileScreen extends HookConsumerWidget {
       'center': 'Trung tâm bảo mật',
     };
 
+    final test = {
+      'test': 'Số dư tests',
+    };
+  
     final menuItems = [
       ProfileMenu(
-        icon: Icons.security,
-        title: profile['security'].toString(),
-        onTap: () {},
+        // icon: Icons.security,
+        // title: profile['security'].toString(),
+        icon: Icons.account_balance_wallet,
+        title: test['test'].toString(),
+        onTap: () {
+          context.router.push(const CombinedWalletStatisticsScreenRoute());
+        },
       ),
       ProfileMenu(
         icon: Icons.account_balance_wallet,

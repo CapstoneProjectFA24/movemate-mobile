@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,7 @@ import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
 import 'package:movemate/utils/enums/transaction_status_enum.dart';
+import 'package:movemate/utils/providers/common_provider.dart';
 
 @RoutePage()
 class ListTransactionScreen extends HookConsumerWidget {
@@ -30,17 +32,20 @@ class ListTransactionScreen extends HookConsumerWidget {
     final state = ref.watch(transactionControllerProvider);
 
     final controller = ref.read(transactionControllerProvider.notifier);
-
+    final user = ref.read(authProvider);
     // Sử dụng useFetch để lấy danh sách ServicesPackageTruckEntity
     final fetchResult = useFetch<TransactionEntity>(
       function: (model, context) async {
         // Gọi API và lấy dữ liệu ban đầu
-        final servicesList = await controller.getTransactionByUserId(context);
+        final servicesList =
+            await controller.getTransactionByUserId(model, context);
 
         // Trả về danh sách ServicesPackageTruckEntity
         return servicesList;
       },
-      initialPagingModel: PagingModel(),
+      initialPagingModel: PagingModel(
+        userId: user?.id,
+      ),
       context: context,
     );
 

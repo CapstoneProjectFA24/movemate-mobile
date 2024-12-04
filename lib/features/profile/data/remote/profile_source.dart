@@ -49,7 +49,7 @@ abstract class ProfileSource {
   Future<HttpResponse<TransactionResponse>> getTransactionByUserId(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
-     @Queries() Map<String, dynamic> transactionQueries,
+    @Queries() Map<String, dynamic> request,
   );
 }
 

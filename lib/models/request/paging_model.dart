@@ -11,6 +11,7 @@ class PagingModel {
   final String? type;
   final int? sortDir;
   final int? userId;
+  final bool? isWallet;
 
   PagingModel({
     this.pageNumber = 1,
@@ -25,5 +26,6 @@ class PagingModel {
     this.type,
     this.sortDir,
     this.userId,
+    this.isWallet,
   });
 }

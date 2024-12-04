@@ -32,7 +32,7 @@ class TransactionController extends _$TransactionController {
 //transaction
 
   Future<List<TransactionEntity>> getTransactionByUserId(
-    // PagingModel request,
+    PagingModel request,
     BuildContext context,
   ) async {
     List<TransactionEntity> transactions = [];
@@ -43,6 +43,7 @@ class TransactionController extends _$TransactionController {
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     print("check controller");
+    print("check controller request ${request.userId}");
 
     state = await AsyncValue.guard(() async {
       final response = await transactionRepository.getTransactionByUserId(
@@ -70,7 +71,7 @@ class TransactionController extends _$TransactionController {
         // }
 
         if (statusCode != StatusCodeType.unauthentication.type) {}
-        await getTransactionByUserId(context);
+        await getTransactionByUserId(request, context);
       });
     }
 

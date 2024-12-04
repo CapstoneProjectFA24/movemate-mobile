@@ -100,7 +100,9 @@ class WalletScreen extends HookConsumerWidget {
         },
       ),
       resizeToAvoidBottomInset: false,
-      body: Column(
+      body:
+      
+       Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -295,6 +297,8 @@ class WalletScreen extends HookConsumerWidget {
           ),
         ],
       ),
+   
+   
     );
   }
 
@@ -334,4 +338,6 @@ class WalletScreen extends HookConsumerWidget {
       ),
     );
   }
+
+
 }

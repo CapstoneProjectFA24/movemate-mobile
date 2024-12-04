@@ -69,6 +69,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CleaningServiceScreen(),
       );
     },
+    CombinedWalletStatisticsScreenRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const CombinedWalletStatisticsScreen(),
+      );
+    },
     ConfirmLastPaymentRoute.name: (routeData) {
       final args = routeData.argsAs<ConfirmLastPaymentRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -664,6 +670,20 @@ class CleaningServiceScreenRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'CleaningServiceScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CombinedWalletStatisticsScreen]
+class CombinedWalletStatisticsScreenRoute extends PageRouteInfo<void> {
+  const CombinedWalletStatisticsScreenRoute({List<PageRouteInfo>? children})
+      : super(
+          CombinedWalletStatisticsScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CombinedWalletStatisticsScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
