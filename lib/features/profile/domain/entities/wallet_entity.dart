@@ -52,7 +52,7 @@ class WalletEntity {
       updatedAt: map['updatedAt'],
       bankNumber: map['bankNumber'] ?? '',
       bankName: map['bankName'] ?? '',
-      isLocked: map['isLocked']?.boolValue ?? false,
+      isLocked: map['isLocked'] ?? false,
     );
   }
 

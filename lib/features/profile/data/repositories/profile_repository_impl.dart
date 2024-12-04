@@ -1,5 +1,6 @@
 // import local
 import 'package:movemate/features/profile/data/models/queries/transaction_queries.dart';
+import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
@@ -69,6 +70,27 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
       request: () => _profileSource.getWallet(
         APIConstants.contentType,
         accessToken,
+      ),
+    );
+  }
+
+//unlock wallet
+  @override
+  Future<WalletResponse> unlockWallet({
+    required String accessToken,
+    required UnlockWalletRequest request,
+  }) async {
+    print("check repo");
+    final requestUnlock = UnlockWalletRequest(
+      bankName: request.bankName,
+      bankNumber: request.bankNumber,
+    );
+
+    return getDataOf(
+      request: () => _profileSource.unlockWallet(
+        APIConstants.contentType,
+        accessToken,
+        requestUnlock,
       ),
     );
   }

@@ -167,14 +167,52 @@ class _ProfileSource implements ProfileSource {
   }
 
   @override
-  Future<HttpResponse<TransactionResponse>> getTransactionByUserId(
+  Future<HttpResponse<WalletResponse>> unlockWallet(
     String contentType,
     String accessToken,
-    Map<String, dynamic> transactionQueries,
+    UnlockWalletRequest request,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(transactionQueries);
+    final _headers = <String, dynamic>{
+      r'Content-Type': contentType,
+      r'Authorization': accessToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request?.toMap() ?? <String, dynamic>{});
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<WalletResponse>>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/wallets',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final _value = WalletResponse.fromMap(_result.data!);
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<TransactionResponse>> getTransactionByUserId(
+    String contentType,
+    String accessToken,
+    Map<String, dynamic> request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(request);
     final _headers = <String, dynamic>{
       r'Content-Type': contentType,
       r'Authorization': accessToken,

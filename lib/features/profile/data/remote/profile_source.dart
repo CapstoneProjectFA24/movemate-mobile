@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
@@ -44,6 +45,15 @@ abstract class ProfileSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
   );
+
+  // unlock wallet
+  @PUT(APIConstants.unlock_wallet)
+  Future<HttpResponse<WalletResponse>> unlockWallet(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Body() UnlockWalletRequest request,
+  );
+
   // get transaction
   @GET(APIConstants.get_transaction)
   Future<HttpResponse<TransactionResponse>> getTransactionByUserId(

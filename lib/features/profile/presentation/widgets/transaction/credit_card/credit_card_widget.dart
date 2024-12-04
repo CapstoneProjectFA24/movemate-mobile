@@ -3,18 +3,23 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
+import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/features/profile/presentation/widgets/transaction/credit_card/card_input_formatter.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 
 class CreditCardWidget extends HookConsumerWidget {
   const CreditCardWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isCardLocked = useState<bool>(true);
-    final cardNumber = useState<String>('');
+    final wallet = ref.read(walletProvider);
+    // final isCardLocked = useState<bool>(true);
+    final isCardLocked = useState<bool>(wallet?.isLocked ?? true);
+    final cardNumber = useState<String>(wallet?.bankNumber ?? '');
     final cardHolder = useState<String>('');
     final expiryDate = useState<String>('');
-    final selectedBank = useState<String?>(null);
+    final selectedBank = useState<String?>(wallet?.bankName ?? '');
 
     // New state to persist card holder and expiry date
     final savedCardHolder = useState<String>('');
@@ -24,6 +29,7 @@ class CreditCardWidget extends HookConsumerWidget {
     final tempCardHolderController = useTextEditingController();
     final tempExpiryDateController = useTextEditingController();
 
+    final unlockWalletRequest = useState<UnlockWalletRequest?>(null);
     // List of banks for dropdown
     final banks = [
       'Vietcombank',
@@ -223,7 +229,7 @@ class CreditCardWidget extends HookConsumerWidget {
                       backgroundColor: Colors.orange,
                       foregroundColor: Colors.white,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         // Update all states
                         cardNumber.value = tempCardNumberController.text;
@@ -233,8 +239,23 @@ class CreditCardWidget extends HookConsumerWidget {
                         // Save card holder and expiry date to persistent state
                         savedCardHolder.value = tempCardHolderController.text;
                         savedExpiryDate.value = tempExpiryDateController.text;
+                        // Create and update the UnlockWalletRequest instance
+                        unlockWalletRequest.value = UnlockWalletRequest(
+                          bankNumber: tempCardNumberController.text,
+                          bankName: selectedBank.value,
+                        );
 
-                        isCardLocked.value = false;
+                        final res = await ref
+                            .read(profileControllerProvider.notifier)
+                            .unlockWallet(
+                                unlockWalletRequest.value
+                                    as UnlockWalletRequest,
+                                context);
+                        if (res?.isLocked == false) {
+                          isCardLocked.value = res?.isLocked ?? false;
+                        }
+                        // isCardLocked.value = res?.isLocked ?? false;
+
                         Navigator.of(context).pop(true);
                       }
                     },

@@ -50,7 +50,10 @@ class ListTransactionScreen extends HookConsumerWidget {
       initialPagingModel: PagingModel(),
       context: context,
     );
-
+    print("object heck balance ${wallet?.balance}");
+    print("object heck bankName ${wallet?.bankName}");
+    print("object heck bankNumber ${wallet?.bankNumber}");
+    print("object heck isLocked ${wallet?.isLocked}");
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Scaffold(

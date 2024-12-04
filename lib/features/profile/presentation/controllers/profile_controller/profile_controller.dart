@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
+import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 import 'package:movemate/features/profile/domain/repositories/profile_repository.dart';
@@ -137,6 +138,72 @@ class ProfileController extends _$ProfileController {
         balance: response.payload.balance,
         id: response.payload.id,
         userId: response.payload.userId,
+        createdAt: response.payload.createdAt,
+        updatedAt: response.payload.updatedAt,
+        bankNumber: response.payload.bankNumber,
+        bankName: response.payload.bankName,
+        isLocked: response.payload.isLocked,
+      );
+
+      ref.read(walletProvider.notifier).update(
+            (state) => walletEntity,
+          );
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+      });
+    }
+
+    print("controller return ${walletInfor?.balance}");
+    return walletInfor;
+  }
+//unlock Wallet
+
+  Future<WalletEntity?> unlockWallet(
+    UnlockWalletRequest request,
+    BuildContext context,
+  ) async {
+    WalletEntity? walletInfor;
+
+    state = const AsyncLoading();
+    final walletRepository = ref.read(profileRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    print("check controller");
+    state = await AsyncValue.guard(() async {
+      final response = await walletRepository.unlockWallet(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
+      walletInfor = response.payload;
+      print("controller response $walletInfor");
+
+      final walletEntity = WalletEntity(
+        balance: response.payload.balance,
+        id: response.payload.id,
+        userId: response.payload.userId,
+        createdAt: response.payload.createdAt,
+        updatedAt: response.payload.updatedAt,
+        bankNumber: response.payload.bankNumber,
+        bankName: response.payload.bankName,
+        isLocked: response.payload.isLocked,
       );
 
       ref.read(walletProvider.notifier).update(
