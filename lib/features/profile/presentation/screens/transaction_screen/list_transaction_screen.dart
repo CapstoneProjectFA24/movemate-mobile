@@ -22,6 +22,7 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
 import 'package:movemate/utils/enums/transaction_status_enum.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 
 @RoutePage()
 class ListTransactionScreen extends HookConsumerWidget {
@@ -32,6 +33,8 @@ class ListTransactionScreen extends HookConsumerWidget {
     final state = ref.watch(transactionControllerProvider);
 
     final controller = ref.read(transactionControllerProvider.notifier);
+
+    final wallet = ref.read(walletProvider);
 
     // Sử dụng useFetch để lấy danh sách ServicesPackageTruckEntity
     final fetchResult = useFetch<TransactionEntity>(

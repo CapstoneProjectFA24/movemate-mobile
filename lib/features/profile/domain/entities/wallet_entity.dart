@@ -1,8 +1,11 @@
-// "id": 4,
+// "id": 3,
 // "userId": 3,
-// "balance": 996134850,
+// "balance": 135664240,
+// "bankNumber": "string",
+// "bankName": "string",
+// "isLocked": false,
 // "createdAt": "2024-10-25T23:46:49.703",
-// "updatedAt": "2024-11-11T12:15:44.91"
+// "updatedAt": "2024-12-05T03:19:16.947"
 
 import 'dart:convert';
 
@@ -12,6 +15,9 @@ class WalletEntity {
   final double balance;
   final String? createdAt;
   final String? updatedAt;
+  final String? bankNumber;
+  final String? bankName;
+  final bool? isLocked;
 
   WalletEntity({
     required this.id,
@@ -19,6 +25,9 @@ class WalletEntity {
     required this.balance,
     this.createdAt,
     this.updatedAt,
+    this.bankNumber,
+    this.bankName,
+    this.isLocked,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +37,9 @@ class WalletEntity {
       'balance': balance,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'bankNumber': bankNumber,
+      'bankName': bankName,
+      'isLocked': isLocked,
     };
   }
 
@@ -38,13 +50,16 @@ class WalletEntity {
       balance: map['balance']?.toDouble() ?? 0.0,
       createdAt: map['createdAt'],
       updatedAt: map['updatedAt'],
+      bankNumber: map['bankNumber'] ?? '',
+      bankName: map['bankName'] ?? '',
+      isLocked: map['isLocked']?.boolValue ?? false,
     );
   }
 
   String toJson() => json.encode(toMap());
   @override
   String toString() {
-    return 'WalletEntity(id: $id, userId: $userId, balance: $balance, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'WalletEntity(id: $id, userId: $userId, balance: $balance, createdAt: $createdAt, updatedAt: $updatedAt , bankNumber: $bankNumber,  bankName: $bankName,  isLocked: $isLocked,)';
   }
 
   factory WalletEntity.fromJson(String source) =>
