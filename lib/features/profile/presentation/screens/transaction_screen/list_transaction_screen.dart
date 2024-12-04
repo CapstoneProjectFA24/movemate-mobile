@@ -9,7 +9,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/profile/domain/entities/transaction_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/features/profile/presentation/controllers/transaction_controller/transaction_controller.dart';
-import 'package:movemate/features/profile/presentation/widgets/transaction/credit_card_widget.dart';
+import 'package:movemate/features/profile/presentation/widgets/transaction/credit_card/credit_card_widget.dart';
 import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_item.dart';
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
