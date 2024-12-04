@@ -58,6 +58,8 @@ extension TransactionStatusExtension on TransactionStatus {
   }
 }
 
+
+
 IconData getIconForTransactionType(String type) {
   switch (type) {
     case 'DEPOSIT':

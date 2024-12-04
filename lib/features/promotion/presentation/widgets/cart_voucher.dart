@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
 import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
@@ -37,12 +38,12 @@ class CartVoucherScreen extends HookConsumerWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFFFF3E0), // Light orange background
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Mã Voucher Của Tôi',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.orange[900],
+              color: Colors.orange,
             ),
           ),
           backgroundColor: Colors.transparent,
@@ -81,7 +82,7 @@ class CartVoucherScreen extends HookConsumerWidget {
           Icon(
             Icons.card_giftcard,
             size: 200,
-            color: Colors.orange[300],
+            color: Colors.orange[700],
           ),
           const SizedBox(height: 20),
           Text(
@@ -95,7 +96,21 @@ class CartVoucherScreen extends HookConsumerWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Navigate to voucher collection screen
+              // Navigate to voucher collection
+
+              final tabsRouter = context.router.root
+                  .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+              if (tabsRouter != null) {
+                tabsRouter.setActiveIndex(2);
+                context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+              } else {
+                context.router.pushAndPopUntil(
+                  const TabViewScreenRoute(children: [
+                    PromotionScreenRoute(),
+                  ]),
+                  predicate: (route) => false,
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange[600],

@@ -56,8 +56,8 @@ class VoucherItem extends HookConsumerWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.orange[100]!,
-                Colors.orange[200]!,
+                Colors.orange[400]!,
+                Colors.orange[300]!,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -186,10 +186,10 @@ class VoucherItem extends HookConsumerWidget {
                           children: [
                             Text(
                               promotionUserGot.name.toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.orange[900],
+                                color: Colors.black,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -197,25 +197,25 @@ class VoucherItem extends HookConsumerWidget {
                             const SizedBox(height: 8),
                             Text(
                               'Giảm tối đa: ${promotionUserGot.discountRate.toInt()}%',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
-                                color: Colors.orange[700],
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'Dành cho dịch vụ: ${serviceData?.name}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 10,
-                                color: Colors.orange[700],
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               'Hết hạn: $formattedDateReviewAt',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
-                                color: Colors.orange[700],
+                                color: Colors.white,
                               ),
                             ),
                           ],

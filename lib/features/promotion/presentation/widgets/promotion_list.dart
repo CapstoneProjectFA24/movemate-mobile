@@ -70,6 +70,7 @@ class PromotionList extends HookConsumerWidget {
             itemCount: promotions.length,
             itemBuilder: (context, index) {
               final promotion = promotions[index];
+              print("object checking lengh ${promotions.length}");
               return GestureDetector(
                 // onTap: () => redeemPromotion(promotion, index),
                 onTap: () async {
@@ -87,14 +88,14 @@ class PromotionList extends HookConsumerWidget {
             },
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            context.router.push(
-              const CartVoucherScreenRoute(),
-            );
-          },
-          child: const Text('Mã khuyến mãi đã lưu'),
-        ),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     context.router.push(
+        //       const CartVoucherScreenRoute(),
+        //     );
+        //   },
+        //   child: const Text('Mã khuyến mãi đã lưu'),
+        // ),
       ],
     );
   }

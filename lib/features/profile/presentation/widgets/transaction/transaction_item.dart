@@ -60,6 +60,16 @@ class TransactionItem extends StatelessWidget {
         'Unknown'; // Fallback to 'Unknown' if not found
     final status = TransactionStatus.DEPOSIT.toVietnamese();
 
+    String amountPrefix = '';
+    if (transactionStatus == TransactionStatus.DEPOSIT ||
+        transactionStatus == TransactionStatus.PAYMENT ||
+        transactionStatus == TransactionStatus.TRANFER) {
+      amountPrefix = '- ';
+    } else if (transactionStatus == TransactionStatus.RECHARGE ||
+        transactionStatus == TransactionStatus.RECEIVE) {
+      amountPrefix = '+ ';
+    }
+
     print("object $status ");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -136,7 +146,7 @@ class TransactionItem extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                formatPrice(amount.toInt()),
+                                "$amountPrefix${formatPrice(amount.toInt())}",
                                 style: TextStyle(
                                   color: amountColor,
                                   fontWeight: FontWeight.w700,
