@@ -51,6 +51,7 @@ class ListTransactionScreen extends HookConsumerWidget {
           backgroundColor: AssetsConstants.primaryMain,
           title: "Lịch sử giao dịch",
           iconSecond: Icons.home_outlined,
+          backButtonColor: Colors.white,
           centerTitle: true,
           onCallBackSecond: () {
             final tabsRouter = context.router.root

@@ -103,7 +103,7 @@ class TransactionItem extends StatelessWidget {
                       child: Icon(
                         icon,
                         color: amountColor,
-                        size: 28,
+                        size: 24,
                       ),
                     ),
                     const SizedBox(width: 16),

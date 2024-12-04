@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 enum TransactionStatus {
   RECHARGE("Nạp tiền"),
-  DEPOSIT("Gửi tiền"),
+  DEPOSIT("Đặt cọc"),
   PAYMENT("Thanh toán"),
   RECEIVE("Nhận tiền"),
   TRANFER("Chuyển tiền");
@@ -61,15 +61,15 @@ extension TransactionStatusExtension on TransactionStatus {
 IconData getIconForTransactionType(String type) {
   switch (type) {
     case 'DEPOSIT':
-      return Icons.arrow_downward;
+      return Icons.arrow_downward_rounded;
     case 'RECEIVE':
-      return Icons.arrow_forward;
+      return Icons.arrow_circle_right_rounded;
     case 'TRANFER':
-      return Icons.swap_horiz;
+      return Icons.swap_horiz_rounded;
     case 'RECHARGE':
-      return Icons.credit_card;
+      return Icons.credit_card_rounded;
     case 'PAYMENT':
-      return Icons.payment;
+      return Icons.account_balance_wallet_rounded;
     default:
       return Icons.help_outline;
   }
