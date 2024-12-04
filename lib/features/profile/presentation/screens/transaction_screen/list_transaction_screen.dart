@@ -32,20 +32,19 @@ class ListTransactionScreen extends HookConsumerWidget {
     final state = ref.watch(transactionControllerProvider);
 
     final controller = ref.read(transactionControllerProvider.notifier);
-    final user = ref.read(authProvider);
+
     // Sử dụng useFetch để lấy danh sách ServicesPackageTruckEntity
     final fetchResult = useFetch<TransactionEntity>(
       function: (model, context) async {
         // Gọi API và lấy dữ liệu ban đầu
+
         final servicesList =
             await controller.getTransactionByUserId(model, context);
 
         // Trả về danh sách ServicesPackageTruckEntity
         return servicesList;
       },
-      initialPagingModel: PagingModel(
-        userId: user?.id,
-      ),
+      initialPagingModel: PagingModel(),
       context: context,
     );
 

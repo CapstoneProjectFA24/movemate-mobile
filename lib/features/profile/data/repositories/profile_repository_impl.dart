@@ -78,17 +78,34 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
   Future<TransactionResponse> getTransactionByUserId({
     PagingModel? request,
     required String accessToken,
+    required int userId,
   }) async {
     final transactionQueries = TransactionQueries(
-      // page: request.pageNumber,
-      // perPage: request.pageSize,
-      // type: request.type ?? 'truck', // Đảm bảo `type` được đặt
-      // sortColumn: request.sortColumn ?? 'truckCategoryId',
-      // sortDir: request.sortDir ?? 0,
-      userId: request?.userId ?? 0,
-      // sortColumn: 'truckCategoryId',
-      // sortDir: 0,
+      userId: userId,
     ).toMap();
+    print(' transactionQueries  ${transactionQueries.toString()}');
+
+    return getDataOf(
+      request: () => _profileSource.getTransactionByUserId(
+        APIConstants.contentType,
+        accessToken,
+        transactionQueries,
+      ),
+    );
+  }
+
+  //transaction
+  @override
+  Future<TransactionResponse> getTransactionByUserIdWithWallet({
+    PagingModel? request,
+    required String accessToken,
+    required int userId,
+  }) async {
+    final transactionQueries = TransactionQueries(
+      isWallet: true,
+      userId: userId,
+    ).toMap();
+    print(' transactionQueries  ${transactionQueries.toString()}');
 
     return getDataOf(
       request: () => _profileSource.getTransactionByUserId(

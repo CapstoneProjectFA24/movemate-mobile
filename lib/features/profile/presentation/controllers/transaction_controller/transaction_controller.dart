@@ -48,7 +48,9 @@ class TransactionController extends _$TransactionController {
     state = await AsyncValue.guard(() async {
       final response = await transactionRepository.getTransactionByUserId(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        request: PagingModel(userId: user.id),
+        request: request,
+        // request: PagingModel(userId: user.id),
+        userId: user.id!,
       );
       transactions = response.payload;
     });
@@ -77,4 +79,54 @@ class TransactionController extends _$TransactionController {
 
     return transactions;
   }
+// transaction by wallet
+  Future<List<TransactionEntity>> getTransactionByUserIdWithWallet(
+    PagingModel request,
+    BuildContext context,
+  ) async {
+    List<TransactionEntity> transactions = [];
+
+    state = const AsyncLoading();
+    final transactionRepository = ref.read(profileRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+
+    print("check controller");
+    print("check controller request ${request.userId}");
+
+    state = await AsyncValue.guard(() async {
+      final response = await transactionRepository.getTransactionByUserIdWithWallet(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+        // request: PagingModel(userId: user.id),
+        userId: user.id!,
+      );
+      transactions = response.payload;
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        // if (state.hasError) {
+        //   await ref.read(signInControllerProvider.notifier).signOut(context);
+        // }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+        await getTransactionByUserIdWithWallet(request, context);
+      });
+    }
+
+    return transactions;
+  }
+
 }

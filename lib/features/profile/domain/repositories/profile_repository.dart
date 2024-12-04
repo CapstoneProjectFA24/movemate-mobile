@@ -40,6 +40,13 @@ abstract class ProfileRepository {
   Future<TransactionResponse> getTransactionByUserId({
     PagingModel request,
     required String accessToken,
+    required int userId,
+  });
+  //transaction
+  Future<TransactionResponse> getTransactionByUserIdWithWallet({
+    PagingModel request,
+    required String accessToken,
+    required int userId,
   });
 }
 

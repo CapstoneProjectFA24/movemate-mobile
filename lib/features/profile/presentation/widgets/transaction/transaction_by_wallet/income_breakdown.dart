@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/profile/domain/entities/transaction_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/transaction_controller/transaction_controller.dart';
 import 'package:movemate/features/profile/presentation/screens/wallet/combined_wallet_statistics_screen.dart';
+import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
@@ -14,10 +16,8 @@ class IncomeBreakdown extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final incomeItems = ref.watch(incomeProvider);
-
     final state = ref.watch(transactionControllerProvider);
-    final user = ref.watch(authProvider);
+
     final controller = ref.read(transactionControllerProvider.notifier);
 
     // Sử dụng useFetch để lấy danh sách ServicesPackageTruckEntity
@@ -25,32 +25,30 @@ class IncomeBreakdown extends HookConsumerWidget {
       function: (model, context) async {
         // Gọi API và lấy dữ liệu ban đầu
         final servicesList =
-            await controller.getTransactionByUserId(model, context);
+            await controller.getTransactionByUserIdWithWallet(model, context);
 
         // Trả về danh sách ServicesPackageTruckEntity
         return servicesList;
       },
-      initialPagingModel: PagingModel(
-        userId: user?.id,
-        isWallet: true,
-      ),
+      initialPagingModel: PagingModel(),
       context: context,
     );
 
+    print("object chekc list wallet ${fetchResult.items.toList().toString()}");
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Income Breakdown',
+            'Lịch sử giao dịch',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 10),
-          ...incomeItems.map((item) => _IncomeBreakdownItem(item: item)),
+          ...fetchResult.items.map((item) => _IncomeBreakdownItem(item: item)),
         ],
       ),
     );
@@ -58,7 +56,7 @@ class IncomeBreakdown extends HookConsumerWidget {
 }
 
 class _IncomeBreakdownItem extends StatelessWidget {
-  final IncomeItem item;
+  final TransactionEntity item;
 
   const _IncomeBreakdownItem({
     required this.item,
@@ -66,17 +64,19 @@ class _IncomeBreakdownItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = formatDate(item.createdAt.toString());
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            item.title,
+            formattedDate,
             style: const TextStyle(fontSize: 16),
           ),
           Text(
-            '\$${item.amount.toStringAsFixed(2)}',
+            formatPrice(item.amount.toInt()),
             style: const TextStyle(fontSize: 16),
           ),
           Container(
@@ -85,11 +85,12 @@ class _IncomeBreakdownItem extends StatelessWidget {
               vertical: 5,
             ),
             decoration: BoxDecoration(
-              color: item.color,
+              color: Colors.orangeAccent,
               borderRadius: BorderRadius.circular(5),
             ),
             child: Text(
-              '${item.percentage.toStringAsFixed(0)}%',
+              // '${item.percentage.toStringAsFixed(0)}%',
+              item.transactionType,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16,
@@ -102,37 +103,8 @@ class _IncomeBreakdownItem extends StatelessWidget {
   }
 }
 
-final incomeProvider =
-    StateNotifierProvider<IncomeNotifier, List<IncomeItem>>((ref) {
-  return IncomeNotifier();
-});
-
-class IncomeNotifier extends StateNotifier<List<IncomeItem>> {
-  IncomeNotifier()
-      : super([
-          const IncomeItem(
-            title: 'Monthly Salary',
-            amount: 10086.50,
-            percentage: 50,
-            color: Color(0xFFD3D3F3),
-          ),
-          const IncomeItem(
-            title: 'Passive Income',
-            amount: 3631.14,
-            percentage: 18,
-            color: Color(0xFFFFB6C1),
-          ),
-          const IncomeItem(
-            title: 'Freelance',
-            amount: 3429.41,
-            percentage: 17,
-            color: Color(0xFF9370DB),
-          ),
-          const IncomeItem(
-            title: 'Side Business',
-            amount: 3025.95,
-            percentage: 15,
-            color: Color(0xFF4B0082),
-          ),
-        ]);
+//hàm để format ngày
+String formatDate(String dateString) {
+  DateTime dateTime = DateTime.parse(dateString);
+  return DateFormat('dd/MM/yyyy').format(dateTime);
 }

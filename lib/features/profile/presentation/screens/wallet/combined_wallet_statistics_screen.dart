@@ -6,6 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/payment/presentation/screens/last_payment/last_payment_screen.dart';
+import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/income_breakdown.dart';
+import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/income_statistics_content.dart';
 import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/wallet_content.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'dart:math';
@@ -107,7 +109,7 @@ class CombinedWalletStatisticsScreen extends HookConsumerWidget {
             Expanded(
               child: selectedTab.value == 0
                   ? const WalletContent()
-                  : const _IncomeStatisticsContent(),
+                  : const IncomeStatisticsContent(),
             ),
           ],
         ),
@@ -196,7 +198,7 @@ class _IncomeStatisticsContent extends HookConsumerWidget {
         children: [
           _IncomeChart(),
           SizedBox(height: 20),
-          _IncomeBreakdown(),
+          IncomeBreakdown(),
         ],
       ),
     );
@@ -278,71 +280,71 @@ class _IncomePieChartPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-class _IncomeBreakdown extends HookConsumerWidget {
-  const _IncomeBreakdown();
+// class _IncomeBreakdown extends HookConsumerWidget {
+//   const _IncomeBreakdown();
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final incomeItems = ref.watch(incomeProvider);
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final incomeItems = ref.watch(incomeProvider);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Income Breakdown',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        ...incomeItems.map((item) => _IncomeBreakdownItem(item: item)),
-      ],
-    );
-  }
-}
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const Text(
+//           'Income Breakdown',
+//           style: TextStyle(
+//             fontSize: 20,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         const SizedBox(height: 10),
+//         ...incomeItems.map((item) => _IncomeBreakdownItem(item: item)),
+//       ],
+//     );
+//   }
+// }
 
-class _IncomeBreakdownItem extends StatelessWidget {
-  final IncomeItem item;
+// class _IncomeBreakdownItem extends StatelessWidget {
+//   final IncomeItem item;
 
-  const _IncomeBreakdownItem({
-    required this.item,
-  });
+//   const _IncomeBreakdownItem({
+//     required this.item,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            item.title,
-            style: const TextStyle(fontSize: 16),
-          ),
-          Text(
-            '\$${item.amount.toStringAsFixed(2)}',
-            style: const TextStyle(fontSize: 16),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 5,
-            ),
-            decoration: BoxDecoration(
-              color: item.color,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Text(
-              '${item.percentage.toStringAsFixed(0)}%',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 10),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Text(
+//             item.title,
+//             style: const TextStyle(fontSize: 16),
+//           ),
+//           Text(
+//             '\$${item.amount.toStringAsFixed(2)}',
+//             style: const TextStyle(fontSize: 16),
+//           ),
+//           Container(
+//             padding: const EdgeInsets.symmetric(
+//               horizontal: 10,
+//               vertical: 5,
+//             ),
+//             decoration: BoxDecoration(
+//               color: item.color,
+//               borderRadius: BorderRadius.circular(5),
+//             ),
+//             child: Text(
+//               '${item.percentage.toStringAsFixed(0)}%',
+//               style: const TextStyle(
+//                 color: Colors.white,
+//                 fontSize: 16,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
