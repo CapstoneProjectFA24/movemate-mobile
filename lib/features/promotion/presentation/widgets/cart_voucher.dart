@@ -38,12 +38,12 @@ class CartVoucherScreen extends HookConsumerWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFFFF3E0), // Light orange background
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Mã Voucher Của Tôi',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.orange[900],
+              color: Colors.orange,
             ),
           ),
           backgroundColor: Colors.transparent,
@@ -82,7 +82,7 @@ class CartVoucherScreen extends HookConsumerWidget {
           Icon(
             Icons.card_giftcard,
             size: 200,
-            color: Colors.orange[300],
+            color: Colors.orange[700],
           ),
           const SizedBox(height: 20),
           Text(
