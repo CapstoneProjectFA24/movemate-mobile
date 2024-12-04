@@ -185,7 +185,7 @@ class PromotionController extends _$PromotionController {
   ) async {
     PromotionEntity? promotions;
 
-    // state = const AsyncLoading();
+    state = const AsyncLoading();
     final promotionRepository = ref.read(promotionRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
