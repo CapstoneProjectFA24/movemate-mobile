@@ -66,43 +66,29 @@ class ListTransactionScreen extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Cards',
+                'Thẻ',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               // Horizontal Scroll for Cards
-              SingleChildScrollView(
+              const SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const CreditCardWidget(
-                      cardNumber: '8842 2394 2399 1293',
-                      cardHolder: 'Anna Larsen',
-                      expiryDate: '06/25',
-                    ),
-                    const SizedBox(width: 20), // Optional space between cards
-                    const CreditCardWidget(
-                      cardNumber: '1234 5678 9876 5432',
-                      cardHolder: 'John Doe',
-                      expiryDate: '11/24',
-                    ),
-                    const SizedBox(width: 20), // Optional space between cards
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        iconColor: Colors.blue,
-                        elevation: 0,
-                        side: const BorderSide(color: Colors.blue),
-                      ),
-                      child: const Text('ADD NEW +'),
-                    ),
+                    SizedBox(width: 35), // Optional space between cards
+                    CreditCardWidget(
+                        // cardNumber: '1234 5678 9876 5432',
+                        // cardHolder: 'John Doe',
+                        // expiryDate: '11/24',
+                        ),
                   ],
                 ),
               ),
               const SizedBox(height: 40),
               const Text(
-                'Transactions',
+                'Giao dịch',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),

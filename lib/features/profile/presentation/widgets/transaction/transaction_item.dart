@@ -1,9 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:movemate/features/profile/presentation/screens/transaction_screen/list_transaction_screen.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
-
-import '../../../../order/presentation/widgets/main_detail_ui/customer_info.dart';
 
 class TransactionItem extends StatelessWidget {
   final IconData icon;
@@ -35,6 +33,12 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // hàm để định dạng ngày tháng
+    final formattedDateReviewAt =
+        DateFormat('dd-MM-yyyy').format(DateTime.parse(date.toString()));
+    final formattedTimeReviewAt =
+        DateFormat('HH:mm').format(DateTime.parse(date.toString()));
+
     // Attempt to match the payment method string to the PaymentMethodType enum
     PaymentMethodType? methodType = PaymentMethodType.fromString(paymentMethod);
 
@@ -44,139 +48,247 @@ class TransactionItem extends StatelessWidget {
     String paymentMethodName = methodType?.displayName ??
         'Unknown'; // Fallback to 'Unknown' if not found
 
-    return Card(
-      color: cardColor,
-      margin: const EdgeInsets.only(bottom: 10),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.blue.shade50,
-          child: Icon(icon, color: Colors.blue.shade700),
-        ),
-        title: Text(name, style: titleStyle),
-        subtitle: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(description, style: descriptionStyle),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Text('Payment Method: ',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: Text(paymentMethodName,
-                        overflow: TextOverflow.ellipsis),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              formatPrice(amount.toInt()),
-              style: TextStyle(
-                color: amountColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 2),
             ),
-            // if (paymentMethodImage.isNotEmpty)
-            //   Padding(
-            //     padding: const EdgeInsets.only(top: 8.0),
-            //     child: Flexible(
-            //       child:
-            //           Image.network(paymentMethodImage, width: 35, height: 35),
-            //     ),
-            //   ),
           ],
         ),
-        isThreeLine: true,
-        dense: true,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                // Handle tap event
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    // Left side - Transaction Icon with gradient background
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            amountColor.withOpacity(0.1),
+                            amountColor.withOpacity(0.2),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Icon(
+                        icon,
+                        color: amountColor,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+
+                    // Middle - Transaction Details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  name,
+                                  style: titleStyle.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                formatPrice(amount.toInt()),
+                                style: TextStyle(
+                                  color: amountColor,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            description,
+                            style: descriptionStyle.copyWith(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 8),
+                          // Payment Method and Date Row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Payment Method with Icon
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    if (paymentMethodImage.isNotEmpty) ...[
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: CachedNetworkImage(
+                                          imageUrl: paymentMethodImage,
+                                          width: 24,
+                                          height: 24,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            color: Colors.grey[200],
+                                            child: const Icon(
+                                              Icons.payment,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                            color: Colors.grey[200],
+                                            child: const Icon(
+                                              Icons.error_outline,
+                                              size: 16,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                    ],
+                                    Expanded(
+                                      child: Text(
+                                        paymentMethod,
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Date
+                              Text(
+                                formattedDateReviewAt,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-// Hàm hỗ trợ để định dạng giá
+// Utility functions remain the same
 String formatPrice(int price) {
   final formatter = NumberFormat('#,###', 'vi_VN');
   return '${formatter.format(price)} đ';
 }
 
-// Icon mapping based on transaction type
 IconData getIconForTransactionType(String type) {
   switch (type) {
     case 'DEPOSIT':
-      return Icons.arrow_downward; // Deposit icon
+      return Icons.arrow_downward;
     case 'RECEIVE':
-      return Icons.arrow_forward; // Receive icon
+      return Icons.arrow_forward;
     case 'TRANSFER':
-      return Icons.swap_horiz; // Transfer icon
+      return Icons.swap_horiz;
     case 'RECHARGE':
-      return Icons.credit_card; // Recharge icon
+      return Icons.credit_card;
     case 'PAYMENT':
-      return Icons.payment; // Payment icon
+      return Icons.payment;
     default:
-      return Icons.help_outline; // Default icon if type is unknown
+      return Icons.help_outline;
   }
 }
 
-// Function to get card color and amount color based on transaction type
 Color getCardColor(String type) {
   switch (type) {
     case 'DEPOSIT':
-      return Colors.red.shade50; // Red card for Deposit
+      return Colors.red.shade50.withOpacity(0.7);
     case 'RECHARGE':
-      return Colors.green.shade50; // Green card for Recharge
+      return Colors.green.shade50.withOpacity(0.7);
     default:
-      return Colors.orange.shade50; // Light orange card for others
+      return Colors.orange.shade50.withOpacity(0.7);
   }
 }
 
 Color getAmountColor(String type) {
   switch (type) {
     case 'DEPOSIT':
-      return Colors.red; // Red for Deposit
+      return Colors.red.shade700;
     case 'RECHARGE':
-      return Colors.green; // Green for Recharge
+      return Colors.green.shade700;
     default:
-      return Colors.orange.shade700; // Orange for others
+      return Colors.orange.shade700;
   }
 }
 
 TextStyle getTextStyleForTitle(String type) {
+  const baseStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+
   switch (type) {
     case 'DEPOSIT':
-      return const TextStyle(
-          color: Colors.red,
-          fontWeight: FontWeight.bold); // Bold Red for Deposit
+      return baseStyle.copyWith(color: Colors.red.shade700);
     case 'RECHARGE':
-      return const TextStyle(
-          color: Colors.green,
-          fontWeight: FontWeight.bold); // Bold Green for Recharge
+      return baseStyle.copyWith(color: Colors.green.shade700);
     default:
-      return TextStyle(
-          color: Colors.orange.shade700,
-          fontWeight: FontWeight.w600); // Orange for others
+      return baseStyle.copyWith(color: Colors.orange.shade700);
   }
 }
 
 TextStyle getTextStyleForDescription(String type) {
+  const baseStyle = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  );
+
   switch (type) {
     case 'DEPOSIT':
-      return TextStyle(
-          color: Colors.red.shade700,
-          fontWeight: FontWeight.w600); // Darker Red for Deposit
+      return baseStyle.copyWith(color: Colors.red.shade600);
     case 'RECHARGE':
-      return TextStyle(
-          color: Colors.green.shade700,
-          fontWeight: FontWeight.w600); // Darker Green for Recharge
+      return baseStyle.copyWith(color: Colors.green.shade600);
     default:
-      return TextStyle(
-          color: Colors.orange.shade500,
-          fontWeight: FontWeight.w600); // Orange for others
+      return baseStyle.copyWith(color: Colors.orange.shade600);
   }
 }
