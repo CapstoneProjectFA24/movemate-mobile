@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
 import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
@@ -95,7 +96,21 @@ class CartVoucherScreen extends HookConsumerWidget {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Navigate to voucher collection screen
+              // Navigate to voucher collection
+
+              final tabsRouter = context.router.root
+                  .innerRouterOf<TabsRouter>(TabViewScreenRoute.name);
+              if (tabsRouter != null) {
+                tabsRouter.setActiveIndex(2);
+                context.router.popUntilRouteWithName(TabViewScreenRoute.name);
+              } else {
+                context.router.pushAndPopUntil(
+                  const TabViewScreenRoute(children: [
+                    PromotionScreenRoute(),
+                  ]),
+                  predicate: (route) => false,
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange[600],

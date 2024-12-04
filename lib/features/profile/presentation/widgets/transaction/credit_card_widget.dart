@@ -34,7 +34,7 @@ class CreditCardWidget extends HookWidget {
           return AlertDialog(
             backgroundColor: Colors.white, // Improved background color
             title: const Text(
-              'Enter Card Information',
+              'Thêm thông tin thẻ',
               style: TextStyle(
                 color: Colors.black, // Improved text color
                 fontWeight: FontWeight.bold,
@@ -57,7 +57,7 @@ class CreditCardWidget extends HookWidget {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.orange),
                         ),
                       ),
                       keyboardType: TextInputType.number,
@@ -94,7 +94,7 @@ class CreditCardWidget extends HookWidget {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.orange),
                         ),
                       ),
                       validator: (value) {
@@ -116,7 +116,7 @@ class CreditCardWidget extends HookWidget {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.orange),
                         ),
                       ),
                       keyboardType: TextInputType.number,
@@ -149,13 +149,13 @@ class CreditCardWidget extends HookWidget {
                 },
                 child: const Text(
                   'Hủy',
-                  style: TextStyle(color: Colors.red), // Button text color
+                  style: TextStyle(color: Colors.orange), // Button text color
                 ),
               ),
               // Confirm Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Button background color
+                  backgroundColor: Colors.orange, // Button background color
                   iconColor: Colors.white, // Button text color
                 ),
                 onPressed: () {
@@ -168,7 +168,8 @@ class CreditCardWidget extends HookWidget {
                     Navigator.of(context).pop(true);
                   }
                 },
-                child: const Text('Confirm'),
+                child: const Text('Xác nhận',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           );

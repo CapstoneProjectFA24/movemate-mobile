@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
 import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
@@ -137,24 +138,54 @@ class PromotionScreen extends HookConsumerWidget {
                 : (useFetchResult.isFetchingData)
                     ? const Align(
                         alignment: Alignment.topCenter,
-                        child: EmptyBox(title: ''),
+                        child: EmptyBox(title: 'Đã hết voucher để nhận'),
                       )
-                    : Expanded(
-                        child: PromotionList(promotions: promotionUserNotGet),
-
-                        // TabBarView(
-                        //   controller: tabController,
-                        //   children: [
-                        //     PromotionList(promotions: promotionUserNotGet),
-                        //     PromotionList(
-                        //       promotions: activePromotions,
-                        //     ),
-                        //     PromotionList(
-                        //       promotions: nextMonthPromotions,
-                        //     ),
-                        //   ],
-                        // ),
-                      ),
+                    : (promotionUserNotGet.isEmpty)
+                        ? Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.shade50,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    'Đã hết voucher để nhận',
+                                    style: TextStyle(
+                                      color: Colors.orange,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Navigate to the user's vouchers screen
+                                      context.router.push(
+                                        const CartVoucherScreenRoute(),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.orange,
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text('Đi đến Voucher của tôi'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child:
+                                PromotionList(promotions: promotionUserNotGet),
+                          ),
           ],
         ),
       ),
