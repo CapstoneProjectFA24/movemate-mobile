@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
+import 'package:movemate/utils/enums/transaction_status_enum.dart';
 
 class TransactionItem extends StatelessWidget {
   final IconData icon;
@@ -42,12 +43,21 @@ class TransactionItem extends StatelessWidget {
     // Attempt to match the payment method string to the PaymentMethodType enum
     PaymentMethodType? methodType = PaymentMethodType.fromString(paymentMethod);
 
+    // Chuyển đổi trạng thái sang enum
+    final transactionStatus = TransactionStatus.fromString(name);
+
+    // Lấy tên tiếng Việt
+    final statusVietnamese =
+        transactionStatus?.toVietnamese() ?? 'Không xác định';
+
     // If methodType is not null, get the image and display name from the enum extension
     String paymentMethodImage =
         methodType?.imageUrl ?? ''; // Fallback to empty string if not found
     String paymentMethodName = methodType?.displayName ??
         'Unknown'; // Fallback to 'Unknown' if not found
+    final status = TransactionStatus.DEPOSIT.toVietnamese();
 
+    print("object $status ");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
@@ -107,7 +117,7 @@ class TransactionItem extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  name,
+                                  statusVietnamese,
                                   style: titleStyle.copyWith(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
@@ -220,75 +230,4 @@ class TransactionItem extends StatelessWidget {
 String formatPrice(int price) {
   final formatter = NumberFormat('#,###', 'vi_VN');
   return '${formatter.format(price)} đ';
-}
-
-IconData getIconForTransactionType(String type) {
-  switch (type) {
-    case 'DEPOSIT':
-      return Icons.arrow_downward;
-    case 'RECEIVE':
-      return Icons.arrow_forward;
-    case 'TRANSFER':
-      return Icons.swap_horiz;
-    case 'RECHARGE':
-      return Icons.credit_card;
-    case 'PAYMENT':
-      return Icons.payment;
-    default:
-      return Icons.help_outline;
-  }
-}
-
-Color getCardColor(String type) {
-  switch (type) {
-    case 'DEPOSIT':
-      return Colors.red.shade50.withOpacity(0.7);
-    case 'RECHARGE':
-      return Colors.green.shade50.withOpacity(0.7);
-    default:
-      return Colors.orange.shade50.withOpacity(0.7);
-  }
-}
-
-Color getAmountColor(String type) {
-  switch (type) {
-    case 'DEPOSIT':
-      return Colors.red.shade700;
-    case 'RECHARGE':
-      return Colors.green.shade700;
-    default:
-      return Colors.orange.shade700;
-  }
-}
-
-TextStyle getTextStyleForTitle(String type) {
-  const baseStyle = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  );
-
-  switch (type) {
-    case 'DEPOSIT':
-      return baseStyle.copyWith(color: Colors.red.shade700);
-    case 'RECHARGE':
-      return baseStyle.copyWith(color: Colors.green.shade700);
-    default:
-      return baseStyle.copyWith(color: Colors.orange.shade700);
-  }
-}
-
-TextStyle getTextStyleForDescription(String type) {
-  const baseStyle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-  );
-
-  switch (type) {
-    case 'DEPOSIT':
-      return baseStyle.copyWith(color: Colors.red.shade600);
-    case 'RECHARGE':
-      return baseStyle.copyWith(color: Colors.green.shade600);
-    default:
-      return baseStyle.copyWith(color: Colors.orange.shade600);
-  }
 }
