@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:movemate/features/promotion/data/models/request/promotion_request.dart';
 import 'package:movemate/features/promotion/data/models/request/promotion_sort_request.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_by_id_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_object_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_response.dart';
 import 'package:movemate/features/promotion/data/models/response/voucher_response.dart';
@@ -36,6 +37,13 @@ abstract class PromotionSource {
   //post voucher for user by promotion id
   @POST('${APIConstants.post_voucher_for_user}/{id}')
   Future<HttpResponse<SuccessModel>> postVouherForUser(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Path('id') int id,
+  );
+  //get promotion  by promotion id
+  @GET('${APIConstants.promotions}/{id}')
+  Future<HttpResponse<PromotionByIdResponse>> getPromotionById(
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,

@@ -112,20 +112,20 @@ class PromotionScreen extends HookConsumerWidget {
           onCallBackFirst: () {
             useFetchResult.refresh();
           },
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(50.0),
-            child: Container(
-              color: Colors.white,
-              child: TabBar(
-                controller: tabController,
-                indicatorColor: Colors.orange,
-                indicatorWeight: 2,
-                labelColor: Colors.orange,
-                unselectedLabelColor: Colors.grey,
-                tabs: tabs.map((tab) => Tab(text: tab)).toList(),
-              ),
-            ),
-          ),
+          // bottom: PreferredSize(
+          //   preferredSize: const Size.fromHeight(50.0),
+          //   child: Container(
+          //     color: Colors.white,
+          //     child: TabBar(
+          //       controller: tabController,
+          //       indicatorColor: Colors.orange,
+          //       indicatorWeight: 2,
+          //       labelColor: Colors.orange,
+          //       unselectedLabelColor: Colors.grey,
+          //       tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+          //     ),
+          //   ),
+          // ),
         ),
         body: Column(
           children: [
@@ -140,18 +140,20 @@ class PromotionScreen extends HookConsumerWidget {
                         child: EmptyBox(title: ''),
                       )
                     : Expanded(
-                        child: TabBarView(
-                          controller: tabController,
-                          children: [
-                            PromotionList(promotions: promotionUserNotGet),
-                            PromotionList(
-                              promotions: activePromotions,
-                            ),
-                            PromotionList(
-                              promotions: nextMonthPromotions,
-                            ),
-                          ],
-                        ),
+                        child: PromotionList(promotions: promotionUserNotGet),
+
+                        // TabBarView(
+                        //   controller: tabController,
+                        //   children: [
+                        //     PromotionList(promotions: promotionUserNotGet),
+                        //     PromotionList(
+                        //       promotions: activePromotions,
+                        //     ),
+                        //     PromotionList(
+                        //       promotions: nextMonthPromotions,
+                        //     ),
+                        //   ],
+                        // ),
                       ),
           ],
         ),

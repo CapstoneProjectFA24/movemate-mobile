@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_by_id_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_object_response.dart';
 import 'package:movemate/features/promotion/data/models/response/voucher_response.dart';
 import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
@@ -175,6 +176,61 @@ class PromotionController extends _$PromotionController {
         await Future.delayed(const Duration(seconds: 2));
         return await postVouherForUser(context, id, retryCount: retryCount + 1);
       }
+    }
+  }
+
+  Future<PromotionEntity?> getPromotionById(
+    BuildContext context,
+    int id,
+  ) async {
+    PromotionEntity? promotions;
+
+    // state = const AsyncLoading();
+    final promotionRepository = ref.read(promotionRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    // print("object checking controller 1");
+
+    final result = await AsyncValue.guard(() async {
+      // print("object checking  controller 2 $id");
+
+      final response = await promotionRepository.getPromotionById(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        id: id,
+      );
+      // print("object checking  controller 2 $response");
+      // promotions = response.payload;
+      return response.payload;
+    });
+
+    // print("object checking  controller 3 $result");
+
+    state = result;
+
+    if (state.hasError) {
+      final statusCode = (state.error as DioException).onStatusDio();
+      await handleAPIError(
+        statusCode: statusCode,
+        stateError: state.error!,
+        context: context,
+        onCallBackGenerateToken: () async => await reGenerateToken(
+          authRepository,
+          context,
+        ),
+      );
+
+      if (statusCode != StatusCodeType.unauthentication.type) {}
+      // Retry logic with a limit on retries
+      if (statusCode == StatusCodeType.unauthentication.type) {
+        // Retry after a delay to prevent hammering the server too quickly
+        await Future.delayed(const Duration(seconds: 2));
+        return await getPromotionById(context, id);
+      }
+    }
+    if (result is AsyncData<PromotionEntity>) {
+      return result.value;
+    } else {
+      return null;
     }
   }
 }

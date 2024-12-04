@@ -37,20 +37,21 @@ class PromotionCard extends StatelessWidget {
               // Discount Badge at top
               Positioned(
                 top: -15, // Thu nhỏ vị trí của badge
-                right: -5, // Thu nhỏ khoảng cách bên phải
+                right: -16, // Thu nhỏ khoảng cách bên phải
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 8), // Giảm padding badge
+                      horizontal: 10, vertical: 4), // Giảm padding badge
                   decoration: BoxDecoration(
                     color: const Color(0xFFFF6F00),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(
-                    '-${promotion.discountRate}%',
-                    style: const TextStyle(
+                  child: const Text(
+                    // '-${promotion.discountRate * 100}%',
+                    'Lựa chọn tốt nhất',
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -144,56 +145,57 @@ class PromotionCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Giảm ${promotion.discountRate}% cho đơn hàng',
-                                style: TextStyle(
-                                  fontSize: 12, // Giảm kích thước font
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.orange.shade700,
-                                ),
-                              ),
+                              // Text(
+                              //   'Giảm ${promotion.discountRate * 100}% cho đơn hàng',
+                              //   style: TextStyle(
+                              //     fontSize: 12, // Giảm kích thước font
+                              //     fontWeight: FontWeight.bold,
+                              //     color: Colors.orange.shade700,
+                              //   ),
+                              // ),
                               const SizedBox(height: 2),
                               Text(
-                                'Từ ${promotion.discountMin}\$ - ${promotion.discountMax}\$',
+                                'Từ ${promotion.discountMin.toInt()}% - ${promotion.discountMax.toInt()}%',
                                 style: TextStyle(
                                   fontSize: 11, // Giảm kích thước font
-                                  color: Colors.grey.shade600,
+                                  // color: Colors.grey.shade600,
+                                  color: Colors.orange.shade700,
                                 ),
                               ),
                             ],
                           ),
                         ),
 
-                        // Status Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 3), // Giảm padding
-                          decoration: BoxDecoration(
-                            color: Colors.orange.shade100,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                promotion.isPublic
-                                    ? Icons.public
-                                    : Icons.lock_outline,
-                                color: Colors.orange.shade700,
-                                size: 10, // Giảm kích thước icon
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                promotion.isPublic ? 'Công khai' : 'Riêng tư',
-                                style: TextStyle(
-                                  fontSize: 10, // Giảm kích thước font
-                                  color: Colors.orange.shade700,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // // Status Badge
+                        // Container(
+                        //   padding: const EdgeInsets.symmetric(
+                        //       horizontal: 6, vertical: 3), // Giảm padding
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.orange.shade100,
+                        //     borderRadius: BorderRadius.circular(20),
+                        //   ),
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       Icon(
+                        //         promotion.isPublic
+                        //             ? Icons.public
+                        //             : Icons.lock_outline,
+                        //         color: Colors.orange.shade700,
+                        //         size: 10, // Giảm kích thước icon
+                        //       ),
+                        //       const SizedBox(width: 4),
+                        //       Text(
+                        //         promotion.isPublic ? 'Công khai' : 'Riêng tư',
+                        //         style: TextStyle(
+                        //           fontSize: 10, // Giảm kích thước font
+                        //           color: Colors.orange.shade700,
+                        //           fontWeight: FontWeight.w500,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

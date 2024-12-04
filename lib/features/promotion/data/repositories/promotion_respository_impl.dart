@@ -11,6 +11,7 @@ import 'package:movemate/features/order/domain/repositories/order_repository.dar
 import 'package:movemate/features/promotion/data/models/request/promotion_request.dart';
 import 'package:movemate/features/promotion/data/models/request/promotion_sort_request.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_by_id_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_object_response.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_response.dart';
 import 'package:movemate/features/promotion/data/models/response/voucher_response.dart';
@@ -88,6 +89,21 @@ class PromotionRespositoryImpl extends RemoteBaseRepository
     print("checking test repo $id");
     return getDataOf(
       request: () => _promotionSource.postVouherForUser(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
+  //get promotion id
+  @override
+  Future<PromotionByIdResponse> getPromotionById({
+    required String accessToken,
+    required int id,
+  }) async {
+    print("checking test repo $id");
+    return getDataOf(
+      request: () => _promotionSource.getPromotionById(
         APIConstants.contentType,
         accessToken,
         id,

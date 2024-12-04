@@ -4,7 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
+import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
+import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal_card.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
@@ -157,146 +162,166 @@ class VoucherModal extends HookConsumerWidget {
                       .any((v) => v.id == currentVoucher.id);
                   final isDisabled = !isSelected &&
                       hasExistingVoucherWithSamePromotion(currentVoucher);
-
-                  return Card(
-                    color: Colors.white,
-                    margin: const EdgeInsets.only(bottom: 16.0),
-                    elevation: 3.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.card_giftcard,
-                                color: Colors.amberAccent,
-                                size: 40.0,
-                              ),
-                              const SizedBox(width: 16.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Phiếu giảm giá ${filteredVouchers[index].code}',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    if (isDisabled)
-                                      const Text(
-                                        'Đã có voucher khác từ cùng chương trình được chọn',
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 14.0,
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      )
-                                    else
-                                      Text(
-                                        'Giảm đến ${formatPrice(filteredVouchers[index].price.toInt())}',
-                                        style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14.0,
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16.0),
-                          Row(
-                            children: [
-                              const Spacer(),
-                              ElevatedButton(
-                                onPressed: isDisabled
-                                    ? null // Disable button nếu có voucher cùng promotion đã được chọn
-                                    : () {
-                                        if (!isSelected) {
-                                          // Thêm voucher mới
-                                          localSelectedVouchers.value = [
-                                            ...localSelectedVouchers.value,
-                                            currentVoucher
-                                          ];
-                                          onVoucherUsed(currentVoucher);
-
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              backgroundColor:
-                                                  Colors.orange.shade700,
-                                              content: Text(
-                                                'Đã sử dụng phiếu giảm giá ${index + 1}',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          // Hủy voucher
-                                          localSelectedVouchers.value =
-                                              localSelectedVouchers.value
-                                                  .where((v) =>
-                                                      v.id != currentVoucher.id)
-                                                  .toList();
-                                          onVoucherCanceled(currentVoucher);
-
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              backgroundColor:
-                                                  Colors.red.shade700,
-                                              content: Text(
-                                                'Đã hủy phiếu giảm giá ${index + 1}',
-                                                style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isSelected
-                                      ? Colors.red
-                                      : (isDisabled
-                                          ? Colors.grey
-                                          : Colors.orange),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                ),
-                                child: Text(
-                                  isSelected
-                                      ? 'Hủy'
-                                      : (isDisabled
-                                          ? 'Không khả dụng'
-                                          : 'Sử dụng'),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+         
+                  return VoucherModalCard(
+                    voucher: currentVoucher,
+                    isSelected: isSelected,
+                    isDisabled: isDisabled,
+                    onVoucherUsed: (voucher) {
+                      localSelectedVouchers.value = [
+                        ...localSelectedVouchers.value,
+                        voucher
+                      ];
+                      onVoucherUsed(voucher);
+                    },
+                    onVoucherCanceled: (voucher) {
+                      localSelectedVouchers.value = localSelectedVouchers.value
+                          .where((v) => v.id != voucher.id)
+                          .toList();
+                      onVoucherCanceled(voucher);
+                    },
+                    index: index,
                   );
+
+                  // Card(
+                  //   color: Colors.white,
+                  //   margin: const EdgeInsets.only(bottom: 16.0),
+                  //   elevation: 3.0,
+                  //   shape: RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(12.0),
+                  //   ),
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.all(16.0),
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Row(
+                  //           children: [
+                  //             const Icon(
+                  //               Icons.card_giftcard,
+                  //               color: Colors.amberAccent,
+                  //               size: 40.0,
+                  //             ),
+                  //             const SizedBox(width: 16.0),
+                  //             Expanded(
+                  //               child: Column(
+                  //                 crossAxisAlignment: CrossAxisAlignment.start,
+                  //                 children: [
+                  //                   Text(
+                  //                     'Phiếu giảm giá ${filteredVouchers[index].code}',
+                  //                     style: const TextStyle(
+                  //                       color: Colors.black,
+                  //                       fontSize: 16.0,
+                  //                       fontWeight: FontWeight.bold,
+                  //                     ),
+                  //                   ),
+                  //                   const SizedBox(height: 8.0),
+                  //                   if (isDisabled)
+                  //                     const Text(
+                  //                       'Đã có voucher khác từ cùng chương trình được chọn',
+                  //                       style: TextStyle(
+                  //                         color: Colors.red,
+                  //                         fontSize: 14.0,
+                  //                         fontStyle: FontStyle.italic,
+                  //                       ),
+                  //                     )
+                  //                   else
+                  //                     Text(
+                  //                       'Giảm đến ${formatPrice(filteredVouchers[index].price.toInt())}',
+                  //                       style: const TextStyle(
+                  //                         color: Colors.grey,
+                  //                         fontSize: 14.0,
+                  //                       ),
+                  //                     ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //         const SizedBox(height: 16.0),
+                  //         Row(
+                  //           children: [
+                  //             const Spacer(),
+                  //             ElevatedButton(
+                  //               onPressed: isDisabled
+                  //                   ? null // Disable button nếu có voucher cùng promotion đã được chọn
+                  //                   : () {
+                  //                       if (!isSelected) {
+                  //                         // Thêm voucher mới
+                  //                         localSelectedVouchers.value = [
+                  //                           ...localSelectedVouchers.value,
+                  //                           currentVoucher
+                  //                         ];
+                  //                         onVoucherUsed(currentVoucher);
+
+                  //                         ScaffoldMessenger.of(context)
+                  //                             .showSnackBar(
+                  //                           SnackBar(
+                  //                             backgroundColor:
+                  //                                 Colors.orange.shade700,
+                  //                             content: Text(
+                  //                               'Đã sử dụng phiếu giảm giá ${index + 1}',
+                  //                               style: const TextStyle(
+                  //                                   color: Colors.white,
+                  //                                   fontSize: 18,
+                  //                                   fontWeight:
+                  //                                       FontWeight.bold),
+                  //                             ),
+                  //                           ),
+                  //                         );
+                  //                       } else {
+                  //                         // Hủy voucher
+                  //                         localSelectedVouchers.value =
+                  //                             localSelectedVouchers.value
+                  //                                 .where((v) =>
+                  //                                     v.id != currentVoucher.id)
+                  //                                 .toList();
+                  //                         onVoucherCanceled(currentVoucher);
+
+                  //                         ScaffoldMessenger.of(context)
+                  //                             .showSnackBar(
+                  //                           SnackBar(
+                  //                             backgroundColor:
+                  //                                 Colors.red.shade700,
+                  //                             content: Text(
+                  //                               'Đã hủy phiếu giảm giá ${index + 1}',
+                  //                               style: const TextStyle(
+                  //                                   color: Colors.white,
+                  //                                   fontSize: 18,
+                  //                                   fontWeight:
+                  //                                       FontWeight.bold),
+                  //                             ),
+                  //                           ),
+                  //                         );
+                  //                       }
+                  //                     },
+                  //               style: ElevatedButton.styleFrom(
+                  //                 backgroundColor: isSelected
+                  //                     ? Colors.red
+                  //                     : (isDisabled
+                  //                         ? Colors.grey
+                  //                         : Colors.orange),
+                  //                 shape: RoundedRectangleBorder(
+                  //                   borderRadius: BorderRadius.circular(20.0),
+                  //                 ),
+                  //               ),
+                  //               child: Text(
+                  //                 isSelected
+                  //                     ? 'Hủy'
+                  //                     : (isDisabled
+                  //                         ? 'Không khả dụng'
+                  //                         : 'Sử dụng'),
+                  //                 style: const TextStyle(
+                  //                   color: Colors.white,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // );
                 }),
               ),
             ),
