@@ -139,6 +139,7 @@ class ListTransactionScreen extends HookConsumerWidget {
                                 transaction.transactionType);
 
                             return TransactionItem(
+                              transaction: transaction,
                               icon: transactionIcon,
                               name: transaction.transactionType,
                               description: transaction.transactionCode,

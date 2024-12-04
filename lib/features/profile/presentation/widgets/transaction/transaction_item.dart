@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/profile/domain/entities/transaction_entity.dart';
+import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_detail_dialog.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
 import 'package:movemate/utils/enums/transaction_status_enum.dart';
 
@@ -16,7 +18,7 @@ class TransactionItem extends StatelessWidget {
   final Color amountColor;
   final TextStyle titleStyle;
   final TextStyle descriptionStyle;
-
+  final TransactionEntity transaction;
   const TransactionItem({
     super.key,
     required this.icon,
@@ -30,6 +32,7 @@ class TransactionItem extends StatelessWidget {
     required this.amountColor,
     required this.titleStyle,
     required this.descriptionStyle,
+    required this.transaction,
   });
 
   @override
@@ -79,7 +82,12 @@ class TransactionItem extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                // Handle tap event
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return TransactionDetailDialog(transaction: transaction);
+                  },
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.all(16),
