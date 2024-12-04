@@ -8,8 +8,9 @@ import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/v
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/enums/transaction_status_enum.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
-import 'income_providers.dart';
+
 
 class IncomeBreakdown extends HookConsumerWidget {
   const IncomeBreakdown({super.key});
@@ -65,7 +66,9 @@ class _IncomeBreakdownItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formattedDate = formatDate(item.createdAt.toString());
-
+    final cardColor = getCardColorWallet(item.transactionType);
+    final amountPrefix = defineAmountPrefix(item.transactionType);
+    final amountColor = getAmountColor(item.transactionType);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
@@ -76,8 +79,8 @@ class _IncomeBreakdownItem extends StatelessWidget {
             style: const TextStyle(fontSize: 16),
           ),
           Text(
-            formatPrice(item.amount.toInt()),
-            style: const TextStyle(fontSize: 16),
+            '$amountPrefix ${formatPrice(item.amount.toInt())}',
+            style: TextStyle(fontSize: 16, color: amountColor),
           ),
           Container(
             padding: const EdgeInsets.symmetric(
@@ -85,7 +88,7 @@ class _IncomeBreakdownItem extends StatelessWidget {
               vertical: 5,
             ),
             decoration: BoxDecoration(
-              color: Colors.orangeAccent,
+              color: cardColor,
               borderRadius: BorderRadius.circular(5),
             ),
             child: Text(

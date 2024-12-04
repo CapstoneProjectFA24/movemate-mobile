@@ -58,8 +58,6 @@ extension TransactionStatusExtension on TransactionStatus {
   }
 }
 
-
-
 IconData getIconForTransactionType(String type) {
   switch (type) {
     case 'DEPOSIT':
@@ -85,6 +83,57 @@ Color getCardColor(String type) {
       return Colors.green.shade50.withOpacity(0.7);
     default:
       return Colors.orange.shade50.withOpacity(0.7);
+  }
+}
+
+Color getCardColorWallet(String type) {
+  switch (type) {
+    case 'DEPOSIT':
+      return Colors.red.shade500.withOpacity(0.7);
+    case 'RECEIVE':
+      return Colors.green.shade500.withOpacity(0.7);
+    case 'TRANFER':
+      return Colors.orange.shade300.withOpacity(0.7);
+    case 'RECHARGE':
+      return Colors.green.shade300.withOpacity(0.7);
+    case 'PAYMENT':
+      return Colors.orange.withOpacity(0.7);
+    default:
+      return Colors.orange.shade50.withOpacity(0.7);
+  }
+}
+
+String defineAmountPrefix(String type) {
+  switch (type) {
+    case 'DEPOSIT':
+      return '- ';
+    case 'RECEIVE':
+      return '+ ';
+    case 'TRANFER':
+      return '- ';
+    case 'RECHARGE':
+      return '+ ';
+    case 'PAYMENT':
+      return '- ';
+    default:
+      return '- ';
+  }
+}
+
+String defineTransactionInCome(String type) {
+  switch (type) {
+    case 'DEPOSIT':
+      return '';
+    case 'RECEIVE':
+      return '';
+    case 'TRANFER':
+      return ' ';
+    case 'RECHARGE':
+      return ' ';
+    case 'PAYMENT':
+      return ' ';
+    default:
+      return ' ';
   }
 }
 
