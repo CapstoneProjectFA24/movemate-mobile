@@ -1,4 +1,5 @@
 // local
+import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
@@ -9,6 +10,7 @@ import 'package:movemate/features/order/data/remote/order_remote/order_source.da
 // system
 import 'package:movemate/features/order/data/repositories/order_repository_impl.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_repository.g.dart';
@@ -46,6 +48,12 @@ abstract class OrderRepository {
     // required PagingModel request,
     required String accessToken,
     required int id,
+  });
+  Future<SuccessModel> changeBookingAt({
+    // required PagingModel request,
+    required String accessToken,
+    required int id,
+    required ChangeBookingAtRequest request,
   });
 }
 

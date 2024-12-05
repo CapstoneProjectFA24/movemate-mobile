@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/change_booking_date_time_modal.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -34,6 +36,19 @@ class ServiceInfoCard extends HookConsumerWidget {
         .format(DateTime.parse(order.bookingAt.toString()));
     final formattedTime =
         DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
+    bool isChangeDateEnabled() {
+      return bookingStatus.canReviewSuggestion ||
+          bookingStatus.canAcceptSchedule ||
+          bookingStatus.isWaitingStaffSchedule ||
+          bookingStatus.isProcessingRequest ||
+          bookingStatus.isOnlineReviewing ||
+          bookingStatus.isOnlineSuggestionReady ||
+          bookingStatus.canMakePayment;
+    }
 
     return FadeInUp(
       child: Center(
@@ -45,7 +60,37 @@ class ServiceInfoCard extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildHouseInformation(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    buildHouseInformation(),
+                    if (isChangeDateEnabled())
+                      ElevatedButton(
+                        onPressed: () {
+                          // Show modal for changing date and time
+                          showChangeBookingDateTimeModal(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              AssetsConstants.mainColor.withOpacity(0.7),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 6,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'Thay đổi ngày',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
                 const SizedBox(height: spacing),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,6 +187,24 @@ Số điện thoại: ${userdata?.phone}
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void showChangeBookingDateTimeModal(BuildContext context) {
+    // Code to show the modal for changing date and time
+    // This can be extracted into a separate component
+    showDialog(
+      // barrierColor: Colors.white10,
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => ChangeBookingDateTimeModal(
+        bookingId: order.id,
+        initialDate: DateTime.parse(order.bookingAt.toString()),
+        onDateTimeChanged: (newDateTime) {
+          // Handle the new date and time selected by the user
+          // and update the order entity accordingly
+        },
       ),
     );
   }

@@ -1,4 +1,5 @@
 // import local
+import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/request/service_query_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
@@ -9,6 +10,7 @@ import 'package:movemate/features/order/data/models/ressponse/truck_categorys_re
 import 'package:movemate/features/order/data/remote/order_remote/order_source.dart';
 import 'package:movemate/features/order/domain/repositories/order_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/models/response/success_model.dart';
 
 // utils
 import 'package:movemate/utils/constants/api_constant.dart';
@@ -94,9 +96,9 @@ class OrderRepositoryImpl extends RemoteBaseRepository
     );
   }
 
-  @override  
+  @override
   Future<BookingNewResponse> getBookingNewById({
-        required String accessToken,
+    required String accessToken,
     required int id,
   }) async {
     return getDataOf(
@@ -107,13 +109,35 @@ class OrderRepositoryImpl extends RemoteBaseRepository
       ),
     );
   }
-  @override  
+
+  @override
   Future<BookingNewResponse> getBookingOldById({
-        required String accessToken,
+    required String accessToken,
     required int id,
   }) async {
     return getDataOf(
       request: () => _orderSource.getBookingOldById(
+        APIConstants.contentType,
+        accessToken,
+        id,
+      ),
+    );
+  }
+
+  @override
+  Future<SuccessModel> changeBookingAt({
+    required String accessToken,
+    required int id,
+    required ChangeBookingAtRequest request,
+  }) async {
+    final requestBookingAt = ChangeBookingAtRequest(
+      bookingAt: request.bookingAt,
+    );
+    print("check date time repo1 ${request.toJson()}");
+    print("check date time repo2 ${requestBookingAt.toJson()}");
+    return getDataOf(
+      request: () => _orderSource.changeBookingAt(
+        requestBookingAt,
         APIConstants.contentType,
         accessToken,
         id,
