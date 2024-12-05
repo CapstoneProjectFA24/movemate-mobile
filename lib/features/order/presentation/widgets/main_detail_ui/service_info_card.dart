@@ -64,7 +64,8 @@ class ServiceInfoCard extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     buildHouseInformation(),
-                    if (isChangeDateEnabled())
+                    if (isChangeDateEnabled() &&
+                        (order.isUpdated == null || order.isUpdated == false))
                       ElevatedButton(
                         onPressed: () {
                           // Show modal for changing date and time

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
@@ -23,6 +24,10 @@ import 'package:movemate/utils/commons/functions/api_utils.dart';
 import 'package:movemate/utils/extensions/extensions_export.dart';
 
 part 'order_controller.g.dart';
+
+final refreshOrderDetails = StateProvider.autoDispose<bool>(
+  (ref) => true,
+);
 
 @riverpod
 class OrderController extends _$OrderController {
@@ -314,6 +319,10 @@ class OrderController extends _$OrderController {
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         id: id,
       );
+      ref
+          .read(refreshOrderDetails.notifier)
+          .update((state) => !ref.read(refreshOrderDetails));
+
       print("check date time controller2 ${request.toJson()}");
       return response;
     });

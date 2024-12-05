@@ -46,6 +46,8 @@ class BookingResponseEntity {
   final String? cancelReason;
   final bool isPorter;
   final bool isRoundTrip;
+  final bool? isUpdated;
+  final bool? isInsurance;
   final String note;
   final double totalFee;
   final int truckNumber;
@@ -95,6 +97,8 @@ class BookingResponseEntity {
     this.cancelReason,
     required this.isPorter,
     required this.isRoundTrip,
+    this.isUpdated,
+    this.isInsurance,
     required this.note,
     required this.totalFee,
     this.feeInfo,
@@ -146,6 +150,8 @@ class BookingResponseEntity {
       cancelReason: json['cancelReason'],
       isPorter: json['isPorter'] ?? false,
       isRoundTrip: json['isRoundTrip'] ?? false,
+      isUpdated: json['isUpdated'] ?? false,
+      isInsurance: json['isInsurance'] ?? false,
       note: json['note'] ?? '',
       totalFee: (json['totalFee'] as num?)?.toDouble() ?? 0.0,
       truckNumber: json['truckNumber'] ?? 0,
@@ -213,6 +219,8 @@ class BookingResponseEntity {
       'cancelReason': cancelReason,
       'isPorter': isPorter,
       'isRoundTrip': isRoundTrip,
+      'isUpdated': isUpdated,
+      'isInsurance': isInsurance,
       'note': note,
       'totalFee': totalFee,
       'truckNumber': truckNumber,
@@ -267,6 +275,8 @@ class BookingResponseEntity {
         'cancelReason: $cancelReason, '
         'isPorter: $isPorter, '
         'isRoundTrip: $isRoundTrip, '
+        'isUpdated: $isUpdated, '
+        'isInsurance: $isInsurance, '
         'note: $note, '
         'totalFee: $totalFee, '
         'truckNumber: $truckNumber, '

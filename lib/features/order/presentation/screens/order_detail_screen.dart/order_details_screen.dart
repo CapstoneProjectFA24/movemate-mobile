@@ -193,11 +193,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
         context: context);
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
+    ref.listen<bool>(refreshOrderDetails, (_, __) => orderEntity.refresh());
 
     useEffect(() {
       OrderStreamManager().updateJob(order);
       return null;
     }, [bookingAsync.value]);
+
     // print(
     //     " current listStaffResponsibility ${listStaffResponsibility?.firstWhere((e) => e.staffType == 'DRIVER').isResponsible}");
     if (listStaffResponsibility == null) {
@@ -288,7 +290,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                       fontWeight: FontWeight.w500,
                     ),
                     ServiceInfoCard(
-                      order: order,
+                      order: orderEntity.data ?? order,
                       houseType: houseType,
                     )
                   ],
