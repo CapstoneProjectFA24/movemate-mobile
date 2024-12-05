@@ -60,6 +60,9 @@ class APIConstants {
 
 //get user
   static const get_user = '/users';
+
+//user report
+  static const user_report = '/users/report';
   // api vietmap-key
   // static const apiVietMapKey =
   //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";

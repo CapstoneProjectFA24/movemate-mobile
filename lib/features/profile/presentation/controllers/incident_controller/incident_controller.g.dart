@@ -7,7 +7,7 @@ part of 'incident_controller.dart';
 // **************************************************************************
 
 String _$incidentControllerHash() =>
-    r'fffba5a12c2a51d6106be1960ef53ce1a91c53de';
+    r'837cc49b6ef6a191230a95de0f13b16ec3976255';
 
 /// See also [IncidentController].
 @ProviderFor(IncidentController)

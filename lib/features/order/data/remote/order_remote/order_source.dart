@@ -3,6 +3,7 @@ import 'package:movemate/features/auth/data/models/request/sign_in_request.dart'
 import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/request/service_query_request.dart';
+import 'package:movemate/features/order/data/models/request/user_report_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
@@ -68,6 +69,14 @@ abstract class OrderSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,
+  );
+
+  //user report
+  @POST(APIConstants.user_report)
+  Future<HttpResponse<SuccessModel>> postUserReport(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Body() UserReportRequest object,
   );
 }
 

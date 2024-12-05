@@ -6,7 +6,7 @@ part of 'order_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$orderControllerHash() => r'002d0e16fd408737afd103c48008f0572d1c89f8';
+String _$orderControllerHash() => r'e8f3908547753aa6baf43a259a76ff7f84c012e3';
 
 /// See also [OrderController].
 @ProviderFor(OrderController)

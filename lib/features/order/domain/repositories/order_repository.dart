@@ -1,5 +1,6 @@
 // local
 import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
+import 'package:movemate/features/order/data/models/request/user_report_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
@@ -54,6 +55,13 @@ abstract class OrderRepository {
     required String accessToken,
     required int id,
     required ChangeBookingAtRequest request,
+  });
+  //usser repoer 
+  Future<SuccessModel> postUserReport({
+    // required PagingModel request,
+    required String accessToken,
+    required int id,
+    required UserReportRequest request,
   });
 }
 

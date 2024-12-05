@@ -2,6 +2,7 @@
 import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
 import 'package:movemate/features/order/data/models/request/order_query_request.dart';
 import 'package:movemate/features/order/data/models/request/service_query_request.dart';
+import 'package:movemate/features/order/data/models/request/user_report_request.dart';
 import 'package:movemate/features/order/data/models/ressponse/booking_new_response.dart';
 import 'package:movemate/features/order/data/models/ressponse/order_reponse.dart';
 import 'package:movemate/features/order/data/models/ressponse/service_response.dart';
@@ -141,6 +142,27 @@ class OrderRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
         id,
+      ),
+    );
+  }
+
+  //user report
+  @override
+  Future<SuccessModel> postUserReport({
+    required String accessToken,
+    required int id,
+    required UserReportRequest request,
+  }) async {
+    final requestBookingAt = UserReportRequest(
+      bookingId: id,
+      resourceList: request.resourceList,
+    );
+
+    return getDataOf(
+      request: () => _orderSource.postUserReport(
+        APIConstants.contentType,
+        accessToken,
+        requestBookingAt,
       ),
     );
   }
