@@ -2,9 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 
 class IncidentsContentModal extends HookConsumerWidget {
-  const IncidentsContentModal({super.key});
+  final OrderEntity order;
+  const IncidentsContentModal({super.key, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -127,7 +129,7 @@ class IncidentsContentModal extends HookConsumerWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    context.router.push(const IncidentsScreenRoute());
+                    context.router.push(IncidentsScreenRoute(order: order));
                     // Add logic for when the user selects this option
                   },
                   style: ElevatedButton.styleFrom(

@@ -5,20 +5,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
 import 'package:movemate/features/order/data/models/request/incident_request.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/widgets/cloudinary/cloudinary_camera_upload_widget.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 import '../../../../../../utils/commons/widgets/widgets_common_export.dart';
-@RoutePage()
 
 @RoutePage()
+@RoutePage()
 class IncidentsScreen extends HookConsumerWidget {
-  const IncidentsScreen({super.key});
+  final OrderEntity order;
+  const IncidentsScreen({super.key, required this.order});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final supportType = useState<String?>(null);
-    final orderIdController = useTextEditingController();
+    final orderIdController =
+        useTextEditingController(text: order.id.toString());
     final descriptionController = useTextEditingController();
     // Track which tab is active (Request Support or Sent Request)
     final request = useState(IncidentRequest(resourceList: []));
@@ -40,14 +43,10 @@ class IncidentsScreen extends HookConsumerWidget {
     );
 
     List<String> supportTypes = [
-      'Vấn đề về tài khoản',
-      'Kỹ thuật',
-      'Đặt hàng',
-      'Giao hàng',
-      'Thanh toán',
       'Bảo hành',
       'Hủy đơn hàng',
-      'Khác'
+      'Vỡ hàng',
+      'Khác',
     ];
 
     return Scaffold(
@@ -114,34 +113,35 @@ class IncidentsScreen extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isRequestSent.value
-                              ? AssetsConstants.primaryLight
-                              : Colors.grey[200],
-                          iconColor: Colors.grey[700],
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(8),
-                              bottomRight: Radius.circular(8),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          isRequestSent.value =
-                              true; // Switch to "Yêu cầu đã gửi"
-                        },
-                        child: LabelText(
-                          content: 'Yêu cầu đã gửi',
-                          size: 14,
-                          color: isRequestSent.value
-                              ? AssetsConstants.whiteColor
-                              : AssetsConstants.greyColor.shade600,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+
+                    // Expanded(
+                    //   child: ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: isRequestSent.value
+                    //           ? AssetsConstants.primaryLight
+                    //           : Colors.grey[200],
+                    //       iconColor: Colors.grey[700],
+                    //       shape: const RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.only(
+                    //           topRight: Radius.circular(8),
+                    //           bottomRight: Radius.circular(8),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     onPressed: () {
+                    //       isRequestSent.value =
+                    //           true; // Switch to "Yêu cầu đã gửi"
+                    //     },
+                    //     child: LabelText(
+                    //       content: 'Yêu cầu đã gửi',
+                    //       size: 14,
+                    //       color: isRequestSent.value
+                    //           ? AssetsConstants.whiteColor
+                    //           : AssetsConstants.greyColor.shade600,
+                    //       fontWeight: FontWeight.w500,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -184,10 +184,10 @@ class IncidentsScreen extends HookConsumerWidget {
                         color: Colors.black, fontWeight: FontWeight.bold)),
                 TextFormField(
                   controller: orderIdController,
-                  enabled: !isRequestSent
+                  enabled: isRequestSent
                       .value, // Disable editing for "Yêu cầu đã gửi"
                   decoration: InputDecoration(
-                    hintText: 'Ví dụ: 9485376960606',
+                    hintText: orderIdController.toString(),
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -208,7 +208,7 @@ class IncidentsScreen extends HookConsumerWidget {
                         color: Colors.black, fontWeight: FontWeight.bold)),
                 TextFormField(
                   controller: descriptionController,
-                  enabled: !isRequestSent
+                  enabled: isRequestSent
                       .value, // Disable editing for "Yêu cầu đã gửi"
                   maxLines: 4,
                   decoration: InputDecoration(

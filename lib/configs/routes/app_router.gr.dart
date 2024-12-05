@@ -118,10 +118,20 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
-    IncidentsScreenRoute.name: (routeData) {
+    IncidentsListScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const IncidentsScreen(),
+        child: const IncidentsListScreen(),
+      );
+    },
+    IncidentsScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<IncidentsScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: IncidentsScreen(
+          key: args.key,
+          order: args.order,
+        ),
       );
     },
     InfoScreenRoute.name: (routeData) {
@@ -839,17 +849,55 @@ class HomeScreenRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [IncidentsScreen]
-class IncidentsScreenRoute extends PageRouteInfo<void> {
-  const IncidentsScreenRoute({List<PageRouteInfo>? children})
+/// [IncidentsListScreen]
+class IncidentsListScreenRoute extends PageRouteInfo<void> {
+  const IncidentsListScreenRoute({List<PageRouteInfo>? children})
       : super(
+          IncidentsListScreenRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'IncidentsListScreenRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [IncidentsScreen]
+class IncidentsScreenRoute extends PageRouteInfo<IncidentsScreenRouteArgs> {
+  IncidentsScreenRoute({
+    Key? key,
+    required OrderEntity order,
+    List<PageRouteInfo>? children,
+  }) : super(
           IncidentsScreenRoute.name,
+          args: IncidentsScreenRouteArgs(
+            key: key,
+            order: order,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'IncidentsScreenRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<IncidentsScreenRouteArgs> page =
+      PageInfo<IncidentsScreenRouteArgs>(name);
+}
+
+class IncidentsScreenRouteArgs {
+  const IncidentsScreenRouteArgs({
+    this.key,
+    required this.order,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  @override
+  String toString() {
+    return 'IncidentsScreenRouteArgs{key: $key, order: $order}';
+  }
 }
 
 /// generated route for

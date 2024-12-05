@@ -26,7 +26,7 @@ class ProfileScreen extends HookConsumerWidget {
       'bgcolor': Colors.deepOrangeAccent,
       'present': 'Quà tặng',
       'Transaction': 'Giao dịch',
-      'center': 'Trung tâm bảo mật',
+      'center': 'Danh sách sự cố',
     };
 
     final menuItems = [
@@ -64,9 +64,11 @@ class ProfileScreen extends HookConsumerWidget {
         },
       ),
       ProfileMenu(
-        icon: Icons.location_on,
+        icon: Icons.report_problem,
         title: profile['center'].toString(),
-        onTap: () {},
+        onTap: () {
+          context.router.push(const IncidentsListScreenRoute());
+        },
       ),
       ProfileMenu(
         icon: Icons.logout_outlined,

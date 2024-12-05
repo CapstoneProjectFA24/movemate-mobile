@@ -164,8 +164,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
       isLoading:
           state.isLoading || stateService.isLoading || stateProfile.isLoading,
       child: Scaffold(
-        appBar: 
-        CustomAppBar(
+        appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
           iconFirst: Icons.error,
           iconFirstColor: AssetsConstants.whiteColor,
@@ -177,7 +176,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
               isScrollControlled: true, // Cho phép cuộn trong modal
               backgroundColor: Colors.transparent, // Chỉnh nền trong suốt
               builder: (BuildContext context) {
-                return const IncidentsContentModal();
+                return IncidentsContentModal(order: order);
               },
             );
           },
