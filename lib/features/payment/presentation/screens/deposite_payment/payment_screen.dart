@@ -9,6 +9,7 @@ import 'package:movemate/services/payment_services/controllers/payment_controlle
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 
 final paymentMethodProvider =
     StateProvider<PaymentMethodType>((ref) => PaymentMethodType.momo);
@@ -35,6 +36,8 @@ class PaymentScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingController = ref.read(bookingControllerProvider.notifier);
+
+    final wallet = ref.read(walletProvider);
 
     // Call refreshBookingData when the widget is first built
     useEffect(() {
@@ -79,7 +82,8 @@ class PaymentScreen extends HookConsumerWidget {
 
     Future<void> handlePaymentButtonPressed() async {
       try {
-        if (selectedMethod == PaymentMethodType.wallet) {
+        if (selectedMethod == PaymentMethodType.wallet &&
+            wallet?.isLocked == false) {
           await paymentController.createPaymentBookingByWallet(
             context: context,
             selectedMethod: selectedMethod.type,
@@ -189,41 +193,66 @@ class PaymentScreen extends HookConsumerWidget {
 
                         Column(
                           children: paymentList.map((method) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 5),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.network(
-                                    method.imageUrl,
-                                    width: 40,
-                                    height: 40,
+                            bool isWalletLocked =
+                                method == PaymentMethodType.wallet &&
+                                    wallet?.isLocked == true;
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    method.displayName,
-                                    style: const TextStyle(fontSize: 16),
+                                  child: Row(
+                                    children: [
+                                      Image.network(
+                                        method.imageUrl,
+                                        width: 40,
+                                        height: 40,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        method.displayName,
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      const Spacer(),
+                                      Radio<PaymentMethodType>(
+                                        value: method,
+                                        groupValue: selectedMethod,
+                                        onChanged: isWalletLocked
+                                            ? null
+                                            : (value) {
+                                                if (value != null) {
+                                                  ref
+                                                      .read(
+                                                          paymentMethodProvider
+                                                              .notifier)
+                                                      .state = value;
+                                                }
+                                              },
+                                        activeColor: const Color(0xFFFF7F00),
+                                      ),
+                                    ],
                                   ),
-                                  const Spacer(),
-                                  Radio<PaymentMethodType>(
-                                    value: method,
-                                    groupValue: selectedMethod,
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        ref
-                                            .read(
-                                                paymentMethodProvider.notifier)
-                                            .state = value;
-                                      }
-                                    },
-                                    activeColor: const Color(0xFFFF7F00),
+                                ),
+                                if (isWalletLocked)
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 10, top: 4),
+                                    child: Text(
+                                      "Ví chưa được mở khóa",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
+                              ],
                             );
                           }).toList(),
                         ),

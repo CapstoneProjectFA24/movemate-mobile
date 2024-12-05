@@ -12,6 +12,7 @@ import 'package:movemate/services/realtime_service/booking_status_realtime/booki
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
+import 'package:movemate/utils/providers/wallet_provider.dart';
 
 final paymentMethodProvider =
     StateProvider<PaymentMethodType>((ref) => PaymentMethodType.momo);
@@ -46,6 +47,7 @@ class LastPaymentScreen extends HookConsumerWidget {
       isExpanded.value = !isExpanded.value;
     }
 
+    final wallet = ref.read(walletProvider);
     final bookingAsync = ref.watch(bookingStreamProvider(id.toString()));
     final checkIsCredit = bookingAsync.value?.isCredit;
 
@@ -164,60 +166,88 @@ class LastPaymentScreen extends HookConsumerWidget {
                         Column(
                           children: paymentList.map((method) {
                             // Xác định xem phương thức này có được phép chọn hay không
-                            bool isDisabled = checkIsCredit == true &&
-                                method != PaymentMethodType.cash;
+                            // bool isDisabled = checkIsCredit == true &&
+                            //     method != PaymentMethodType.cash;
 
-                            return Opacity(
-                              opacity: isDisabled ? 0.5 : 1.0,
-                              child: IgnorePointer(
-                                ignoring: isDisabled,
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border:
-                                        Border.all(color: Colors.grey.shade300),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Image.network(
-                                        method.imageUrl,
-                                        width: 40,
-                                        height: 40,
+                            // Check both credit and wallet lock conditions
+                            bool isDisabled = (checkIsCredit == true &&
+                                    method != PaymentMethodType.cash) ||
+                                (method == PaymentMethodType.wallet &&
+                                    wallet?.isLocked == true);
+
+                            bool showWalletLockMessage =
+                                method == PaymentMethodType.wallet &&
+                                    wallet?.isLocked == true;
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Opacity(
+                                  opacity: isDisabled ? 0.5 : 1.0,
+                                  child: IgnorePointer(
+                                    ignoring: isDisabled,
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        method.displayName,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: isDisabled
-                                              ? Colors.grey
-                                              : Colors.black87,
-                                        ),
+                                      child: Row(
+                                        children: [
+                                          Image.network(
+                                            method.imageUrl,
+                                            width: 40,
+                                            height: 40,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(
+                                            method.displayName,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: isDisabled
+                                                  ? Colors.grey
+                                                  : Colors.black87,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          Radio<PaymentMethodType>(
+                                            value: method,
+                                            groupValue: selectedMethod,
+                                            onChanged: isDisabled
+                                                ? null
+                                                : (value) {
+                                                    if (value != null) {
+                                                      ref
+                                                          .read(
+                                                              paymentMethodProvider
+                                                                  .notifier)
+                                                          .state = value;
+                                                    }
+                                                  },
+                                            activeColor:
+                                                const Color(0xFFFF7F00),
+                                          ),
+                                        ],
                                       ),
-                                      const Spacer(),
-                                      Radio<PaymentMethodType>(
-                                        value: method,
-                                        groupValue: selectedMethod,
-                                        onChanged: isDisabled
-                                            ? null
-                                            : (value) {
-                                                if (value != null) {
-                                                  ref
-                                                      .read(
-                                                          paymentMethodProvider
-                                                              .notifier)
-                                                      .state = value;
-                                                }
-                                              },
-                                        activeColor: const Color(0xFFFF7F00),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
+                                if (showWalletLockMessage)
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 10, top: 4, bottom: 8),
+                                    child: Text(
+                                      "Ví chưa được mở khóa",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             );
                           }).toList(),
                         ),

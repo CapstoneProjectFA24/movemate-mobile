@@ -18,6 +18,8 @@ class WalletEntity {
   final String? bankNumber;
   final String? bankName;
   final bool? isLocked;
+  final String? expirdAt;
+  final String? cardHolderName;
 
   WalletEntity({
     required this.id,
@@ -28,6 +30,8 @@ class WalletEntity {
     this.bankNumber,
     this.bankName,
     this.isLocked,
+    this.expirdAt,
+    this.cardHolderName,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,6 +44,8 @@ class WalletEntity {
       'bankNumber': bankNumber,
       'bankName': bankName,
       'isLocked': isLocked,
+      'expirdAt': expirdAt,
+      'cardHolderName': cardHolderName,
     };
   }
 
@@ -53,13 +59,15 @@ class WalletEntity {
       bankNumber: map['bankNumber'] ?? '',
       bankName: map['bankName'] ?? '',
       isLocked: map['isLocked'] ?? false,
+      expirdAt: map['expirdAt'] ?? '',
+      cardHolderName: map['cardHolderName'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
   @override
   String toString() {
-    return 'WalletEntity(id: $id, userId: $userId, balance: $balance, createdAt: $createdAt, updatedAt: $updatedAt , bankNumber: $bankNumber,  bankName: $bankName,  isLocked: $isLocked,)';
+    return 'WalletEntity(id: $id, userId: $userId, balance: $balance, createdAt: $createdAt, updatedAt: $updatedAt , bankNumber: $bankNumber,  bankName: $bankName,  isLocked: $isLocked,  expirdAt: $expirdAt,  cardHolderName: $cardHolderName,)';
   }
 
   factory WalletEntity.fromJson(String source) =>

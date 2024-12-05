@@ -84,6 +84,8 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
     final requestUnlock = UnlockWalletRequest(
       bankName: request.bankName,
       bankNumber: request.bankNumber,
+      cardHolderName: request.cardHolderName,
+      expirdAt: request.expirdAt,
     );
 
     return getDataOf(

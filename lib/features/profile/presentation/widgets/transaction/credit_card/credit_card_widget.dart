@@ -17,8 +17,8 @@ class CreditCardWidget extends HookConsumerWidget {
     // final isCardLocked = useState<bool>(true);
     final isCardLocked = useState<bool>(wallet?.isLocked ?? true);
     final cardNumber = useState<String>(wallet?.bankNumber ?? '');
-    final cardHolder = useState<String>('');
-    final expiryDate = useState<String>('');
+    final cardHolder = useState<String>(wallet?.cardHolderName ?? '');
+    final expiryDate = useState<String>(wallet?.expirdAt ?? '');
     final selectedBank = useState<String?>(wallet?.bankName ?? '');
 
     // New state to persist card holder and expiry date
@@ -243,6 +243,8 @@ class CreditCardWidget extends HookConsumerWidget {
                         unlockWalletRequest.value = UnlockWalletRequest(
                           bankNumber: tempCardNumberController.text,
                           bankName: selectedBank.value,
+                          cardHolderName: tempCardHolderController.text,
+                          expirdAt: tempExpiryDateController.text,
                         );
 
                         final res = await ref

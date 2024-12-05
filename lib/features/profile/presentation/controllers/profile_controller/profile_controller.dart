@@ -143,6 +143,8 @@ class ProfileController extends _$ProfileController {
         bankNumber: response.payload.bankNumber,
         bankName: response.payload.bankName,
         isLocked: response.payload.isLocked,
+        expirdAt: response.payload.expirdAt,
+        cardHolderName: response.payload.cardHolderName,
       );
 
       ref.read(walletProvider.notifier).update(
@@ -204,6 +206,8 @@ class ProfileController extends _$ProfileController {
         bankNumber: response.payload.bankNumber,
         bankName: response.payload.bankName,
         isLocked: response.payload.isLocked,
+        expirdAt: response.payload.expirdAt,
+        cardHolderName: response.payload.cardHolderName,
       );
 
       ref.read(walletProvider.notifier).update(

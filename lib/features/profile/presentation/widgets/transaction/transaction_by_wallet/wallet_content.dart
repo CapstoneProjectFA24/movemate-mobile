@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/payment/presentation/screens/last_payment/last_payment_screen.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/text_input_format_price/text_input_format_price.dart';
@@ -26,6 +28,7 @@ class WalletContent extends HookConsumerWidget {
     final paymentController = ref.watch(paymentControllerProvider.notifier);
     final amountController = useTextEditingController();
     final errorMessage = useState<String?>(null);
+    final isWalletLocked = wallet?.isLocked ?? false;
 
     void handleAmountInput(String value) {
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
@@ -62,6 +65,17 @@ class WalletContent extends HookConsumerWidget {
       } catch (e) {
         print("Payment failed: $e");
       }
+    }
+
+    Future<void> handleUnlockWallet() async {
+      // Navigate to the unlock wallet screen
+      //  Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => const CombinedWalletStatisticsScreenRoute(),
+      //   ),
+      // );
+      context.router.popAndPush(const ListTransactionScreenRoute());
     }
 
     return Stack(
@@ -142,6 +156,7 @@ class WalletContent extends HookConsumerWidget {
                                 border: InputBorder.none,
                                 hintText: '0',
                               ),
+                              enabled: !isWalletLocked,
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -157,6 +172,20 @@ class WalletContent extends HookConsumerWidget {
                         child: Text(
                           errorMessage.value!,
                           style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                    // Wallet locked message
+                    if (isWalletLocked)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Ví chưa được mở khóa',
+                          style: TextStyle(
                             color: Colors.red,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -200,12 +229,14 @@ class WalletContent extends HookConsumerWidget {
                     Radio<PaymentMethodType>(
                       value: method,
                       groupValue: selectedMethod,
-                      onChanged: (value) {
-                        if (value != null) {
-                          ref.read(paymentMethodProvider.notifier).state =
-                              value;
-                        }
-                      },
+                      onChanged: isWalletLocked
+                          ? null
+                          : (value) {
+                              if (value != null) {
+                                ref.read(paymentMethodProvider.notifier).state =
+                                    value;
+                              }
+                            },
                       activeColor: const Color(0xFFFF7F00),
                     ),
                   ],
@@ -227,9 +258,11 @@ class WalletContent extends HookConsumerWidget {
               ),
               elevation: 0,
             ),
-            onPressed: () {
-              handlePaymentButtonPressed();
-            },
+            onPressed: isWalletLocked
+                ? handleUnlockWallet
+                : () {
+                    handlePaymentButtonPressed();
+                  },
             child: Container(
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
@@ -243,10 +276,10 @@ class WalletContent extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: const EdgeInsets.all(10),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'XÁC NHẬN',
-                  style: TextStyle(
+                  isWalletLocked ? 'Mở khóa thẻ' : 'XÁC NHẬN',
+                  style: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
