@@ -22,9 +22,11 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/prof
 
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/service_info_card.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
+import 'package:movemate/features/order/presentation/widgets/tab_container/custom_tab_container.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/chat_services/models/chat_model.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -89,8 +91,50 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 .watch(bookingStreamProvider(order.id.toString()))
                 .value
                 ?.assignments
-                .where((e) => e.isResponsible == true)
+                //đổi từ chọn đứa được isressponible thành isReviewer
+                .where(
+                    (e) => e.isResponsible == true && e.staffType == 'REVIEWER')
                 .toList();
+        return staffResponsibility;
+      } catch (e) {
+        print('Error: $e');
+        return [];
+      }
+    }
+
+    List<AssignmentsRealtimeEntity>? getListStaffDriverInOrder(
+        OrderEntity order) {
+      try {
+        final staffResponsibility =
+            // order.assignments.where((e) => e.isResponsible == true).toList();
+            ref
+                .watch(bookingStreamProvider(order.id.toString()))
+                .value
+                ?.assignments
+                .where((e) => e.staffType == 'DRIVER')
+                .toList();
+        return staffResponsibility;
+      } catch (e) {
+        print('Error: $e');
+        return [];
+      }
+    }
+
+    List<AssignmentsRealtimeEntity>? getListStaffPorterInOrder(
+        OrderEntity order) {
+      try {
+        final staffResponsibility =
+            // order.assignments.where((e) => e.isResponsible == true).toList();
+            ref
+                .watch(bookingStreamProvider(order.id.toString()))
+                .value
+                ?.assignments
+                .where((e) => e.staffType == 'PORTER')
+                .toList();
+
+        print(
+            "object cheking liststaffPorterInOrder ${staffResponsibility.toString()}");
+
         return staffResponsibility;
       } catch (e) {
         print('Error: $e');
@@ -100,6 +144,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final listStaffResponsibility = getListStaffResponsibility(order);
 
+    final listStaffDriverInOrder = getListStaffDriverInOrder(order);
+    final listStaffPorterInOrder = getListStaffPorterInOrder(order);
     // final currentListStaff = ref
     //     .watch(bookingStreamProvider(order.id.toString()))
     //     .value
@@ -227,6 +273,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           );
                         }),
                     const SizedBox(height: 20),
+                    if (listStaffPorterInOrder!.isNotEmpty ||
+                        listStaffPorterInOrder.isNotEmpty)
+                      CustomTabContainer(
+                          porterItems: listStaffPorterInOrder ?? [],
+                          driverItems: listStaffDriverInOrder ?? [],
+                          bookingId: order.id),
+                    const SizedBox(height: 20),
                     const LabelText(
                       content: 'Thông tin khách hàng',
                       size: 16,
@@ -280,5 +333,18 @@ class OrderDetailsScreen extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+StaffRole convertToStaffRole(String staffType) {
+  switch (staffType.toUpperCase()) {
+    case 'DRIVER':
+      return StaffRole.driver;
+    case 'PORTER':
+      return StaffRole.porter;
+    case 'REVIEWER':
+      return StaffRole.reviewer;
+    default:
+      return StaffRole.manager;
   }
 }

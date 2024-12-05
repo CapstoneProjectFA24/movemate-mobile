@@ -97,6 +97,18 @@ class AssignmentsRealtimeEntity {
   }
 
   String toJson() => json.encode(toMap());
+
+  @override
+  String toString() {
+    return 'AssignmentsRealtimeEntity('
+        'userId: $userId, '
+        'status: $status, '
+        'bookingId: $bookingId, '
+        'staffType: $staffType, '
+        'isResponsible: $isResponsible, '
+        'status: $status, '
+        ')';
+  }
 }
 
 class BookingDetailRealTimeEntity {

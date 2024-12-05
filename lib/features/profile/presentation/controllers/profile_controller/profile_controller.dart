@@ -81,7 +81,7 @@ class ProfileController extends _$ProfileController {
     final profileRepository = ref.read(profileRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-
+    print("object checking profile controller $id");
     state = await AsyncValue.guard(() async {
       final response = await profileRepository.getProfileInforById(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
