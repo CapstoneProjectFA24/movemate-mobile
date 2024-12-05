@@ -121,7 +121,8 @@ class ReservationCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    child: Text("${reservation.failedReason} reason "),
+                    // child: Text("${reservation.failedReason} reason "),
+                    child: const Text(" "),
                   ),
                   const SizedBox(height: 8),
                   Row(
