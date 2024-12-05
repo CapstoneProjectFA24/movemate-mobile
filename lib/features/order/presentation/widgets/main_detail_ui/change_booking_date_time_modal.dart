@@ -169,6 +169,27 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
               ),
             ),
           ],
+          const SizedBox(height: 8),
+          const Row(
+            children: [
+              Text(
+                "Lưu ý:\n ",
+                style: TextStyle(
+                  color: Color.fromARGB(255, 77, 77, 77),
+                  fontSize: 11,
+                ),
+              ),
+              Text(
+                " chỉ có thể thay đổi thời gian dọn nhà 1 lần. \n Hãy cân nhắc trước khi đổi.",
+                overflow: TextOverflow.clip,
+                maxLines: 2,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 11,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       actions: [
