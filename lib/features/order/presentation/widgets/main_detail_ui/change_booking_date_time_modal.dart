@@ -31,17 +31,39 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
     final chanegBookingAtRequest = useState<ChangeBookingAtRequest?>(null);
 
     // Kiểm tra tính hợp lệ của thời gian
+    // void checkTimeValidity(DateTime dateTime) {
+    //   if (dateTime.isBefore(DateTime.now())) {
+    //     errorText.value = "Không được chọn thời gian quá khứ";
+    //   } else {
+    //     errorText.value = null;
+    //   }
+    // }
+
     void checkTimeValidity(DateTime dateTime) {
       if (dateTime.isBefore(DateTime.now())) {
         errorText.value = "Không được chọn thời gian quá khứ";
+      } else if (dateTime.hour < 7 || dateTime.hour >= 17) {
+        errorText.value = "Thời gian phải từ 7h đến 17h";
       } else {
         errorText.value = null;
       }
     }
 
+    // Kiểm tra ngay khi build để đảm bảo trạng thái ban đầu hợp lệ
+    useEffect(() {
+      checkTimeValidity(selectedDateTime.value);
+      return null;
+    }, [selectedDateTime.value]);
+
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: const Text('Thay đổi ngày và giờ'),
+      title: const Text(
+        'Thay đổi ngày dọn nhà',
+        style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: Colors.orangeAccent),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -172,7 +194,7 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
 
                   // Định dạng lại DateTime theo định dạng ISO8601 với 'Z'
                   chanegBookingAtRequest.value = ChangeBookingAtRequest(
-                    bookingAt: selectedDateTime.value.toUtc().toIso8601String(),
+                    bookingAt: selectedDateTime.value.toIso8601String(),
                   );
 
                   print("checking date time ${selectedDateTime.value} ");

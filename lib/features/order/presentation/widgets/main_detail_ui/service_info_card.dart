@@ -50,6 +50,10 @@ class ServiceInfoCard extends HookConsumerWidget {
           bookingStatus.canMakePayment;
     }
 
+    // Xác định xem nút có được bật hay không
+    bool isButtonEnabled = isChangeDateEnabled() &&
+        (order.isUpdated == null || order.isUpdated == false);
+
     return FadeInUp(
       child: Center(
         child: Container(
@@ -64,34 +68,38 @@ class ServiceInfoCard extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     buildHouseInformation(),
-                    if (isChangeDateEnabled() &&
-                        (order.isUpdated == null || order.isUpdated == false))
-                      ElevatedButton(
-                        onPressed: () {
-                          // Show modal for changing date and time
-                          showChangeBookingDateTimeModal(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              AssetsConstants.mainColor.withOpacity(0.7),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 7,
-                            vertical: 6,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                    ElevatedButton(
+                      onPressed: isButtonEnabled
+                          ? () {
+                              // Hiển thị modal để thay đổi ngày và giờ
+                              showChangeBookingDateTimeModal(context);
+                            }
+                          : () {}, // Nếu không được bật, onPressed sẽ là null để vô hiệu hóa nút
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isButtonEnabled
+                            ? AssetsConstants.mainColor.withOpacity(0.7)
+                            : Colors.grey, // Màu nền tùy theo trạng thái
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 6,
                         ),
-                        child: const Text(
-                          'Thay đổi ngày',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
+                      child: Text(
+                        order.isUpdated == true
+                            ? 'Đã đổi ngày'
+                            : 'Thay đổi ngày',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
+
                 const SizedBox(height: spacing),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -314,17 +314,17 @@ class OrderController extends _$OrderController {
     final user = await SharedPreferencesUtils.getInstance('user_token');
     print("check date time controller1 ${request.toJson()}");
     final result = await AsyncValue.guard(() async {
-      final response = await truckTypeRepository.changeBookingAt(
-        request: request,
-        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        id: id,
-      );
+      // final response = await truckTypeRepository.changeBookingAt(
+      //   request: request,
+      //   accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+      //   id: id,
+      // );
       ref
           .read(refreshOrderDetails.notifier)
           .update((state) => !ref.read(refreshOrderDetails));
 
       print("check date time controller2 ${request.toJson()}");
-      return response;
+      // return response;
     });
 
     print("check date time controller3 ${request.toJson()}");
