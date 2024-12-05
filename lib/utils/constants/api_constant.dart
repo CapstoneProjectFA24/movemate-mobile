@@ -49,6 +49,8 @@ class APIConstants {
   static const unlock_wallet = '/wallets';
   //transactions
   static const get_transaction = '/transactions';
+  //get incident list
+  static const get_incident_list = '/bookingtrackers';
 // promotions
   static const promotions = '/promotions';
 // getPromotionNoUser 

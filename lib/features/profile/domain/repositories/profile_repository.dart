@@ -1,5 +1,6 @@
 // local
 import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
+import 'package:movemate/features/profile/data/models/response/incident_response.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
@@ -49,6 +50,12 @@ abstract class ProfileRepository {
   });
   //transaction
   Future<TransactionResponse> getTransactionByUserIdWithWallet({
+    PagingModel request,
+    required String accessToken,
+    required int userId,
+  });
+  //get  incident list
+  Future<IncidentResponse> getIncidentListByUserId({
     PagingModel request,
     required String accessToken,
     required int userId,

@@ -1,6 +1,8 @@
 // import local
+import 'package:movemate/features/profile/data/models/queries/incident_queries.dart';
 import 'package:movemate/features/profile/data/models/queries/transaction_queries.dart';
 import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
+import 'package:movemate/features/profile/data/models/response/incident_response.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/staff_profile_response.dart';
 import 'package:movemate/features/profile/data/models/response/transaction_response.dart';
@@ -136,6 +138,26 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
         transactionQueries,
+      ),
+    );
+  }
+
+  //get list incident list
+  @override
+  Future<IncidentResponse> getIncidentListByUserId({
+    PagingModel? request,
+    required String accessToken,
+    required int userId,
+  }) async {
+    final incidentQueries = IncidentQueries(
+      userId: userId,
+    ).toMap();
+
+    return getDataOf(
+      request: () => _profileSource.getIncidentListByUserId(
+        APIConstants.contentType,
+        accessToken,
+        incidentQueries,
       ),
     );
   }
