@@ -74,19 +74,7 @@ class OrderItem extends HookConsumerWidget {
         ),
         child: Row(
           children: [
-            // Image
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 10.0),
-            //   child: ClipRRect(
-            //     borderRadius: BorderRadius.circular(10),
-            //     child: Image.network(
-            //       'https://storage.googleapis.com/a1aa/image/fpR5CaQW2ny0CCt8MBn1ufzjTBuLAgHXz4yQMiYIxzaWDIlTA.jpg',
-            //       width: 100,
-            //       height: 100,
-            //       fit: BoxFit.cover,
-            //     ),
-            //   ),
-            // ),
+
             const SizedBox(width: 15),
             // Card Content
             Expanded(
