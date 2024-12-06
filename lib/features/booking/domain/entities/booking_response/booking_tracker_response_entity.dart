@@ -12,6 +12,7 @@ class BookingTrackerResponseEntity {
   final String? point;
   final String? description;
   final String? status;
+  final bool? isInsurance;
   final List<TrackerSourceResponseEntity> trackerSources;
 
   BookingTrackerResponseEntity({
@@ -23,6 +24,7 @@ class BookingTrackerResponseEntity {
     this.point,
     this.description,
     this.status,
+    this.isInsurance,
     required this.trackerSources,
   });
 
@@ -36,6 +38,7 @@ class BookingTrackerResponseEntity {
       point: json['point'],
       description: json['description'],
       status: json['status'],
+      isInsurance: json['isInsurance'] ?? false,
       trackerSources: (json['trackerSources'] as List<dynamic>?)
               ?.map((e) => TrackerSourceResponseEntity.fromMap(e))
               .toList() ??
@@ -53,6 +56,7 @@ class BookingTrackerResponseEntity {
       'point': point,
       'description': description,
       'status': status,
+      'isInsurance': isInsurance,
       'trackerSources': trackerSources.map((e) => e.toMap()).toList(),
     };
   }

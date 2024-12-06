@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_tracker_response_entity.dart';
 import 'package:movemate/features/order/data/models/request/incident_request.dart';
 import 'package:movemate/features/order/data/models/request/user_report_request.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -31,9 +32,9 @@ class IncidentsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final supportType = useState<String?>(null);
+    final isInsurance = useState<bool?>(false);
     final state = ref.watch(orderControllerProvider);
-    final orderIdController =
-        useTextEditingController(text: order.id.toString());
+
     final descriptionController = useTextEditingController();
     final reasonController = useTextEditingController();
     final estimatedAmountController = useTextEditingController();
@@ -44,8 +45,6 @@ class IncidentsScreen extends HookConsumerWidget {
     final description = useState<String>('');
     final title = useState<String>('');
     final estimatedAmount = useState<double?>(0.0);
-    final location = useState<String?>('');
-    final point = useState<String?>('');
 
     final userReportRequest =
         useState(UserReportRequest(bookingId: order.id, resourceList: []));
@@ -54,7 +53,7 @@ class IncidentsScreen extends HookConsumerWidget {
     final images = useState<List<String>>([]);
     final fullScreenImage = useState<String?>(null);
 
-    print("tuan checking 1 ${images.toString()}");
+    // print("tuan checking 1 ${images.toString()}");
 
     final imagePublicIds = useState<List<String>>(
       images.value.map((url) {
@@ -70,6 +69,69 @@ class IncidentsScreen extends HookConsumerWidget {
       'Bảo hành',
       'Vỡ hàng',
     ];
+
+    int checkInsuranceValidService(OrderEntity order) {
+      if (order.isInsurance == true) {
+        try {
+          final checkInsuranceValidService = order.bookingDetails
+                  .firstWhere(
+                    (e) => e.serviceId == 34,
+                    // Trả về null nếu không tìm thấy phần tử
+                  )
+                  .quantity ??
+              0;
+
+          return checkInsuranceValidService;
+        } catch (e) {
+          print('Error: $e');
+          return 0;
+        }
+      } else {
+        return 0;
+      }
+    }
+
+    int countBookingTrackerHasTypeMonetary(OrderEntity order) {
+      if (order.bookingTrackers.isNotEmpty) {
+        int count = 0;
+        for (final tracker in order.bookingTrackers) {
+          if (tracker.type == 'MONETARY' && tracker.isInsurance == true) {
+            count++;
+          }
+        }
+        return count;
+      } else {
+        return 0;
+      }
+    }
+
+    // Nếu không tìm thấy, trả về giá trị mặc định là 0
+
+    final getInsuranceValidService = checkInsuranceValidService(order);
+    final getInsuranceCountType = countBookingTrackerHasTypeMonetary(order);
+    final insuranceValid = getInsuranceValidService - getInsuranceCountType;
+    List<DropdownMenuItem<bool>> buildIsInsuranceOptions() {
+      if (insuranceValid > 0) {
+        return [
+          const DropdownMenuItem<bool>(
+            value: true,
+            child: Text('Có sử dụng bảo hiểm'),
+          ),
+          const DropdownMenuItem<bool>(
+            value: false,
+            child: Text('Không sử dụng bảo hiểm'),
+          ),
+        ];
+      } else {
+        // Nếu không có dịch vụ bảo hiểm hoặc không có quantity > 0
+        return [
+          const DropdownMenuItem<bool>(
+            value: false,
+            child: Text('Không sử dụng bảo hiểm'),
+          ),
+        ];
+      }
+    }
 
 //////////////////////
 
@@ -224,11 +286,15 @@ class IncidentsScreen extends HookConsumerWidget {
                             ))
                         .toList(),
                     decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.orange),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       hintText: "Chọn loại hỗ trợ",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.grey),
+                        borderSide: const BorderSide(color: Colors.orange),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
@@ -236,28 +302,76 @@ class IncidentsScreen extends HookConsumerWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  // const SizedBox(height: 16),
 
-                  const Text('Mã đơn hàng',
+                  // const Text('Mã đơn hàng',
+                  //     style: TextStyle(
+                  //         color: Colors.black, fontWeight: FontWeight.bold)),
+                  // TextFormField(
+                  //   controller: orderIdController,
+                  //   enabled: isRequestSent
+                  //       .value, // Disable editing for "Yêu cầu đã gửi"
+                  //   decoration: InputDecoration(
+                  //     hintText: orderIdController.toString(),
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //     border: OutlineInputBorder(
+                  //       borderSide: const BorderSide(color: Colors.grey),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 8),
+                  const Text('Bảo hiểm đồ vật giá trị cao (>50 triệu)',
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
-                  TextFormField(
-                    controller: orderIdController,
-                    enabled: isRequestSent
-                        .value, // Disable editing for "Yêu cầu đã gửi"
+                  DropdownButtonFormField<bool>(
+                    dropdownColor: Colors.white,
+                    value: isInsurance.value ??
+                        false, // Mặc định là "Không sử dụng bảo hiểm"
+                    onChanged: isRequestSent.value
+                        ? null // Disable editing for "Yêu cầu đã gửi"
+                        : (value) {
+                            isInsurance.value = value;
+                          },
+                    items: buildIsInsuranceOptions(),
                     decoration: InputDecoration(
-                      hintText: orderIdController.toString(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.orange),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      hintText: "Bảo hiểm đồ vật giá trị cao (>50 triệu)",
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),
                       ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
                     ),
                   ),
+
+                  const SizedBox(height: 8),
+                  if (order.isInsurance == true && insuranceValid >= 0)
+                    Row(
+                      children: [
+                        const Text('Số lượng bảo hiểm còn:',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 8),
+                        Text('$insuranceValid',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: !(insuranceValid == 0)
+                                  ? Colors.black
+                                  : Colors.red,
+                            )),
+                      ],
+                    ),
+
                   const SizedBox(height: 8),
                   const Text(
-                    'Vui lòng nhập mã đơn hàng đối với những yêu cầu liên quan đến đơn hàng của bạn',
+                    'Chỉ được sử dụng bảo hiểm khi mà bạn đã mua bảo hiển đồ vật có giá trị cao',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   ),
 
@@ -329,6 +443,10 @@ class IncidentsScreen extends HookConsumerWidget {
                     //     .value, // Disable editing for "Yêu cầu đã gửi"
                     maxLines: 4,
                     decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.orange),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       hintText: 'Nhập mô tả',
                       filled: true,
                       fillColor: Colors.white,
@@ -352,6 +470,10 @@ class IncidentsScreen extends HookConsumerWidget {
                     //     .value, // Disable editing for "Yêu cầu đã gửi"
                     maxLines: 4,
                     decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.orange),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       hintText: 'Nhập lý do ',
                       filled: true,
                       fillColor: Colors.white,
@@ -447,7 +569,7 @@ class IncidentsScreen extends HookConsumerWidget {
                           title: title.value,
                           reason: reason.value,
                           estimatedAmount: amount,
-                          isInsurance: order.isInsurance,
+                          isInsurance: isInsurance.value,
                         );
                         print(
                             "tuan checking userReportRequest${userReportRequest.value.toString()}");
