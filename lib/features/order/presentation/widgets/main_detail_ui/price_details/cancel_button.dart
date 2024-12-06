@@ -8,6 +8,7 @@ import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/booking_status_type.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CancelButton extends HookConsumerWidget {
   final OrderEntity order;
@@ -27,26 +28,35 @@ class CancelButton extends HookConsumerWidget {
       return bookingStatus.canCanceled;
     }
 
-    bool isCancelText() {
-      return bookingStatus.isCancelled;
+    // Xác định các điều kiện cụ thể
+    final bool canCancelPreDeposit = bookingStatus.canCanceledPreDeposit;
+    final bool canCancelPostDeposit = bookingStatus.canCanceledPostDeposit;
+    final bool enabled = (canCancelPreDeposit || canCancelPostDeposit);
+
+    void handleCancel() {
+      if (canCancelPreDeposit) {
+        showCancelDialogPreDeposit(context, ref);
+      } else if (canCancelPostDeposit) {
+        showCancelDialogPostDeposit(context, ref);
+      }
+    }
+
+    void handleDisabled() {
+      showCancelDiaglogWhenDisableButton(context, ref);
     }
 
     return SizedBox(
       width: double.infinity,
       height: 54,
       child: ElevatedButton(
-        onPressed: (isCancelEnabled())
-            ? () {
-                showCancelDialogPreDeposit(context, ref);
-              }
-            : null,
+        onPressed: enabled ? handleCancel : handleDisabled,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
             side: BorderSide(
-              color: isCancelEnabled() ? Colors.orange : Colors.grey[300]!,
+              color: enabled ? Colors.orange : Colors.grey[300]!,
               width: 1,
             ),
           ),
@@ -54,7 +64,7 @@ class CancelButton extends HookConsumerWidget {
         child: LabelText(
           content: 'Hủy đơn hàng',
           size: 14,
-          color: isCancelEnabled() ? Colors.orange : Colors.grey[600]!,
+          color: enabled ? Colors.orange : Colors.grey[600]!,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -64,7 +74,6 @@ class CancelButton extends HookConsumerWidget {
   void showCancelDialogPreDeposit(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      // barrierColor: Colors.grey.shade100.withOpacity(0.5),
       builder: (BuildContext context) {
         String? selectedReason;
 
@@ -98,10 +107,72 @@ class CancelButton extends HookConsumerWidget {
     );
   }
 
+  /// Hiển thị dialog cảnh báo trước khi hủy sau khi đặt cọc
   void showCancelDialogPostDeposit(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      // barrierColor: Colors.grey.shade100.withOpacity(0.5),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange,
+                size: 24,
+              ),
+              SizedBox(width: 8),
+              Text(
+                'Cảnh báo',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Nếu bạn hủy đơn ngay lúc này chúng tôi chỉ hoàn tiền đặt cọc cho bạn.',
+            style: TextStyle(fontSize: 14),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Đóng dialog cảnh báo
+              },
+              child: const Text(
+                'Hủy',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Đóng dialog cảnh báo
+                showCancelDialog(context, ref); // Hiển thị CancelDialog
+              },
+              child: const Text(
+                'Xác nhận',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Hàm mới để hiển thị CancelDialog sau khi xác nhận từ dialog cảnh báo
+  void showCancelDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
       builder: (BuildContext context) {
         String? selectedReason;
 
@@ -125,13 +196,49 @@ class CancelButton extends HookConsumerWidget {
                         id: order.id,
                         context: context,
                       );
-                  Navigator.pop(context);
+                  Navigator.pop(context); // Đóng CancelDialog
                 }
               },
             );
           },
         );
       },
+    );
+  }
+
+  void showCancelDiaglogWhenDisableButton(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: Colors.grey.shade100,
+        content: const Text(
+          'Rất tiếc bạn không thể hủy đơn hàng lúc này. Vui lòng liên hệ bộ phận Chăm sóc Khách hàng nếu cần hỗ trợ.',
+          style: TextStyle(fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close the dialog
+            },
+            child: const LabelText(
+              content: 'OK',
+              size: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              launch('tel:0382703625');
+            },
+            child: const LabelText(
+              content: 'Hỗ trợ',
+              size: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

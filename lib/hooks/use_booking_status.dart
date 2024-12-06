@@ -176,6 +176,8 @@ BookingStatusResult useBookingStatus(
         case BookingStatusType.inProgress:
           canReport = true;
           canCanceled = false;
+          canCanceledPreDeposit = false;
+          canCanceledPostDeposit = false;
           if (isDriverCompleted || isPorterCompleted) {
             canMakePaymentLast = true;
           }
@@ -238,8 +240,10 @@ BookingStatusResult useBookingStatus(
           if (isDriverCompleted || isPorterCompleted) {
             canMakePaymentLast = true;
           }
-
+          canCanceledPreDeposit = false;
+          canCanceledPostDeposit = false;
           canCanceled = false;
+
         default:
           break;
       }
@@ -329,6 +333,8 @@ BookingStatusResult useBookingStatus(
       canMakePaymentLast: canMakePaymentLast,
       canReviewSuggestion: canReviewSuggestion,
       canCanceled: canCanceled,
+      canCanceledPreDeposit: canCanceledPreDeposit,
+      canCanceledPostDeposit: canCanceledPostDeposit,
       canReport: canReport,
 
       // Offline flow states
