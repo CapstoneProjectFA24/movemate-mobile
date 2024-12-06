@@ -10,6 +10,10 @@ class BookingStatusResult {
   final bool canMakePayment; // Thanh toán
   final bool canMakePaymentLast; // Thanh toán
   final bool canReviewSuggestion; // Xác nhận đánh giá của reviewer
+  final bool canCanceled; // Có thể hủy
+  final bool canCanceledPreDeposit; // Có thể hủy
+  final bool canCanceledPostDeposit; // Có thể hủy
+  final bool canReport; // Có thể báo cáo sự cố
 
   // Status indicators - Offline Flow
   final bool
@@ -49,6 +53,10 @@ class BookingStatusResult {
     this.canMakePayment = false,
     this.canMakePaymentLast = false,
     this.canReviewSuggestion = false,
+    this.canCanceled = false,
+    this.canCanceledPreDeposit = false,
+    this.canCanceledPostDeposit = false,
+    this.canReport = false,
     this.isWaitingStaffSchedule = false,
     this.isReviewerMoving = false,
     this.isReviewerAssessing = false,
@@ -101,11 +109,29 @@ BookingStatusResult useBookingStatus(
     final isPorterCompleted =
         hasAssignmentWithStatus("PORTER", AssignmentsStatusType.completed);
 
+    // Check driver state
+
+    final isDriverWaiting =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.waiting);
+    final isDriverAssigned =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.assigned);
+    final isDriverIncoming =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.incoming);
+    final isDriverArrived =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.arrived);
+    final isDriverInProgress =
+        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
+
     // Initialize action and state flags
     bool canAcceptSchedule = false;
     bool canMakePayment = false;
     bool canMakePaymentLast = false;
     bool canReviewSuggestion = false;
+    bool canCanceled = false;
+    bool canCanceledPreDeposit = false;
+    bool canCanceledPostDeposit = false;
+    bool canReport = false;
+
     bool isWaitingStaffSchedule = false;
     bool isProcessingRequest = false;
     bool isOnlineReviewing = false;
@@ -117,24 +143,40 @@ BookingStatusResult useBookingStatus(
         case BookingStatusType.assigned:
           if (hasReviewerAssigned) {
             isProcessingRequest = true;
+            canCanceled = true;
+            canCanceledPreDeposit = true;
           }
           break;
         case BookingStatusType.reviewing:
           if (hasReviewerAssigned) {
             isOnlineReviewing = true;
+            canCanceled = true;
+            canCanceledPreDeposit = true;
           }
           if (isSuggestionReady) {
             isOnlineSuggestionReady = true;
+            canCanceled = true;
+            canCanceledPreDeposit = true;
           }
           break;
         case BookingStatusType.reviewed:
           canReviewSuggestion = true;
+          canCanceled = true;
+          canCanceledPreDeposit = true;
           break;
         case BookingStatusType.depositing:
           canMakePayment = true;
+          canCanceled = true;
+          canCanceledPreDeposit = true;
+          break;
+        case BookingStatusType.coming:
+          canCanceled = true;
+          canCanceledPostDeposit = true;
           break;
         case BookingStatusType.inProgress:
-          if (isDriverCompleted && isPorterCompleted) {
+          canReport = true;
+          canCanceled = false;
+          if (isDriverCompleted || isPorterCompleted) {
             canMakePaymentLast = true;
           }
 
@@ -148,49 +190,60 @@ BookingStatusResult useBookingStatus(
         case BookingStatusType.assigned:
           if (hasReviewerAssigned) {
             isWaitingStaffSchedule = true;
+            canCanceled = true;
+            canCanceledPreDeposit = true;
           }
           break;
         case BookingStatusType.waiting:
           canAcceptSchedule = true;
+          canCanceled = true;
+          canCanceledPreDeposit = true;
           break;
         case BookingStatusType.depositing:
           canMakePayment = true;
+          canCanceled = true;
+          canCanceledPreDeposit = true;
           break;
 
         case BookingStatusType.reviewing:
-          if (isReviewerMoving) {
+          if (hasReviewerAssigned) {
+            canCanceled = true;
+            canCanceledPostDeposit = true;
+          } else if (isReviewerMoving) {
+            canCanceled = true;
+            canCanceledPostDeposit = true;
             // Reviewer đang di chuyển
           } else if (isReviewerAssessing) {
+            canCanceled = true;
+            canCanceledPostDeposit = true;
             // Reviewer đang khảo sát
           } else if (isSuggestionReady) {
+            canCanceled = true;
+            canCanceledPostDeposit = true;
             // Có đề xuất mới
           }
           break;
         case BookingStatusType.reviewed:
           canReviewSuggestion = true;
+          canCanceled = true;
+          canCanceledPostDeposit = true;
+          break;
+        case BookingStatusType.coming:
+          canCanceled = true;
+          canCanceledPostDeposit = true;
           break;
 
         case BookingStatusType.inProgress:
-          if (isDriverCompleted && isPorterCompleted) {
+          canReport = true;
+          if (isDriverCompleted || isPorterCompleted) {
             canMakePaymentLast = true;
           }
+
+          canCanceled = false;
         default:
           break;
       }
     }
-
-    // Check driver state
-
-    final isDriverWaiting =
-        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.waiting);
-    final isDriverAssigned =
-        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.assigned);
-    final isDriverIncoming =
-        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.incoming);
-    final isDriverArrived =
-        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.arrived);
-    final isDriverInProgress =
-        hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
 
     // flag to check driver state
     bool isDriverProcessingMoving = false;
@@ -275,6 +328,8 @@ BookingStatusResult useBookingStatus(
       canMakePayment: canMakePayment,
       canMakePaymentLast: canMakePaymentLast,
       canReviewSuggestion: canReviewSuggestion,
+      canCanceled: canCanceled,
+      canReport: canReport,
 
       // Offline flow states
       isWaitingStaffSchedule: isWaitingStaffSchedule,

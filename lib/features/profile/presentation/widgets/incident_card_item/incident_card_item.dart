@@ -92,21 +92,26 @@ class ReservationCard extends HookConsumerWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        reservation.trackerSources.first.resourceUrl ??
-                            'https://res.cloudinary.com/dietfw7lr/image/upload/v1733425759/fojgatdijoy3695lkbys.jpg',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.grey[300],
-                            child: const Icon(Icons.error),
-                          );
-                        },
-                      ),
+                      child: reservation.trackerSources.isNotEmpty
+                          ? Image.network(
+                              reservation.trackerSources.first.resourceUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.grey[300],
+                                  child: const Icon(Icons.error),
+                                );
+                              },
+                            )
+                          : const Icon(
+                              Icons.image,
+                              size: 100,
+                              color: Colors.grey,
+                            ),
                     ),
                   ],
                 ),

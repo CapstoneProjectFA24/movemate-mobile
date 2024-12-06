@@ -28,11 +28,12 @@ class IncidentsListScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(incidentControllerProvider);
     final controller = ref.read(incidentControllerProvider.notifier);
-    // final size = MediaQuery.sizeOf(context);
-    // final scrollController = useScrollController();
+    final size = MediaQuery.sizeOf(context);
+    final scrollController = useScrollController();
     final fetchResult = useFetch<BookingTrackersIncidentEntity>(
       function: (model, context) async {
         final servicesList =
+        
             await controller.getIncidentListByUserId(model, context);
         return servicesList;
       },
@@ -42,10 +43,10 @@ class IncidentsListScreen extends HookConsumerWidget {
 
     final dataListIcident = fetchResult.items;
 
-    // useEffect(() {
-    //   scrollController.onScrollEndsListener(fetchResult.loadMore);
-    //   return scrollController.dispose;
-    // }, const []);
+    useEffect(() {
+      scrollController.onScrollEndsListener(fetchResult.loadMore);
+      return scrollController.dispose;
+    }, const []);
 
     return LoadingOverlay(
       isLoading: state.isLoading,
@@ -70,59 +71,57 @@ class IncidentsListScreen extends HookConsumerWidget {
               );
             }
           },
+          iconFirst: Icons.refresh,
+          onCallBackFirst: fetchResult.refresh,
         ),
-        body:
-
-            //  Column(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     SizedBox(height: size.height * 0.02),
-            //     (state.isLoading && fetchResult.items.isEmpty)
-            //         ? const Center(
-            //             child: HomeShimmer(amount: 4),
-            //           )
-            //         : fetchResult.items.isEmpty
-            //             ? const Align(
-            //                 alignment: Alignment.topCenter,
-            //                 child: EmptyBox(title: ''),
-            //               )
-            //             : Expanded(
-            //                 child: ListView.builder(
-            //                   itemCount: fetchResult.items.length + 1,
-            //                   physics: const AlwaysScrollableScrollPhysics(),
-            //                   controller: scrollController,
-            //                   padding: const EdgeInsets.symmetric(
-            //                     horizontal: AssetsConstants.defaultPadding - 10.0,
-            //                   ),
-            //                   itemBuilder: (_, index) {
-            //                     if (index == fetchResult.items.length) {
-            //                       if (fetchResult.isFetchingData) {
-            //                         return const CustomCircular();
-            //                       }
-            //                       return fetchResult.isLastPage
-            //                           ? const NoMoreContent()
-            //                           : Container();
-            //                     }
-            //                     final reservation = dataListIcident[index];
-            //                     return ReservationCard(reservation: reservation);
-            //                   },
-
-            //                 ),
-            //               ),
-
-            //   ],
-            // ),
-
-            Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            itemCount: dataListIcident.length,
-            itemBuilder: (context, index) {
-              final reservation = dataListIcident[index];
-              return ReservationCard(reservation: reservation);
-            },
-          ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: size.height * 0.02),
+            (state.isLoading && fetchResult.items.isEmpty)
+                ? const Center(
+                    child: HomeShimmer(amount: 4),
+                  )
+                : fetchResult.items.isEmpty
+                    ? const Align(
+                        alignment: Alignment.topCenter,
+                        child: EmptyBox(title: ''),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          itemCount: fetchResult.items.length + 1,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          controller: scrollController,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AssetsConstants.defaultPadding - 10.0,
+                          ),
+                          itemBuilder: (_, index) {
+                            if (index == fetchResult.items.length) {
+                              if (fetchResult.isFetchingData) {
+                                return const CustomCircular();
+                              }
+                              return fetchResult.isLastPage
+                                  ? const NoMoreContent()
+                                  : Container();
+                            }
+                            final reservation = dataListIcident[index];
+                            return ReservationCard(reservation: reservation);
+                          },
+                        ),
+                      ),
+          ],
         ),
+
+        //     Padding(
+        //   padding: const EdgeInsets.all(16.0),
+        //   child: ListView.builder(
+        //     itemCount: dataListIcident.length,
+        //     itemBuilder: (context, index) {
+        //       final reservation = dataListIcident[index];
+        //       return ReservationCard(reservation: reservation);
+        //     },
+        //   ),
+        // ),
       ),
     );
   }

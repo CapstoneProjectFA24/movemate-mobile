@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
@@ -374,8 +376,12 @@ class OrderController extends _$OrderController {
     });
 
     print("check date time controller3 ${request.toJson()}");
+    print("check date time controller3 ${result.value.toString()}");
     state = result;
 
+    if (!result.hasError) {
+      context.router.replaceAll([const IncidentsListScreenRoute()]);
+    }
     if (result.hasError) {
       final statusCode = (result.error as DioException).onStatusDio();
       await handleAPIError(

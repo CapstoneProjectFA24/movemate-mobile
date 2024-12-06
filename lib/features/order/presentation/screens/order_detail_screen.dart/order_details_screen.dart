@@ -16,7 +16,7 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/incidents_content_modal.dart';
-import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/price_details.dart';
 
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/profile_infor/profile_staff_info.dart';
 
@@ -66,6 +66,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
+    final canRepostBooking = bookingStatus.isProcessingRequest;
 
     final bookingAssignment = bookingAsync.value?.assignments.length;
 
@@ -214,20 +215,20 @@ class OrderDetailsScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
-          iconFirst: Icons.error,
+          iconFirst: bookingStatus.canReport ? Icons.error : null,
           iconFirstColor: AssetsConstants.whiteColor,
-          onCallBackFirst: () {
-            // Navigator.pop(context);
-
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true, // Cho phép cuộn trong modal
-              backgroundColor: Colors.transparent, // Chỉnh nền trong suốt
-              builder: (BuildContext context) {
-                return IncidentsContentModal(order: order);
-              },
-            );
-          },
+          onCallBackFirst: bookingStatus.canReport
+              ? () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true, // Cho phép cuộn trong modal
+                    backgroundColor: Colors.transparent, // Chỉnh nền trong suốt
+                    builder: (BuildContext context) {
+                      return IncidentsContentModal(order: order);
+                    },
+                  );
+                }
+              : () {},
           backButtonColor: AssetsConstants.whiteColor,
           title: "Thông tin đơn hàng #${order.id ?? ""}",
           iconSecond: Icons.home_outlined,

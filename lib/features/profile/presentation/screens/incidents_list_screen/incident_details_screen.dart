@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/confirm_last_payment/confirm_last_payment.dart';
 import 'package:movemate/features/profile/domain/entities/order_tracker_entity_response.dart';
@@ -18,12 +19,22 @@ class IncidentDetailsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Sample image list - replace with your actual images
-    final List<String> images = [
-      'image1.jpg',
-      'image2.jpg',
-      'image3.jpg',
-      'image4.jpg',
-    ];
+    // Xử lý thời gian
+    final timeString = incident.time;
+    final dateParts = timeString.split(" ")[0].split("-");
+    final timeParts = timeString.split(" ")[1].split(":");
+    final dateTime = DateTime(
+      int.parse(dateParts[0]) + 2000,
+      int.parse(dateParts[1]),
+      int.parse(dateParts[2]),
+      int.parse(timeParts[0]),
+      int.parse(timeParts[1]),
+      int.parse(timeParts[2]),
+    );
+
+    final day = DateFormat('EE').format(dateTime);
+    final date = DateFormat('dd-MM-yyyy').format(dateTime);
+    final time = DateFormat('HH:mm').format(dateTime);
 
     final user = ref.read(authProvider);
     // Xử lý realAmount nếu là null
@@ -105,9 +116,9 @@ class IncidentDetailsScreen extends HookConsumerWidget {
                   const Divider(height: 30),
                   _buildSectionTitle('Thông tin khách hàng', Icons.person),
                   const SizedBox(height: 10),
-                  _buildInfoRow('Name', '${user?.name}'),
+                  _buildInfoRow('Tên', '${user?.name}'),
                   _buildInfoRow('Email', '${user?.email}'),
-                  _buildInfoRow('Phone', '${user?.phone}'),
+                  _buildInfoRow('Số điện thoại', '${user?.phone}'),
                   const SizedBox(height: 20),
                   _buildSectionTitle('Hình ảnh', Icons.image),
                   const SizedBox(height: 10),
@@ -160,7 +171,7 @@ class IncidentDetailsScreen extends HookConsumerWidget {
                   const SizedBox(height: 20),
                   _buildSectionTitle('Thông tin đơn hàng', Icons.shopping_cart),
                   const SizedBox(height: 10),
-                  _buildInfoRow('Date', '24-12-06 03:36:13'),
+                  _buildInfoRow('Ngày', ' $time  $date'),
                   _buildInfoRow(
                     'Tiền đặt cọc',
                     formatPrice(incident.deposit.toInt()),
@@ -274,7 +285,7 @@ class IncidentDetailsScreen extends HookConsumerWidget {
         Text(
           status,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: statusColor ?? const Color(0xFF333333),
           ),

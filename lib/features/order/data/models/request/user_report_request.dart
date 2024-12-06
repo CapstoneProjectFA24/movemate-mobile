@@ -57,6 +57,11 @@ class UserReportRequest {
 
   String toJson() => json.encode(toMap());
 
+  @override
+  String toString() {
+    return 'UserReportRequest(bookingId: $bookingId, location: $location, point: $point, description: $description, title: $title, estimatedAmount: $estimatedAmount, isInsurance: $isInsurance, reason: $reason, resourceList: $resourceList)';
+  }
+
   factory UserReportRequest.fromJson(String source) =>
       UserReportRequest.fromMap(json.decode(source));
 }
