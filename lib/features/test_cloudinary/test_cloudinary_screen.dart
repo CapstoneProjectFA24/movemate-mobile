@@ -9,7 +9,6 @@ class TestCloudinaryScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
     // Danh sách hình ảnh giả lập từ backend
     final images = useState<List<String>>([
       // "https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg",  // 1
@@ -17,10 +16,10 @@ class TestCloudinaryScreen extends HookWidget {
     ]);
     print('Images: ${images.value}');
 
-// Tách publicId từ danh sách hình ảnh   => cái này t fotmat từ images => 
+// Tách publicId từ danh sách hình ảnh   => cái này t fotmat từ images =>
 // id riêng ví dụ :
-        // https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg 
-        // thành => movemate/kv3nomfji9rtofok0wmo
+    // https://res.cloudinary.com/dkpnkjnxs/image/upload/v1728483658/movemate/kv3nomfji9rtofok0wmo.jpg
+    // thành => movemate/kv3nomfji9rtofok0wmo
     final imagePublicIds = useState<List<String>>(
       images.value.map((url) {
         final uri = Uri.parse(url);
@@ -51,10 +50,10 @@ class TestCloudinaryScreen extends HookWidget {
             ImageUploadWidget(
               imagePublicIds: imagePublicIds.value,
               onImageUploaded: (url, publicId) {
-                print('Uploaded successfully: $url');
-                print('Uploaded successfully: $publicId');
-                // Cập nhật danh sách images bằng URL trả về  
-                      //=> RỒI LƯU VÔ state images nè rồi khi PUT cập nhật thì gửi cái images mới lên flow api ấy hen chú TUẤN
+                print('Uploaded successfully url : $url');
+                print('Uploaded successfully publicId: $publicId');
+                // Cập nhật danh sách images bằng URL trả về
+                //=> RỒI LƯU VÔ state images nè rồi khi PUT cập nhật thì gửi cái images mới lên flow api ấy hen chú TUẤN
                 images.value = [...images.value, url];
 
                 // Cập nhật danh sách publicIds
@@ -68,8 +67,15 @@ class TestCloudinaryScreen extends HookWidget {
                 );
               },
               onImageRemoved: (publicId) {
+                // imagePublicIds.value =
+                //     imagePublicIds.value.where((id) => id != publicId).toList();
+
+                images.value = images.value
+                    .where((url) => !url.contains(publicId))
+                    .toList();
                 imagePublicIds.value =
                     imagePublicIds.value.where((id) => id != publicId).toList();
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Image removed: $publicId'),

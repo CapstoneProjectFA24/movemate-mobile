@@ -23,9 +23,11 @@ import 'package:movemate/features/payment/presentation/screens/recharge_wallet/t
 import 'package:movemate/features/payment/presentation/screens/transaction_details_order.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen_by_wallet.dart';
+import 'package:movemate/features/profile/domain/entities/order_tracker_entity_response.dart';
 
 import 'package:movemate/features/profile/presentation/screens/contact/contact_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/payment_screen.dart';
+import 'package:movemate/features/profile/presentation/screens/incidents_list_screen/incident_details_screen.dart';
 import 'package:movemate/features/profile/presentation/screens/incidents_list_screen/incidents_list_screen.dart';
 import 'package:movemate/features/profile/presentation/screens/transaction_screen/list_transaction_screen.dart';
 import 'package:movemate/features/profile/presentation/screens/wallet/combined_wallet_statistics_screen.dart';
@@ -248,6 +250,10 @@ class AppRouter extends _$AppRouter {
         //list incidents screen
         AutoRoute(
           page: IncidentsListScreenRoute.page,
+        ),
+        // incidents details screen
+        AutoRoute(
+          page: IncidentDetailsScreenRoute.page,
         ),
         AutoRoute(
           page: CartVoucherScreenRoute.page,

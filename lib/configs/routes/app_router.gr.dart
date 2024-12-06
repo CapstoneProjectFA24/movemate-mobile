@@ -118,6 +118,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomeScreen(),
       );
     },
+    IncidentDetailsScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<IncidentDetailsScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: IncidentDetailsScreen(
+          key: args.key,
+          incident: args.incident,
+        ),
+      );
+    },
     IncidentsListScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -846,6 +856,45 @@ class HomeScreenRoute extends PageRouteInfo<void> {
   static const String name = 'HomeScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [IncidentDetailsScreen]
+class IncidentDetailsScreenRoute
+    extends PageRouteInfo<IncidentDetailsScreenRouteArgs> {
+  IncidentDetailsScreenRoute({
+    Key? key,
+    required BookingTrackersIncidentEntity incident,
+    List<PageRouteInfo>? children,
+  }) : super(
+          IncidentDetailsScreenRoute.name,
+          args: IncidentDetailsScreenRouteArgs(
+            key: key,
+            incident: incident,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'IncidentDetailsScreenRoute';
+
+  static const PageInfo<IncidentDetailsScreenRouteArgs> page =
+      PageInfo<IncidentDetailsScreenRouteArgs>(name);
+}
+
+class IncidentDetailsScreenRouteArgs {
+  const IncidentDetailsScreenRouteArgs({
+    this.key,
+    required this.incident,
+  });
+
+  final Key? key;
+
+  final BookingTrackersIncidentEntity incident;
+
+  @override
+  String toString() {
+    return 'IncidentDetailsScreenRouteArgs{key: $key, incident: $incident}';
+  }
 }
 
 /// generated route for

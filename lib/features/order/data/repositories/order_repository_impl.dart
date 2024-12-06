@@ -154,6 +154,13 @@ class OrderRepositoryImpl extends RemoteBaseRepository
     required UserReportRequest request,
   }) async {
     final requestBookingAt = UserReportRequest(
+      description: request.description,
+      estimatedAmount: request.estimatedAmount,
+      isInsurance: request.isInsurance,
+      location: request.location,
+      point: request.point,
+      reason: request.reason,
+      title: request.title,
       bookingId: id,
       resourceList: request.resourceList,
     );

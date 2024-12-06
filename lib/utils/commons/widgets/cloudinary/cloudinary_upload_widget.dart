@@ -1,3 +1,5 @@
+import 'package:cloudinary_url_gen/transformation/resize/resize.dart';
+import 'package:cloudinary_url_gen/transformation/transformation.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -25,6 +27,8 @@ class ImageUploadWidget extends HookWidget {
     final isLoading = useState(false);
     final cloudinary = useMemoized(
         () => CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false));
+    // Define the text overlay
+    String overlayText = "Sample Overlay Text"; // Customize this text
 
     Future<void> uploadImage() async {
       if (disabled || isLoading.value) return;
@@ -42,6 +46,7 @@ class ImageUploadWidget extends HookWidget {
         if (pickedFile == null) return;
 
         final File imageFile = File(pickedFile.path);
+        // Cloudinary transformation for the overlay
 
         final CloudinaryResponse response = await cloudinary.uploadFile(
           CloudinaryFile.fromFile(
@@ -51,11 +56,32 @@ class ImageUploadWidget extends HookWidget {
           ),
         );
 
-        print('Upload success: ${response.secureUrl}');
+        // print('Upload success: ${response.secureUrl}');
         onImageUploaded(
           response.secureUrl,
           response.publicId,
         );
+
+        print('Upload success pickedFile : ${pickedFile.path}');
+
+        final transform = cloudinary
+            .getImage(pickedFile.path)
+            .transform()
+            .overlay(
+              CloudinaryImage(
+                'text:arial_60_bold:$overlayText',
+              ),
+            )
+            .x(0)
+            .y(0)
+            .quality('auto')
+            .height(100)
+            .width(100);
+
+        final transformedUrl =
+            transform.generate(); // This generates the URL with overlay
+        print('Upload success transform : $transformedUrl');
+        print('Upload success transform : $transform');
       } catch (e) {
         if (e is DioException) {
           print('Failed to upload image: ${e.response?.data}');
@@ -126,8 +152,9 @@ class ImageUploadWidget extends HookWidget {
                         shape: const CircleBorder(),
                         child: IconButton(
                           icon: const Icon(Icons.delete, color: Colors.white),
-                          onPressed: () =>
-                              onImageRemoved(imagePublicIds[index] , ),
+                          onPressed: () => onImageRemoved(
+                            imagePublicIds[index],
+                          ),
                         ),
                       ),
                     ),

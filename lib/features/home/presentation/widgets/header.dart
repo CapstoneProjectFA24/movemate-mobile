@@ -42,6 +42,9 @@ class Header extends HookConsumerWidget {
           String district = "";
           String city = "";
 
+          // print('get position lat ${position.latitude}');
+          // print('get position long${position.longitude}');
+          // print('1 check data  ${data.toString()}');
           for (var boundary in boundaries) {
             if (boundary['type'] == 1) {
               district = boundary['name']; // Lấy tên Quận/Huyện

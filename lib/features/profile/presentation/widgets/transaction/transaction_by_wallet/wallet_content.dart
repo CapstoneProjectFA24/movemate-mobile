@@ -245,6 +245,7 @@ class WalletContent extends HookConsumerWidget {
             }),
           ],
         ),
+      
         Positioned(
           bottom: 20,
           left: 20,
@@ -286,6 +287,8 @@ class WalletContent extends HookConsumerWidget {
             ),
           ),
         ),
+      
+      
       ],
     );
   }

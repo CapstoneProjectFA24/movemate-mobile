@@ -1,17 +1,24 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
 import 'package:movemate/features/order/data/models/request/incident_request.dart';
+import 'package:movemate/features/order/data/models/request/user_report_request.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/utils/commons/widgets/cloudinary/cloudinary_camera_upload_widget.dart';
+import 'package:movemate/utils/constants/api_constant.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 import '../../../../../../utils/commons/widgets/widgets_common_export.dart';
 
-@RoutePage()
 @RoutePage()
 class IncidentsScreen extends HookConsumerWidget {
   final OrderEntity order;
@@ -25,6 +32,8 @@ class IncidentsScreen extends HookConsumerWidget {
     final descriptionController = useTextEditingController();
     // Track which tab is active (Request Support or Sent Request)
     final request = useState(IncidentRequest(resourceList: []));
+
+    final userReportRequest = useState<UserReportRequest?>(null);
 
     final isRequestSent = useState<bool>(false);
     final images = useState<List<String>>([]);
@@ -48,6 +57,48 @@ class IncidentsScreen extends HookConsumerWidget {
       'Vỡ hàng',
       'Khác',
     ];
+
+//////////////////////
+
+    // Hàm để lấy vị trí hiện tại
+    Future<Position> getCurrentPosition() async {
+      LocationPermission permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        throw Exception("Không có quyền truy cập vị trí");
+      }
+      return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+    }
+
+    // Hàm để gọi Reverse Geocoding API của VietMap
+    Future<String> getAddressFromLatLng(Position position) async {
+      const apiKey = APIConstants.apiVietMapKey;
+      final double latitude = position.latitude;
+      final double longitude = position.longitude;
+
+      final String url =
+          'https://maps.vietmap.vn/api/reverse/v3?apikey=$apiKey&lat=$latitude&lng=$longitude';
+
+      try {
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          final List<dynamic> data = json.decode(response.body);
+          if (data.isNotEmpty) {
+            // Lấy thông tin từ boundaries
+            String display = data[0]['display'];
+            return display;
+          } else {
+            return "Không tìm thấy địa chỉ";
+          }
+        } else {
+          return "Lỗi khi gọi API: ${response.statusCode}";
+        }
+      } catch (e) {
+        return "Không thể lấy địa chỉ: $e";
+      }
+    }
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -113,35 +164,6 @@ class IncidentsScreen extends HookConsumerWidget {
                         ),
                       ),
                     ),
-
-                    // Expanded(
-                    //   child: ElevatedButton(
-                    //     style: ElevatedButton.styleFrom(
-                    //       backgroundColor: isRequestSent.value
-                    //           ? AssetsConstants.primaryLight
-                    //           : Colors.grey[200],
-                    //       iconColor: Colors.grey[700],
-                    //       shape: const RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.only(
-                    //           topRight: Radius.circular(8),
-                    //           bottomRight: Radius.circular(8),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     onPressed: () {
-                    //       isRequestSent.value =
-                    //           true; // Switch to "Yêu cầu đã gửi"
-                    //     },
-                    //     child: LabelText(
-                    //       content: 'Yêu cầu đã gửi',
-                    //       size: 14,
-                    //       color: isRequestSent.value
-                    //           ? AssetsConstants.whiteColor
-                    //           : AssetsConstants.greyColor.shade600,
-                    //       fontWeight: FontWeight.w500,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -263,72 +285,37 @@ class IncidentsScreen extends HookConsumerWidget {
 
                 const Text('Dung lượng không vượt quá 5Mb',
                     style: TextStyle(color: Colors.grey, fontSize: 12)),
-                // GestureDetector(
-                //   onTap: isRequestSent.value
-                //       ? null // Disable tap in "Yêu cầu đã gửi" tab
-                //       : () {},
-                //   child: Container(
-                //     height: 120,
-                //     decoration: BoxDecoration(
-                //       border: Border.all(color: Colors.grey[300]!, width: 1.5),
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //     child: Center(
-                //       child: FaIcon(FontAwesomeIcons.plus,
-                //           color: Colors.grey[400], size: 30),
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(height: 16),
-                // const Text('Thêm video',
-                //     style: TextStyle(
-                //         color: Colors.black, fontWeight: FontWeight.bold)),
-                // const Text('Dung lượng không vượt quá 5Mb',
-                //     style: TextStyle(color: Colors.grey, fontSize: 12)),
-                // GestureDetector(
-                //   onTap: isRequestSent.value
-                //       ? null // Disable tap in "Yêu cầu đã gửi" tab
-                //       : () {},
-                //   child: Container(
-                //     height: 120,
-                //     decoration: BoxDecoration(
-                //       border: Border.all(color: Colors.grey[300]!, width: 1.5),
-                //       borderRadius: BorderRadius.circular(8),
-                //     ),
-                //     child: Center(
-                //       child: FaIcon(FontAwesomeIcons.plus,
-                //           color: Colors.grey[400], size: 30),
-                //     ),
-                //   ),
-                // ),
+
                 const SizedBox(height: 16),
 
-                // Show "Send Request" button only for "Yêu cầu hỗ trợ"
-                if (!isRequestSent.value)
-                  SizedBox(
-                    width: double.infinity, // Chiều ngang toàn màn hình
-                    child: ElevatedButton(
-                      onPressed: () {
-                        print(
-                            "tuan checking ${request.value.resourceList.toString()}");
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 14,
-                            horizontal: AssetsConstants.defaultBorder),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Bo góc
-                        ),
-                      ),
-                      child: const LabelText(
-                        content: 'Gửi yêu cầu',
-                        size: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AssetsConstants.whiteColor,
+                SizedBox(
+                  width: double.infinity, // Chiều ngang toàn màn hình
+                  child: ElevatedButton(
+                    onPressed: () {
+                      userReportRequest.value = UserReportRequest(
+                        bookingId: order.id,
+                        resourceList: request.value.resourceList,
+                      );
+                      print(
+                          "tuan checking ${request.value.resourceList.toString()}");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: AssetsConstants.defaultBorder),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8), // Bo góc
                       ),
                     ),
+                    child: const LabelText(
+                      content: 'Gửi yêu cầu',
+                      size: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AssetsConstants.whiteColor,
+                    ),
                   ),
+                ),
               ],
             ),
           ),
@@ -365,45 +352,6 @@ class IncidentsScreen extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row(
-          //   children: [
-          //     Container(
-          //       width: 4,
-          //       height: 24,
-          //       decoration: const BoxDecoration(
-          //         color: Colors.orange,
-          //         borderRadius: BorderRadius.all(Radius.circular(2)),
-          //       ),
-          //     ),
-          //     const SizedBox(width: 8),
-          //     Expanded(
-          //       child: Text(
-          //         title,
-          //         style: const TextStyle(
-          //           fontSize: 18,
-          //           fontWeight: FontWeight.bold,
-          //           color: Colors.grey,
-          //         ),
-          //       ),
-          //     ),
-          //     Container(
-          //       padding:
-          //           const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          //       decoration: BoxDecoration(
-          //         color: Colors.orangeAccent,
-          //         borderRadius: BorderRadius.circular(20),
-          //       ),
-          //       child: Text(
-          //         '${imagePublicIds.length} ảnh',
-          //         style: const TextStyle(
-          //           color: Colors.orangeAccent,
-          //           fontWeight: FontWeight.w600,
-          //           fontSize: 14,
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
           CloudinaryCameraUploadWidget(
               disabled: !isEnabled,
               imagePublicIds: imagePublicIds,
