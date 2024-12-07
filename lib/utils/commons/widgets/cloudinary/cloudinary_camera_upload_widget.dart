@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:movemate/features/booking/domain/entities/booking_request/resource.dart';
 
-
 class CloudinaryCameraUploadWidget extends HookConsumerWidget {
   final bool disabled;
   final Function(String url, String publicId) onImageUploaded;
@@ -19,6 +18,14 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
   final Widget? optionalButton;
   final bool showCameraButton;
   final Function(Resource)? onUploadComplete;
+
+  // Các thuộc tính để tùy chỉnh text overlay (có thể null)
+  final String? overlayText;
+  final String? fontFamily;
+  final int? fontSize;
+  final String? fontColor;
+  final String? gravity;
+  final int? yOffset;
 
   const CloudinaryCameraUploadWidget({
     super.key,
@@ -30,13 +37,69 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
     this.optionalButton,
     this.showCameraButton = true,
     this.onUploadComplete,
+    this.overlayText, // Optional
+    this.fontFamily, // Optional
+    this.fontSize, // Optional
+    this.fontColor, // Optional
+    this.gravity, // Optional
+    this.yOffset, // Optional
   });
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final picker = useMemoized(() => ImagePicker());
     final isLoading = useState(false);
     final cloudinary = useMemoized(
         () => CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false));
+
+    // Hàm tạo URL với transformation (nếu có)
+    String getTransformedUrl(String secureUrl) {
+      print("chekcing uri $secureUrl ");
+      final uri = Uri.parse(secureUrl);
+      final pathSegments = uri.pathSegments;
+
+      // Tìm vị trí 'upload' trong pathSegments
+      final uploadIndex = pathSegments.indexOf('upload');
+      if (uploadIndex == -1 || uploadIndex + 1 >= pathSegments.length) {
+        // Nếu không tìm thấy 'upload' hoặc thiếu phần sau, trả về URL gốc
+        return secureUrl;
+      }
+
+      // Phần sau 'upload'
+      final afterUpload = pathSegments.sublist(uploadIndex + 1);
+
+      // Xây dựng transformation string
+      final family = fontFamily ?? "Arial";
+      final size = fontSize?.toString() ?? "20";
+      final color = fontColor ?? "white";
+      final posGravity = gravity ?? "south";
+      final posYOffset = yOffset ?? 50;
+      final overlay = Uri.encodeComponent(overlayText ?? "");
+
+      // Định dạng transformation: l_text:<fontFamily>_<fontSize>_<fontColor>:<overlayText>,g_<gravity>
+      final transformation =
+          "l_text:${family}_${size}_$color:$overlay,g_$posGravity,y_$posYOffset";
+
+      // Tạo lại pathSegments với transformation chèn vào
+      final newPathSegments = [
+        ...pathSegments.sublist(0, uploadIndex + 1),
+        transformation,
+        ...afterUpload,
+      ];
+
+      // Tạo lại URI với pathSegments mới
+      final transformedUri = uri.replace(
+        pathSegments: newPathSegments,
+      );
+
+      print("chekcing uri 2 ${transformedUri.toString()} ");
+      return transformedUri.toString();
+    }
+
+    final checking =
+        getTransformedUrl('movemate/q0dgjkd6y0ujkvqmgybl').toString();
+    print("chekcing chekcing uri 3342 $checking");
+    // Hàm upload hình ảnh từ camera
     Future<void> uploadImageFromCamera() async {
       if (disabled || isLoading.value) return;
 
@@ -62,13 +125,19 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
           ),
         );
 
-        print('check 1 2 Upload success: ${response.secureUrl}');
+        print('Upload success: ${response.secureUrl}');
 
+        // Tạo URL đã được thêm transformations
+        final transformedUrl = getTransformedUrl(response.secureUrl);
+
+        // In ra để kiểm tra
+        print('Transformed URL: $transformedUrl');
+
+        // Truyền transformedUrl và publicId qua callback
         onImageUploaded(
-          response.secureUrl,
+          transformedUrl,
           response.publicId,
         );
- 
       } catch (e) {
         if (e is DioException) {
           print('Failed to upload image: ${e.response?.data}');
@@ -88,6 +157,7 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Phần hiển thị hình ảnh đã upload
         if (imagePublicIds.isNotEmpty)
           SizedBox(
             height: 200,
@@ -95,8 +165,12 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
               scrollDirection: Axis.horizontal,
               itemCount: imagePublicIds.length,
               itemBuilder: (context, index) {
-                final imageUrl =
-                    'https://res.cloudinary.com/dkpnkjnxs/image/upload/${imagePublicIds[index]}';
+                final publicId = imagePublicIds[index];
+                final imageUrl = getTransformedUrl(publicId);
+                print('checking image url 1: $imageUrl');
+                print('checking image url 2: $publicId');
+                print(
+                    'checking image url 3: ${imagePublicIds[index].toString()}');
                 return Stack(
                   children: [
                     Container(
@@ -123,6 +197,7 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
                             );
                           },
                           errorBuilder: (context, error, stackTrace) {
+                            print('checking lỗi : $error ');
                             return const Center(
                               child: Icon(Icons.error, color: Colors.red),
                             );
@@ -162,6 +237,8 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
             ),
           ),
         const SizedBox(height: 16),
+
+        // Phần button upload và optional button
         Row(
           children: [
             if (showCameraButton) ...[

@@ -40,7 +40,8 @@ class IncidentsScreen extends HookConsumerWidget {
     final estimatedAmountController = useTextEditingController();
     final errorMessage = useState<String?>(null);
     // Track which tab is active (Request Support or Sent Request)
-    final request = useState(IncidentRequest(resourceList: []));
+    // final request =
+    //     useState(UserReportRequest(bookingId: order.id, resourceList: []));
     final reason = useState<String>('');
     final description = useState<String>('');
     final title = useState<String>('');
@@ -60,7 +61,7 @@ class IncidentsScreen extends HookConsumerWidget {
         final uri = Uri.parse(url);
         final pathSegments = uri.pathSegments;
         return pathSegments.length > 1
-            ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last.split('.').first}'
+            ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last}' // Bao gồm phần mở rộng
             : '';
       }).toList(),
     );
@@ -509,8 +510,9 @@ class IncidentsScreen extends HookConsumerWidget {
                             .toList();
 
                         // Cập nhật lại resourceList trong IncidentRequest
-                        request.value.resourceList =
-                            request.value.resourceList.where((resource) {
+                        userReportRequest.value.resourceList = userReportRequest
+                            .value.resourceList
+                            .where((resource) {
                           // Loại bỏ resource có publicId tương ứng
                           return resource.resourceCode != publicId;
                         }).toList();
@@ -519,7 +521,7 @@ class IncidentsScreen extends HookConsumerWidget {
                       actionIcon: Icons.location_on,
                       isEnabled: !isRequestSent.value,
                       showCameraButton: true,
-                      request: request.value),
+                      request: userReportRequest.value),
                   const SizedBox(height: 16),
 
                   const Text('Dung lượng không vượt quá 5Mb',
@@ -562,7 +564,7 @@ class IncidentsScreen extends HookConsumerWidget {
                         // Create the UserReportRequest using the display address and position
                         userReportRequest.value = UserReportRequest(
                           bookingId: order.id,
-                          resourceList: request.value.resourceList,
+                          resourceList: userReportRequest.value.resourceList,
                           location: displayAddress,
                           point: "${position.latitude}, ${position.longitude}",
                           description: description.value,
@@ -572,7 +574,9 @@ class IncidentsScreen extends HookConsumerWidget {
                           isInsurance: isInsurance.value,
                         );
                         print(
-                            "tuan checking userReportRequest${userReportRequest.value.toString()}");
+                            "tuan checking userReportRequest ${userReportRequest.value.toString()}");
+                        print(
+                            "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
                         await ref
                             .read(orderControllerProvider.notifier)
                             .postUserReport(
@@ -613,7 +617,7 @@ class IncidentsScreen extends HookConsumerWidget {
     required IconData actionIcon,
     required bool isEnabled,
     required bool showCameraButton,
-    required IncidentRequest request,
+    required UserReportRequest request,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -632,29 +636,56 @@ class IncidentsScreen extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+//examples add image overlay to text
+// CloudinaryCameraUploadWidget(
+//   overlayText: "Hello World",
+//   fontFamily: "Courier",
+//   fontSize: 30,
+//   fontColor: "red",
+//   gravity: "north",
+//   onImageUploaded: (url, publicId) {
+//     // Xử lý khi upload thành công
+//   },
+//   onImageRemoved: (publicId) {
+//     // Xử lý khi xóa hình ảnh
+//   },
+//   imagePublicIds: [],
+//   onImageTapped: (publicId) {
+//     // Xử lý khi nhấn vào hình ảnh
+//   },
+// )
+
           CloudinaryCameraUploadWidget(
-              disabled: !isEnabled,
-              imagePublicIds: imagePublicIds,
-              onImageUploaded: isEnabled
-                  ? (url, publicId) {
-                      // Add the uploaded image URL and public ID to the lists
-                      onImageUploaded(url, publicId);
-                      // Create Resource for the uploaded image
-                      final newResource = Resource(
-                        type: 'image', // Or dynamically determine the type
-                        resourceUrl: url,
-                        resourceCode: publicId, // Or generate unique code
-                      );
-                      // Add the Resource to the request's resourceList
-                      request.resourceList.add(newResource);
-                    }
-                  : (_, __) {},
-              onImageRemoved: isEnabled ? onImageRemoved : (_) {},
-              onImageTapped: onImageTapped,
-              showCameraButton: showCameraButton,
-              onUploadComplete: (resource) {
-                request.resourceList.add(resource);
-              }),
+            // Truyền các thuộc tính text overlay nếu cần
+            overlayText: "Hello World",
+            fontFamily: "Courier",
+            fontSize: 30,
+            fontColor: "red",
+            gravity: "north",
+            yOffset: 500,
+            disabled: !isEnabled,
+            imagePublicIds: imagePublicIds,
+            onImageUploaded: isEnabled
+                ? (url, publicId) {
+                    // Thêm URL ảnh đã upload và publicId vào danh sách
+                    onImageUploaded(url, publicId);
+                    // Tạo Resource cho ảnh đã upload
+                    final newResource = Resource(
+                      type: 'image', // Hoặc xác định kiểu động
+                      resourceUrl: url,
+                      resourceCode: publicId, // Hoặc tạo mã duy nhất
+                    );
+                    // Thêm Resource vào resourceList của request
+                    request.resourceList.add(newResource);
+                  }
+                : (_, __) {},
+            onImageRemoved: isEnabled ? onImageRemoved : (_) {},
+            onImageTapped: onImageTapped,
+            showCameraButton: showCameraButton,
+            onUploadComplete: (resource) {
+              request.resourceList.add(resource);
+            },
+          ),
         ],
       ),
     );
