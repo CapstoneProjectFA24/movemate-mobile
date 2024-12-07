@@ -36,13 +36,25 @@ class SignInController extends _$SignInController {
     state = const AsyncLoading();
     final authRepository = ref.read(authRepositoryProvider);
 
+    String formatPhoneNumber(String? phone) {
+      if (phone != null && phone.startsWith('0')) {
+        return '+84${phone.substring(1)}';
+      }
+      return phone ?? '';
+    }
+
+    final formattedPhone = formatPhoneNumber(phone);
+
     // Tạo request với email hoặc phone
     final request = SignInRequest(
-      email: email,
-      phone: phone,
+      email: email ?? formattedPhone,
+      // phone: formattedPhone,
       password: password,
     );
 
+    print("checking request 1 ${request.email}");
+    print("checking request 3 ${request.password}");
+    print("checking request 4 ${request.toJson()}");
     state = await AsyncValue.guard(
       () async {
         final user = await authRepository.signIn(request: request);
@@ -68,7 +80,8 @@ class SignInController extends _$SignInController {
           request: RegisterTokenRequest(fcmToken: deviceToken),
           accessToken: APIConstants.prefixToken + userModel.tokens.accessToken,
         );
-
+        print("checkonh phone $phone");
+        print("checkonh phone $formattedPhone");
         ref.read(authProvider.notifier).update(
               (state) => userModel,
             );
