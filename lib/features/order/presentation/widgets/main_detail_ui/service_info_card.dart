@@ -67,7 +67,9 @@ class ServiceInfoCard extends HookConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildHouseInformation(),
+                    Expanded(
+                      child: buildHouseInformation(),
+                    ),
                     ElevatedButton(
                       onPressed: isButtonEnabled
                           ? () {
@@ -80,7 +82,7 @@ class ServiceInfoCard extends HookConsumerWidget {
                             ? AssetsConstants.mainColor.withOpacity(0.7)
                             : Colors.grey, // Màu nền tùy theo trạng thái
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
+                          horizontal: 4,
                           vertical: 6,
                         ),
                         shape: RoundedRectangleBorder(
@@ -92,7 +94,7 @@ class ServiceInfoCard extends HookConsumerWidget {
                             ? 'Đã đổi ngày'
                             : 'Thay đổi ngày',
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           color: Colors.white,
                         ),
                       ),
