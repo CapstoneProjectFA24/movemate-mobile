@@ -11,23 +11,19 @@ import 'package:movemate/features/profile/presentation/controllers/profile_contr
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 
-// Hàm hỗ trợ để định dạng giá
+// Giữ nguyên các hàm định dạng
 String formatPrice(int price) {
   final formatter = NumberFormat('#,###', 'vi_VN');
   return '${formatter.format(price)} đ';
 }
 
-// Hàm hỗ trợ để định dạng ngày tháng
 String formatDate(DateTime date) {
-  final formatter =
-      DateFormat('dd-MM-yyyy'); // Định dạng ngày theo 'ngày-tháng-năm'
+  final formatter = DateFormat('dd-MM-yyyy');
   return formatter.format(date);
 }
 
-// Hàm hỗ trợ để định dạng giờ
 String formatTime(DateTime date) {
-  final formatter =
-      DateFormat('hh:mm:ss'); // Định dạng ngày theo 'ngày-tháng-năm'
+  final formatter = DateFormat('hh:mm:ss');
   return formatter.format(date);
 }
 
@@ -45,8 +41,6 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double containerWidth = MediaQuery.of(context).size.width * 0.85;
 
-    // print('allUri: $allUri');
-
     final state = ref.watch(bookingControllerProvider);
     final useFetchResultOrder = useFetchObject<OrderEntity>(
       function: (context) async {
@@ -58,7 +52,6 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     );
     final result = useFetchResultOrder.data;
 
-//---//
     final stateWallet = ref.watch(profileControllerProvider);
     final useFetchResultWallet = useFetchObject<WalletEntity>(
       function: (context) async {
@@ -84,296 +77,255 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     }
 
     final listServices = getListSerVices(result);
-    double containerHeight = listServices.length * 108.0;
+    double containerHeight = listServices.length * 120.0;
+
     return LoadingOverlay(
       isLoading: stateWallet.isLoading,
       child: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.orange.shade400, Colors.orange.shade500],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Container chính
-                        Container(
-                          width: containerWidth,
-                          height: containerHeight,
-                          margin: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(height: 24),
-                              // Biểu tượng thành công
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.orange.shade500,
-                                  size: containerWidth *
-                                      0.1, // Tăng kích thước icon dựa trên chiều rộng container
-                                ),
-                              ),
-                              // Tiêu đề
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 16),
-                                child: Text(
-                                  "Thanh toán thành công",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.orange.shade500,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: containerWidth *
-                                        0.06, // Điều chỉnh kích thước phông chữ theo chiều rộng container
-                                  ),
-                                ),
-                              ),
-                              // Thông tin giao dịch
-
-                              // Chi tiết mã giao dịch
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: Column(
-                                  children: [
-                                    buildTransactionDetailRow('Mã đơn hàng',
-                                        '${result?.id}', containerWidth),
-                                    const SizedBox(height: 8),
-                                    buildTransactionDetailRow('Nguồn tiền',
-                                        'Ví MoveMate', containerWidth),
-                                    const SizedBox(height: 8),
-                                    buildTransactionDetailRow(
-                                        'Thời gian giao dịch',
-                                        formatDate(result?.updatedAt ??
-                                            DateTime.now()),
-                                        containerWidth),
-                                    buildTransactionDetailRow(
-                                        '',
-                                        formatTime(result?.updatedAt ??
-                                            DateTime.now()),
-                                        containerWidth * 0.89),
-                                  ],
-                                ),
-                              ),
-                              // Đường kẻ nét đứt
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 16),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: DashedLine(color: Colors.grey.shade300),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 152,
-                                      child: ListView.builder(
-                                        physics:
-                                            const AlwaysScrollableScrollPhysics(), // Cho phép cuộn
-                                        itemCount: listServices.length,
-                                        itemBuilder: (context, index) {
-                                          final serviceDetails =
-                                              listServices[index];
-                                          return buildListService(
-                                            serviceDetails.name,
-                                            formatPrice(
-                                                (serviceDetails.price ?? 0)
-                                                    .toInt()),
-                                            containerWidth * 0.80,
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              // Đường kẻ nét đứt
-                              Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: DashedLine(color: Colors.grey.shade300),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 24),
-                                child: Column(
-                                  children: [
-                                    buildTransactionDetailPriceRow(
-                                      'Tổng tiền',
-                                      formatPrice(
-                                          ((result?.total ?? 0)).toInt()),
-                                      containerWidth,
-                                      false,
-                                    ),
-                                    const SizedBox(height: 2),
-                                    buildTransactionDetailPriceRow(
-                                        'Tiền đã đặt cọc',
-                                        formatPrice(
-                                            (result?.deposit ?? 0).toInt()),
-                                        containerWidth * 0.80,
-                                        false),
-                                    buildTransactionDetailPriceRow(
-                                        'Số tiền còn lại đã thanh toán',
-                                        formatPrice(((result?.total ?? 0) -
-                                                (result?.deposit ?? 0))
-                                            .toInt()),
-                                        containerWidth * 0.80,
-                                        true),
-                                  ],
-                                ),
-                              ),
-
-                              // const SizedBox(height: 4),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.orange.shade400, Colors.orange.shade500],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                // Buttons container at bottom
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade500,
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 48,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                final tabsRouter = context.router.root
-                                    .innerRouterOf<TabsRouter>(
-                                        TabViewScreenRoute.name);
-                                if (tabsRouter != null) {
-                                  tabsRouter.setActiveIndex(0);
-                                  context.router.popUntilRouteWithName(
-                                      TabViewScreenRoute.name);
-                                } else {
-                                  context.router.pushAndPopUntil(
-                                    const TabViewScreenRoute(children: [
-                                      HomeScreenRoute(),
-                                    ]),
-                                    predicate: (route) => false,
-                                  );
-                                }
-                              },
-                              // Example of a button to navigate to the Home tab
-
-                              // Navigating to Home screen within TabViewScreen
-
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                side: const BorderSide(color: Colors.white),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+              ),
+              child: SafeArea(
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: containerWidth,
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.8,
+                              ),
+                              height: containerHeight,
+                              margin: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 10,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(height: 24),
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 16),
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue.shade100,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.orange.shade500,
+                                        size: containerWidth * 0.1,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(bottom: 16),
+                                      child: Text(
+                                        "Thanh toán thành công",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.orange.shade500,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: containerWidth * 0.06,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24),
+                                      child: Column(
+                                        children: [
+                                          buildTransactionDetailRow(
+                                              'Mã đơn hàng',
+                                              '${result?.id}',
+                                              containerWidth),
+                                          const SizedBox(height: 8),
+                                          buildTransactionDetailRow(
+                                              'Nguồn tiền',
+                                              'Ví MoveMate',
+                                              containerWidth),
+                                          const SizedBox(height: 8),
+                                          buildTransactionDetailRow(
+                                              'Thời gian giao dịch',
+                                              formatDate(result?.updatedAt ??
+                                                  DateTime.now()),
+                                              containerWidth),
+                                          buildTransactionDetailRow(
+                                              '',
+                                              formatTime(result?.updatedAt ??
+                                                  DateTime.now()),
+                                              containerWidth * 0.89),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24),
+                                      child: DashedLine(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 152,
+                                            child: ListView.builder(
+                                              physics:
+                                                  const AlwaysScrollableScrollPhysics(),
+                                              itemCount: listServices.length,
+                                              itemBuilder: (context, index) {
+                                                final serviceDetails =
+                                                    listServices[index];
+                                                return buildListService(
+                                                  serviceDetails.name,
+                                                  formatPrice(
+                                                      (serviceDetails.price ??
+                                                              0)
+                                                          .toInt()),
+                                                  containerWidth * 0.80,
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: DashedLine(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Column(
+                                        children: [
+                                          buildTransactionDetailPriceRow(
+                                            'Tổng tiền',
+                                            formatPrice(
+                                                ((result?.total ?? 0)).toInt()),
+                                            containerWidth,
+                                            false,
+                                          ),
+                                          const SizedBox(height: 2),
+                                          buildTransactionDetailPriceRow(
+                                              'Tiền đã đặt cọc',
+                                              formatPrice((result?.deposit ?? 0)
+                                                  .toInt()),
+                                              containerWidth * 0.80,
+                                              false),
+                                          // Added back the missing row
+                                          buildTransactionDetailPriceRow(
+                                              'Số tiền còn lại đã thanh toán',
+                                              formatPrice(((result?.total ??
+                                                          0) -
+                                                      (result?.deposit ?? 0))
+                                                  .toInt()),
+                                              containerWidth * 0.80,
+                                              true),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Text(
-                                'Màn hình chính',
-                                style: TextStyle(
-                                  color: Colors.orange.shade500,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: containerWidth * 0.045,
-                                ),
+                            ),
+                            // Extra space to ensure the button doesn't cover content
+                            const SizedBox(height: 80),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Positioned button at the bottom
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade500,
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              final tabsRouter = context.router.root
+                                  .innerRouterOf<TabsRouter>(
+                                      TabViewScreenRoute.name);
+                              if (tabsRouter != null) {
+                                tabsRouter.setActiveIndex(0);
+                                context.router.popUntilRouteWithName(
+                                    TabViewScreenRoute.name);
+                              } else {
+                                context.router.pushAndPopUntil(
+                                  const TabViewScreenRoute(children: [
+                                    HomeScreenRoute(),
+                                  ]),
+                                  predicate: (route) => false,
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Màn hình chính',
+                              style: TextStyle(
+                                color: Colors.orange.shade500,
+                                fontWeight: FontWeight.bold,
+                                fontSize: containerWidth * 0.045,
                               ),
                             ),
                           ),
                         ),
-                        // const SizedBox(width: 16),
-                        // Expanded(
-                        //   child: SizedBox(
-                        //     height: 48,
-                        //     child: ElevatedButton(
-                        //       // onPressed: () {
-                        //       //   context.router
-                        //       //       .push(const TransactionDetailsOrderRoute());
-                        //       // },
-
-                        //       onPressed: () async {
-                        //         // Trích xuất phần số nguyên từ bookingId để lấy id
-
-                        //         final id = bookingId;
-
-                        //         // Sử dụng BookingController để lấy OrderEntity
-                        //         final bookingController = ref
-                        //             .read(bookingControllerProvider.notifier);
-                        //         final orderEntity = await bookingController
-                        //             .getOrderEntityById(id);
-
-                        //         if (orderEntity != null) {
-                        //           // Điều hướng đến OrderDetailsScreen với orderEntity
-                        //           context.router.replaceAll([
-                        //             OrderDetailsScreenRoute(order: orderEntity)
-                        //           ]);
-                        //         } else {
-                        //           // Xử lý lỗi nếu không tìm thấy OrderEntity
-                        //           ScaffoldMessenger.of(context).showSnackBar(
-                        //             const SnackBar(
-                        //                 content: Text(
-                        //                     'Không tìm thấy thông tin đơn hàng')),
-                        //           );
-                        //         }
-                        //       },
-
-                        //       style: ElevatedButton.styleFrom(
-                        //         backgroundColor: Colors.orange.shade800,
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(8),
-                        //         ),
-                        //       ),
-                        //       child: Text(
-                        //         'Chi tiết đơn hàng',
-                        //         style: TextStyle(
-                        //           fontWeight: FontWeight.bold,
-                        //           fontSize: containerWidth * 0.045,
-                        //           color: Colors.white,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -443,31 +395,31 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 5, // Allocate space for the title
+            flex: 5,
             child: Text(
               title,
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey[700],
               ),
-              softWrap: true, // Allow wrapping
-              overflow: TextOverflow.visible, // Ensure text is not clipped
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ),
-          const SizedBox(width: 10), // Add spacing between title and value
+          const SizedBox(width: 10),
           Expanded(
-            flex: 2, // Allocate space for the value
+            flex: 2,
             child: Text(
               value,
               style: const TextStyle(
                 fontSize: 12,
                 color: Color.fromARGB(255, 174, 178, 183),
               ),
-              softWrap: true, // Allow wrapping
-              overflow: TextOverflow.visible, // Ensure text is not clipped
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ),
         ],
