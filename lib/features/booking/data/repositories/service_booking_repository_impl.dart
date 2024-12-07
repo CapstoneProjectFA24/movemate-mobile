@@ -9,6 +9,7 @@ import 'package:movemate/features/booking/data/models/response/service_truck_res
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
+import 'package:movemate/features/booking/data/models/response/truck_cate_price_response.dart';
 import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
@@ -16,6 +17,7 @@ import 'package:movemate/features/booking/data/models/resquest/cancel_booking.da
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/truck_entity_response.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/models/response/success_model.dart';
@@ -104,6 +106,28 @@ class ServiceBookingRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
         id,
+      ),
+    );
+  }
+
+  //get truck cate detail by price
+  @override
+  Future<TruckCategoryPriceResponse> getTruckDetailPrice({
+    required PagingModel request,
+    required String accessToken,
+  }) async {
+    // Convert PagingModel to a Map of query parameters
+    final Map<String, dynamic> queries = {
+      'page': request.pageNumber,
+      'per_page': request.pageSize,
+      'SortColumn': request.sortColumn,
+      // Add other parameters if needed
+    };
+    return getDataOf(
+      request: () => _serviceBookingSource.getTruckDetailPrice(
+        APIConstants.contentType,
+        accessToken,
+        queries,
       ),
     );
   }

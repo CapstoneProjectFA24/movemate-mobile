@@ -95,10 +95,10 @@ class IncidentDetailsScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Center(
+                  Center(
                     child: Text(
-                      'Sự cố vỡ hàng',
-                      style: TextStyle(
+                      incident.title,
+                      style: const TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF333333),

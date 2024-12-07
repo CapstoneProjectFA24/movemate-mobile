@@ -5,12 +5,14 @@ import 'package:movemate/features/booking/data/models/response/booking_response.
 import 'package:movemate/features/booking/data/models/response/house_type_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_obj_response.dart';
 import 'package:movemate/features/booking/data/models/response/service_truck_response.dart';
+import 'package:movemate/features/booking/data/models/response/truck_cate_price_response.dart';
 import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/data/models/resquest/reviewer_status_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/truck_entity_response.dart';
 import 'package:movemate/models/response/success_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -66,6 +68,13 @@ abstract class ServiceBookingSource {
     @Header(APIConstants.contentHeader) String contentType,
     @Header(APIConstants.authHeader) String accessToken,
     @Path('id') int id,
+  );
+  // truckCate detail  has price
+  @GET(APIConstants.get_truck_category)
+  Future<HttpResponse<TruckCategoryPriceResponse>> getTruckDetailPrice(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Queries() Map<String, dynamic> queries,
   );
   // get all Services truck
   @GET(APIConstants.get_list_truck_cate)

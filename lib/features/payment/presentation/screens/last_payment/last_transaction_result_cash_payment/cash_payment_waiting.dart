@@ -76,7 +76,7 @@ class CashPaymentWaiting extends HookConsumerWidget {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(100)),
                       child: Image.asset(
-                        'assets/images/background/giphy.webp',
+                        'assets/images/background/giphy.gif',
                         width: 200,
                         height: 200,
                         fit: BoxFit.contain,

@@ -1,77 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 
-class DiscountCodesWidget extends ConsumerWidget {
+import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+
+class DiscountCodesWidget extends HookConsumerWidget {
   const DiscountCodesWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color.fromARGB(125, 255, 204, 128),
-            Colors.orange.shade700,
-          ],
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Mã Khuyến Mãi',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: constraints.maxWidth,
-                      ),
-                      child: const Row(
-                        children: [
-                          VuochersCard(
-                            promoCode: 'MOVEMATESALE',
-                            description: 'Giảm ngay 99% mọi đơn',
-                            companyLogo:
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
-                          ),
-                          SizedBox(width: 12),
-                          VuochersCard(
-                            promoCode: 'FIRSTRIDE',
-                            description: 'Giảm 50% cho chuyến đi đầu tiên',
-                            companyLogo:
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
-                          ),
-                          SizedBox(width: 12),
-                          VuochersCard(
-                            promoCode: 'WEEKENDOFF',
-                            description: 'Giảm 30% vào cuối tuần',
-                            companyLogo:
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+    final state = ref.watch(promotionControllerProvider);
+
+    final useFetchResult = useFetchObject<PromotionAboutUserEntity>(
+      function: (context) => ref
+          .read(promotionControllerProvider.notifier)
+          .getPromotionNoUser(context),
+      context: context,
+    );
+    final promotionAboutUser = useFetchResult.data;
+
+    final promotionUserNotGet = promotionAboutUser?.promotionNoUser ?? [];
+    return LoadingOverlay(
+      isLoading: state.isLoading,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color.fromARGB(125, 255, 204, 128),
+              Colors.orange.shade700,
             ],
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Mã Khuyến Mãi',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Prevent nested scrolling
+                  itemCount: promotionUserNotGet.length,
+                  itemBuilder: (context, index) {
+                    final promo = promotionUserNotGet[index];
+
+//                            VuochersCard(
+//                             promoCode: 'MOVEMATESALE',
+//                             description: 'Giảm ngay 99% mọi đơn',
+//                             companyLogo:
+//                                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
+//                           ),
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: VuochersCard(
+                        promoCode: promo.id
+                            .toString(), // Assuming `promo.code` is available
+                        description: promo
+                            .description, // Assuming `promo.description` is available
+                        companyLogo:
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s', // Assuming `promo.companyLogo` is available
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

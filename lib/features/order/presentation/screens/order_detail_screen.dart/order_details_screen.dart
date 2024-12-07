@@ -230,7 +230,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 }
               : () {},
           backButtonColor: AssetsConstants.whiteColor,
-          title: "Thông tin đơn hàng #${order.id ?? ""}",
+          title: "Thông tin đơn hàng BOK${order.id ?? ""}",
           iconSecond: Icons.home_outlined,
           onCallBackSecond: () {
             final tabsRouter = context.router.root

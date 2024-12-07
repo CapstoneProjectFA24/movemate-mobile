@@ -11,6 +11,7 @@ import 'package:movemate/features/booking/data/models/resquest/booking_valuation
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/truck_entity_response.dart';
 import 'package:movemate/features/booking/domain/entities/services_package_entity.dart';
 import 'package:movemate/features/booking/domain/entities/truck_category_entity.dart';
 import 'package:movemate/features/booking/domain/repositories/service_booking_repository.dart';
@@ -220,6 +221,55 @@ class ServicePackageController extends _$ServicePackageController {
 
         if (statusCode != StatusCodeType.unauthentication.type) {}
         await getTruckDetailById(id, context);
+      });
+    }
+
+    return truckCateDetails;
+  }
+
+  //get truck cate detail by price
+  Future<List<Truck>> getTruckDetailPrice(
+    PagingModel request,
+    BuildContext context,
+  ) async {
+    List<Truck> truckCateDetails = [];
+
+    state = const AsyncLoading();
+    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
+    final authRepository = ref.read(authRepositoryProvider);
+    final user = await SharedPreferencesUtils.getInstance('user_token');
+    // print("fcm token : ${user?.fcmToken}");
+
+    state = await AsyncValue.guard(() async {
+      final response = await serviceBookingRepository.getTruckDetailPrice(
+        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
+        request: request,
+      );
+
+      truckCateDetails = response.payload;
+      // print("object checking ${response.payload.toString()}");
+      state = AsyncData(truckCateDetails);
+    });
+
+    if (state.hasError) {
+      state = await AsyncValue.guard(() async {
+        final statusCode = (state.error as DioException).onStatusDio();
+        await handleAPIError(
+          statusCode: statusCode,
+          stateError: state.error!,
+          context: context,
+          onCallBackGenerateToken: () async => await reGenerateToken(
+            authRepository,
+            context,
+          ),
+        );
+
+        if (state.hasError) {
+          await ref.read(signInControllerProvider.notifier).signOut(context);
+        }
+
+        if (statusCode != StatusCodeType.unauthentication.type) {}
+        await getTruckDetailPrice(request, context);
       });
     }
 

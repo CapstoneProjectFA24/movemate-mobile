@@ -74,7 +74,6 @@ class OrderItem extends HookConsumerWidget {
         ),
         child: Row(
           children: [
-
             const SizedBox(width: 15),
             // Card Content
             Expanded(
@@ -89,7 +88,7 @@ class OrderItem extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         LabelText(
-                          content: 'Mã đơn hàng : #${order.id}',
+                          content: 'Mã đơn hàng : BOK${order.id}',
                           size: AssetsConstants.defaultFontSize - 12.0,
                           fontWeight: FontWeight.w600,
                         ),

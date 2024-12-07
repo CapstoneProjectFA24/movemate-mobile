@@ -8,6 +8,7 @@ import 'package:movemate/features/booking/data/models/response/service_truck_res
 import 'package:movemate/features/booking/data/models/response/services_fee_system_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_package_response.dart';
 import 'package:movemate/features/booking/data/models/response/services_response.dart';
+import 'package:movemate/features/booking/data/models/response/truck_cate_price_response.dart';
 import 'package:movemate/features/booking/data/models/response/truck_cate_response.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_request.dart';
 import 'package:movemate/features/booking/data/models/resquest/booking_valuation_request.dart';
@@ -16,6 +17,7 @@ import 'package:movemate/features/booking/data/models/resquest/reviewer_status_r
 import 'package:movemate/features/booking/data/models/resquest/valuation_price_one_of_system_service_request.dart';
 import 'package:movemate/features/booking/data/remote/service_booking_source.dart';
 import 'package:movemate/features/booking/data/repositories/service_booking_repository_impl.dart';
+import 'package:movemate/features/booking/domain/entities/service_truck/truck_entity_response.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/models/response/success_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -54,6 +56,11 @@ abstract class ServiceBookingRepository {
   Future<TruckCateResponse> getTruckDetailById({
     required String accessToken,
     required int id,
+  });
+  // get Truck Detail Price
+  Future<TruckCategoryPriceResponse> getTruckDetailPrice({
+    required PagingModel request,
+    required String accessToken,
   });
 
   // Services Fee System Methods

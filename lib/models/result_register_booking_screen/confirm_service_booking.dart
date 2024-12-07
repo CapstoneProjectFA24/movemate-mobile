@@ -73,7 +73,7 @@ class ConfirmServiceBookingScreen extends HookConsumerWidget {
                     ),
                     const SizedBox(height: 15),
                     Image.asset(
-                      'assets/images/background/giphy.webp',
+                      'assets/images/background/giphy.gif',
                       width: 200,
                       height: 150,
                       fit: BoxFit.contain,
