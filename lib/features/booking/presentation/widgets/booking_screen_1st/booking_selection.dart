@@ -15,6 +15,8 @@ import 'number_selection_modal.dart';
 // Import HouseTypeSelectionModal
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/house_type/house_type_selection_modal.dart';
 
+const checking = 'Phòng trọ';
+
 class BookingSelection extends HookConsumerWidget {
   final String title;
   const BookingSelection({super.key, required this.title});
@@ -23,7 +25,7 @@ class BookingSelection extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingNotifier = ref.read(bookingProvider.notifier);
     final bookingState = ref.watch(bookingProvider);
-
+    print('checking houseType: ${bookingState.houseType?.name} ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,6 +52,7 @@ class BookingSelection extends HookConsumerWidget {
           ],
         ),
         const SizedBox(height: 16),
+
         // Nút chọn số phòng ngủ và số tầng
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -68,26 +71,28 @@ class BookingSelection extends HookConsumerWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text('-',
-                  style: TextStyle(
-                      fontSize: 24, color: AssetsConstants.greyColor)),
-            ),
-            Expanded(
-              child: RoomFloorCountButton(
-                label: 'Số tầng',
-                value: bookingState.numberOfFloors ?? 1,
-                onTap: () => showNumberSelectionModal(
-                  context,
-                  title: 'Số lượng tầng',
-                  maxNumber: 10,
-                  onNumberSelected: (number) {
-                    bookingNotifier.updateNumberOfFloors(number);
-                  },
+            if (checking != bookingState.houseType?.name)
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text('-',
+                    style: TextStyle(
+                        fontSize: 24, color: AssetsConstants.greyColor)),
+              ),
+            if (checking != bookingState.houseType?.name)
+              Expanded(
+                child: RoomFloorCountButton(
+                  label: 'Số tầng',
+                  value: bookingState.numberOfFloors ?? 1,
+                  onTap: () => showNumberSelectionModal(
+                    context,
+                    title: 'Số lượng tầng',
+                    maxNumber: 10,
+                    onNumberSelected: (number) {
+                      bookingNotifier.updateNumberOfFloors(number);
+                    },
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ],
