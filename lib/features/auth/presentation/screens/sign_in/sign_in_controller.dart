@@ -36,13 +36,43 @@ class SignInController extends _$SignInController {
     state = const AsyncLoading();
     final authRepository = ref.read(authRepositoryProvider);
 
+    String formatPhoneNumber(String? phone) {
+      if (phone != null && phone.startsWith('0')) {
+        return '+84${phone.substring(1)}';
+      }
+      return phone ?? '';
+    }
+
+    // Hàm kiểm tra xem một chuỗi có phải là số điện thoại hay không (chỉ chứa chữ số)
+    bool isPhoneNumber(String s) {
+      final phoneRegExp = RegExp(r'^\d+$');
+      return phoneRegExp.hasMatch(s);
+    }
+
+    // Hàm định dạng email nếu nó là số điện thoại
+    String? formatEmail(String? email) {
+      if (email != null && isPhoneNumber(email)) {
+        // Nếu email là số điện thoại, định dạng nó
+        return formatPhoneNumber(email);
+      }
+      return email;
+    }
+
+    // Định dạng email
+    final formattedEmail = formatEmail(email);
+    // Định dạng số điện thoại
+    final formattedPhone = formatPhoneNumber(phone);
+
     // Tạo request với email hoặc phone
     final request = SignInRequest(
-      email: email,
-      phone: phone,
+      email: formattedEmail,
+      // phone: formattedPhone,
       password: password,
     );
 
+    print("checking request 1 ${request.email}");
+    print("checking request 3 ${request.password}");
+    print("checking request 4 ${request.toJson()}");
     state = await AsyncValue.guard(
       () async {
         final user = await authRepository.signIn(request: request);
@@ -68,7 +98,8 @@ class SignInController extends _$SignInController {
           request: RegisterTokenRequest(fcmToken: deviceToken),
           accessToken: APIConstants.prefixToken + userModel.tokens.accessToken,
         );
-
+        print("checkonh phone $phone");
+        print("checkonh phone $formattedPhone");
         ref.read(authProvider.notifier).update(
               (state) => userModel,
             );

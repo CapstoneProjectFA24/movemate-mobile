@@ -57,33 +57,26 @@ class DiscountCodesWidget extends HookConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Prevent nested scrolling
-                  itemCount: promotionUserNotGet.length,
-                  itemBuilder: (context, index) {
-                    final promo = promotionUserNotGet[index];
-
-//                            VuochersCard(
-//                             promoCode: 'MOVEMATESALE',
-//                             description: 'Giảm ngay 99% mọi đơn',
-//                             companyLogo:
-//                                 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s',
-//                           ),
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: VuochersCard(
-                        promoCode: promo.id
-                            .toString(), // Assuming `promo.code` is available
-                        description: promo
-                            .description, // Assuming `promo.description` is available
-                        companyLogo:
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s', // Assuming `promo.companyLogo` is available
-                      ),
-                    );
-                  },
+                SizedBox(
+                  height: 180, // Điều chỉnh chiều cao phù hợp
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal, // Cuộn ngang
+                    shrinkWrap: true,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: promotionUserNotGet.length,
+                    itemBuilder: (context, index) {
+                      final promo = promotionUserNotGet[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12.0),
+                        child: VuochersCard(
+                          promoCode: promo.id.toString(),
+                          description: promo.description ?? '',
+                          companyLogo:
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s', // Assuming promo.companyLogo is available
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

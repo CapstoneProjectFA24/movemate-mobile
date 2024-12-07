@@ -47,8 +47,7 @@ class PromotionEntity {
     return PromotionEntity(
       id: map['id'] ?? 0,
       isPublic: map['isPublic'] ?? false,
-      startDate: dateFormat.parse(map['startDate']),
-      endDate: dateFormat.parse(map['endDate']),
+
       // Convert int to double if necessary
 
       discountRate:
@@ -65,8 +64,22 @@ class PromotionEntity {
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       type: map['type'] ?? '',
-      startBookingTime: dateFormat.parse(map['startBookingTime']),
-      endBookingTime: dateFormat.parse(map['endBookingTime']),
+      startDate: map['startDate'] != null
+          ? dateFormat.parse(map['startDate'])
+          : DateTime.now(), // Hoặc 1 giá trị mặc định nào đó
+
+      endDate: map['endDate'] != null
+          ? dateFormat.parse(map['endDate'])
+          : DateTime.now(),
+
+      startBookingTime: map['startBookingTime'] != null
+          ? dateFormat.parse(map['startBookingTime'])
+          : DateTime.now(),
+
+      endBookingTime: map['endBookingTime'] != null
+          ? dateFormat.parse(map['endBookingTime'])
+          : DateTime.now(),
+
       isInfinite: map['isInfinite'] ?? false,
       serviceId: map['serviceId'] ?? 0,
       vouchers: List<VoucherEntity>.from(

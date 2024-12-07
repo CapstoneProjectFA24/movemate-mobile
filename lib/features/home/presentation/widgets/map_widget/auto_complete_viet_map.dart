@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
@@ -36,6 +37,7 @@ class _ModifiedAutocompleteWidgetState
   final LayerLink _layerLink = LayerLink();
   final FocusNode _focusNode = FocusNode();
   bool _isProgrammaticallySettingText = false;
+
   void _controllerListener() {
     setState(() {});
     _onChanged(widget.controller.text);
@@ -191,10 +193,37 @@ class _ModifiedAutocompleteWidgetState
     final refId = suggestion['ref_id'];
     final url = Uri.parse(
         'https://maps.vietmap.vn/api/place/v3?apikey=$apiKey&refid=$refId');
+
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final details = json.decode(response.body);
+
+        final checkDistance = await calculateDistance(
+          10.841416800000001,
+          106.81007447258705,
+          details['lat'],
+          details['lng'],
+        );
+
+        // Thêm điều kiện kiểm tra khoảng cách
+        if (checkDistance >= 161) {
+          // Hiển thị pop-up thông báo
+          // Hiển thị Snackbar thông báo
+          Flushbar(
+            message:
+                'Dịch vụ không trong phạm vi phục vụ. Vui lòng chọn địa điểm khác.',
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.grey.withOpacity(0.8),
+            margin: const EdgeInsets.all(8),
+            borderRadius: BorderRadius.circular(8),
+            flushbarPosition: FlushbarPosition.TOP, // Đặt vị trí ở trên cùng
+          ).show(context);
+          // Dừng việc thực thi hàm nếu khoảng cách quá xa
+          return;
+        }
+
+        print("check distance: $checkDistance");
         final location = LocationModel(
           label: details['name'],
           address: details['display'],
@@ -350,7 +379,7 @@ class _ModifiedAutocompleteWidgetState
                 ],
               ),
             ),
-            
+
             onChanged: (value) {
               if (!_isProgrammaticallySettingText) {
                 _onChanged(value);
