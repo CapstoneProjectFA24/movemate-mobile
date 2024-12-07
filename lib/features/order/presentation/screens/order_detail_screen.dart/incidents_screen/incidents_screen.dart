@@ -600,7 +600,8 @@ class IncidentsScreen extends HookConsumerWidget {
                         // Now we have both the display address and position
                         String? displayAddress = addressInfo['display'];
                         Position position = addressInfo['position'];
-
+                        print(
+                            "tuan checking userReportRequest resourceList 0000 ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
                         // Create the UserReportRequest using the display address and position
                         userReportRequest.value = UserReportRequest(
                           bookingId: order.id,
@@ -617,8 +618,8 @@ class IncidentsScreen extends HookConsumerWidget {
                             "tuan checking userReportRequest ${userReportRequest.value.toString()}");
                         // print(
                         //     "tuan checking formattedAddress value ${formattedAddress.value.toString()}");
-                        // print(
-                        //     "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
+                        print(
+                            "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.toString()}");
                         await ref
                             .read(orderControllerProvider.notifier)
                             .postUserReport(
@@ -705,7 +706,7 @@ class IncidentsScreen extends HookConsumerWidget {
             fontSize: 30,
             fontColor: "orange",
             gravity: "north",
-            yOffset: 100,
+            yOffset: 950,
             disabled: !isEnabled,
             imagePublicIds: imagePublicIds,
             onImageUploaded: isEnabled

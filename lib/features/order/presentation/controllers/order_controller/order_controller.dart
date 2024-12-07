@@ -360,6 +360,8 @@ class OrderController extends _$OrderController {
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     print("check date time controller1 ${request.toJson()}");
+    print(
+        "check date time controller 12 ${request.resourceList.first.toJson()}");
 
     final result = await AsyncValue.guard(() async {
       final response = await truckTypeRepository.postUserReport(
