@@ -93,6 +93,11 @@ BookingStatusResult useBookingStatus(
           a.status.toAssignmentsTypeEnum() == subStatus);
     }
 
+    // Helper function to check assignment has in booking
+    bool hasAssignmentInbooking(String staffType) {
+      return assignments.any((a) => a.staffType == staffType);
+    }
+
     // Check reviewer states
     final hasReviewerAssigned =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.assigned);
@@ -121,6 +126,8 @@ BookingStatusResult useBookingStatus(
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.arrived);
     final isDriverInProgress =
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
+    //check porter has booking
+    final isPorterHasBooking = hasAssignmentInbooking("PORTER");
 
     // Initialize action and state flags
     bool canAcceptSchedule = false;
@@ -178,7 +185,14 @@ BookingStatusResult useBookingStatus(
           canCanceled = false;
           canCanceledPreDeposit = false;
           canCanceledPostDeposit = false;
-          if (isDriverCompleted || isPorterCompleted) {
+
+          if (isDriverCompleted && isPorterHasBooking) {
+            if (isPorterCompleted) {
+              canMakePaymentLast = true;
+            } else {
+              canMakePaymentLast = false;
+            }
+          } else if (isDriverCompleted && !isPorterHasBooking) {
             canMakePaymentLast = true;
           }
 
@@ -237,7 +251,13 @@ BookingStatusResult useBookingStatus(
 
         case BookingStatusType.inProgress:
           canReport = true;
-          if (isDriverCompleted || isPorterCompleted) {
+          if (isDriverCompleted && isPorterHasBooking) {
+            if (isPorterCompleted) {
+              canMakePaymentLast = true;
+            } else {
+              canMakePaymentLast = false;
+            }
+          } else if (isDriverCompleted && !isPorterHasBooking) {
             canMakePaymentLast = true;
           }
           canCanceledPreDeposit = false;
@@ -296,6 +316,7 @@ BookingStatusResult useBookingStatus(
     }
 
     // check porter state
+
     final isPorterIncoming =
         hasAssignmentWithStatus("PORTER", AssignmentsStatusType.incoming);
 

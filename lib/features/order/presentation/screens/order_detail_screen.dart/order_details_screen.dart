@@ -279,9 +279,11 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     if (listStaffPorterInOrder!.isNotEmpty ||
                         listStaffPorterInOrder.isNotEmpty)
                       CustomTabContainer(
-                          porterItems: listStaffPorterInOrder ?? [],
-                          driverItems: listStaffDriverInOrder ?? [],
-                          bookingId: order.id),
+                        porterItems: listStaffPorterInOrder ?? [],
+                        driverItems: listStaffDriverInOrder ?? [],
+                        bookingId: order.id,
+                        order: order,
+                      ),
                     const SizedBox(height: 20),
                     const LabelText(
                       content: 'Thông tin khách hàng',

@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/tab_container/list_widget_item.dart';
 
 import 'package:movemate/hooks/use_fetch_obj.dart';
@@ -12,6 +13,7 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 
 class CustomTabContainer extends HookConsumerWidget {
   final int bookingId;
+  final OrderEntity order;
   final List<AssignmentsRealtimeEntity> porterItems;
   final List<AssignmentsRealtimeEntity> driverItems;
 
@@ -20,6 +22,7 @@ class CustomTabContainer extends HookConsumerWidget {
     required this.porterItems,
     required this.driverItems,
     required this.bookingId,
+    required this.order,
   });
 
   Future<bool?> _showConfirmationDialog(
@@ -80,7 +83,7 @@ class CustomTabContainer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedTab = useState<String>('Bốc vác');
+    final selectedTab = useState<String>('Tài xế');
     final selectedPorter = useState<AssignmentsRealtimeEntity?>(null);
     final selectedDriver = useState<AssignmentsRealtimeEntity?>(null);
 
@@ -270,6 +273,7 @@ class CustomTabContainer extends HookConsumerWidget {
               (item.isResponsible ?? true) ? 'Chịu trách nhiệm' : 'Nhân viên',
           role: "porter",
           orderId: bookingId,
+          order: order,
         );
       },
     );
@@ -297,6 +301,7 @@ class CustomTabContainer extends HookConsumerWidget {
               (item.isResponsible ?? true) ? 'Chịu trách nhiệm' : 'Nhân viên',
           role: "driver",
           orderId: bookingId,
+          order: order,
         );
       },
     );

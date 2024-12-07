@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
@@ -9,8 +10,10 @@ import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
 import 'package:movemate/features/profile/domain/entities/staff_profile_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_driver_controller/profile_driver_controller.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 
 // Navigation function cho cả Driver và Porter
@@ -50,6 +53,7 @@ class ListItemWidget extends HookConsumerWidget {
   final AssignmentsRealtimeEntity item;
   final AssignmentsRealtimeEntity? selectedValue;
   final ValueNotifier<AssignmentsRealtimeEntity?> selectionNotifier;
+  final OrderEntity order;
   final IconData icon;
   final Color iconColor;
   final String subtitle;
@@ -65,6 +69,7 @@ class ListItemWidget extends HookConsumerWidget {
     required this.subtitle,
     required this.role,
     required this.orderId,
+    required this.order,
   });
 
   @override
@@ -81,8 +86,38 @@ class ListItemWidget extends HookConsumerWidget {
       },
       context: context,
     );
-    final staff = useFetchResultProfileAssign.data;
+
+    final staffInformation = useFetchResultProfileAssign.data;
+
     final staffProFile = useFetchResultProfileAssign;
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
+    bool canShowMap(String staffType, BookingStatusResult bookingStatus) {
+      switch (staffType.toUpperCase()) {
+        case "DRIVER":
+          return bookingStatus.isDriverProcessingMoving;
+
+        default:
+          return false;
+      }
+    }
+
+    void handleMapNavigation(
+        BuildContext context, String staffType, String userId) {
+      switch (staffType.toUpperCase()) {
+        case "DRIVER":
+          context.router.push(TrackingDriverMapRoute(
+            staffId: userId,
+            job: order,
+            bookingStatus: bookingStatus,
+          ));
+          break;
+      }
+    }
+
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Card(
@@ -166,52 +201,74 @@ class ListItemWidget extends HookConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Text(
-                            subtitle,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            Text(
+                              subtitle,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '-',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
+                            const SizedBox(width: 4),
+                            Text(
+                              '-',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            staffProFile.data?.phone ?? '',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey.shade600,
+                            const SizedBox(width: 4),
+                            Text(
+                              staffProFile.data?.phone ?? '',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
                 // Thêm nút chat
                 if (item.isResponsible == true)
-                  IconButton(
-                    icon: const Icon(Icons.chat_bubble_outline),
-                    onPressed: () {
-                      if (staffProFile.data != null) {
-                        navigateToChatScreen(
-                          context: context,
-                          userId: item.userId.toString(),
-                          name: staffProFile.data!.name ?? '',
-                          avatarUrl: staffProFile.data!.avatarUrl,
-                          role: role,
-                          orderId: orderId,
-                        );
-                      }
-                    },
+                  Positioned(
+                    right: 0,
+                    child: Row(
+                      children: [
+                        if (canShowMap(item.staffType, bookingStatus))
+                          IconButton(
+                            icon: FaIcon(
+                              FontAwesomeIcons.mapLocation,
+                              size: 18,
+                              color: Colors.grey.shade600,
+                            ),
+                            onPressed: () => handleMapNavigation(
+                              context,
+                              item.staffType,
+                              item.userId.toString(),
+                            ),
+                          ),
+                        IconButton(
+                          icon: const Icon(Icons.chat_bubble_outline),
+                          onPressed: () {
+                            if (staffProFile.data != null) {
+                              navigateToChatScreen(
+                                context: context,
+                                userId: item.userId.toString(),
+                                name: staffProFile.data!.name ?? '',
+                                avatarUrl: staffProFile.data!.avatarUrl,
+                                role: role,
+                                orderId: orderId,
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
               ],
             ),
