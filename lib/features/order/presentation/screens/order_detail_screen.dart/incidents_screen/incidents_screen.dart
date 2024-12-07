@@ -29,9 +29,52 @@ class IncidentsScreen extends HookConsumerWidget {
   final OrderEntity order;
   const IncidentsScreen({super.key, required this.order});
 
+  // Hàm để lấy vị trí hiện tại
+  Future<Position> getCurrentPosition() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      throw Exception("Không có quyền truy cập vị trí");
+    }
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  }
+
+  // Hàm để gọi Reverse Geocoding API của VietMap
+  Future<Map<String, dynamic>> getAddressFromLatLng(Position position) async {
+    const apiKey = APIConstants.apiVietMapKey;
+    final double latitude = position.latitude;
+    final double longitude = position.longitude;
+
+    final String url =
+        'https://maps.vietmap.vn/api/reverse/v3?apikey=$apiKey&lat=$latitude&lng=$longitude';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        if (data.isNotEmpty) {
+          // Lấy thông tin từ boundaries
+          String display = data[0]['display'];
+          return {'display': display, 'position': position};
+        } else {
+          return {'display': "Không tìm thấy địa chỉ", 'position': position};
+        }
+      } else {
+        return {
+          'display': "Lỗi khi gọi API: ${response.statusCode}",
+          'position': position
+        };
+      }
+    } catch (e) {
+      return {'display': "Không thể lấy địa chỉ: $e", 'position': position};
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final supportType = useState<String?>(null);
+    final supportType = useState<String?>('Vỡ hàng');
     final isInsurance = useState<bool?>(false);
     final state = ref.watch(orderControllerProvider);
 
@@ -46,6 +89,9 @@ class IncidentsScreen extends HookConsumerWidget {
     final description = useState<String>('');
     final title = useState<String>('');
     final estimatedAmount = useState<double?>(0.0);
+    final currentAddress = useState<String>('');
+    final formattedAddress = useState<String>('');
+    final currentPosition = useState<Position?>(null);
 
     final userReportRequest =
         useState(UserReportRequest(bookingId: order.id, resourceList: []));
@@ -56,12 +102,45 @@ class IncidentsScreen extends HookConsumerWidget {
 
     // print("tuan checking 1 ${images.toString()}");
 
+    // final imagePublicIds = useState<List<String>>(
+    //   images.value.map((url) {
+    //     final uri = Uri.parse(url);
+    //     final pathSegments = uri.pathSegments;
+    //     return pathSegments.length > 1
+    //         ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last}' // Bao gồm phần mở rộng
+    //         : '';
+    //   }).toList(),
+    // );
+
+    // Thêm useEffect để lấy và format địa chỉ
+    useEffect(() {
+      Future<void> fetchAddress() async {
+        try {
+          Position position = await getCurrentPosition();
+          currentPosition.value = position;
+          var addressInfo = await getAddressFromLatLng(position);
+          String displayAddress = addressInfo['display'] ?? '';
+
+          currentAddress.value = displayAddress;
+          // Format địa chỉ thành không dấu
+          formattedAddress.value = convertToUnsigned(displayAddress);
+        } catch (e) {
+          print('Error getting address: $e');
+          currentAddress.value = 'Khong the lay dia chi';
+          formattedAddress.value = 'Khong the lay dia chi';
+        }
+      }
+
+      fetchAddress();
+      return null;
+    }, []);
+
     final imagePublicIds = useState<List<String>>(
       images.value.map((url) {
         final uri = Uri.parse(url);
         final pathSegments = uri.pathSegments;
         return pathSegments.length > 1
-            ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last}' // Bao gồm phần mở rộng
+            ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last.split('.').first}'
             : '';
       }).toList(),
     );
@@ -135,49 +214,6 @@ class IncidentsScreen extends HookConsumerWidget {
     }
 
 //////////////////////
-
-    // Hàm để lấy vị trí hiện tại
-    Future<Position> getCurrentPosition() async {
-      LocationPermission permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        throw Exception("Không có quyền truy cập vị trí");
-      }
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-    }
-
-    // Hàm để gọi Reverse Geocoding API của VietMap
-    Future<Map<String, dynamic>> getAddressFromLatLng(Position position) async {
-      const apiKey = APIConstants.apiVietMapKey;
-      final double latitude = position.latitude;
-      final double longitude = position.longitude;
-
-      final String url =
-          'https://maps.vietmap.vn/api/reverse/v3?apikey=$apiKey&lat=$latitude&lng=$longitude';
-
-      try {
-        final response = await http.get(Uri.parse(url));
-        if (response.statusCode == 200) {
-          final List<dynamic> data = json.decode(response.body);
-          if (data.isNotEmpty) {
-            // Lấy thông tin từ boundaries
-            String display = data[0]['display'];
-            return {'display': display, 'position': position};
-          } else {
-            return {'display': "Không tìm thấy địa chỉ", 'position': position};
-          }
-        } else {
-          return {
-            'display': "Lỗi khi gọi API: ${response.statusCode}",
-            'position': position
-          };
-        }
-      } catch (e) {
-        return {'display': "Không thể lấy địa chỉ: $e", 'position': position};
-      }
-    }
 
     void handleAmountInput(String value) {
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
@@ -272,13 +308,14 @@ class IncidentsScreen extends HookConsumerWidget {
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     dropdownColor: Colors.white,
-                    value: supportType.value,
+                    value: supportType.value ?? 'Vỡ hàng',
                     onChanged: isRequestSent.value
                         ? null // Disable editing for "Yêu cầu đã gửi"
                         : (value) {
                             supportType.value = value;
+                            // Thêm ngay sau khi khởi tạo supportType
                             title.value =
-                                value ?? ''; // Lưu giá trị vào `title`
+                                'Vỡ hàng'; // Set initial title value; // Lưu giá trị vào `title`
                           },
                     items: supportTypes
                         .map((e) => DropdownMenuItem<String>(
@@ -492,6 +529,9 @@ class IncidentsScreen extends HookConsumerWidget {
                           color: Colors.black, fontWeight: FontWeight.bold)),
 
                   buildConfirmationSection(
+                      location: currentPosition.value != null
+                          ? "${currentPosition.value!.latitude}-${currentPosition.value!.longitude}"
+                          : "Loading location...",
                       imagePublicIds: imagePublicIds.value,
                       onImageUploaded: (url, publicId) {
                         images.value = [...images.value, url];
@@ -568,15 +608,17 @@ class IncidentsScreen extends HookConsumerWidget {
                           location: displayAddress,
                           point: "${position.latitude}, ${position.longitude}",
                           description: description.value,
-                          title: title.value,
+                          title: supportType.value,
                           reason: reason.value,
                           estimatedAmount: amount,
                           isInsurance: isInsurance.value,
                         );
                         print(
                             "tuan checking userReportRequest ${userReportRequest.value.toString()}");
-                        print(
-                            "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
+                        // print(
+                        //     "tuan checking formattedAddress value ${formattedAddress.value.toString()}");
+                        // print(
+                        //     "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
                         await ref
                             .read(orderControllerProvider.notifier)
                             .postUserReport(
@@ -618,6 +660,7 @@ class IncidentsScreen extends HookConsumerWidget {
     required bool isEnabled,
     required bool showCameraButton,
     required UserReportRequest request,
+    required String location,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -657,12 +700,12 @@ class IncidentsScreen extends HookConsumerWidget {
 
           CloudinaryCameraUploadWidget(
             // Truyền các thuộc tính text overlay nếu cần
-            overlayText: "Hello World",
+            overlayText: location,
             fontFamily: "Courier",
             fontSize: 30,
-            fontColor: "red",
+            fontColor: "orange",
             gravity: "north",
-            yOffset: 500,
+            yOffset: 100,
             disabled: !isEnabled,
             imagePublicIds: imagePublicIds,
             onImageUploaded: isEnabled
@@ -690,4 +733,45 @@ class IncidentsScreen extends HookConsumerWidget {
       ),
     );
   }
+}
+
+// Hàm chuyển đổi tiếng Việt có dấu thành không dấu
+String convertToUnsigned(String text) {
+  const vietnamese = 'aAeEoOuUiIdDyY'
+      'áàạảãâấầậẩẫăắằặẳẵ'
+      'ÁÀẠẢÃÂẤẦẬẨẪĂẮẰẶẲẴ'
+      'éèẹẻẽêếềệểễ'
+      'ÉÈẸẺẼÊẾỀỆỂỄ'
+      'óòọỏõôốồộổỗơớờợởỡ'
+      'ÓÒỌỎÕÔỐỒỘỔỖƠỚỜỢỞỠ'
+      'úùụủũưứừựửữ'
+      'ÚÙỤỦŨƯỨỪỰỬỮ'
+      'íìịỉĩ'
+      'ÍÌỊỈĨ'
+      'đ'
+      'Đ'
+      'ýỳỵỷỹ'
+      'ÝỲỴỶỸ';
+
+  const unsignedVietnamese = 'aAeEoOuUiIdDyY'
+      'aaaaaaaaaaaaaaaaaa'
+      'AAAAAAAAAAAAAAAAAA'
+      'eeeeeeeeeeee'
+      'EEEEEEEEEEEE'
+      'ooooooooooooooooo'
+      'OOOOOOOOOOOOOOOOO'
+      'uuuuuuuuuuu'
+      'UUUUUUUUUUU'
+      'iiiii'
+      'IIIII'
+      'd'
+      'D'
+      'yyyyy'
+      'YYYYY';
+
+  String result = text;
+  for (int i = 0; i < vietnamese.length; i++) {
+    result = result.replaceAll(vietnamese[i], unsignedVietnamese[i]);
+  }
+  return result;
 }

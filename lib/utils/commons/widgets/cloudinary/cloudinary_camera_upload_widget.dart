@@ -53,20 +53,22 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
         () => CloudinaryPublic('dkpnkjnxs', 'movemate', cache: false));
 
     // Hàm tạo URL với transformation (nếu có)
-    String getTransformedUrl(String secureUrl) {
-      print("chekcing uri $secureUrl ");
-      final uri = Uri.parse(secureUrl);
-      final pathSegments = uri.pathSegments;
+    String getTransformedUrl(String input) {
+      // Tạo base URL Cloudinary nếu input là publicId
+      String baseUrl = input.startsWith('http')
+          ? input
+          : 'https://res.cloudinary.com/dkpnkjnxs/image/upload/$input';
 
-      // Tìm vị trí 'upload' trong pathSegments
-      final uploadIndex = pathSegments.indexOf('upload');
-      if (uploadIndex == -1 || uploadIndex + 1 >= pathSegments.length) {
-        // Nếu không tìm thấy 'upload' hoặc thiếu phần sau, trả về URL gốc
-        return secureUrl;
+      // Nếu không có overlay text, trả về URL gốc
+      if (overlayText == null || overlayText!.isEmpty) {
+        return baseUrl;
       }
-
-      // Phần sau 'upload'
-      final afterUpload = pathSegments.sublist(uploadIndex + 1);
+      // Encode text overlay đúng cách cho Cloudinary
+      String encodedText = Uri.encodeComponent(overlayText!)
+          .replaceAll('-', '%2D')
+          .replaceAll('_', '%5F')
+          .replaceAll('.', '%2E')
+          .replaceAll('/', '%2F');
 
       // Xây dựng transformation string
       final family = fontFamily ?? "Arial";
@@ -76,29 +78,17 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
       final posYOffset = yOffset ?? 50;
       final overlay = Uri.encodeComponent(overlayText ?? "");
 
-      // Định dạng transformation: l_text:<fontFamily>_<fontSize>_<fontColor>:<overlayText>,g_<gravity>
+      // Tìm vị trí '/upload/' trong URL
+      final uploadIndex = baseUrl.indexOf('/upload/');
+      if (uploadIndex == -1) return baseUrl;
+
+      // Chèn transformation vào sau '/upload/'
       final transformation =
-          "l_text:${family}_${size}_$color:$overlay,g_$posGravity,y_$posYOffset";
+          "l_text:${family}_${size}_$color:$encodedText,g_$posGravity,y_$posYOffset/";
 
-      // Tạo lại pathSegments với transformation chèn vào
-      final newPathSegments = [
-        ...pathSegments.sublist(0, uploadIndex + 1),
-        transformation,
-        ...afterUpload,
-      ];
-
-      // Tạo lại URI với pathSegments mới
-      final transformedUri = uri.replace(
-        pathSegments: newPathSegments,
-      );
-
-      print("chekcing uri 2 ${transformedUri.toString()} ");
-      return transformedUri.toString();
+      return baseUrl.replaceFirst('/upload/', '/upload/$transformation');
     }
 
-    final checking =
-        getTransformedUrl('movemate/q0dgjkd6y0ujkvqmgybl').toString();
-    print("chekcing chekcing uri 3342 $checking");
     // Hàm upload hình ảnh từ camera
     Future<void> uploadImageFromCamera() async {
       if (disabled || isLoading.value) return;
