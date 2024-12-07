@@ -47,7 +47,7 @@ class SignInController extends _$SignInController {
 
     // Tạo request với email hoặc phone
     final request = SignInRequest(
-      email: email ?? formattedPhone,
+      email: email ?? phone,
       // phone: formattedPhone,
       password: password,
     );

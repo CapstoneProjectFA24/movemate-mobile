@@ -32,10 +32,24 @@ class SignInScreen extends HookConsumerWidget with Validations {
     required String password,
     required String phoneNumber,
   }) async {
+    // Kiểm tra xem cả email và phoneNumber đều rỗng
+    if (email.isEmpty && phoneNumber.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng nhập Email hoặc Số điện thoại.'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+    // Sử dụng toán tử ba ngôi để gán giá trị cho email
+    String contact = email.isEmpty ? phoneNumber : email;
+
     if (formKey.currentState!.validate()) {
       unfocus(context);
       await ref.read(signInControllerProvider.notifier).signIn(
-            email: email,
+            email: contact,
             phone: phoneNumber,
             password: password,
             context: context,
