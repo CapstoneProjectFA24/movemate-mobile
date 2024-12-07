@@ -43,11 +43,29 @@ class SignInController extends _$SignInController {
       return phone ?? '';
     }
 
+    // Hàm kiểm tra xem một chuỗi có phải là số điện thoại hay không (chỉ chứa chữ số)
+    bool isPhoneNumber(String s) {
+      final phoneRegExp = RegExp(r'^\d+$');
+      return phoneRegExp.hasMatch(s);
+    }
+
+    // Hàm định dạng email nếu nó là số điện thoại
+    String? formatEmail(String? email) {
+      if (email != null && isPhoneNumber(email)) {
+        // Nếu email là số điện thoại, định dạng nó
+        return formatPhoneNumber(email);
+      }
+      return email;
+    }
+
+    // Định dạng email
+    final formattedEmail = formatEmail(email);
+    // Định dạng số điện thoại
     final formattedPhone = formatPhoneNumber(phone);
 
     // Tạo request với email hoặc phone
     final request = SignInRequest(
-      email: email ?? phone,
+      email: formattedEmail,
       // phone: formattedPhone,
       password: password,
     );

@@ -274,34 +274,36 @@ class ServiceCard extends HookConsumerWidget {
             ],
             // Note colors for service types
             const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  color: Colors.red,
-                ),
-                const SizedBox(width: 8),
-                const Text('Thông tin cũ', style: TextStyle(fontSize: 10)),
-                const SizedBox(width: 16),
-                Container(
-                  width: 12,
-                  height: 12,
-                  color: Colors.green,
-                ),
-                const SizedBox(width: 8),
-                const Text('Thông tin cập nhật',
-                    style: TextStyle(fontSize: 10)),
-                const SizedBox(width: 16),
-                Container(
-                  width: 12,
-                  height: 12,
-                  color: Colors.black,
-                ),
-                const SizedBox(width: 8),
-                const Text('Không thay đổi', style: TextStyle(fontSize: 10)),
-              ],
+            FittedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 10,
+                    height: 12,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('Thông tin cũ', style: TextStyle(fontSize: 10)),
+                  const SizedBox(width: 16),
+                  Container(
+                    width: 10,
+                    height: 12,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('Thông tin cập nhật',
+                      style: TextStyle(fontSize: 10)),
+                  const SizedBox(width: 16),
+                  Container(
+                    width: 10,
+                    height: 12,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text('Không thay đổi', style: TextStyle(fontSize: 10)),
+                ],
+              ),
             ),
           ],
         ),

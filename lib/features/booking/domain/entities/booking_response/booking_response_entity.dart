@@ -48,6 +48,7 @@ class BookingResponseEntity {
   final bool isRoundTrip;
   final bool? isUpdated;
   final bool? isInsurance;
+  final bool? isUnchanged;
   final String note;
   final double totalFee;
   final int truckNumber;
@@ -99,6 +100,7 @@ class BookingResponseEntity {
     required this.isRoundTrip,
     this.isUpdated,
     this.isInsurance,
+    this.isUnchanged,
     required this.note,
     required this.totalFee,
     this.feeInfo,
@@ -152,6 +154,7 @@ class BookingResponseEntity {
       isRoundTrip: json['isRoundTrip'] ?? false,
       isUpdated: json['isUpdated'] ?? false,
       isInsurance: json['isInsurance'] ?? false,
+      isUnchanged: json['isUnchanged'] ?? false,
       note: json['note'] ?? '',
       totalFee: (json['totalFee'] as num?)?.toDouble() ?? 0.0,
       truckNumber: json['truckNumber'] ?? 0,
@@ -221,6 +224,7 @@ class BookingResponseEntity {
       'isRoundTrip': isRoundTrip,
       'isUpdated': isUpdated,
       'isInsurance': isInsurance,
+      'isUnchanged': isUnchanged,
       'note': note,
       'totalFee': totalFee,
       'truckNumber': truckNumber,
@@ -277,6 +281,7 @@ class BookingResponseEntity {
         'isRoundTrip: $isRoundTrip, '
         'isUpdated: $isUpdated, '
         'isInsurance: $isInsurance, '
+        'isUnchanged: $isUnchanged, '
         'note: $note, '
         'totalFee: $totalFee, '
         'truckNumber: $truckNumber, '

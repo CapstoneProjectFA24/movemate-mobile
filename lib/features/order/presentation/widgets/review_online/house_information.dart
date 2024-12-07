@@ -31,7 +31,7 @@ class HouseInformation extends HookConsumerWidget {
             .format(DateTime.parse(orderOld!.bookingAt.toString()))
         : null;
     final formattedTimeOld = orderOld != null
-        ? DateFormat('hh:mm')
+        ? DateFormat('HH:mm')
             .format(DateTime.parse(orderOld!.bookingAt.toString()))
         : null;
 

@@ -56,6 +56,7 @@ class OrderEntity {
   final bool isRoundTrip;
   final bool? isUpdated;
   final bool? isInsurance;
+  final bool? isUnchanged;
   final String? note;
   final double totalFee;
   final int truckNumber;
@@ -114,6 +115,7 @@ class OrderEntity {
     required this.isRoundTrip,
     this.isUpdated,
     this.isInsurance,
+    this.isUnchanged,
     required this.note,
     required this.totalFee,
     required this.feeInfo,
@@ -152,6 +154,7 @@ class OrderEntity {
       isDeleted: map['isDeleted'] ?? false,
       isUpdated: map['isUpdated'] ?? false,
       isInsurance: map['isInsurance'] ?? false,
+      isUnchanged: map['isUnchanged'] ?? false,
       createdAt: map['createdAt'] != null
           ? dateFormat.parse(map['createdAt'])
           : DateTime.now(),
@@ -259,6 +262,7 @@ class OrderEntity {
       'isRoundTrip': isRoundTrip,
       'isUpdated': isUpdated,
       'isInsurance': isInsurance,
+      'isUnchanged': isUnchanged,
       'note': note,
       'totalFee': totalFee,
       'truckNumber': truckNumber,
@@ -332,6 +336,7 @@ class OrderEntity {
       isRoundTrip: response.isRoundTrip,
       isUpdated: response.isUpdated,
       isInsurance: response.isInsurance,
+      isUnchanged: response.isUnchanged,
       note: response.note ?? '',
       totalFee: response.totalFee,
       truckNumber: response.truckNumber,

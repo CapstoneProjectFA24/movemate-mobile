@@ -156,7 +156,7 @@ class ReviewOnline extends HookConsumerWidget {
             final validVouchers = promotion.vouchers.where((voucher) =>
                 voucher.isActived &&
                 voucher.bookingId == null &&
-                (voucher.userId == null || voucher.userId == order.userId));
+                (voucher.userId == order.userId));
 
             matchingVouchers.addAll(validVouchers);
           }
@@ -182,6 +182,7 @@ class ReviewOnline extends HookConsumerWidget {
 
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
+    final checkIsUnchanged = order.isUnchanged == true;
     return LoadingOverlay(
       isLoading: stateProfile.isLoading ||
           stateService.isLoading ||
@@ -189,8 +190,9 @@ class ReviewOnline extends HookConsumerWidget {
           statePromotion.isLoading,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: const CustomAppBar(
-          title: 'Gợi ý dịch vụ',
+        appBar: CustomAppBar(
+          title:
+              order.isUnchanged == true ? 'Gợi ý dịch vụ' : 'Xác nhận dịch vụ',
           backButtonColor: AssetsConstants.whiteColor,
           centerTitle: true,
         ),
@@ -201,9 +203,11 @@ class ReviewOnline extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Chọn xe không hợp lý',
-                        style: TextStyle(
+                      Text(
+                        order.isUnchanged == false
+                            ? 'Vui lòng xác nhận'
+                            : 'Chọn xe không hợp lý',
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
