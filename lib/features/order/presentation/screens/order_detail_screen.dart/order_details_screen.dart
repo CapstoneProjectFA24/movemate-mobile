@@ -260,7 +260,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 BookingStatus(order: orderEntity.data ?? order),
                 const SizedBox(height: 20),
                 TimelineSteps(
-                  order: order,
+                  order: orderEntity.data ?? order,
                   expandedIndex: expandedIndex,
                 ),
                 const SizedBox(height: 14),
