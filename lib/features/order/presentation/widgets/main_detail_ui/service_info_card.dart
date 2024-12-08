@@ -38,7 +38,7 @@ class ServiceInfoCard extends HookConsumerWidget {
         DateFormat('HH:mm').format(DateTime.parse(order.bookingAt.toString()));
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
     bool isChangeDateEnabled() {
       return bookingStatus.canReviewSuggestion ||

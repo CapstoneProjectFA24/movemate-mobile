@@ -52,7 +52,7 @@ class ProfileStaffInfo extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
     final isStateController = state.isLoading;
 
     String getCardTitle(String staffType) {

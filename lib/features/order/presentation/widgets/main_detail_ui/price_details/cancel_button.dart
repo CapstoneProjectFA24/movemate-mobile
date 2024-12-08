@@ -26,7 +26,7 @@ class CancelButton extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
     bool isCancelEnabled() {
       return bookingStatus.canCanceled;
@@ -126,7 +126,7 @@ class CancelButton extends HookConsumerWidget {
             // Ví dụ:
             // await ref.read(bookingControllerProvider.notifier)
             //   .cancelBooking(request: cancelRequest, id: order.id, context: context);
-            context.router.push( RefundScreenRoute(order:order));
+            context.router.push(RefundScreenRoute(order: order));
             Navigator.pop(context);
           },
         );

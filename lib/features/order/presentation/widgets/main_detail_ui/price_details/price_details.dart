@@ -35,7 +35,7 @@ class PriceDetails extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
     String formatPrice(int price) {
       final formatter = NumberFormat('#,###', 'vi_VN');

@@ -66,7 +66,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
     final canRepostBooking = bookingStatus.isProcessingRequest;
 
     final bookingAssignment = bookingAsync.value?.assignments.length;

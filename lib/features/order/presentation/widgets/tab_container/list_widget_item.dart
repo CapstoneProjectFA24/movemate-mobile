@@ -92,7 +92,7 @@ class ListItemWidget extends HookConsumerWidget {
     final staffProFile = useFetchResultProfileAssign;
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
     final canCheckDriverTracking = bookingStatus.isDriverProcessingMoving;
     final canCheckPorterTracking = bookingStatus.isPorterProcessingMoving;
