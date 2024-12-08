@@ -82,7 +82,7 @@ class OrderItem extends HookConsumerWidget {
                 child: bookingAsync.when(
                   data: (data) {
                     final bookingStatus = useBookingStatus(
-                        bookingAsync.value, order.isReviewOnline);
+                        bookingAsync.value, order.isReviewOnline ?? false);
                     // Extract necessary flags from bookingStatus
                     final bool isCancelled = bookingStatus.isCancelled;
                     final bool instructionIconFollowStatus =
