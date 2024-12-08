@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
 import 'package:movemate/features/booking/domain/entities/image_data.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/media_selection_modal.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/room_image.dart';
+import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/room_video.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_1st/image_button/video_data.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
-import 'room_image.dart';
-import 'room_video.dart';
-import 'add_image_button.dart';
-import 'add_video_button.dart';
+import 'add_media_button.dart';
 
 class RoomMediaSection extends ConsumerWidget {
   // Changed to ConsumerWidget
@@ -42,6 +42,10 @@ class RoomMediaSection extends ConsumerWidget {
         bookingState.isUploadingLivingRoomVideo;
 
     // print('check tải ảnh $isUploadingLivingRoomImage');
+    // Tổng số item: số hình ảnh + số video + (1 nếu có thể thêm media)
+    final int totalItemCount = images.length +
+        videos.length +
+        ((canAddMoreImages || canAddMoreVideos) ? 1 : 0);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,56 +63,30 @@ class RoomMediaSection extends ConsumerWidget {
             crossAxisSpacing: 16, // Horizontal spacing between columns
             childAspectRatio: 2, // Width to height ratio of each cell
           ),
-          itemCount: images.length +
-              videos.length +
-              (canAddMoreImages ? 1 : 0) +
-              (canAddMoreVideos ? 1 : 0),
+          itemCount: totalItemCount,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            int imageCount = images.length;
-            int videoCount = videos.length;
-
-            // Display images
-            if (index < imageCount) {
+            if (index < images.length) {
               final image = images[index];
               return RoomImage(
                 imageData: image,
                 roomType: roomType,
               );
-            }
-
-            // Display videos
-            if (index < imageCount + videoCount) {
-              final video = videos[index - imageCount];
+            } else if (index < images.length + videos.length) {
+              final video = videos[index - images.length];
               return RoomVideo(
                 videoData: video,
                 roomType: roomType,
               );
-            }
-
-            // Calculate the current position for additional buttons
-            int additionalIndex = index - imageCount - videoCount;
-
-            // Display Add Image button or loader
-            if (canAddMoreImages && additionalIndex == 0) {
-              return AddImageButton(
+            } else {
+              // Đây là vị trí cuối cùng, hiển thị AddMediaButton
+              return AddMediaButton(
                 roomType: roomType,
-                hasImages: images.isNotEmpty,
+                hasMedia: images.isNotEmpty || videos.isNotEmpty,
               );
             }
-
-            // Display Add Video button or loader
-            if (canAddMoreVideos &&
-                (additionalIndex == (canAddMoreImages ? 1 : 0))) {
-              return AddVideoButton(
-                roomType: roomType,
-                hasVideos: videos.isNotEmpty,
-              );
-            }
-            print('check index $imageCount');
-            print('check index ${images.length}');
-            return const SizedBox.shrink(); // Render nothing
+            // return const SizedBox.shrink();
           },
         ),
         // Display a message if the limits are reached
@@ -125,4 +103,24 @@ class RoomMediaSection extends ConsumerWidget {
       ],
     );
   }
+}
+
+Future<void> _showMediaSelectionModal(
+    BuildContext context, BookingNotifier bookingNotifier, roomType) async {
+  await showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+    ),
+    builder: (context) => MediaSelectionModal(
+      roomType: roomType,
+      onImageSelected: (imageData) {
+        bookingNotifier.addImageToRoom(roomType, imageData);
+      },
+      onVideoSelected: (videoData) {
+        bookingNotifier.addVideoToRoom(roomType, videoData);
+      },
+    ),
+  );
 }

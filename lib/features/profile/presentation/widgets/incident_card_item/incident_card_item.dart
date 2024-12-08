@@ -239,38 +239,38 @@ class ReservationCard extends HookConsumerWidget {
             const SizedBox(height: 12),
 
             // Danh sách ảnh
-            if (reservation.trackerSources.isNotEmpty)
-              SizedBox(
-                height: 60,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: reservation.trackerSources.length,
-                  itemBuilder: (context, index) {
-                    final source = reservation.trackerSources[index];
-                    return Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          source.resourceUrl ??
-                              'https://res.cloudinary.com/dietfw7lr/image/upload/v1733425759/fojgatdijoy3695lkbys.jpg',
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 60,
-                              height: 60,
-                              color: Colors.grey[300],
-                              child: const Icon(Icons.error, size: 20),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            // if (reservation.trackerSources.isNotEmpty)
+            //   SizedBox(
+            //     height: 60,
+            //     child: ListView.builder(
+            //       scrollDirection: Axis.horizontal,
+            //       itemCount: reservation.trackerSources.length,
+            //       itemBuilder: (context, index) {
+            //         final source = reservation.trackerSources[index];
+            //         return Container(
+            //           margin: const EdgeInsets.only(right: 8),
+            //           child: ClipRRect(
+            //             borderRadius: BorderRadius.circular(6),
+            //             child: Image.network(
+            //               source.resourceUrl ??
+            //                   'https://res.cloudinary.com/dietfw7lr/image/upload/v1733425759/fojgatdijoy3695lkbys.jpg',
+            //               width: 60,
+            //               height: 60,
+            //               fit: BoxFit.cover,
+            //               errorBuilder: (context, error, stackTrace) {
+            //                 return Container(
+            //                   width: 60,
+            //                   height: 60,
+            //                   color: Colors.grey[300],
+            //                   child: const Icon(Icons.error, size: 20),
+            //                 );
+            //               },
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     ),
+            //   ),
           ],
         ),
       ),

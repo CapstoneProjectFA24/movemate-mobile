@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/features/home/domain/entities/location_model_entities.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/balance_indicator.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/location_field.dart';
 import 'package:movemate/features/home/presentation/widgets/service_selector/date_time_section.dart';
@@ -293,23 +294,24 @@ class ServiceSelector extends HookConsumerWidget {
                 onPressed: () {
                   showErrors.value = true; // Show validation errors
 
-                  // bookingNotifier.updatePickUpLocation(LocationModel(
-                  //     label: 'label',
-                  //     address:
-                  //         '152a Mã lò, Bình Trị Đông A, Bình Tân, Ho Chi Minh City, Vietnam',
-                  //     latitude: 10.763150,
-                  //     longitude: 106.604640,
-                  //     distance: "43"));
-                  // bookingNotifier.updateDropOffLocation(LocationModel(
-                  //     label: 'label',
-                  //     address:
-                  //         '252 Mã lò, Bình Trị Đông B, Bình Tân, Ho Chi Minh City, Vietnam',
-                  //     latitude: 10.769140,
-                  //     longitude: 106.602870,
-                  //     distance: '2'));
+                  bookingNotifier.updatePickUpLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          '152a Mã lò, Bình Trị Đông A, Bình Tân, Ho Chi Minh City, Vietnam',
+                      latitude: 10.763150,
+                      longitude: 106.604640,
+                      distance: "43"));
+                  bookingNotifier.updateDropOffLocation(LocationModel(
+                      label: 'label',
+                      address:
+                          '252 Mã lò, Bình Trị Đông B, Bình Tân, Ho Chi Minh City, Vietnam',
+                      latitude: 10.769140,
+                      longitude: 106.602870,
+                      distance: '2'));
 
-                  // bookingNotifier.updateBookingDate(
-                  //     DateTime.now().add(const Duration(days: 1)));
+                  bookingNotifier.updateBookingDate(
+                      DateTime.now().add(const Duration(days: 1)));
+
                   // Validate booking details
                   final isPickUpValid = bookingState.pickUpLocation != null &&
                       bookingState.pickUpLocation!.address != 'Chọn địa điểm';

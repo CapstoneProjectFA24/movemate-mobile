@@ -13,8 +13,8 @@ import 'package:movemate/features/booking/domain/entities/sub_service_entity.dar
 import '/features/booking/domain/entities/booking_enities.dart';
 
 class BookingNotifier extends StateNotifier<Booking> {
-  static const int maxImages = 5; // Giới hạn hình ảnh tối đa
-  static const int maxVideos = 2; // Giới hạn video tối đa
+  static const int maxImages = 10; // Giới hạn hình ảnh tối đa
+  static const int maxVideos = 10; // Giới hạn video tối đa
   static const int maxVideoSize = 25 * 1024 * 1024; // 25 MB tính bằng bytes
   final emptyLocationModel = LocationModel(
     label: 'Chọn địa điểm',
