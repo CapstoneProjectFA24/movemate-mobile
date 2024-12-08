@@ -25,19 +25,27 @@ class BookingStatus extends HookConsumerWidget {
     final isComplete = bookingStatus.isCompleted;
     final isRefunding = bookingStatus.isRefunding;
 
-    String statusText;
+    String statusText = bookingStatus.statusMessage;
     String statusTextDetails = bookingStatus.statusMessage;
 
     if (isComplete) {
-      if (order.isRefunded) {
+      if (order.isCancel) {
+        if (order.isRefunded) {
+          statusText = 'Đã hoàn tiền';
+          statusTextDetails = 'Đã hoàn lại tiền vào ví của bạn';
+        } else {
+          statusText = 'Đã hủy';
+          statusTextDetails = 'Đơn hàng đã bị hủy';
+        }
+      } else if (order.isRefunded) {
         statusText = 'Đã hoàn tiền';
         statusTextDetails = 'Đã hoàn lại tiền vào ví của bạn';
-      } else if (isComplete) {
+      } else if (isComplete && !order.isCancel) {
+        statusText = 'Đã hoàn thành';
+        statusTextDetails = 'Đơn hàng đã hoàn thành';
+      } else {
         statusText = 'Đã hủy';
         statusTextDetails = 'Đơn hàng đã bị hủy';
-      } else {
-        statusText = 'Hoàn thành';
-        statusTextDetails = 'bookingStatus.statusMessage';
       }
     } else if (isRefunding) {
       statusText = 'Đang chờ hoàn tiền';

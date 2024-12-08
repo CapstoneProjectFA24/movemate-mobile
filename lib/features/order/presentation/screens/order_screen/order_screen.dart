@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/orderItem.dart';
@@ -20,6 +21,7 @@ class OrderScreen extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
     final state = ref.watch(orderControllerProvider);
+    final stateBooking = ref.watch(bookingControllerProvider);
 
     final fetchReslut = useFetch<OrderEntity>(
       function: (model, context) => ref
@@ -37,6 +39,13 @@ class OrderScreen extends HookConsumerWidget {
       context: context,
     );
 
+    ref.listen<bool>(refreshOrderList, (_, __) => fetchReslut.refresh());
+
+    useEffect(() {
+      ref.listen<bool>(refreshOrderList, (_, __) => fetchReslut.refresh());
+      return null;
+    }, []);
+
     useEffect(() {
       scrollController.onScrollEndsListener(fetchReslut.loadMore);
 
@@ -49,7 +58,7 @@ class OrderScreen extends HookConsumerWidget {
     }, const []);
 
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: state.isLoading || stateBooking.isLoading,
       child: Scaffold(
         appBar: CustomAppBar(
           title: 'Danh sách đặt dịch vụ',
@@ -76,9 +85,7 @@ class OrderScreen extends HookConsumerWidget {
                         alignment: Alignment.topCenter,
                         child: EmptyBox(title: ''),
                       )
-                    :
-                    
-                     Expanded(
+                    : Expanded(
                         child: ListView.builder(
                           itemCount: fetchReslut.items.length + 1,
                           physics: const AlwaysScrollableScrollPhysics(),

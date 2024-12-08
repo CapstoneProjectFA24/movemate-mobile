@@ -13,10 +13,10 @@ class OrderStreamManager {
   Stream<OrderEntity> get jobStream => _jobController.stream;
 
   void updateJob(OrderEntity newJob) {
-    print(
-        'tuan Updating order in StreamManager: ${newJob.assignments.map((e) => e.toJson())}');
-    print(
-        'tuan Updating order in StreamManager totalReal: ${newJob.totalReal}');
+    // print(
+    //     'tuan Updating order in StreamManager: ${newJob.assignments.map((e) => e.toJson())}');
+    // print(
+    //     'tuan Updating order in StreamManager totalReal: ${newJob.totalReal}');
 
     _jobController.add(newJob);
   }
@@ -37,8 +37,8 @@ class OrderStreamManagerResponse {
   Stream<BookingResponseEntity> get jobStream => _jobController.stream;
 
   void updateJob(BookingResponseEntity newJob) {
-    print(
-        'tuan Updating order in StreamManager: ${newJob.assignments.map((e) => e.toJson())}');
+    // print(
+    //     'tuan Updating order in StreamManager: ${newJob.assignments.map((e) => e.toJson())}');
 
     _jobController.add(newJob);
   }

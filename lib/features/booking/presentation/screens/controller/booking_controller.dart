@@ -33,6 +33,9 @@ final bookingResponseProvider =
 final refreshOrderList = StateProvider.autoDispose<bool>(
   (ref) => true,
 );
+final refreshOrderDetailsById = StateProvider.autoDispose<bool>(
+  (ref) => true,
+);
 
 @riverpod
 class BookingController extends _$BookingController {
@@ -304,6 +307,9 @@ class BookingController extends _$BookingController {
       ref
           .read(refreshOrderList.notifier)
           .update((state) => !ref.read(refreshOrderList));
+      ref
+          .read(refreshOrderDetailsById.notifier)
+          .update((state) => !ref.read(refreshOrderDetailsById));
       // stream realtime -> ref status
       // case1
       // todo nếu mà status là WAITING + not online -> chọn truyền status DEPOSITING -> sau đó chuyển qua paymenscrent

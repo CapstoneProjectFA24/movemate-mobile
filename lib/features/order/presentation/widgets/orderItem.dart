@@ -93,19 +93,21 @@ class OrderItem extends HookConsumerWidget {
                     final bool isComplete = bookingStatus.isCompleted;
                     final bool isRefunding = bookingStatus.isRefunding;
 
-                    String statusTextDetails = '';
+                    String statusTextDetails = bookingStatus.statusMessage;
 
                     if (isComplete) {
                       if (order.isCancel) {
-                        statusTextDetails = 'Đơn hàng đã bị hủy';
-                      }
-                      if (order.isRefunded) {
+                        if (order.isRefunded) {
+                          statusTextDetails = 'Đã hoàn lại tiền';
+                        } else {
+                          statusTextDetails = 'Đơn hàng đã bị hủy';
+                        }
+                      } else if (order.isRefunded) {
                         statusTextDetails = 'Đã hoàn lại tiền';
                       } else if (isComplete) {
                         statusTextDetails = 'Đơn hàng đã hoàn thành';
-                      } else {
+                      } else
                         statusTextDetails = bookingStatus.statusMessage;
-                      }
                     } else if (isRefunding) {
                       statusTextDetails = 'Đang xử lý yêu cầu hoàn tiền';
                     } else if (isCancelled) {
