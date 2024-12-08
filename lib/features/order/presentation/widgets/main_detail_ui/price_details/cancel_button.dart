@@ -1,10 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/cancel_diaglog.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/post_deposit_cancel_dialog.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
@@ -109,92 +112,23 @@ class CancelButton extends HookConsumerWidget {
   }
 
   /// Hiển thị dialog cảnh báo trước khi hủy sau khi đặt cọc
+
   void showCancelDialogPostDeposit(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Đang hủy đơn hàng',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.orange,
-                ),
-              ),
-            ],
-          ),
-          content: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                'Vui lòng đọc kỹ thông tin cảnh báo bên dưới ',
-              ),
-              SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    subtitle: Text(
-                      'Sau khi hủy, bạn không thể tiếp tục thanh toán cho đơn hàng nầy.Các thanh toán tương ứng cũng sẽ không còn hiệu lực.',
-                    ),
-                  ),
-                  ListTile(
-                    subtitle: Text(
-                      'Mã giảm giá đã áp dụng cho đơn hàng này sẽ tự động được thu hồi.',
-                    ),
-                  ),
-                  ListTile(
-                    subtitle: Text(
-                      'Bất kỳ khoản thanh toán nào chúng tôi nhận được cho đơn hàng này sẽ được hoàn trả dụa theo thời gian dọn nhà ',
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Bạn vẫn muốn hủy?',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'Không',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.orange,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                // Handle cancel booking logic here
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'Có, hủy đặt chỗ',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.orange,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
+        return PostDepositCancelDialog(
+          onCancel: () {
+            Navigator.pop(context);
+          },
+          onConfirm: () async {
+            // Thực hiện logic hủy đơn ở đây
+            // Ví dụ:
+            // await ref.read(bookingControllerProvider.notifier)
+            //   .cancelBooking(request: cancelRequest, id: order.id, context: context);
+            context.router.push( RefundScreenRoute(order:order));
+            Navigator.pop(context);
+          },
         );
       },
     );

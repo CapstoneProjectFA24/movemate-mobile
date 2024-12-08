@@ -122,12 +122,18 @@ class ReservationCard extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        reservation.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF333333),
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            Text(
+                              reservation.title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF333333),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -155,45 +161,49 @@ class ReservationCard extends HookConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Text(
-                            'Ước tính: ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF666666),
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Ước tính: ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF666666),
+                              ),
                             ),
-                          ),
-                          Text(
-                            ' ${formatPrice(reservation.estimatedAmount.toInt())}',
-                            style: TextStyle(
-                              fontSize:
-                                  realAmountText == 'Đang chờ...' ? 12 : 14,
-                              color: const Color(0xFF333333),
-                              fontWeight: FontWeight.w600,
+                            Text(
+                              ' ${formatPrice(reservation.estimatedAmount.toInt())}',
+                              style: TextStyle(
+                                fontSize:
+                                    realAmountText == 'Đang chờ...' ? 12 : 14,
+                                color: const Color(0xFF333333),
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            'Thực tế: ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF666666),
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Thực tế: ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFF666666),
+                              ),
                             ),
-                          ),
-                          Text(
-                            realAmountText,
-                            style: TextStyle(
-                              fontSize:
-                                  realAmountText == 'Đang chờ...' ? 12 : 14,
-                              color: const Color(0xFF333333),
-                              fontWeight: FontWeight.w600,
+                            Text(
+                              realAmountText,
+                              style: TextStyle(
+                                fontSize:
+                                    realAmountText == 'Đang chờ...' ? 12 : 14,
+                                color: const Color(0xFF333333),
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -239,38 +249,38 @@ class ReservationCard extends HookConsumerWidget {
             const SizedBox(height: 12),
 
             // Danh sách ảnh
-            if (reservation.trackerSources.isNotEmpty)
-              SizedBox(
-                height: 60,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: reservation.trackerSources.length,
-                  itemBuilder: (context, index) {
-                    final source = reservation.trackerSources[index];
-                    return Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          source.resourceUrl ??
-                              'https://res.cloudinary.com/dietfw7lr/image/upload/v1733425759/fojgatdijoy3695lkbys.jpg',
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 60,
-                              height: 60,
-                              color: Colors.grey[300],
-                              child: const Icon(Icons.error, size: 20),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            // if (reservation.trackerSources.isNotEmpty)
+            //   SizedBox(
+            //     height: 60,
+            //     child: ListView.builder(
+            //       scrollDirection: Axis.horizontal,
+            //       itemCount: reservation.trackerSources.length,
+            //       itemBuilder: (context, index) {
+            //         final source = reservation.trackerSources[index];
+            //         return Container(
+            //           margin: const EdgeInsets.only(right: 8),
+            //           child: ClipRRect(
+            //             borderRadius: BorderRadius.circular(6),
+            //             child: Image.network(
+            //               source.resourceUrl ??
+            //                   'https://res.cloudinary.com/dietfw7lr/image/upload/v1733425759/fojgatdijoy3695lkbys.jpg',
+            //               width: 60,
+            //               height: 60,
+            //               fit: BoxFit.cover,
+            //               errorBuilder: (context, error, stackTrace) {
+            //                 return Container(
+            //                   width: 60,
+            //                   height: 60,
+            //                   color: Colors.grey[300],
+            //                   child: const Icon(Icons.error, size: 20),
+            //                 );
+            //               },
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     ),
+            //   ),
           ],
         ),
       ),

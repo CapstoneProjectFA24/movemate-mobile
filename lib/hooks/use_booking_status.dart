@@ -127,8 +127,10 @@ BookingStatusResult useBookingStatus(
     final isDriverInProgress =
         hasAssignmentWithStatus("DRIVER", AssignmentsStatusType.inProgress);
     //check porter has booking
+    final isDriverHasBooking = hasAssignmentInbooking("DRIVER");
     final isPorterHasBooking = hasAssignmentInbooking("PORTER");
-
+    final isPorterAssigned =
+        hasAssignmentWithStatus("PORTER", AssignmentsStatusType.assigned);
     // Initialize action and state flags
     bool canAcceptSchedule = false;
     bool canMakePayment = false;
@@ -178,7 +180,24 @@ BookingStatusResult useBookingStatus(
           break;
         case BookingStatusType.coming:
           canCanceled = true;
-          canCanceledPostDeposit = true;
+          // canCanceledPostDeposit = true;
+
+          if (isDriverAssigned && isPorterHasBooking) {
+            if (isPorterAssigned) {
+              canCanceledPostDeposit = true;
+            } else {
+              canCanceledPostDeposit = false;
+            }
+          } else if (isDriverAssigned && !isPorterHasBooking) {
+            if (isDriverAssigned) {
+              canCanceledPostDeposit = true;
+            } else {
+              canCanceledPostDeposit = false;
+            }
+          } else {
+            canCanceledPostDeposit = true;
+          }
+
           break;
         case BookingStatusType.inProgress:
           canReport = true;
@@ -246,7 +265,23 @@ BookingStatusResult useBookingStatus(
           break;
         case BookingStatusType.coming:
           canCanceled = true;
-          canCanceledPostDeposit = true;
+          // canCanceledPostDeposit = true;
+          if (isDriverAssigned && isPorterHasBooking) {
+            if (isPorterAssigned) {
+              canCanceledPostDeposit = true;
+            } else {
+              canCanceledPostDeposit = false;
+            }
+          } else if (isDriverAssigned && !isPorterHasBooking) {
+            if (isDriverAssigned) {
+              canCanceledPostDeposit = true;
+            } else {
+              canCanceledPostDeposit = false;
+            }
+          } else {
+            canCanceledPostDeposit = true;
+          }
+
           break;
 
         case BookingStatusType.inProgress:

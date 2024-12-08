@@ -344,6 +344,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const PromotionScreen(),
       );
     },
+    RefundScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<RefundScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: RefundScreen(
+          key: args.key,
+          order: args.order,
+        ),
+      );
+    },
     RegistrationSuccessScreenRoute.name: (routeData) {
       final args = routeData.argsAs<RegistrationSuccessScreenRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1600,6 +1610,44 @@ class PromotionScreenRoute extends PageRouteInfo<void> {
   static const String name = 'PromotionScreenRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RefundScreen]
+class RefundScreenRoute extends PageRouteInfo<RefundScreenRouteArgs> {
+  RefundScreenRoute({
+    Key? key,
+    required OrderEntity order,
+    List<PageRouteInfo>? children,
+  }) : super(
+          RefundScreenRoute.name,
+          args: RefundScreenRouteArgs(
+            key: key,
+            order: order,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'RefundScreenRoute';
+
+  static const PageInfo<RefundScreenRouteArgs> page =
+      PageInfo<RefundScreenRouteArgs>(name);
+}
+
+class RefundScreenRouteArgs {
+  const RefundScreenRouteArgs({
+    this.key,
+    required this.order,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  @override
+  String toString() {
+    return 'RefundScreenRouteArgs{key: $key, order: $order}';
+  }
 }
 
 /// generated route for
