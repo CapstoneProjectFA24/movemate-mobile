@@ -91,15 +91,18 @@ class ListItemWidget extends HookConsumerWidget {
 
     final staffProFile = useFetchResultProfileAssign;
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
-
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
+
+    final canCheckDriverTracking = bookingStatus.isDriverProcessingMoving;
+    final canCheckPorterTracking = bookingStatus.isPorterProcessingMoving;
 
     bool canShowMap(String staffType, BookingStatusResult bookingStatus) {
       switch (staffType.toUpperCase()) {
         case "DRIVER":
           return bookingStatus.isDriverProcessingMoving;
-
+        case "PORTER":
+          return bookingStatus.isDriverProcessingMoving;
         default:
           return false;
       }
@@ -114,6 +117,36 @@ class ListItemWidget extends HookConsumerWidget {
             job: order,
             bookingStatus: bookingStatus,
           ));
+          break;
+        case "PORTER":
+          // context.router.push(PorterTrackingMapRoute(
+          //   staffId: userId,
+          //   job: order,
+          //   bookingStatus: bookingStatus,
+
+          // ));
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text(
+                "Chỉ có thể xem vị trí của tài xế",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.orange.withOpacity(
+                  0.7), // You can choose any color that fits your design
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.only(
+                top: 20.0,
+                left: 10.0,
+                right: 10.0,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              duration: const Duration(
+                  seconds: 3), // Duration the SnackBar is visible
+            ),
+          );
           break;
       }
     }
@@ -239,7 +272,8 @@ class ListItemWidget extends HookConsumerWidget {
                     right: 0,
                     child: Row(
                       children: [
-                        if (canShowMap(item.staffType, bookingStatus))
+                        if (canShowMap(item.staffType, bookingStatus) &&
+                            (canCheckDriverTracking || canCheckPorterTracking))
                           IconButton(
                             icon: FaIcon(
                               FontAwesomeIcons.mapLocation,
