@@ -22,7 +22,7 @@ class RefundScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.read(bookingControllerProvider);
+    final state = ref.watch(bookingControllerProvider);
 
     final reasons = [
       'Bất khả kháng',
