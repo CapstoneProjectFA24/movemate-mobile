@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/features/booking/data/models/resquest/cancel_booking.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -115,15 +116,11 @@ class CancelButton extends HookConsumerWidget {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: const Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.orange,
-                size: 24,
-              ),
-              SizedBox(width: 8),
               Text(
-                'Cảnh báo',
+                'Đang hủy đơn hàng',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -132,30 +129,64 @@ class CancelButton extends HookConsumerWidget {
               ),
             ],
           ),
-          content: const Text(
-            'Nếu bạn hủy đơn ngay lúc này chúng tôi chỉ hoàn tiền đặt cọc cho bạn.',
-            style: TextStyle(fontSize: 14),
+          content: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10),
+              Text(
+                'Vui lòng đọc kỹ thông tin cảnh báo bên dưới ',
+              ),
+              SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    subtitle: Text(
+                      'Sau khi hủy, bạn không thể tiếp tục thanh toán cho đơn hàng nầy.Các thanh toán tương ứng cũng sẽ không còn hiệu lực.',
+                    ),
+                  ),
+                  ListTile(
+                    subtitle: Text(
+                      'Mã giảm giá đã áp dụng cho đơn hàng này sẽ tự động được thu hồi.',
+                    ),
+                  ),
+                  ListTile(
+                    subtitle: Text(
+                      'Bất kỳ khoản thanh toán nào chúng tôi nhận được cho đơn hàng này sẽ được hoàn trả dụa theo thời gian dọn nhà ',
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Bạn vẫn muốn hủy?',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Đóng dialog cảnh báo
+                Navigator.pop(context);
               },
               child: const Text(
-                'Hủy',
+                'Không',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: Colors.orange,
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Đóng dialog cảnh báo
-                showCancelDialog(context, ref); // Hiển thị CancelDialog
+                // Handle cancel booking logic here
+                Navigator.pop(context);
               },
               child: const Text(
-                'Xác nhận',
+                'Có, hủy đặt chỗ',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.orange,
