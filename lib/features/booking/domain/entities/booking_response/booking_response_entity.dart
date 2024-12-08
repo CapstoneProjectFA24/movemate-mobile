@@ -28,6 +28,7 @@ class BookingResponseEntity {
   final bool isDeposited;
   final bool isBonus;
   final bool isReported;
+  final bool isRefunded;
   final String? reportedReason;
   final bool isDeleted;
   final String createdAt;
@@ -80,6 +81,7 @@ class BookingResponseEntity {
     required this.isDeposited,
     required this.isBonus,
     required this.isReported,
+    required this.isRefunded,
     this.reportedReason,
     required this.isDeleted,
     required this.createdAt,
@@ -134,6 +136,7 @@ class BookingResponseEntity {
       isDeposited: json['isDeposited'] ?? false,
       isBonus: json['isBonus'] ?? false,
       isReported: json['isReported'] ?? false,
+      isRefunded: json['isRefunded'] ?? false,
       reportedReason: json['reportedReason'],
       isDeleted: json['isDeleted'] ?? false,
       createdAt: json['createdAt'] ?? '',
@@ -204,6 +207,7 @@ class BookingResponseEntity {
       'isDeposited': isDeposited,
       'isBonus': isBonus,
       'isReported': isReported,
+      'isRefunded': isRefunded,
       'reportedReason': reportedReason,
       'isDeleted': isDeleted,
       'createdAt': createdAt,
@@ -261,6 +265,7 @@ class BookingResponseEntity {
         'isDeposited: $isDeposited, '
         'isBonus: $isBonus, '
         'isReported: $isReported, '
+        'isRefunded: $isRefunded, '
         'reportedReason: $reportedReason, '
         'isDeleted: $isDeleted, '
         'createdAt: $createdAt, '

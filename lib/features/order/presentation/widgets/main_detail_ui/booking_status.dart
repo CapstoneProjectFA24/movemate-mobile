@@ -24,6 +24,42 @@ class BookingStatus extends HookConsumerWidget {
 
     final isComplete = bookingStatus.isCompleted;
 
+    String statusText;
+    String statusTextDetails;
+
+    if (isComplete) {
+      if (order.isRefunded) {
+        statusText = 'Đã hoàn tiền';
+        statusTextDetails = 'Đã hoàn lại tiền vào ví của bạn';
+      } else if (isComplete) {
+        statusText = 'Đã hủy';
+        statusTextDetails = 'Đơn hàng đã bị hủy';
+      } else {
+        statusText = 'Hoàn thành';
+        statusTextDetails = bookingStatus.statusMessage;
+      }
+    } else if (isCancelled) {
+      statusText = 'Đã hủy';
+      statusTextDetails = 'Đơn hàng đã bị hủy';
+    } else if (!insTructionIconFolowStatus) {
+      statusText = 'Đang chờ thực hiện';
+    } else {
+      statusText = 'Đang thực hiện';
+    }
+
+    // Helper function to determine the detailed status message
+    String getDetailedStatusMessage() {
+      if (order.isRefunded) {
+        return 'Đã hoàn lại tiền vào ví của bạn';
+      } else if (order.isCancel) {
+        return 'Đơn hàng đã bị hủy';
+      } else if (!isComplete) {
+        return bookingStatus.statusMessage;
+      } else {
+        return '';
+      }
+    }
+
     return FadeIn(
       duration: const Duration(milliseconds: 800),
       child: Container(
@@ -32,13 +68,7 @@ class BookingStatus extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             LabelText(
-              content: isCancelled
-                  ? 'Đã hủy'
-                  : isComplete
-                      ? 'Hoàn thành'
-                      : !insTructionIconFolowStatus
-                          ? 'Đang chờ thực hiện'
-                          : 'Đang thực hiện',
+              content: statusText,
               size: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -46,7 +76,7 @@ class BookingStatus extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: LabelText(
-                  content: bookingStatus.statusMessage,
+                  content: getDetailedStatusMessage(),
                   size: 14,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,

@@ -97,6 +97,8 @@ BookingStatusResult useBookingStatus(
     bool hasAssignmentInbooking(String staffType) {
       return assignments.any((a) => a.staffType == staffType);
     }
+    // Helper function to check isCanceled in booking
+
 
     // Check reviewer states
     final hasReviewerAssigned =
@@ -416,7 +418,7 @@ BookingStatusResult useBookingStatus(
       isMovingInProgress: status == BookingStatusType.coming,
       isCompleted: status == BookingStatusType.completed,
       isCancelled: status == BookingStatusType.cancelled,
-      isRefunded: status == BookingStatusType.refunded,
+      isRefunded: status == BookingStatusType.refunding,
     );
   }, [booking, isReviewOnline]);
 }
@@ -477,8 +479,8 @@ String _getDefaultStatusMessage(BookingStatusType status) {
       return "Dịch vụ đã hoàn thành";
     case BookingStatusType.cancelled:
       return "Đơn hàng đã bị hủy";
-    case BookingStatusType.refunded:
-      return "Đã hoàn tiền";
+    case BookingStatusType.refunding:
+      return "Đang chờ hoàn tiền";
     case BookingStatusType.pending:
       return "Đang xử lý yêu cầu";
     default:

@@ -101,10 +101,10 @@ BookingStatusInfo getBookingStatusText(BookingStatusType status) {
         description: 'Lịch hẹn đã bị hủy',
         nextStep: 'Bạn có thể đặt lịch mới',
       );
-    case BookingStatusType.refunded:
+    case BookingStatusType.refunding:
       return BookingStatusInfo(
-        statusText: 'Đã hoàn tiền',
-        description: 'Tiền đặt cọc đã được hoàn trả',
+        statusText: 'Chờ hoàn tiền',
+        description: 'Tiền đặt cọc đang đợi hoàn trả',
         nextStep: 'Kiểm tra tài khoản của bạn',
       );
     case BookingStatusType.reviewing:
