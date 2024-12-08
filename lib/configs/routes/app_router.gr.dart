@@ -296,6 +296,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PorterTrackingMapRoute.name: (routeData) {
+      final args = routeData.argsAs<PorterTrackingMapRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PorterTrackingMap(
+          key: args.key,
+          staffId: args.staffId,
+          job: args.job,
+          bookingStatus: args.bookingStatus,
+        ),
+      );
+    },
     PrivacyPolicyScreenRoute.name: (routeData) {
       final args = routeData.argsAs<PrivacyPolicyScreenRouteArgs>(
           orElse: () => const PrivacyPolicyScreenRouteArgs());
@@ -1428,6 +1440,54 @@ class PaymentScreenRouteArgs {
   @override
   String toString() {
     return 'PaymentScreenRouteArgs{key: $key, id: $id}';
+  }
+}
+
+/// generated route for
+/// [PorterTrackingMap]
+class PorterTrackingMapRoute extends PageRouteInfo<PorterTrackingMapRouteArgs> {
+  PorterTrackingMapRoute({
+    Key? key,
+    required String staffId,
+    required OrderEntity job,
+    required BookingStatusResult bookingStatus,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PorterTrackingMapRoute.name,
+          args: PorterTrackingMapRouteArgs(
+            key: key,
+            staffId: staffId,
+            job: job,
+            bookingStatus: bookingStatus,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PorterTrackingMapRoute';
+
+  static const PageInfo<PorterTrackingMapRouteArgs> page =
+      PageInfo<PorterTrackingMapRouteArgs>(name);
+}
+
+class PorterTrackingMapRouteArgs {
+  const PorterTrackingMapRouteArgs({
+    this.key,
+    required this.staffId,
+    required this.job,
+    required this.bookingStatus,
+  });
+
+  final Key? key;
+
+  final String staffId;
+
+  final OrderEntity job;
+
+  final BookingStatusResult bookingStatus;
+
+  @override
+  String toString() {
+    return 'PorterTrackingMapRouteArgs{key: $key, staffId: $staffId, job: $job, bookingStatus: $bookingStatus}';
   }
 }
 
