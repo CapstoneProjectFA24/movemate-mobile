@@ -14,7 +14,8 @@ enum BookingStatusType {
   inProgress('IN_PROGRESS'),
   completed('COMPLETED'),
   cancelled('CANCEL'),
-  refunding('REFUNDING');
+  refunding('REFUNDING'),
+  refunded('REFUNDED');
 
   final String type;
   const BookingStatusType(this.type);
@@ -64,6 +65,8 @@ extension ConvertOrderPartnerStatus on String {
         return BookingStatusType.cancelled;
       case 'REFUNDING':
         return BookingStatusType.refunding;
+      case 'REFUNDED':
+        return BookingStatusType.refunded;
       default:
         return BookingStatusType.pending;
     }
@@ -116,6 +119,8 @@ Color getStatusColor(BookingStatusType status) {
       return AssetsConstants.greyColor; // Grey color
     case BookingStatusType.refunding:
       return AssetsConstants.pinkColor; // Pink color
+    case BookingStatusType.refunded:
+      return AssetsConstants.beaminColor; // Pink color
     default:
       return AssetsConstants.primaryMain; // Default primary color
   }

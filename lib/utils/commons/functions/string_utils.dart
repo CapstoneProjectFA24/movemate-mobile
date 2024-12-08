@@ -105,6 +105,12 @@ BookingStatusInfo getBookingStatusText(BookingStatusType status) {
       return BookingStatusInfo(
         statusText: 'Chờ hoàn tiền',
         description: 'Tiền đặt cọc đang đợi hoàn trả',
+        nextStep: 'Đang chờ tiền hoàn về tài khoản',
+      );
+    case BookingStatusType.refunded:
+      return BookingStatusInfo(
+        statusText: 'Đã hoàn tiền',
+        description: 'Tiền đặt cọc đã được hoàn trả',
         nextStep: 'Kiểm tra tài khoản của bạn',
       );
     case BookingStatusType.reviewing:

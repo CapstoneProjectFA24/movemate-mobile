@@ -45,6 +45,7 @@ class BookingStatusResult {
   final bool isMovingInProgress; // Đang vận chuyển (coming)
   final bool isCompleted; // Hoàn thành
   final bool isCancelled; // Đã hủy
+  final bool isRefunding; // Đã hoàn tiền
   final bool isRefunded; // Đã hoàn tiền
 
   BookingStatusResult({
@@ -71,6 +72,7 @@ class BookingStatusResult {
     this.isPorterProcessingMoving = false,
     this.isCompleted = false,
     this.isCancelled = false,
+    this.isRefunding = false,
     this.isRefunded = false,
   });
 }
@@ -418,7 +420,8 @@ BookingStatusResult useBookingStatus(
       isMovingInProgress: status == BookingStatusType.coming,
       isCompleted: status == BookingStatusType.completed,
       isCancelled: status == BookingStatusType.cancelled,
-      isRefunded: status == BookingStatusType.refunding,
+      isRefunding: status == BookingStatusType.refunding,
+      isRefunded: status == BookingStatusType.refunded,
     );
   }, [booking, isReviewOnline]);
 }

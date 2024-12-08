@@ -23,9 +23,10 @@ class BookingStatus extends HookConsumerWidget {
         bookingStatus.canReviewSuggestion;
 
     final isComplete = bookingStatus.isCompleted;
+    final isRefunding = bookingStatus.isRefunding;
 
     String statusText;
-    String statusTextDetails;
+    String statusTextDetails = bookingStatus.statusMessage;
 
     if (isComplete) {
       if (order.isRefunded) {
@@ -36,8 +37,12 @@ class BookingStatus extends HookConsumerWidget {
         statusTextDetails = 'Đơn hàng đã bị hủy';
       } else {
         statusText = 'Hoàn thành';
-        statusTextDetails = bookingStatus.statusMessage;
+        statusTextDetails = 'bookingStatus.statusMessage';
       }
+    } else if (isRefunding) {
+      statusText = 'Đang chờ hoàn tiền';
+      statusTextDetails =
+          'Chúng tôi đang xử lý yêu cầu hoàn tiền cho đơn hàng này';
     } else if (isCancelled) {
       statusText = 'Đã hủy';
       statusTextDetails = 'Đơn hàng đã bị hủy';
@@ -45,19 +50,7 @@ class BookingStatus extends HookConsumerWidget {
       statusText = 'Đang chờ thực hiện';
     } else {
       statusText = 'Đang thực hiện';
-    }
-
-    // Helper function to determine the detailed status message
-    String getDetailedStatusMessage() {
-      if (order.isRefunded) {
-        return 'Đã hoàn lại tiền vào ví của bạn';
-      } else if (order.isCancel) {
-        return 'Đơn hàng đã bị hủy';
-      } else if (!isComplete) {
-        return bookingStatus.statusMessage;
-      } else {
-        return '';
-      }
+      statusTextDetails = bookingStatus.statusMessage;
     }
 
     return FadeIn(
@@ -76,7 +69,7 @@ class BookingStatus extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: LabelText(
-                  content: getDetailedStatusMessage(),
+                  content: statusTextDetails,
                   size: 14,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,
@@ -86,7 +79,7 @@ class BookingStatus extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  'Nếu cần hỗ trợ thêm, bạn vui lòng truy cập Trung tâm Trợ giúp nhé.',
+                  'Nếu cần hỗ trợ thêm, bạn vui lòng truy cập Trung tâm trợ giúp',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
