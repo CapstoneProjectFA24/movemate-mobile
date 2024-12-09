@@ -5,12 +5,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/data/models/request/change_booking_at_request.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class ChangeBookingDateTimeModal extends HookConsumerWidget {
   final int bookingId;
+  final OrderEntity order;
   final DateTime initialDate;
   final Function(DateTime) onDateTimeChanged;
 
@@ -19,6 +21,7 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
     required this.initialDate,
     required this.onDateTimeChanged,
     required this.bookingId,
+    required this.order,
   });
 
   @override
@@ -31,19 +34,14 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
     final chanegBookingAtRequest = useState<ChangeBookingAtRequest?>(null);
 
     // Kiểm tra tính hợp lệ của thời gian
-    // void checkTimeValidity(DateTime dateTime) {
-    //   if (dateTime.isBefore(DateTime.now())) {
-    //     errorText.value = "Không được chọn thời gian quá khứ";
-    //   } else {
-    //     errorText.value = null;
-    //   }
-    // }
 
     void checkTimeValidity(DateTime dateTime) {
-      if (dateTime.isBefore(DateTime.now())) {
+      if (dateTime.isBefore(currentDateTime)) {
         errorText.value = "Không được chọn thời gian quá khứ";
       } else if (dateTime.hour < 7 || dateTime.hour >= 17) {
         errorText.value = "Thời gian phải từ 7h đến 17h";
+      } else if (dateTime.isAtSameMomentAs(order.bookingAt)) {
+        errorText.value = "Thời gian không thể trùng với thời gian cũ";
       } else {
         errorText.value = null;
       }
@@ -120,7 +118,7 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
                     final pickedTime = await showTimePicker(
                       context: context,
                       initialTime:
-                          TimeOfDay.fromDateTime(selectedDateTime.value),
+                          TimeOfDay(hour: currentHour, minute: currentMinute),
                       builder: (context, child) {
                         return MediaQuery(
                           data: MediaQuery.of(context).copyWith(
@@ -170,25 +168,27 @@ class ChangeBookingDateTimeModal extends HookConsumerWidget {
             ),
           ],
           const SizedBox(height: 8),
-          const Row(
-            children: [
-              Text(
-                "Lưu ý:\n ",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 77, 77, 77),
-                  fontSize: 11,
+          const FittedBox(
+            child: Row(
+              children: [
+                Text(
+                  "Lưu ý:\n ",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 77, 77, 77),
+                    fontSize: 11,
+                  ),
                 ),
-              ),
-              Text(
-                " chỉ có thể thay đổi thời gian dọn nhà 1 lần. \n Hãy cân nhắc trước khi đổi.",
-                overflow: TextOverflow.clip,
-                maxLines: 2,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 11,
+                Text(
+                  " chỉ có thể thay đổi thời gian dọn nhà 1 lần. \n Hãy cân nhắc trước khi đổi.",
+                  overflow: TextOverflow.clip,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 11,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

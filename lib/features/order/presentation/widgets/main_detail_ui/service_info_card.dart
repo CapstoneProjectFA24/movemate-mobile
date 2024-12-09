@@ -210,6 +210,7 @@ Số điện thoại: ${userdata?.phone}
       barrierDismissible: false,
       context: context,
       builder: (context) => ChangeBookingDateTimeModal(
+        order: order,
         bookingId: order.id,
         initialDate: DateTime.parse(order.bookingAt.toString()),
         onDateTimeChanged: (newDateTime) {
