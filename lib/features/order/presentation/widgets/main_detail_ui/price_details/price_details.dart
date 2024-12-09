@@ -245,29 +245,29 @@ class PriceDetails extends HookConsumerWidget {
             ),
 
             // phiếu giảm giá
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: LabelText(
-                    content: 'Phiếu giảm giá',
-                    size: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: LabelText(
-                    content: formatPrice(orderData.total.toInt() ?? 0),
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     const Padding(
+            //       padding: EdgeInsets.symmetric(vertical: 10),
+            //       child: LabelText(
+            //         content: 'Phiếu giảm giá',
+            //         size: 16,
+            //         color: Colors.grey,
+            //         fontWeight: FontWeight.w500,
+            //       ),
+            //     ),
+            //     Padding(
+            //       padding: const EdgeInsets.symmetric(vertical: 10),
+            //       child: LabelText(
+            //         content: formatPrice(orderData.total.toInt() ?? 0),
+            //         size: 18,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.black,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
