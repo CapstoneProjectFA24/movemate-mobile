@@ -17,6 +17,7 @@ import 'package:movemate/utils/enums/booking_status_type.dart';
 
 class VoucherModal extends HookConsumerWidget {
   final List<VoucherEntity> vouchers;
+  final OrderEntity order;
   // final OrderEntity order;
   final List<VoucherEntity> selectedVouchers; // Thêm danh sách đã chọn
   final Function(VoucherEntity) onVoucherUsed;
@@ -25,7 +26,7 @@ class VoucherModal extends HookConsumerWidget {
   const VoucherModal({
     super.key,
     required this.vouchers,
-    // required this.order,
+    required this.order,
     required this.selectedVouchers, // Yêu cầu danh sách đã chọn
     required this.onVoucherUsed,
     required this.onVoucherCanceled,
@@ -169,6 +170,7 @@ class VoucherModal extends HookConsumerWidget {
 
                     return VoucherModalCard(
                       voucher: currentVoucher,
+                      order: order,
                       isSelected: isSelected,
                       isDisabled: isDisabled,
                       onVoucherUsed: (voucher) {

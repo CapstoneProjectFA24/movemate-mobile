@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/enums/enums_export.dart';
 
 class VoucherModalCard extends HookConsumerWidget {
   final VoucherEntity voucher;
-
+  final OrderEntity order;
   final bool isSelected;
   final bool isDisabled;
   final Function(VoucherEntity) onVoucherUsed;
@@ -26,6 +28,7 @@ class VoucherModalCard extends HookConsumerWidget {
     required this.onVoucherUsed,
     required this.onVoucherCanceled,
     required this.index,
+    required this.order,
   });
 
   @override
@@ -39,7 +42,8 @@ class VoucherModalCard extends HookConsumerWidget {
       context: context,
     );
     final promotion = useFetchResultPromotion.data;
-    // print("checking promotion by id ${useFetchResultPromotion.data?.toJson()}");
+    final checkDeposit = order.status == BookingStatusType.depositing;
+  
     return LayoutBuilder(
       builder: (context, constraints) => LoadingOverlay(
         isLoading: state.isLoading,
@@ -98,12 +102,23 @@ class VoucherModalCard extends HookConsumerWidget {
                                         fontSize: 14.0,
                                       ),
                                     ),
-                                    Text(
-                                      'Giảm đến ${formatPrice(voucher.price.toInt())}',
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14.0,
-                                      ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Giảm đến',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                        Text(
+                                          ' ${formatPrice(voucher.price.toInt())}',
+                                          style: const TextStyle(
+                                            color: Colors.orange,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -129,7 +144,7 @@ class VoucherModalCard extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 8.0),
                 Row(
                   children: [
                     Text(
@@ -141,7 +156,7 @@ class VoucherModalCard extends HookConsumerWidget {
                     ),
                     const Spacer(),
                     ElevatedButton(
-                      onPressed: isDisabled
+                      onPressed: checkDeposit || isDisabled
                           ? null
                           : () {
                               if (!isSelected) {
@@ -177,19 +192,23 @@ class VoucherModalCard extends HookConsumerWidget {
                               }
                             },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isSelected
-                            ? Colors.red
-                            : (isDisabled ? Colors.grey : Colors.orange),
+                        backgroundColor: checkDeposit
+                            ? Colors.grey
+                            : (isSelected
+                                ? Colors.red
+                                : (isDisabled ? Colors.grey : Colors.orange)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                       child: Text(
-                        isSelected
-                            ? 'Hủy'
-                            : (isDisabled ? 'Không khả dụng' : 'Sử dụng'),
-                        style: const TextStyle(
-                          color: Colors.white,
+                        checkDeposit
+                            ? 'Đã sử dụng'
+                            : (isSelected
+                                ? 'Hủy'
+                                : (isDisabled ? 'Không khả dụng' : 'Sử dụng')),
+                        style: TextStyle(
+                          color: checkDeposit ? Colors.black : Colors.white,
                         ),
                       ),
                     ),

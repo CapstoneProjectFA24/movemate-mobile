@@ -97,7 +97,13 @@ class PriceDetails extends HookConsumerWidget {
           context.pushRoute(ReviewOnlineRoute(
               order: orderEntity ?? order, orderOld: orderOld));
         } else if (bookingStatus.canMakePayment) {
-          context.pushRoute(PaymentScreenRoute(id: order.id));
+          // context.pushRoute(PaymentScreenRoute(id: order.id));
+          final bookingController =
+              ref.read(bookingControllerProvider.notifier);
+          final orderEntity =
+              await bookingController.getOrderEntityById(order.id);
+          context.pushRoute(ReviewOnlineRoute(
+              order: orderEntity ?? order, orderOld: orderOld));
         } else if (bookingStatus.canMakePaymentLast) {
           context.pushRoute(ConfirmLastPaymentRoute(
             orderObj: orderObj,
@@ -135,7 +141,8 @@ class PriceDetails extends HookConsumerWidget {
         if (bookingStatus.canReviewSuggestion) {
           return 'Xác nhận đánh giá';
         } else if (bookingStatus.canMakePayment) {
-          return 'Thanh toán ngay';
+          // return 'Thanh toán ngay';
+          return 'Xem đề xuất';
         } else if (bookingStatus.canMakePaymentLast) {
           return 'Xác nhận thanh toán';
         }
@@ -237,7 +244,30 @@ class PriceDetails extends HookConsumerWidget {
               height: 32,
             ),
 
-            // Total amount
+            // phiếu giảm giá
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: LabelText(
+                    content: 'Phiếu giảm giá',
+                    size: 16,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: LabelText(
+                    content: formatPrice(orderData.total.toInt() ?? 0),
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

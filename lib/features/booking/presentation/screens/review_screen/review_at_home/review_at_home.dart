@@ -206,6 +206,8 @@ class Buttons extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final checkDepossit =
         bookingAsync.value!.status == BookingStatusType.depositing;
+
+    final checkReviwed = bookingAsync.value!.status == 'REVIEWED';
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Column(
@@ -313,7 +315,7 @@ class Buttons extends HookConsumerWidget {
               text: 'Xác nhận',
               color: const Color(0xFFFF6600),
               textColor: Colors.white,
-              onPressed: checkDepossit
+              onPressed: !checkDepossit
                   ? () async {
                       final reviewerStatusRequest = ReviewerStatusRequest(
                         status: BookingStatusType.depositing,

@@ -203,8 +203,12 @@ class ReviewOnline extends HookConsumerWidget {
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
     final checkIsUnchanged = order.isUnchanged == true;
+
     final checkDepossit =
         bookingAsync.value!.status == BookingStatusType.depositing;
+
+    final checkReviwed = bookingAsync.value!.status == 'REVIEWED';
+    print('log care  ${!checkDepossit && checkReviwed}');
     return LoadingOverlay(
       isLoading: stateProfile.isLoading ||
           stateService.isLoading ||
@@ -249,7 +253,9 @@ class ReviewOnline extends HookConsumerWidget {
                         staffAssignment: staffResponsibility,
                       ),
                       const SizedBox(height: 10),
-                      if (matchingVouchers.value.isNotEmpty)
+                      if (matchingVouchers.value.isNotEmpty &&
+                          !checkDepossit &&
+                          checkReviwed)
                         ConfirmationLink(
                           order: order,
                           vouchers: matchingVouchers.value,
@@ -301,7 +307,7 @@ class ReviewOnline extends HookConsumerWidget {
                       //     ],
                       //   ),
                       buildButton('Xác nhận', Colors.orange,
-                          onPressed: checkDepossit
+                          onPressed: (!checkDepossit && checkReviwed)
                               ? () async {
                                   final bookingStatus =
                                       order.status.toBookingTypeEnum();
