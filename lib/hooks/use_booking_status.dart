@@ -101,7 +101,6 @@ BookingStatusResult useBookingStatus(
     }
     // Helper function to check isCanceled in booking
 
-
     // Check reviewer states
     final hasReviewerAssigned =
         hasAssignmentWithStatus("REVIEWER", AssignmentsStatusType.assigned);

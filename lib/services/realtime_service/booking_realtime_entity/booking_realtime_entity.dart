@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+// BookingAt : "12/08/2024 00:33:00"
 class BookingRealtimeEntity {
   final String id;
   final String status;
@@ -9,6 +10,7 @@ class BookingRealtimeEntity {
   final double totalFee;
   final double totalReal;
   final bool isCredit;
+  final String bookingAt;
   final bool isCancel;
   final bool isRefunded;
   final bool isReported;
@@ -23,6 +25,7 @@ class BookingRealtimeEntity {
     required this.totalFee,
     required this.totalReal,
     required this.isCredit,
+    required this.bookingAt,
     required this.isCancel,
     required this.isRefunded,
     required this.isReported,
@@ -44,6 +47,7 @@ class BookingRealtimeEntity {
       isCredit: data['IsCredit'] as bool,
       isCancel: data['IsCancel'] as bool,
       isRefunded: data['IsRefunded'] as bool,
+      bookingAt: data['BookingAt'] ?? "12/08/2024 00:00:00",
       isReported: data['IsReported'] as bool,
       bookingDetails: (data['BookingDetails'] as List<dynamic>?)
               ?.map((e) => BookingDetailRealTimeEntity.fromMap(e))
@@ -64,6 +68,7 @@ class BookingRealtimeEntity {
       'IsCredit': isCredit,
       'IsCancel': isCancel,
       'IsRefunded': isRefunded,
+      'BookingAt': bookingAt,
       'IsReported': isReported,
       'TotalReal': totalReal,
     };

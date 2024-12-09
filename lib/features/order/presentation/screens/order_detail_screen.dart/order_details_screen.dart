@@ -195,6 +195,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
     ref.listen<bool>(refreshOrderDetailsById, (_, __) => orderEntity.refresh());
+    ref.listen<bool>(refreshOrderDetails, (_, __) => orderEntity.refresh());
 
     useEffect(() {
       OrderStreamManager().updateJob(order);
