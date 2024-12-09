@@ -196,7 +196,7 @@ class VoucherItem extends HookConsumerWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Giảm tối đa: ${promotionUserGot.discountRate.toInt()}%',
+                              'Giảm tối đa: ${promotionUserGot.discountMax.toInt()}%',
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.white,
@@ -206,9 +206,11 @@ class VoucherItem extends HookConsumerWidget {
                             Text(
                               'Dành cho dịch vụ: ${serviceData?.name}',
                               style: const TextStyle(
-                                fontSize: 10,
+                                fontSize: 14,
                                 color: Colors.white,
                               ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 8),
                             Text(
@@ -218,6 +220,14 @@ class VoucherItem extends HookConsumerWidget {
                                 color: Colors.white,
                               ),
                             ),
+                            // const SizedBox(height: 8),
+                            // Text(
+                            //   'Đã sử dụng cho đơn hàng: $formattedDateReviewAt',
+                            //   style: const TextStyle(
+                            //     fontSize: 14,
+                            //     color: Colors.white,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

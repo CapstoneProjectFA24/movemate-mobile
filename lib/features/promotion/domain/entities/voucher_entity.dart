@@ -2,9 +2,9 @@ import 'dart:convert';
 
 class VoucherEntity {
   final int id;
-  final int userId;
+  final int? userId;
   final int promotionCategoryId;
-  final int bookingId;
+  final int? bookingId;
   final double price;
   final String code;
   final bool isActived;

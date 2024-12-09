@@ -15,6 +15,7 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/incidents_content_modal.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/price_details.dart';
 
@@ -66,6 +67,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
+
     final canRepostBooking = bookingStatus.isProcessingRequest;
 
     final bookingAssignment = bookingAsync.value?.assignments.length;
@@ -322,12 +324,13 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 //     : Container(),
                 const SizedBox(height: 10),
                 // (statusOrders == BookingStatusType.reviewed)
-                //     ? CustomerInfo(
-                //         isExpanded: isExpanded,
-                //         toggleDropdown: toggleDropdown,
-                //       )
-                //     : Container(),
-                // const SizedBox(height: 20),
+                ///?
+                //  CustomerInfo(
+                //     isExpanded: isExpanded,
+                //     toggleDropdown: toggleDropdown,
+                //   ),
+                // : Container(),
+                const SizedBox(height: 20),
                 PriceDetails(
                   order: order,
                   serviceData: serviceData,

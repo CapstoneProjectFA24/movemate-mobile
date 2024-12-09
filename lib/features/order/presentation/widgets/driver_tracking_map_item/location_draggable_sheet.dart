@@ -303,11 +303,11 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                   const SizedBox(height: 16),
                   _buildCustomerInfo(profile: profile),
                   const SizedBox(height: 3),
-                  _buildConfirmationImageLink(
-                    context: context, job: job,
+                  // _buildConfirmationImageLink(
+                  //   context: context, job: job,
 
-                    // status: status
-                  ),
+                  //   // status: status
+                  // ),
                   const SizedBox(height: 20),
                 ],
               ),

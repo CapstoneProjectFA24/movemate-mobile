@@ -30,7 +30,7 @@ class ConfirmationLink extends StatelessWidget {
           builder: (context) {
             return VoucherModal(
               vouchers: vouchers,
-              order: order,
+              // order: order,
               selectedVouchers: selectedVouchers, // Truyền danh sách đã chọn
               onVoucherUsed: onVoucherSelected,
               onVoucherCanceled:

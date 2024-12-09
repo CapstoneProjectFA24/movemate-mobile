@@ -12,6 +12,7 @@ class PromotionEntity {
   final double discountMax;
   final double requireMin;
   final double discountMin;
+  final double? amount;
   final String name;
   final String description;
   final String type;
@@ -31,6 +32,7 @@ class PromotionEntity {
     required this.discountMax,
     required this.requireMin,
     required this.discountMin,
+    required this.amount,
     required this.name,
     required this.description,
     required this.type,
@@ -58,6 +60,7 @@ class PromotionEntity {
           (map['requireMin'] != null) ? map['requireMin']?.toDouble() : 0.0,
       discountMin:
           (map['discountMin'] != null) ? map['discountMin']?.toDouble() : 0.0,
+      amount: (map['amount'] != null) ? map['amount']?.toDouble() : 0.0,
 
       quantity: map['quantity'] ?? 0,
 
@@ -97,6 +100,7 @@ class PromotionEntity {
       'discountMax': discountMax,
       'requireMin': requireMin,
       'discountMin': discountMin,
+      'amount': amount,
       'name': name,
       'description': description,
       'type': type,
