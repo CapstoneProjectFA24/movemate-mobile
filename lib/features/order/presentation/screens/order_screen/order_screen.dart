@@ -21,7 +21,7 @@ class OrderScreen extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
     final scrollController = useScrollController();
     final state = ref.watch(orderControllerProvider);
-    final stateBooking = ref.watch(bookingControllerProvider);
+    // final stateBooking = ref.watch(bookingControllerProvider);
 
     final fetchReslut = useFetch<OrderEntity>(
       function: (model, context) => ref
@@ -58,7 +58,7 @@ class OrderScreen extends HookConsumerWidget {
     }, const []);
 
     return LoadingOverlay(
-      isLoading: state.isLoading || stateBooking.isLoading,
+      isLoading: state.isLoading,
       child: Scaffold(
         appBar: CustomAppBar(
           title: 'Danh sách đặt dịch vụ',

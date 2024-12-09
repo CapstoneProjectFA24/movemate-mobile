@@ -53,8 +53,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final state = ref.watch(orderControllerProvider);
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
-    final stateBooking = ref.watch(bookingControllerProvider);
-
+final stateBooking = ref.watch(bookingControllerProvider);
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -195,7 +194,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
         context: context);
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
-    ref.listen<bool>(refreshOrderDetailsById, (_, __) => orderEntity.refresh());
+    // ref.listen<bool>(refreshOrderDetailsById, (_, __) => orderEntity.refresh());
 
     useEffect(() {
       OrderStreamManager().updateJob(order);
@@ -211,10 +210,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
     }
     // print("tuan log check status 3 ${order.status}");
     return LoadingOverlay(
-      isLoading: state.isLoading ||
-          stateService.isLoading ||
-          stateProfile.isLoading ||
-          stateBooking.isLoading,
+      isLoading:
+          state.isLoading || stateService.isLoading || stateProfile.isLoading,
       child: Scaffold(
         appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
