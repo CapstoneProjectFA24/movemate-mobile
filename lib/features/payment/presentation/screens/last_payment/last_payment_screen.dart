@@ -9,6 +9,7 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -16,11 +17,6 @@ import 'package:movemate/utils/providers/wallet_provider.dart';
 
 final paymentMethodProvider =
     StateProvider<PaymentMethodType>((ref) => PaymentMethodType.momo);
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 // List of available payment methods
 final paymentList = [
@@ -293,7 +289,8 @@ class LastPaymentScreen extends HookConsumerWidget {
                                   children: [
                                     LabelText(
                                       content: formatPrice(
-                                          (bookingResponse.totalReal).toInt()),
+                                          (bookingResponse.totalReal)
+                                              .toDouble()),
                                       size: AssetsConstants.labelFontSize * 1.3,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
@@ -323,8 +320,8 @@ class LastPaymentScreen extends HookConsumerWidget {
                                         .map<Widget>((detail) {
                                       return _OrderItem(
                                         label: detail.name ?? '',
-                                        price:
-                                            formatPrice(detail.price.toInt()),
+                                        price: formatPrice(
+                                            detail.price.toDouble()),
                                       );
                                     }),
                                     // Đường kẻ nét đứt
@@ -339,7 +336,7 @@ class LastPaymentScreen extends HookConsumerWidget {
                                     _OrderItem(
                                       label: 'Tiền đặt cọc',
                                       price:
-                                          '- ${formatPrice(bookingResponse.deposit.toInt())}',
+                                          '- ${formatPrice(bookingResponse.deposit.toDouble())}',
                                     ),
                                   ],
                                 ),

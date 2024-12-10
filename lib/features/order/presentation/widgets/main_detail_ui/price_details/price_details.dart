@@ -13,6 +13,7 @@ import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
@@ -42,11 +43,7 @@ class PriceDetails extends HookConsumerWidget {
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
 
-    String formatPrice(int price) {
-      final formatter = NumberFormat('#,###', 'vi_VN');
-      return '${formatter.format(price)} đ';
-    }
-
+ 
     final stateBooking = ref.watch(bookingControllerProvider);
     final stateOldBooking = ref.watch(orderControllerProvider);
 
@@ -248,18 +245,18 @@ class PriceDetails extends HookConsumerWidget {
             ...orderData.bookingDetails.map<Widget>((detail) {
               return buildPriceItem(
                 detail.name ?? '',
-                formatPrice(detail.price.toInt()),
+                formatPrice(detail.price.toDouble()),
               );
             }),
 
             const SizedBox(height: 12),
             buildSummary(
-                'Tiền đặt cọc', formatPrice(orderData.deposit.toInt() ?? 0)),
+                'Tiền đặt cọc', formatPrice(orderData.deposit.toDouble() ?? 0)),
             // Hiển thị các fee từ feeDetails
             ...orderData.feeDetails.map((fee) {
               return buildSummary(
                 fee.name,
-                formatPrice(fee.amount.toInt()),
+                formatPrice(fee.amount.toDouble()),
               );
             }),
 
@@ -271,101 +268,74 @@ class PriceDetails extends HookConsumerWidget {
 
             if (order.vouchers?.length != 0 && order.vouchers?.length != null)
               // phiếu giảm giá
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: LabelText(
-                      content: 'Phiếu giảm giá',
-                      size: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: order.vouchers?.length,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AssetsConstants.defaultPadding - 15.0,
-              ),
-              itemBuilder: (_, index) {
-                if (index == order.vouchers?.length) {
-                  if (order.vouchers?.length == 0) {
-                    return const CustomCircular();
-                  }
-                  return Container();
-                }
-                final voucher = order.vouchers?[index];
-                // print("log care voucher ${order.vouchers?[index].bookingId}");
-                // print("log care voucher ${order.vouchers?[index].code}");
-                // print("log care voucher ${order.vouchers?[index].id}");
-                // print("log care voucher ${order.vouchers?[index].isActived}");
-                // print("log care voucher ${order.vouchers?[index].price}");
-                // print(
-                //     "log care voucher ${order.vouchers?[index].promotionCategoryId}");
-                // print(
-                //     "log care voucher userid ${order.vouchers?[index].userId}");
-                return VoucherInOrder(
-                  voucher: voucher,
-                );
-              },
-            ),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: LabelText(
-                    content: 'Tổng giá',
-                    size: 16,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                // if (order.vouchers?.length != 0 &&
-                //     order.vouchers?.length != null)
-                //   Padding(
-                //     padding: const EdgeInsets.symmetric(vertical: 10),
-                //     child: LabelText(
-                //       content: formatPrice((order.total -
-                //               order.vouchers!.fold<double>(
-                //                 0,
-                //                 (total, voucher) =>
-                //                     total + (voucher.price ?? 0),
-                //               ))
-                //           .toInt()),
-                //       size: 18,
-                //       fontWeight: FontWeight.bold,
-                //       color: Colors.black,
-                //     ),
-                //   ),
-                // if (order.vouchers?.length == 0 ||
-                //     order.vouchers?.length == null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: LabelText(
-                    content: formatPrice(order.total.toInt() ?? 0),
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            if (order.total != order.totalReal)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        LabelText(
+                          content: 'Phiếu giảm giá',
+                          size: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                  LabelText(
+                    content: '- ${formatPrice((order.vouchers!.fold<double>(
+                      0,
+                      (total, voucher) => total + (voucher.price ?? 0),
+                    )).toDouble())}',
+                    size: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemCount: order.vouchers?.length,
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: AssetsConstants.defaultPadding - 15.0,
+            //   ),
+            //   itemBuilder: (_, index) {
+            //     if (index == order.vouchers?.length) {
+            //       if (order.vouchers?.length == 0) {
+            //         return const CustomCircular();
+            //       }
+            //       return Container();
+            //     }
+            //     final voucher = order.vouchers?[index];
+            //     // print("log care voucher ${order.vouchers?[index].bookingId}");
+            //     // print("log care voucher ${order.vouchers?[index].code}");
+            //     // print("log care voucher ${order.vouchers?[index].id}");
+            //     // print("log care voucher ${order.vouchers?[index].isActived}");
+            //     // print("log care voucher ${order.vouchers?[index].price}");
+            //     // print(
+            //     //     "log care voucher ${order.vouchers?[index].promotionCategoryId}");
+            //     // print(
+            //     //     "log care voucher userid ${order.vouchers?[index].userId}");
+            //     return VoucherInOrder(
+            //       voucher: voucher,
+            //     );
+            //   },
+            // ),
+
+            //tổng giá không Vouchers
+            if (order.vouchers?.length == 0 || order.vouchers?.length == null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
                     child: LabelText(
-                      content: 'Tiền còn lại',
+                      content: 'Tổng giá',
                       size: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -374,7 +344,95 @@ class PriceDetails extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: LabelText(
-                      content: formatPrice(order.totalReal.toInt() ?? 0),
+                      content: formatPrice(
+                          (bookingAsync.value?.total ?? order.total)
+                              .toDouble()),
+                      size: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+
+            //Tổng giá có vouchers
+            if (order.vouchers?.length != 0 && order.vouchers?.length != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: 'Tổng giá',
+                      size: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: formatPrice((order.total +
+                              order.vouchers!.fold<double>(
+                                0,
+                                (total, voucher) =>
+                                    total + (voucher.price ?? 0),
+                              ))
+                          .toDouble()),
+                      size: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+
+            if (order.vouchers?.length != 0 && order.vouchers?.length != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: 'Tổng giá sau khi giảm',
+                      size: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: formatPrice(
+                          (bookingAsync.value?.total ?? order.total)
+                              .toDouble()),
+                      size: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+
+            //sau khi deposit xong
+            if (bookingAsync.value?.total != bookingAsync.value?.totalReal)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: 'Tiền còn lại',
+                      size: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: formatPrice(
+                          bookingAsync.value?.totalReal.toDouble() ?? 0),
                       size: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

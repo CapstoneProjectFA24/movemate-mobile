@@ -7,6 +7,7 @@ import 'package:movemate/features/profile/presentation/screens/wallet/combined_w
 import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/transaction_status_enum.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
@@ -84,7 +85,7 @@ class _IncomeBreakdownItem extends StatelessWidget {
             style: const TextStyle(fontSize: 16),
           ),
           Text(
-            '$amountPrefix ${formatPrice(item.amount.toInt())}',
+            '$amountPrefix ${formatPrice(item.amount.toDouble())}',
             style: TextStyle(fontSize: 16, color: amountColor),
           ),
           Container(

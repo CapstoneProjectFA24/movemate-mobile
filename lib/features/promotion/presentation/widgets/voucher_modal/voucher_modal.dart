@@ -342,8 +342,4 @@ class VoucherModal extends HookConsumerWidget {
   }
 }
 
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
+

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/profile/domain/entities/order_tracker_entity_response.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 
 class ReservationCard extends HookConsumerWidget {
   final BookingTrackersIncidentEntity reservation;
@@ -59,7 +60,7 @@ class ReservationCard extends HookConsumerWidget {
 
     // Xử lý realAmount
     final realAmountText = reservation.realAmount != null
-        ? formatPrice(reservation.realAmount?.toInt() ?? 0)
+        ? formatPrice(reservation.realAmount?.toDouble() ?? 0)
         : 'Đang chờ...';
 
     return GestureDetector(
@@ -172,7 +173,7 @@ class ReservationCard extends HookConsumerWidget {
                               ),
                             ),
                             Text(
-                              ' ${formatPrice(reservation.estimatedAmount.toInt())}',
+                              ' ${formatPrice(reservation.estimatedAmount.toDouble())}',
                               style: TextStyle(
                                 fontSize:
                                     realAmountText == 'Đang chờ...' ? 12 : 14,
@@ -285,10 +286,5 @@ class ReservationCard extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  String formatPrice(int price) {
-    final formatter = NumberFormat('#,###', 'vi_VN');
-    return '${formatter.format(price)} đ';
   }
 }

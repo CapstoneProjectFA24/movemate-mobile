@@ -114,7 +114,7 @@ class WalletContent extends HookConsumerWidget {
                           const Icon(Icons.account_balance_wallet,
                               color: AssetsConstants.primaryMain),
                           Text(
-                            'Số dư Ví: ${PriceHelper.formatPrice(wallet?.balance.toInt() ?? 0)}',
+                            'Số dư Ví: ${PriceHelper.formatPrice(wallet?.balance.toDouble() ?? 0)}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -245,7 +245,6 @@ class WalletContent extends HookConsumerWidget {
             }),
           ],
         ),
-      
         Positioned(
           bottom: 20,
           left: 20,
@@ -287,8 +286,6 @@ class WalletContent extends HookConsumerWidget {
             ),
           ),
         ),
-      
-      
       ],
     );
   }

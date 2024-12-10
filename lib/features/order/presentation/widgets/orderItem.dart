@@ -10,6 +10,7 @@ import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
@@ -30,11 +31,7 @@ class OrderItem extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
 
     // Listen to the real-time status from Firestore
-    // Hàm hỗ trợ để định dạng giá
-    String formatPrice(int price) {
-      final formatter = NumberFormat('#,###', 'vi_VN');
-      return '${formatter.format(price)} đ';
-    }
+ 
 
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
@@ -188,7 +185,7 @@ class OrderItem extends HookConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             LabelText(
-                              content: formatPrice(order.total.toInt()),
+                              content: formatPrice(order.total.toDouble()),
                               size: 18,
                               color: AssetsConstants.primaryMain,
                               fontWeight: FontWeight.bold,

@@ -6,6 +6,7 @@ import 'package:movemate/features/booking/presentation/providers/booking_provide
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/sub_service_tile.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ServicePackageTile extends StatefulWidget {
@@ -148,7 +149,7 @@ class _ServicePackageTileState extends State<ServicePackageTile> {
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 1.0),
               child: Text(
-                formatPrice(widget.servicePackage.amount.toInt()).toString(),
+                formatPrice(widget.servicePackage.amount.toDouble()).toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],

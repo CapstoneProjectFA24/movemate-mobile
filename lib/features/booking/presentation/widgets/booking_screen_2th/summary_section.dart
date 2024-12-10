@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/utils/commons/widgets/form_input/label_text.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'price_detail_modal.dart'; // Import your modal component
 
@@ -30,12 +31,6 @@ class SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Hàm hỗ trợ để định dạng giá
-    String formatPrice(int price) {
-      final formatter = NumberFormat('#,###', 'vi_VN');
-      return '${formatter.format(price)} đ';
-    }
-
     return Container(
       color: AssetsConstants.whiteColor,
       padding: const EdgeInsets.all(16.0),
@@ -67,7 +62,7 @@ class SummarySection extends StatelessWidget {
                 ),
                 if (priceLabel != '')
                   LabelText(
-                    content: '  ${formatPrice(totalPrice.toInt())}',
+                    content: '  ${formatPrice(totalPrice.toDouble())}',
                     size: 18,
                     fontWeight: FontWeight.bold,
                     color: AssetsConstants.primaryDark,

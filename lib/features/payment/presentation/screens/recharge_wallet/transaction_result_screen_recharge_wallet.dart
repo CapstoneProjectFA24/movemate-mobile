@@ -7,14 +7,9 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 // Hàm hỗ trợ để định dạng ngày tháng
 String formatDate(DateTime date) {
@@ -215,7 +210,7 @@ class TransactionResultScreenRechargeWallet extends HookConsumerWidget {
                                   children: [
                                     buildTransactionDetailRow(
                                         'Số tiền',
-                                        formatPrice((amount).toInt()),
+                                        formatPrice((amount).toDouble()),
                                         containerWidth),
                                     const SizedBox(height: 8),
                                     buildTransactionDetailRow('Phí giao dịch',
@@ -292,7 +287,7 @@ class TransactionResultScreenRechargeWallet extends HookConsumerWidget {
                                       ),
                                     ),
                                     Text(
-                                      formatPrice(walletUser.toInt()),
+                                      formatPrice(walletUser.toDouble()),
                                       style: TextStyle(
                                         fontSize: containerWidth * 0.045,
                                       ),

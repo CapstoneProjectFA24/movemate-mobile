@@ -5,6 +5,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/booki
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/review_online/house_information.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -97,17 +98,17 @@ class ServiceCard extends HookConsumerWidget {
                           if (newService.serviceId == oldService?.serviceId) {
                             if (newService.price == oldService?.price) {
                               return buildPriceItem(newService.name,
-                                  formatPrice(newService.price.toInt()));
+                                  formatPrice(newService.price.toDouble()));
                             } else {
                               return Column(
                                 children: [
                                   buildPriceItem(
                                       " ${oldService?.name}",
                                       formatPrice(
-                                          (oldService?.price ?? 0).toInt()),
+                                          (oldService?.price ?? 0).toDouble()),
                                       isStrikethrough: true),
                                   buildPriceItem(newService.name,
-                                      formatPrice(newService.price.toInt()),
+                                      formatPrice(newService.price.toDouble()),
                                       isStrikethrough: false),
                                 ],
                               );
@@ -117,18 +118,18 @@ class ServiceCard extends HookConsumerWidget {
                               children: [
                                 buildPriceItem(
                                     "${oldServiceTruck?.name}",
-                                    formatPrice(
-                                        (oldServiceTruck?.price ?? 0).toInt()),
+                                    formatPrice((oldServiceTruck?.price ?? 0)
+                                        .toDouble()),
                                     isStrikethrough: true),
                                 buildPriceItem(newService.name,
-                                    formatPrice(newService.price.toInt()),
+                                    formatPrice(newService.price.toDouble()),
                                     isStrikethrough: false),
                               ],
                             );
                           }
                         } else {
                           return buildPriceItem(newService.name,
-                              formatPrice(newService.price.toInt()));
+                              formatPrice(newService.price.toDouble()));
                         }
                       } else {
                         final oldServiceNonTruck = orderOld?.bookingDetails
@@ -168,7 +169,7 @@ class ServiceCard extends HookConsumerWidget {
                             newService.price == oldServiceNonTruck?.price) {
                           return buildPriceItem(
                             newService.name,
-                            formatPrice(newService.price.toInt()),
+                            formatPrice(newService.price.toDouble()),
                             quantity: newService.quantity,
                           );
                         } else if (newService.serviceId ==
@@ -179,13 +180,13 @@ class ServiceCard extends HookConsumerWidget {
                               buildPriceItem(
                                 oldServiceNonTruck?.name ?? 'Unknown',
                                 formatPrice(
-                                    oldServiceNonTruck?.price.toInt() ?? 0),
+                                    oldServiceNonTruck?.price.toDouble() ?? 0),
                                 isStrikethrough: true,
                                 quantity: oldServicesNonTruck?.quantity ?? 0,
                               ),
                               buildPriceItem(
                                 newService.name,
-                                formatPrice(newService.price.toInt()),
+                                formatPrice(newService.price.toDouble()),
                                 quantity: newService.quantity,
                                 isStrikethrough: false,
                               ),
@@ -200,13 +201,13 @@ class ServiceCard extends HookConsumerWidget {
                               buildPriceItem(
                                 oldServicesNonTruck?.name ?? 'Unknown',
                                 formatPrice(
-                                    oldServicesNonTruck?.price.toInt() ?? 0),
+                                    oldServicesNonTruck?.price.toDouble() ?? 0),
                                 isStrikethrough: true,
                                 quantity: oldServicesNonTruck?.quantity ?? 0,
                               ),
                               buildPriceItem(
                                 newService.name,
-                                formatPrice(newService.price.toInt()),
+                                formatPrice(newService.price.toDouble()),
                                 quantity: newService.quantity,
                                 isStrikethrough: false,
                               ),
@@ -215,7 +216,7 @@ class ServiceCard extends HookConsumerWidget {
                         } else {
                           return buildPriceItem(
                             newService.name,
-                            formatPrice(newService.price.toInt()),
+                            formatPrice(newService.price.toDouble()),
                             quantity: newService.quantity,
                           );
                         }
@@ -227,22 +228,24 @@ class ServiceCard extends HookConsumerWidget {
                       if (orderOld != null) {
                         if (order.deposit == orderOld?.deposit) {
                           return buildPriceItem('Tiền đặt cọc',
-                              formatPrice(order.deposit.toInt()));
+                              formatPrice(order.deposit.toDouble()));
                         } else {
                           return Column(
                             children: [
-                              buildPriceItem('Tiền đặt cọc cũ',
-                                  formatPrice(orderOld?.deposit.toInt() ?? 0),
+                              buildPriceItem(
+                                  'Tiền đặt cọc cũ',
+                                  formatPrice(
+                                      orderOld?.deposit.toDouble() ?? 0),
                                   isStrikethrough: true),
                               buildPriceItem('Tiền đặt cọc mới',
-                                  formatPrice(order.deposit.toInt()),
+                                  formatPrice(order.deposit.toDouble()),
                                   isStrikethrough: false),
                             ],
                           );
                         }
                       } else {
-                        return buildPriceItem(
-                            'Tiền đặt cọc', formatPrice(order.deposit.toInt()));
+                        return buildPriceItem('Tiền đặt cọc',
+                            formatPrice(order.deposit.toDouble()));
                       }
                     }
 
@@ -250,7 +253,7 @@ class ServiceCard extends HookConsumerWidget {
                     final fee = order
                         .feeDetails[index - order.bookingDetails.length - 1];
                     return buildPriceItem(
-                        fee.name, formatPrice(fee.amount.toInt()));
+                        fee.name, formatPrice(fee.amount.toDouble()));
                   },
                 ),
               ),
@@ -259,22 +262,22 @@ class ServiceCard extends HookConsumerWidget {
             // Tổng giá
             if (orderOld != null) ...[
               if (order.total == orderOld?.total)
-                buildSummary('Tổng giá', formatPrice(order.total.toInt()),
+                buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
                     fontWeight: FontWeight.w600)
               else ...[
                 buildPriceItem(
-                    'Tổng giá cũ', formatPrice(orderOld?.total.toInt() ?? 0),
+                    'Tổng giá cũ', formatPrice(orderOld?.total.toDouble() ?? 0),
                     isStrikethrough: true),
                 buildPriceItem(
                   'Tổng giá mới',
                   formatPrice(
-                    order.total.toInt(),
+                    order.total.toDouble(),
                   ),
                   isStrikethrough: false,
                 ),
               ]
             ] else ...[
-              buildSummary('Tổng giá', formatPrice(order.total.toInt()),
+              buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
                   fontWeight: FontWeight.w600),
             ],
             // Note colors for service types
@@ -315,10 +318,4 @@ class ServiceCard extends HookConsumerWidget {
       ),
     );
   }
-}
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }

@@ -8,6 +8,7 @@ import 'package:movemate/features/promotion/domain/entities/promotion_entity.dar
 import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
@@ -43,7 +44,7 @@ class VoucherModalCard extends HookConsumerWidget {
     );
     final promotion = useFetchResultPromotion.data;
     final checkDeposit = order.status == BookingStatusType.depositing;
-  
+
     return LayoutBuilder(
       builder: (context, constraints) => LoadingOverlay(
         isLoading: state.isLoading,
@@ -112,7 +113,7 @@ class VoucherModalCard extends HookConsumerWidget {
                                           ),
                                         ),
                                         Text(
-                                          ' ${formatPrice(voucher.price.toInt())}',
+                                          ' ${formatPrice(voucher.price.toDouble())}',
                                           style: const TextStyle(
                                             color: Colors.orange,
                                             fontSize: 14.0,
@@ -128,7 +129,7 @@ class VoucherModalCard extends HookConsumerWidget {
                                 // Column(
                                 //   children: [
                                 //     Text(
-                                //       'Giảm đến ${formatPrice(voucher.price.toInt())}',
+                                //       'Giảm đến ${formatPrice(voucher.price.toDouble())}',
                                 //       style: TextStyle(
                                 //         fontSize: 12, // Giảm kích thước font
                                 //         fontWeight: FontWeight.bold,
@@ -221,10 +222,4 @@ class VoucherModalCard extends HookConsumerWidget {
       ),
     );
   }
-}
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }

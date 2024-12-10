@@ -2,7 +2,7 @@ class FeeSetting {
   final int id;
   final String name;
   final String description;
-  final int amount;
+  final double? amount;
 
   FeeSetting({
     required this.id,
@@ -15,8 +15,17 @@ class FeeSetting {
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      amount: json['amount'],
+      amount: (json['amount'] ?? 0).toDouble() ?? 0,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'categoryName': name,
+      'maxLoad': amount,
+      'description': description,
+    };
   }
 }
 
@@ -30,7 +39,7 @@ class Truck {
   final String estimatedWidth;
   final String estimatedHeight;
   final String summarize;
-  final int price;
+  final double price;
   final int? totalTrips;
   final List<FeeSetting> feeSettings;
 
@@ -60,7 +69,7 @@ class Truck {
       estimatedWidth: map['estimatedWidth'],
       estimatedHeight: map['estimatedHeight'],
       summarize: map['summarize'],
-      price: map['price'],
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
       totalTrips: map['totalTrips'],
       feeSettings: map['feeSettings'] != null
           ? List<FeeSetting>.from(
