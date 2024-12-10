@@ -40,7 +40,7 @@ class PriceDetails extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline);
 
     String formatPrice(int price) {
       final formatter = NumberFormat('#,###', 'vi_VN');
@@ -64,9 +64,20 @@ class PriceDetails extends HookConsumerWidget {
           .getBookingOldById(order.id, context),
       context: context,
     );
+
+    final useFetcholdOrderNew = useFetchObject<OrderEntity>(
+      function: (context) => ref
+          .read(orderControllerProvider.notifier)
+          .getBookingNewById(order.id, context),
+      context: context,
+    );
+
+    print('log care order new ${useFetcholdOrderNew.data?.isDeposited}');
     final orderOld = useFetcholdOrder.data;
 
     final orderObj = orderEntity.data;
+
+    final orderNew = useFetcholdOrderNew.data;
 
     useEffect(() {
       orderEntity.refresh();
@@ -185,9 +196,12 @@ class PriceDetails extends HookConsumerWidget {
     }
 
     print('log care order ${order.vouchers?.length}');
-
+    final checkIsdeposit = order.isDeposited;
+    final checkIsdepositData = orderData.isDeposited;
+    print('log care order 1 $checkIsdeposit');
+    print('log care order 2 $checkIsdepositData');
     return LoadingOverlay(
-      isLoading: stateBooking.isLoading && stateOldBooking.isLoading,
+      isLoading: stateBooking.isLoading || stateOldBooking.isLoading,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -287,15 +301,15 @@ class PriceDetails extends HookConsumerWidget {
                   return Container();
                 }
                 final voucher = order.vouchers?[index];
-                print("log care voucher ${order.vouchers?[index].bookingId}");
-                print("log care voucher ${order.vouchers?[index].code}");
-                print("log care voucher ${order.vouchers?[index].id}");
-                print("log care voucher ${order.vouchers?[index].isActived}");
-                print("log care voucher ${order.vouchers?[index].price}");
-                print(
-                    "log care voucher ${order.vouchers?[index].promotionCategoryId}");
-                print(
-                    "log care voucher userid ${order.vouchers?[index].userId}");
+                // print("log care voucher ${order.vouchers?[index].bookingId}");
+                // print("log care voucher ${order.vouchers?[index].code}");
+                // print("log care voucher ${order.vouchers?[index].id}");
+                // print("log care voucher ${order.vouchers?[index].isActived}");
+                // print("log care voucher ${order.vouchers?[index].price}");
+                // print(
+                //     "log care voucher ${order.vouchers?[index].promotionCategoryId}");
+                // print(
+                //     "log care voucher userid ${order.vouchers?[index].userId}");
                 return VoucherInOrder(
                   voucher: voucher,
                 );
@@ -314,34 +328,34 @@ class PriceDetails extends HookConsumerWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (order.vouchers?.length != 0 &&
-                    order.vouchers?.length != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: LabelText(
-                      content: formatPrice((order.total -
-                              order.vouchers!.fold<double>(
-                                0,
-                                (total, voucher) =>
-                                    total + (voucher.price ?? 0),
-                              ))
-                          .toInt()),
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                // if (order.vouchers?.length != 0 &&
+                //     order.vouchers?.length != null)
+                //   Padding(
+                //     padding: const EdgeInsets.symmetric(vertical: 10),
+                //     child: LabelText(
+                //       content: formatPrice((order.total -
+                //               order.vouchers!.fold<double>(
+                //                 0,
+                //                 (total, voucher) =>
+                //                     total + (voucher.price ?? 0),
+                //               ))
+                //           .toInt()),
+                //       size: 18,
+                //       fontWeight: FontWeight.bold,
+                //       color: Colors.black,
+                //     ),
+                //   ),
+                // if (order.vouchers?.length == 0 ||
+                //     order.vouchers?.length == null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: LabelText(
+                    content: formatPrice(order.total.toInt() ?? 0),
+                    size: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
-                if (order.vouchers?.length == 0 ||
-                    order.vouchers?.length == null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: LabelText(
-                      content: formatPrice(order.total.toInt() ?? 0),
-                      size: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                ),
               ],
             ),
             if (order.total != order.totalReal)
