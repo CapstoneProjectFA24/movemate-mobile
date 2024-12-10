@@ -77,7 +77,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     }
 
     final listServices = getListSerVices(result);
-    double containerHeight = listServices.length * 120.0;
+    double containerHeight = listServices.length * 800.0;
 
     return LoadingOverlay(
       isLoading: stateWallet.isLoading,
@@ -103,11 +103,12 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                           children: [
                             Container(
                               width: containerWidth,
+                              // height:  MediaQuery.of(context).size.height * 0.9,
                               constraints: BoxConstraints(
                                 maxHeight:
-                                    MediaQuery.of(context).size.height * 0.8,
+                                    MediaQuery.of(context).size.height * 0.9,
                               ),
-                              height: containerHeight,
+                              height: 550,
                               margin: const EdgeInsets.all(24),
                               decoration: BoxDecoration(
                                 color: Colors.white,

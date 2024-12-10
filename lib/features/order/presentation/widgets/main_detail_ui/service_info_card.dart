@@ -75,7 +75,8 @@ class ServiceInfoCard extends HookConsumerWidget {
 
     // Xác định xem nút có được bật hay không
     bool isButtonEnabled = isChangeDateEnabled() &&
-        (order.isUpdated == null || order.isUpdated == false);
+        (order.isUpdated == null || order.isUpdated == false) &&
+        !bookingStatus.canMakePaymentLast;
 
     return FadeInUp(
       child: Center(
