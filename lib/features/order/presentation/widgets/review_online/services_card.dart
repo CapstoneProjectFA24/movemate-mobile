@@ -21,6 +21,8 @@ class ServiceCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+
     return LoadingOverlay(
       isLoading: order == null,
       child: Container(
@@ -260,7 +262,7 @@ class ServiceCard extends HookConsumerWidget {
             ),
             const SizedBox(height: 12),
             // Tổng giá
-            if (orderOld != null) ...[
+            if (orderOld != null ) ...[
               if (order.total == orderOld?.total)
                 buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
                     fontWeight: FontWeight.w600)
@@ -280,6 +282,8 @@ class ServiceCard extends HookConsumerWidget {
               buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
                   fontWeight: FontWeight.w600),
             ],
+
+
             // Note colors for service types
             const SizedBox(height: 12),
             FittedBox(

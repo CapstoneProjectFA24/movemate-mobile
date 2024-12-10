@@ -43,7 +43,6 @@ class PriceDetails extends HookConsumerWidget {
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline);
 
- 
     final stateBooking = ref.watch(bookingControllerProvider);
     final stateOldBooking = ref.watch(orderControllerProvider);
 
@@ -372,13 +371,14 @@ class PriceDetails extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: LabelText(
-                      content: formatPrice((order.total +
-                              order.vouchers!.fold<double>(
-                                0,
-                                (total, voucher) =>
-                                    total + (voucher.price ?? 0),
-                              ))
-                          .toDouble()),
+                      content: formatPrice(
+                          ((bookingAsync.value?.total ?? order.total) +
+                                  order.vouchers!.fold<double>(
+                                    0,
+                                    (total, voucher) =>
+                                        total + (voucher.price ?? 0),
+                                  ))
+                              .toDouble()),
                       size: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

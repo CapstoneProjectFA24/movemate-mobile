@@ -187,9 +187,9 @@ class ReviewOnline extends HookConsumerWidget {
           order: order,
           promotions: useFetchResultPromotion.data!.promotionUser,
         );
-        print('validVouchers checking 1 $validVouchers');
-        print(
-            'validVouchers checking 2 ${useFetchResultPromotion.data!.promotionUser.where((e) => e.serviceId != 0).toList().toString()}');
+        // print('validVouchers checking 1 $validVouchers');
+        // print(
+        //     'validVouchers checking 2 ${useFetchResultPromotion.data!.promotionUser.where((e) => e.serviceId != 0).toList().toString()}');
         // print('validVouchers checking 3 $validVouchers');
         matchingVouchers.value = validVouchers;
       }
