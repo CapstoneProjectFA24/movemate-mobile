@@ -12,9 +12,6 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/providers/wallet_provider.dart';
 
 
-final refreshWallet = StateProvider.autoDispose<bool>(
-  (ref) => true,
-);
 
 class BalanceIndicator extends HookConsumerWidget {
   const BalanceIndicator({super.key});
@@ -37,9 +34,12 @@ class BalanceIndicator extends HookConsumerWidget {
           refreshWallet, (_, __) => useFetchResultWallet.refresh());
       return null;
     }, []);
-    // final walletUser = useFetchResultWallet.isFetchingData
-    //     ? 0
-    //     : useFetchResultWallet.data?.balance ?? 0;
+
+    // Call refreshBookingData when the widget is first built
+    // useEffect(() {
+    //   useFetchResultWallet.refresh;
+    //   return null;
+    // }, []);
 
     final walletUser =
         useFetchResultWallet.isFetchingData ? 0 : wallet?.balance ?? 0;

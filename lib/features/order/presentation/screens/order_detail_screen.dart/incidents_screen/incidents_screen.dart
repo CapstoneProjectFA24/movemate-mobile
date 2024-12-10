@@ -99,18 +99,8 @@ class IncidentsScreen extends HookConsumerWidget {
     final isRequestSent = useState<bool>(false);
     final images = useState<List<String>>([]);
     final fullScreenImage = useState<String?>(null);
-
-    // print("tuan checking 1 ${images.toString()}");
-
-    // final imagePublicIds = useState<List<String>>(
-    //   images.value.map((url) {
-    //     final uri = Uri.parse(url);
-    //     final pathSegments = uri.pathSegments;
-    //     return pathSegments.length > 1
-    //         ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last}' // Bao gồm phần mở rộng
-    //         : '';
-    //   }).toList(),
-    // );
+    final imageError = useState<String?>(null);
+    final amountError = useState<String?>(null);
 
     // Thêm useEffect để lấy và format địa chỉ
     useEffect(() {
@@ -341,24 +331,6 @@ class IncidentsScreen extends HookConsumerWidget {
                   ),
 
                   // const SizedBox(height: 16),
-
-                  // const Text('Mã đơn hàng',
-                  //     style: TextStyle(
-                  //         color: Colors.black, fontWeight: FontWeight.bold)),
-                  // TextFormField(
-                  //   controller: orderIdController,
-                  //   enabled: isRequestSent
-                  //       .value, // Disable editing for "Yêu cầu đã gửi"
-                  //   decoration: InputDecoration(
-                  //     hintText: orderIdController.toString(),
-                  //     filled: true,
-                  //     fillColor: Colors.white,
-                  //     border: OutlineInputBorder(
-                  //       borderSide: const BorderSide(color: Colors.grey),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(height: 8),
                   const Text('Bảo hiểm đồ vật giá trị cao (>50 triệu)',
                       style: TextStyle(
@@ -453,12 +425,16 @@ class IncidentsScreen extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  // Error Message (if any)
-                  if (errorMessage.value != null)
+                  // Thông báo lỗi nếu số tiền bằng 0
+                  if ((estimatedAmount.value == 0 ||
+                          errorMessage.value != null) &&
+                      isRequestSent.value == false)
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        errorMessage.value!,
+                        estimatedAmount.value == 0
+                            ? 'Yêu cầu nhập số tiền'
+                            : errorMessage.value!,
                         style: const TextStyle(
                           color: Colors.red,
                           fontSize: 12,
@@ -466,7 +442,6 @@ class IncidentsScreen extends HookConsumerWidget {
                         ),
                       ),
                     ),
-
                   const SizedBox(height: 16),
 
                   const Text('Mô tả',
@@ -562,8 +537,21 @@ class IncidentsScreen extends HookConsumerWidget {
                       isEnabled: !isRequestSent.value,
                       showCameraButton: true,
                       request: userReportRequest.value),
-                  const SizedBox(height: 16),
 
+// Thông báo lỗi nếu không có hình ảnh
+                  if (userReportRequest.value.resourceList.isEmpty &&
+                      isRequestSent.value == false)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Yêu cầu chụp hình xác minh',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   const Text('Dung lượng không vượt quá 5Mb',
                       style: TextStyle(color: Colors.grey, fontSize: 12)),
 
@@ -589,7 +577,7 @@ class IncidentsScreen extends HookConsumerWidget {
 
                         final amount =
                             double.tryParse(estimatedAmountText) ?? 0.0;
-                        print('object tuan checking userReportRequest $amount');
+                        // print('object tuan checking userReportRequest $amount');
                         // Get the current position first
                         Position currentPosition = await getCurrentPosition();
 
@@ -600,8 +588,8 @@ class IncidentsScreen extends HookConsumerWidget {
                         // Now we have both the display address and position
                         String? displayAddress = addressInfo['display'];
                         Position position = addressInfo['position'];
-                        print(
-                            "tuan checking userReportRequest resourceList 0000 ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
+                        // print(
+                        //     "tuan checking userReportRequest resourceList 0000 ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
                         // Create the UserReportRequest using the display address and position
                         userReportRequest.value = UserReportRequest(
                           bookingId: order.id,
@@ -615,15 +603,80 @@ class IncidentsScreen extends HookConsumerWidget {
                           isInsurance: isInsurance.value,
                         );
                         print(
-                            "tuan checking userReportRequest ${userReportRequest.value.toString()}");
+                            "tuan checking  ${userReportRequest.value.resourceList.length}");
+                        print(
+                            "tuan checking  ${userReportRequest.value.estimatedAmount}");
                         // print(
                         //     "tuan checking formattedAddress value ${formattedAddress.value.toString()}");
-                        print(
-                            "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.toString()}");
-                        await ref
-                            .read(orderControllerProvider.notifier)
-                            .postUserReport(
-                                userReportRequest.value, context, order.id);
+                        // print(
+                        //     "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.toString()}");
+                        // await ref
+                        //     .read(orderControllerProvider.notifier)
+                        //     .postUserReport(
+                        //         userReportRequest.value, context, order.id);
+
+                        // Reset lỗi trước khi kiểm tra
+                        imageError.value = null;
+                        amountError.value = null;
+
+                        bool hasError = false;
+
+                        // Kiểm tra nếu không có hình ảnh
+                        if (userReportRequest.value.resourceList.isEmpty) {
+                          imageError.value = 'Yêu cầu chụp hình xác minh';
+                          hasError = true;
+                        }
+
+                        // Kiểm tra nếu số tiền bằng 0 hoặc không hợp lệ
+                        if (amount == 0) {
+                          amountError.value = 'Yêu cầu nhập số tiền';
+                          hasError = true;
+                        } else if (amount < 10000) {
+                          amountError.value = 'Giá phải lớn hơn 10,000 đ';
+                          hasError = true;
+                        }
+
+                        if (hasError) {
+                          // Nếu có lỗi, không thực hiện gửi yêu cầu
+                          return;
+                        }
+
+                        try {
+                          // Get current position
+                          Position currentPosition = await getCurrentPosition();
+
+                          // Fetch address info
+                          var addressInfo =
+                              await getAddressFromLatLng(currentPosition);
+
+                          String? displayAddress = addressInfo['display'];
+                          Position position = addressInfo['position'];
+
+                          // Create UserReportRequest
+                          userReportRequest.value = UserReportRequest(
+                            bookingId: order.id,
+                            resourceList: userReportRequest.value.resourceList,
+                            location: displayAddress,
+                            point:
+                                "${position.latitude}, ${position.longitude}",
+                            description: description.value,
+                            title: supportType.value,
+                            reason: reason.value,
+                            estimatedAmount: amount,
+                            isInsurance: isInsurance.value,
+                          );
+
+                          await ref
+                              .read(orderControllerProvider.notifier)
+                              .postUserReport(
+                                  userReportRequest.value, context, order.id);
+
+                          // Đánh dấu yêu cầu đã được gửi
+                          isRequestSent.value = true;
+                        } catch (e) {
+                          // Xử lý lỗi nếu có
+                          print('Error sending report: $e');
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,

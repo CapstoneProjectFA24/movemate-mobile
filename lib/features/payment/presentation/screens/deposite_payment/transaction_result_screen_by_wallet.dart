@@ -57,7 +57,7 @@ class TransactionResultScreenByWallet extends HookConsumerWidget {
     final stateWallet = ref.watch(profileControllerProvider);
     final useFetchResultWallet = useFetchObject<WalletEntity>(
       function: (context) async {
-        print('check screen');
+        // print('check screen');
         return ref.read(profileControllerProvider.notifier).getWallet(context);
       },
       context: context,
