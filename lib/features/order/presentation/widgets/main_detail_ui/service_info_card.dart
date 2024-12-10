@@ -31,9 +31,6 @@ class ServiceInfoCard extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userdata = ref.read(authProvider);
 
-    final currentBookingAt =
-        ref.watch(bookingStreamProvider(order.id.toString())).value;
-
     final formattedDate = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.bookingAt.toString()));
 
@@ -44,9 +41,27 @@ class ServiceInfoCard extends HookConsumerWidget {
 
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
-
     // final checkDateTimeChange = currentBookingAt!.bookingAt ?? order.bookingAt;
 
+    DateTime? bookingAtDateTime = parseBookingAt(order.bookingAt);
+
+    if (bookingAtDateTime == null) {
+      // Hiển thị thông báo lỗi nếu phân tích ngày thất bại
+      return const Center(child: Text('Invalid booking date format.'));
+    }
+    // Tính thời gian trước 1 giờ của bookingAt
+    final DateTime oneHourBeforeBooking =
+        bookingAtDateTime.subtract(const Duration(hours: 1));
+
+    // Lấy thời gian hiện tại
+    final DateTime now = DateTime.now();
+
+    // Kiểm tra xem hiện tại có trước thời gian bookingAt trừ đi 1 giờ hay không
+    final bool isBeforeOneHour = now.isBefore(oneHourBeforeBooking);
+    print("checking date time 1 $isBeforeOneHour");
+    print("checking date time 2 $bookingAtDateTime");
+    print("checking date time 3 $oneHourBeforeBooking");
+    print("checking date time 4 ${order.bookingAt}");
     bool isChangeDateEnabled() {
       return bookingStatus.canReviewSuggestion ||
           bookingStatus.canAcceptSchedule ||
@@ -54,7 +69,8 @@ class ServiceInfoCard extends HookConsumerWidget {
           bookingStatus.isProcessingRequest ||
           bookingStatus.isOnlineReviewing ||
           bookingStatus.isOnlineSuggestionReady ||
-          bookingStatus.canMakePayment;
+          bookingStatus.canMakePayment ||
+          isBeforeOneHour;
     }
 
     // Xác định xem nút có được bật hay không
@@ -308,5 +324,25 @@ Số điện thoại: ${userdata?.phone}
         ),
       ],
     );
+  }
+}
+
+/// Hàm để phân tích `bookingAt` từ `order.bookingAt`
+DateTime? parseBookingAt(dynamic bookingAt) {
+  try {
+    if (bookingAt is String) {
+      // Sử dụng DateTime.parse nếu định dạng là chuẩn ISO 8601 hoặc tương tự
+      return DateTime.parse(bookingAt);
+    } else if (bookingAt is DateTime) {
+      // Nếu bookingAt đã là đối tượng DateTime
+      return bookingAt;
+    } else {
+      // Nếu định dạng không được hỗ trợ
+      throw const FormatException('Unsupported type for bookingAt');
+    }
+  } catch (e) {
+    // Xử lý lỗi nếu có
+    print('Error parsing bookingAt: $e');
+    return null;
   }
 }
