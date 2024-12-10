@@ -265,8 +265,13 @@ class ServiceCard extends HookConsumerWidget {
                 buildPriceItem(
                     'Tổng giá cũ', formatPrice(orderOld?.total.toInt() ?? 0),
                     isStrikethrough: true),
-                buildSummary('Tổng giá mới', formatPrice(order.total.toInt()),
-                    fontWeight: FontWeight.w600),
+                buildPriceItem(
+                  'Tổng giá mới',
+                  formatPrice(
+                    order.total.toInt(),
+                  ),
+                  isStrikethrough: false,
+                ),
               ]
             ] else ...[
               buildSummary('Tổng giá', formatPrice(order.total.toInt()),
