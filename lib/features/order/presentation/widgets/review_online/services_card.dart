@@ -5,6 +5,7 @@ import 'package:movemate/features/booking/domain/entities/booking_response/booki
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/review_online/house_information.dart';
+import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -21,8 +22,7 @@ class ServiceCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     return LoadingOverlay(
       isLoading: order == null,
       child: Container(
@@ -262,9 +262,15 @@ class ServiceCard extends HookConsumerWidget {
             ),
             const SizedBox(height: 12),
             // Tổng giá
-            if (orderOld != null ) ...[
-              if (order.total == orderOld?.total)
-                buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
+            if (orderOld != null ||
+                (order.vouchers?.length != 0 &&
+                    order.vouchers?.length != null)) ...[
+              if ((bookingAsync.value?.total == orderOld?.total) ||
+                  (order.total == orderOld?.total))
+                buildSummary(
+                    'Tổng giá',
+                    formatPrice(bookingAsync.value?.total.toDouble() ??
+                        order.total.toDouble()),
                     fontWeight: FontWeight.w600)
               else ...[
                 buildPriceItem(
@@ -273,7 +279,8 @@ class ServiceCard extends HookConsumerWidget {
                 buildPriceItem(
                   'Tổng giá mới',
                   formatPrice(
-                    order.total.toDouble(),
+                    bookingAsync.value?.total.toDouble() ??
+                        order.total.toDouble(),
                   ),
                   isStrikethrough: false,
                 ),
@@ -282,7 +289,6 @@ class ServiceCard extends HookConsumerWidget {
               buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
                   fontWeight: FontWeight.w600),
             ],
-
 
             // Note colors for service types
             const SizedBox(height: 12),

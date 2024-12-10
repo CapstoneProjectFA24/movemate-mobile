@@ -399,12 +399,18 @@ class _OrderItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                fontSize: 14.0, // Adjust font size as needed
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis, // Adds ellipsis if text exceeds
             ),
           ),
+          const SizedBox(width: 16),
           Text(
             price,
             style: TextStyle(
