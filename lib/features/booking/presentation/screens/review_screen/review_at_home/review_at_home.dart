@@ -35,7 +35,7 @@ class ReviewAtHome extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(bookingControllerProvider);
-    final statePromotion = ref.watch(promotionControllerProvider);
+    // final statePromotion = ref.watch(promotionControllerProvider);
 
     final useFetchResultPromotion = useFetchObject<PromotionAboutUserEntity>(
       function: (context) => ref
@@ -87,7 +87,7 @@ class ReviewAtHome extends HookConsumerWidget {
             // 3. Either not assigned to a user (userId is null) or assigned to the order's user
             final validVouchers = promotion.vouchers.where((voucher) =>
                 voucher.isActived &&
-                voucher.bookingId == null &&
+                voucher.bookingId == 0 &&
                 (voucher.userId == order.userId));
 
             matchingVouchers.addAll(validVouchers);
@@ -110,9 +110,13 @@ class ReviewAtHome extends HookConsumerWidget {
       }
       return null;
     }, [useFetchResultPromotion.data]);
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
+    final checkDepossit = bookingAsync.value!.status == 'DEPOSITING';
+
+    final checkWaiting = bookingAsync.value!.status == 'WAITING';
     return LoadingOverlay(
-      isLoading: state.isLoading || statePromotion.isLoading,
+      isLoading: state.isLoading,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         appBar: const CustomAppBar(
@@ -149,7 +153,7 @@ class ReviewAtHome extends HookConsumerWidget {
                   const SizedBox(height: 20),
                   ContactSection(order: order),
                   const SizedBox(height: 30),
-                  if (matchingVouchers.value.isNotEmpty)
+                  if (matchingVouchers.value.isNotEmpty && checkWaiting)
                     ConfirmationLink(
                       order: order,
                       vouchers: matchingVouchers.value,
@@ -158,7 +162,7 @@ class ReviewAtHome extends HookConsumerWidget {
                       onVoucherSelected: addVoucher,
                       onVoucherRemoved: removeVoucher,
                     ),
-                  // const SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -204,10 +208,15 @@ class Buttons extends HookConsumerWidget {
     final profileStaffReviewer = useFetchUserInfo.data;
 
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
-    final checkDepossit =
-        bookingAsync.value!.status == BookingStatusType.depositing;
 
-    final checkReviwed = bookingAsync.value!.status == 'REVIEWED';
+    final checkDepossit = bookingAsync.value!.status == 'DEPOSITING';
+
+    final checkWaiting = bookingAsync.value!.status == 'WAITING';
+
+    // print('log care 1  $checkDepossit');
+    // print('log care 2 $checkWaiting');
+    // print('log care 3 ${state.isLoading}');
+    // print('log care 2 $checkWaiting');
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Column(
@@ -311,32 +320,39 @@ class Buttons extends HookConsumerWidget {
             },
           ),
           const SizedBox(height: 8),
-          ActionButton(
-              text: 'Xác nhận',
+          if (checkWaiting)
+            ActionButton(
+                text: 'Xác nhận',
+                color: const Color(0xFFFF6600),
+                textColor: Colors.white,
+                onPressed: () async {
+                  final reviewerStatusRequest = ReviewerStatusRequest(
+                    status: BookingStatusType.depositing,
+                    vouchers: selectedVouchers
+                        .map((v) => Voucher(
+                              id: v.id,
+                              promotionCategoryId: v.promotionCategoryId,
+                            ))
+                        .toList(),
+                  );
+                  await ref
+                      .read(bookingControllerProvider.notifier)
+                      .confirmReviewBooking(
+                        request: reviewerStatusRequest,
+                        order: order,
+                        context: context,
+                      );
+                }),
+          if (checkDepossit)
+            ActionButton(
+              text: 'Thanh toán',
               color: const Color(0xFFFF6600),
               textColor: Colors.white,
-              onPressed: !checkDepossit
-                  ? () async {
-                      final reviewerStatusRequest = ReviewerStatusRequest(
-                        status: BookingStatusType.depositing,
-                        vouchers: selectedVouchers
-                            .map((v) => Voucher(
-                                  id: v.id,
-                                  promotionCategoryId: v.promotionCategoryId,
-                                ))
-                            .toList(),
-                      );
-                      await ref
-                          .read(bookingControllerProvider.notifier)
-                          .confirmReviewBooking(
-                            request: reviewerStatusRequest,
-                            order: order,
-                            context: context,
-                          );
-                    }
-                  : () {
-                      context.router.push(PaymentScreenRoute(id: order.id));
-                    }),
+              onPressed: () {
+                // print('log care done ');
+                context.router.push(PaymentScreenRoute(id: order.id));
+              },
+            ),
           const SizedBox(height: 8),
           ActionButton(
             text: 'Hủy',
@@ -360,8 +376,8 @@ class AppointmentTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("order updatedAt ${order.updatedAt}");
-    print("order reviewAt ${order.reviewAt}");
+    // print("order updatedAt ${order.updatedAt}");
+    // print("order reviewAt ${order.reviewAt}");
 // hàm để định dạng ngày tháng
     final formattedDateReviewAt = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.reviewAt.toString()));

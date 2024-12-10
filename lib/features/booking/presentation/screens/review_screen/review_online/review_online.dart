@@ -204,11 +204,11 @@ class ReviewOnline extends HookConsumerWidget {
     final isDataValid = getAssID != 0 && getServiceId != 0;
     final checkIsUnchanged = order.isUnchanged == true;
 
-    final checkDepossit =
-        bookingAsync.value!.status == BookingStatusType.depositing;
+    final checkDepossit = bookingAsync.value?.status == 'DEPOSITING';
 
-    final checkReviwed = bookingAsync.value!.status == 'REVIEWED';
-    print('log care  ${!checkDepossit && checkReviwed}');
+    final checkReviwed = bookingAsync.value?.status == 'REVIEWED';
+    // print('log care 1  ${!checkDepossit && checkReviwed}');
+    // print('log care 2 $checkReviwed');
     return LoadingOverlay(
       isLoading: stateProfile.isLoading ||
           stateService.isLoading ||
@@ -283,63 +283,53 @@ class ReviewOnline extends HookConsumerWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // if (selectedVouchers.value.isNotEmpty)
-                      //   Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       const Text(
-                      //         'Các phiếu giảm giá đã chọn:',
-                      //         style: TextStyle(
-                      //             fontSize: 16, fontWeight: FontWeight.bold),
-                      //       ),
-                      //       const SizedBox(height: 8),
-                      //       ...selectedVouchers.value.map((voucher) => ListTile(
-                      //             title: Text('Voucher ID: ${voucher.id}'),
-                      //             subtitle: Text(
-                      //                 'Category ID: ${voucher.promotionCategoryId}'),
-                      //             trailing: IconButton(
-                      //               icon: const Icon(Icons.remove_circle,
-                      //                   color: Colors.red),
-                      //               onPressed: () => removeVoucher(voucher),
-                      //             ),
-                      //           )),
-                      //       const SizedBox(height: 16),
-                      //     ],
-                      //   ),
-                      buildButton('Xác nhận', Colors.orange,
-                          onPressed: (!checkDepossit && checkReviwed)
-                              ? () async {
-                                  final bookingStatus =
-                                      order.status.toBookingTypeEnum();
+                      if (checkDepossit)
+                        buildButton(
+                          'Thanh toán',
+                          Colors.orange,
+                          textColor: Colors.white,
+                          borderColor: Colors.orange,
+                          onPressed: () {
+                            context.router
+                                .push(PaymentScreenRoute(id: order.id));
+                          },
+                        ),
+                      if (checkReviwed)
+                        buildButton(
+                          'Xác nhận',
+                          Colors.orange,
+                          textColor: Colors.white,
+                          borderColor: Colors.orange,
+                          onPressed: () async {
+                            // final bookingStatus =
+                            //     order.status.toBookingTypeEnum();
 
-                                  final reviewerStatusRequest =
-                                      ReviewerStatusRequest(
-                                    status: BookingStatusType.depositing,
-                                    vouchers: selectedVouchers.value
-                                        .map((v) => Voucher(
-                                              id: v.id,
-                                              promotionCategoryId:
-                                                  v.promotionCategoryId,
-                                            ))
-                                        .toList(),
-                                  );
-                                  print(
-                                      'ReviewerStatusRequest: ${reviewerStatusRequest.toJson()}');
+                            final reviewerStatusRequest = ReviewerStatusRequest(
+                              status: BookingStatusType.depositing,
+                              vouchers: selectedVouchers.value
+                                  .map((v) => Voucher(
+                                        id: v.id,
+                                        promotionCategoryId:
+                                            v.promotionCategoryId,
+                                      ))
+                                  .toList(),
+                            );
+                            // print(
+                            //     'ReviewerStatusRequest: ${reviewerStatusRequest.toJson()}');
 
-                                  print('order: $reviewerStatusRequest');
-                                  await ref
-                                      .read(bookingControllerProvider.notifier)
-                                      .confirmReviewBooking(
-                                        request: reviewerStatusRequest,
-                                        order: order,
-                                        context: context,
-                                      );
-                                }
-                              : () {
-                                  context.router
-                                      .push(PaymentScreenRoute(id: order.id));
-                                }),
-                      const SizedBox(height: 12),
+                            // print('order: $reviewerStatusRequest');
+                            await ref
+                                .read(bookingControllerProvider.notifier)
+                                .confirmReviewBooking(
+                                  request: reviewerStatusRequest,
+                                  order: order,
+                                  context: context,
+                                );
+                          },
+                        ),
+                      const SizedBox(
+                        height: 8,
+                      ),
                       buildButton(
                         'Hủy',
                         Colors.white,

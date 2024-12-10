@@ -40,10 +40,10 @@ class PaymentScreen extends HookConsumerWidget {
     final wallet = ref.read(walletProvider);
 
     // Call refreshBookingData when the widget is first built
-    useEffect(() {
-      bookingController.refreshBookingData(id: id);
-      return null;
-    }, []);
+    // useEffect(() {
+    //   bookingController.refreshBookingData(id: id);
+    //   return null;
+    // }, []);
 
     // Access the booking response from the provider
     final bookingResponse = ref.watch(bookingResponseProvider);

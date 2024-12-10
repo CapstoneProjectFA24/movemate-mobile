@@ -8,10 +8,13 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/cancel_button.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/voucher_in_order.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
+import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:movemate/configs/routes/app_router.dart';
@@ -24,11 +27,13 @@ class PriceDetails extends HookConsumerWidget {
   final OrderEntity order;
   final AsyncValue<BookingStatusType> statusAsync;
   final ServicesPackageEntity? serviceData;
+  // final List<VouchersRealtimeEntity> listVoucher;
   const PriceDetails({
     super.key,
     required this.order,
     required this.serviceData,
     required this.statusAsync,
+    // required this.listVoucher,
   });
 
   @override
@@ -124,8 +129,12 @@ class PriceDetails extends HookConsumerWidget {
             builder: (BuildContext context) =>
                 ReviewedToComingModal(order: order),
           );
-        } else if (bookingStatus.canMakePayment) {
-          context.pushRoute(PaymentScreenRoute(id: order.id));
+        } else if (bookingStatus.canMakePayment || bookingStatus.isWaiting) {
+          final bookingController =
+              ref.read(bookingControllerProvider.notifier);
+          final orderEntity =
+              await bookingController.getOrderEntityById(order.id);
+          context.router.push(ReviewAtHomeRoute(order: orderEntity ?? order));
         } else if (bookingStatus.canMakePaymentLast) {
           context.pushRoute(ConfirmLastPaymentRoute(
             orderObj: orderObj,
@@ -174,6 +183,8 @@ class PriceDetails extends HookConsumerWidget {
       // bookingStatus.isOnlineSuggestionReady;
       // bookingStatus.canConfirmCompletion;
     }
+
+    print('log care order ${order.vouchers?.length}');
 
     return LoadingOverlay(
       isLoading: stateBooking.isLoading && stateOldBooking.isLoading,
@@ -244,30 +255,53 @@ class PriceDetails extends HookConsumerWidget {
               height: 32,
             ),
 
-            // phiếu giảm giá
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     const Padding(
-            //       padding: EdgeInsets.symmetric(vertical: 10),
-            //       child: LabelText(
-            //         content: 'Phiếu giảm giá',
-            //         size: 16,
-            //         color: Colors.grey,
-            //         fontWeight: FontWeight.w500,
-            //       ),
-            //     ),
-            //     Padding(
-            //       padding: const EdgeInsets.symmetric(vertical: 10),
-            //       child: LabelText(
-            //         content: formatPrice(orderData.total.toInt() ?? 0),
-            //         size: 18,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.black,
-            //       ),
-            //     ),
-            //   ],
-            // ),
+            if (order.vouchers?.length != 0 && order.vouchers?.length != null)
+              // phiếu giảm giá
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: 'Phiếu giảm giá',
+                      size: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: order.vouchers?.length,
+              padding: const EdgeInsets.symmetric(
+                horizontal: AssetsConstants.defaultPadding - 15.0,
+              ),
+              itemBuilder: (_, index) {
+                if (index == order.vouchers?.length) {
+                  if (order.vouchers?.length == 0) {
+                    return const CustomCircular();
+                  }
+                  return Container();
+                }
+                final voucher = order.vouchers?[index];
+                print("log care voucher ${order.vouchers?[index].bookingId}");
+                print("log care voucher ${order.vouchers?[index].code}");
+                print("log care voucher ${order.vouchers?[index].id}");
+                print("log care voucher ${order.vouchers?[index].isActived}");
+                print("log care voucher ${order.vouchers?[index].price}");
+                print(
+                    "log care voucher ${order.vouchers?[index].promotionCategoryId}");
+                print(
+                    "log care voucher userid ${order.vouchers?[index].userId}");
+                return VoucherInOrder(
+                  voucher: voucher,
+                );
+              },
+            ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -280,17 +314,60 @@ class PriceDetails extends HookConsumerWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: LabelText(
-                    content: formatPrice(orderData.total.toInt() ?? 0),
-                    size: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                if (order.vouchers?.length != 0 &&
+                    order.vouchers?.length != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: formatPrice((order.total -
+                              order.vouchers!.fold<double>(
+                                0,
+                                (total, voucher) =>
+                                    total + (voucher.price ?? 0),
+                              ))
+                          .toInt()),
+                      size: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
+                if (order.vouchers?.length == 0 ||
+                    order.vouchers?.length == null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: formatPrice(order.total.toInt() ?? 0),
+                      size: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
               ],
             ),
+            if (order.total != order.totalReal)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: 'Tiền còn lại',
+                      size: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: LabelText(
+                      content: formatPrice(order.totalReal.toInt() ?? 0),
+                      size: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
 
             Container(
               padding: const EdgeInsets.all(8),

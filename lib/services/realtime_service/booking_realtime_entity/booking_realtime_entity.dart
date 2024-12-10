@@ -15,6 +15,7 @@ class BookingRealtimeEntity {
   final bool isRefunded;
   final bool isReported;
   final List<BookingDetailRealTimeEntity> bookingDetails;
+  // final List<VouchersRealtimeEntity> vouchers;
 
   BookingRealtimeEntity({
     required this.id,
@@ -30,6 +31,7 @@ class BookingRealtimeEntity {
     required this.isRefunded,
     required this.isReported,
     required this.bookingDetails,
+    // required this.vouchers,
   });
 
   factory BookingRealtimeEntity.fromMap(Map<String, dynamic> data, String id) {
@@ -53,6 +55,10 @@ class BookingRealtimeEntity {
               ?.map((e) => BookingDetailRealTimeEntity.fromMap(e))
               .toList() ??
           [],
+      // vouchers: (data['Vouchers'] as List<dynamic>?)
+      //         ?.map((e) => VouchersRealtimeEntity.fromMap(e))
+      //         .toList() ??
+      //     [],
     );
   }
 
@@ -62,6 +68,7 @@ class BookingRealtimeEntity {
       'Status': status,
       'Assignments': assignments.map((e) => e.toMap()).toList(),
       'BookingDetails': bookingDetails.map((e) => e.toMap()).toList(),
+      // 'Vouchers': vouchers.map((e) => e.toMap()).toList(),
       'Deposit': deposit,
       'Total': total,
       'TotalFee': totalFee,
@@ -124,6 +131,66 @@ class AssignmentsRealtimeEntity {
         'staffType: $staffType, '
         'isResponsible: $isResponsible, '
         'status: $status, '
+        ')';
+  }
+}
+
+class VouchersRealtimeEntity {
+  final int? bookingId;
+  final String code;
+  final int id;
+  final bool isActived;
+  final double price;
+  final int promotionCategoryId;
+  final int? userId;
+
+  VouchersRealtimeEntity({
+    this.bookingId,
+    required this.code,
+    required this.id,
+    required this.isActived,
+    required this.price,
+    required this.promotionCategoryId,
+    this.userId,
+  });
+
+  factory VouchersRealtimeEntity.fromMap(Map<String, dynamic> data) {
+    return VouchersRealtimeEntity(
+      bookingId: data['BookingId'] ?? 0, // Cung cấp giá trị mặc định
+      code: data['Code'] ?? '',
+      id: data['Id'] ?? '',
+      // isActived: data['IsActived'] ?? false, // Mặc định là false nếu null
+      isActived: data['isActived'] as bool,
+      price: (data['Price'] as num?)?.toDouble() ?? 0,
+      promotionCategoryId: data['PromotionCategoryId'] ?? 0,
+      userId: data['UserId'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'BookingId': bookingId,
+      'Code': code,
+      'Id': id,
+      'IsActived': isActived,
+      'Price': price,
+      'PromotionCategoryId': promotionCategoryId,
+      'UserId': userId,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  String toString() {
+    return 'AssignmentsRealtimeEntity('
+        'bookingId: $bookingId, '
+        'code: $code, '
+        'IsActived: $isActived, '
+        'Price: $price, '
+        'id: $id, '
+        'promotionCategoryId: $promotionCategoryId, '
+        'userId: $userId, '
         ')';
   }
 }
