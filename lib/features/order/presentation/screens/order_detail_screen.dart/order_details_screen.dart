@@ -300,8 +300,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           );
                         }),
                     const SizedBox(height: 20),
-                    if (listStaffPorterInOrder!.isNotEmpty ||
-                        listStaffPorterInOrder.isNotEmpty)
+                    if (listStaffDriverInOrder!.isNotEmpty ||
+                        listStaffPorterInOrder!.isNotEmpty)
                       CustomTabContainer(
                         porterItems: listStaffPorterInOrder ?? [],
                         driverItems: listStaffDriverInOrder ?? [],
