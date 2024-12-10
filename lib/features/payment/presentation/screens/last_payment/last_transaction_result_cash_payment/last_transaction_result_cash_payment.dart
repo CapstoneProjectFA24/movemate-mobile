@@ -93,7 +93,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                         // Container chính
                         Container(
                           width: containerWidth,
-                          height: containerHeight,
+                          height: 550,
                           margin: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             color: Colors.white,

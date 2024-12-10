@@ -419,10 +419,12 @@ class PriceDetails extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
                     child: LabelText(
-                      content: 'Tiền còn lại',
+                      content: (bookingAsync.value?.totalReal != 0)
+                          ? 'Tiền còn lại'
+                          : 'Đã Thanh toán',
                       size: 16,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
@@ -431,8 +433,10 @@ class PriceDetails extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: LabelText(
-                      content: formatPrice(
-                          bookingAsync.value?.totalReal.toDouble() ?? 0),
+                      content: (bookingAsync.value?.totalReal != 0)
+                          ? formatPrice(
+                              bookingAsync.value?.totalReal.toDouble() ?? 0)
+                          : '',
                       size: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
