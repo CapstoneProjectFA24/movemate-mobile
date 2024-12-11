@@ -187,8 +187,9 @@ class IncidentDetailsScreen extends HookConsumerWidget {
                   _buildSectionTitle('Lý do:', Icons.receipt_sharp),
                   Center(
                     child: Text(
-                      // ' ${incident.failedReason}',
-                      ' ${incident.failedReason}',
+                      incident.failedReason?.isNotEmpty == true
+                          ? incident.failedReason!
+                          : 'Không có lý do',
                       style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey,
@@ -283,12 +284,16 @@ class IncidentDetailsScreen extends HookConsumerWidget {
           ),
         ),
         const Spacer(),
-        Text(
-          status,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: statusColor ?? const Color(0xFF333333),
+        Flexible(
+          child: Text(
+            status,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: statusColor ?? const Color(0xFF333333),
+            ),
           ),
         ),
       ],

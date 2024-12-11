@@ -76,7 +76,12 @@ class IncidentsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final supportType = useState<String?>('Vỡ hàng');
     final isInsurance = useState<bool?>(false);
+
+    final stateIsLoading = useState<bool?>(false);
+
     final state = ref.watch(orderControllerProvider);
+
+    final isLoadingButton = state is AsyncLoading;
 
     final descriptionController = useTextEditingController();
     final reasonController = useTextEditingController();
@@ -138,6 +143,8 @@ class IncidentsScreen extends HookConsumerWidget {
     List<String> supportTypes = [
       'Bảo hành',
       'Vỡ hàng',
+      'Test 1',
+      'Checkking 1',
     ];
 
     int checkInsuranceValidService(OrderEntity order) {
@@ -224,6 +231,7 @@ class IncidentsScreen extends HookConsumerWidget {
       estimatedAmount.value = parsedValue.toDouble();
     }
 
+    print('estimatedAmountController $estimatedAmount');
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Scaffold(
@@ -577,128 +585,101 @@ class IncidentsScreen extends HookConsumerWidget {
                   SizedBox(
                     width: double.infinity, // Chiều ngang toàn màn hình
                     child: ElevatedButton(
-                      onPressed: () async {
-                        description.value = descriptionController.text;
-                        reason.value = reasonController.text;
+                      onPressed: stateIsLoading.value == false
+                          ? () async {
+                              description.value = descriptionController.text;
 
-                        // Convert the text from the controller to a double value
-                        estimatedAmount.value = double.tryParse(
-                                estimatedAmountController.text.replaceAll(
-                                    RegExp(r'[^0-9.]'),
-                                    '') // Remove non-numeric characters
-                                ) ??
-                            0;
-                        final estimatedAmountText = estimatedAmountController
-                            .text
-                            .replaceAll(RegExp(r'[^0-9]'), '');
+                              stateIsLoading.value = true;
 
-                        final amount =
-                            double.tryParse(estimatedAmountText) ?? 0.0;
-                        // print('object tuan checking userReportRequest $amount');
-                        // Get the current position first
-                        // Position currentPosition = await getCurrentPosition();
+                              reason.value = reasonController.text;
+                              final bookingState =
+                                  ref.watch(orderControllerProvider);
 
-                        // Fetch the address and position info
-                        // var addressInfo =
-                        //     await getAddressFromLatLng(currentPosition);
+                              final isLoading = bookingState is AsyncLoading;
 
-                        // Now we have both the display address and position
-                        // String? displayAddress = addressInfo['display'];
-                        // Position position = addressInfo['position'];
-                        // print(
-                        //     "tuan checking userReportRequest resourceList 0000 ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
-                        // Create the UserReportRequest using the display address and position
-                        // userReportRequest.value = UserReportRequest(
-                        //   bookingId: order.id,
-                        //   resourceList: userReportRequest.value.resourceList,
-                        //   location: displayAddress,
-                        //   point: "${position.latitude}, ${position.longitude}",
-                        //   description: description.value,
-                        //   title: supportType.value,
-                        //   reason: reason.value,
-                        //   estimatedAmount: amount,
-                        //   isInsurance: isInsurance.value,
-                        // );
-                        // print(
-                        //     "tuan checking  ${userReportRequest.value.resourceList.length}");
-                        // print(
-                        //     "tuan checking  ${userReportRequest.value.estimatedAmount}");
-                        // print(
-                        //     "tuan checking formattedAddress value ${formattedAddress.value.toString()}");
-                        // print(
-                        //     "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.toString()}");
-                        // await ref
-                        //     .read(orderControllerProvider.notifier)
-                        //     .postUserReport(
-                        //         userReportRequest.value, context, order.id);
+                              if (isLoading) return;
 
-                        // Reset lỗi trước khi kiểm tra
-                        // imageError.value = null;
-                        // amountError.value = null;
+                              // Convert the text from the controller to a double value
+                              estimatedAmount.value = double.tryParse(
+                                      estimatedAmountController.text.replaceAll(
+                                          RegExp(r'[^0-9.]'),
+                                          '') // Remove non-numeric characters
+                                      ) ??
+                                  0;
+                              final estimatedAmountText =
+                                  estimatedAmountController.text
+                                      .replaceAll(RegExp(r'[^0-9]'), '');
 
-                        bool hasError = false;
+                              final amount =
+                                  double.tryParse(estimatedAmountText) ?? 0.0;
 
-                        // Kiểm tra nếu không có hình ảnh
-                        if (userReportRequest.value.resourceList.isEmpty) {
-                          imageError.value = 'Yêu cầu chụp hình xác minh';
-                          hasError = true;
-                        }
+                              bool hasError = false;
 
-                        // Kiểm tra nếu số tiền bằng 0 hoặc không hợp lệ
-                        if (amount == 0) {
-                          amountError.value = 'Yêu cầu nhập số tiền';
-                          hasError = true;
-                        } else if (amount < 10000) {
-                          amountError.value = 'Giá phải lớn hơn 10,000 đ';
-                          hasError = true;
-                        }
+                              // Kiểm tra nếu không có hình ảnh
+                              if (userReportRequest
+                                  .value.resourceList.isEmpty) {
+                                imageError.value = 'Yêu cầu chụp hình xác minh';
+                                hasError = true;
+                              }
 
-                        if (hasError) {
-                          // Nếu có lỗi, không thực hiện gửi yêu cầu
-                          return;
-                        }
+                              // Kiểm tra nếu số tiền bằng 0 hoặc không hợp lệ
+                              if (amount == 0) {
+                                amountError.value = 'Yêu cầu nhập số tiền';
+                                hasError = true;
+                              } else if (amount < 10000) {
+                                amountError.value = 'Giá phải lớn hơn 10,000 đ';
+                                hasError = true;
+                              }
 
-                        try {
-                          // Get current position
-                          Position currentPosition = await getCurrentPosition();
+                              if (hasError) {
+                                // Nếu có lỗi, không thực hiện gửi yêu cầu
+                                return;
+                              }
 
-                          // Fetch address info
-                          var addressInfo =
-                              await getAddressFromLatLng(currentPosition);
+                              try {
+                                // Get current position
+                                Position currentPosition =
+                                    await getCurrentPosition();
 
-                          String? displayAddress = addressInfo['display'];
-                          Position position = addressInfo['position'];
+                                // Fetch address info
+                                var addressInfo =
+                                    await getAddressFromLatLng(currentPosition);
 
-                          // Create UserReportRequest
-                          userReportRequest.value = UserReportRequest(
-                            bookingId: order.id,
-                            resourceList: userReportRequest.value.resourceList,
-                            location: displayAddress,
-                            point:
-                                "${position.latitude}, ${position.longitude}",
-                            description: description.value,
-                            title: supportType.value,
-                            reason: reason.value,
-                            estimatedAmount: amount,
-                            isInsurance: isInsurance.value,
-                          );
+                                String? displayAddress = addressInfo['display'];
+                                Position position = addressInfo['position'];
 
-                          await ref
-                              .read(orderControllerProvider.notifier)
-                              .postUserReport(
-                                  userReportRequest.value, context, order.id);
+                                // Create UserReportRequest
+                                userReportRequest.value = UserReportRequest(
+                                  bookingId: order.id,
+                                  resourceList:
+                                      userReportRequest.value.resourceList,
+                                  location: displayAddress,
+                                  point:
+                                      "${position.latitude}, ${position.longitude}",
+                                  description: description.value,
+                                  title: supportType.value,
+                                  reason: reason.value,
+                                  estimatedAmount: amount,
+                                  isInsurance: isInsurance.value,
+                                );
 
-                          // Đánh dấu yêu cầu đã được gửi
-                          isRequestSent.value = true;
-                        } catch (e) {
-                          // Xử lý lỗi nếu có
-                          print('Error sending report: $e');
-                        }
-                      },
+                                await ref
+                                    .read(orderControllerProvider.notifier)
+                                    .postUserReport(userReportRequest.value,
+                                        context, order.id);
+
+                                // Đánh dấu yêu cầu đã được gửi
+                                isRequestSent.value = true;
+                              } catch (e) {
+                                // Xử lý lỗi nếu có
+                                print('Error sending report: $e');
+                              }
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             (userReportRequest.value.resourceList.isNotEmpty &&
-                                    estimatedAmount != 0)
+                                    estimatedAmount.value != 0)
                                 ? Colors.orange
                                 : Colors.grey,
                         padding: const EdgeInsets.symmetric(
@@ -708,22 +689,26 @@ class IncidentsScreen extends HookConsumerWidget {
                           borderRadius: BorderRadius.circular(8), // Bo góc
                         ),
                       ),
-                      child: state.isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    AssetsConstants.whiteColor),
-                                strokeWidth: 2.0,
-                              ),
-                            )
-                          : const LabelText(
-                              content: 'Gửi yêu cầu',
-                              size: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AssetsConstants.whiteColor,
-                            ),
+                      child: Consumer(builder: (context, ref, _) {
+                        final bookingState = ref.watch(orderControllerProvider);
+                        final isLoading = bookingState is AsyncLoading;
+                        return isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      AssetsConstants.whiteColor),
+                                  strokeWidth: 2.0,
+                                ),
+                              )
+                            : const LabelText(
+                                content: 'Gửi yêu cầu',
+                                size: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AssetsConstants.whiteColor,
+                              );
+                      }),
                     ),
                   ),
                 ],
