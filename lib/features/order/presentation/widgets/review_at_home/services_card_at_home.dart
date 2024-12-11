@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/review_at_home/house_information_at_home.dart';
 import 'package:movemate/features/order/presentation/widgets/review_online/house_information.dart';
@@ -25,6 +26,7 @@ class ServicesCardAtHome extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(servicePackageControllerProvider);
+
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bool checkingHouseType = order.houseTypeId != orderOld?.houseTypeId ||
         order.roomNumber != orderOld?.roomNumber ||

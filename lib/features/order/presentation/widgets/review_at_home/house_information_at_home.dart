@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 
@@ -20,6 +21,7 @@ class HouseInformationAtHome extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(servicePackageControllerProvider);
+
     // Format date and time for new order
     final formattedDateNew = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.bookingAt.toString()));
@@ -45,19 +47,24 @@ class HouseInformationAtHome extends HookConsumerWidget {
     final useFetchResultOld = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
           .read(servicePackageControllerProvider.notifier)
-          .getOldHouseTypeById(orderOld!.houseTypeId, context),
+          .getHouseTypeById(orderOld!.houseTypeId, context),
       context: context,
     );
 
+    // final houseTypeDataOld = useFetchResultOld.data;
+    // final houseTypeDataNew = useFetchResultNew.data;
+
     final houseTypeDataOld = useFetchResultOld.data;
-    final houseTypeDataNew = useFetchResultNew.data;
+
+    // Add null check before using
+    final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
 
     // Get house type, floor and room information for both old and new orders
-    final houseTypeNew = houseTypeDataNew?.name ?? "Unknown";
+    final houseTypeNew = houseTypeDataOld?.name ?? "Unknown";
     final floorNumberNew = order.floorsNumber.toString() ?? "Unknown";
     final roomNumberNew = order.roomNumber.toString() ?? "Unknown";
 
-    final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
+    // final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
     final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
     final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
 
@@ -67,6 +74,10 @@ class HouseInformationAtHome extends HookConsumerWidget {
     print('check house type 1.111  ${orderOld!.houseTypeId}');
     print('check house type 1.1  ${useFetchResultOld.data}');
     print('check house type 2 $houseTypeOld');
+
+    if (useFetchResultOld.isFetchingData) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return LoadingOverlay(
       isLoading: state.isLoading,

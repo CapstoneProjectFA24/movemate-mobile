@@ -138,7 +138,7 @@ class ServicePackageController extends _$ServicePackageController {
   ) async {
     HouseTypeEntity? houseType;
 
-    state = const AsyncLoading();
+    // state = const AsyncLoading();
     final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
@@ -151,54 +151,7 @@ class ServicePackageController extends _$ServicePackageController {
       );
 
       houseType = response.payload;
-      // print('vinh log housetype ${houseType?.toJson()}');
-    });
-
-    if (state.hasError) {
-      state = await AsyncValue.guard(() async {
-        final statusCode = (state.error as DioException).onStatusDio();
-        await handleAPIError(
-          statusCode: statusCode,
-          stateError: state.error!,
-          context: context,
-          onCallBackGenerateToken: () async => await reGenerateToken(
-            authRepository,
-            context,
-          ),
-        );
-
-        if (state.hasError) {
-          await ref.read(signInControllerProvider.notifier).signOut(context);
-        }
-
-        if (statusCode != StatusCodeType.unauthentication.type) {}
-        await getHouseTypeById(id, context);
-      });
-    }
-
-    return houseType;
-  }
-//get house type by id
-  Future<HouseTypeEntity?> getOldHouseTypeById(
-    int id,
-    BuildContext context,
-  ) async {
-    HouseTypeEntity? houseType;
-
-    state = const AsyncLoading();
-    final serviceBookingRepository = ref.read(serviceBookingRepositoryProvider);
-    final authRepository = ref.read(authRepositoryProvider);
-    final user = await SharedPreferencesUtils.getInstance('user_token');
-    // print("fcm token : ${user?.fcmToken}");
-
-    state = await AsyncValue.guard(() async {
-      final response = await serviceBookingRepository.getHouseTypeById(
-        accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
-        id: id,
-      );
-
-      houseType = response.payload;
-      // print('vinh log housetype ${houseType?.toJson()}');
+      // print('vinh log ${houseType?.toJson()}');
     });
 
     if (state.hasError) {
