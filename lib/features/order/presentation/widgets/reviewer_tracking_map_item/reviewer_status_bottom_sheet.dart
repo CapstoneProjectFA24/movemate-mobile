@@ -27,21 +27,9 @@ class ReviewerStatusBottomSheet extends HookConsumerWidget {
         useBookingStatus(bookingAsync.value, job.isReviewOnline);
 
     switch (job.status) {
-      case 'đang vận chuyển':
-        title = 'Đang vận chuyển';
-        imageUrl1 = 'https://example.com/transit_image1.jpg';
-        imageUrl2 = 'https://example.com/transit_image2.jpg';
-        break;
-      case 'đã giao tới':
-        title = 'Đã giao tới';
-        imageUrl1 = 'https://example.com/delivered_image1.jpg';
-        imageUrl2 = 'https://example.com/delivered_image2.jpg';
-        break;
-      case 'đang bốc vác':
       default:
-        title = 'Đang bốc vác';
-        imageUrl1 =
-            'https://storage.googleapis.com/a1aa/image/eq28WdUZ0GwXSyUbvWvmQNR1PnwoYdyBBZoxnanwyUGr6V4JA.jpg';
+        title = 'Đang di chuyển';
+        imageUrl1 = 'https://cdn-icons-png.flaticon.com/512/10053/10053703.png';
         imageUrl2 =
             'https://storage.googleapis.com/a1aa/image/vofMEZ1jlD0TSipQlRFA4flClWaV6oSEOMoua9CHKoeqqXhnA.jpg';
         break;

@@ -391,20 +391,20 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
                 job: widget.job,
               ),
             ),
-            Positioned(
-              bottom: 220,
-              right: 20,
-              child: FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ChatScreen()),
-                  );
-                },
-                backgroundColor: Colors.orange,
-                child: const Icon(Icons.chat),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 220,
+            //   right: 20,
+            //   child: FloatingActionButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => const ChatScreen()),
+            //       );
+            //     },
+            //     backgroundColor: Colors.orange,
+            //     child: const Icon(Icons.chat),
+            //   ),
+            // ),
           ],
         ));
   }
