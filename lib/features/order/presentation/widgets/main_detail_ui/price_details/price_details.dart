@@ -9,6 +9,8 @@ import 'package:movemate/features/order/presentation/controllers/order_controlle
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/cancel_button.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/voucher_in_order.dart';
+import 'package:movemate/features/order/presentation/widgets/review_at_home/services_card_at_home.dart';
+import 'package:movemate/features/order/presentation/widgets/review_online/services_card.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
@@ -74,11 +76,18 @@ class PriceDetails extends HookConsumerWidget {
     final orderObj = orderEntity.data;
 
     final orderNew = useFetcholdOrderNew.data;
+    // print('check newOrder : ${orderNew?.houseTypeId}');
 
     useEffect(() {
       orderEntity.refresh();
+
       return null;
     }, [bookingAsync.value?.totalReal]);
+
+    useEffect(() {
+      useFetcholdOrderNew.refresh();
+      return null;
+    }, [bookingAsync.value?.status]);
 
     useEffect(() {
       return null;
@@ -241,23 +250,33 @@ class PriceDetails extends HookConsumerWidget {
             }),
 
             // Price details
-            ...orderData.bookingDetails.map<Widget>((detail) {
-              return buildPriceItem(
-                detail.name ?? '',
-                formatPrice(detail.price.toDouble()),
-              );
-            }),
+            if (order.isReviewOnline)
+              ...orderData.bookingDetails.map<Widget>((detail) {
+                return buildPriceItem(
+                  detail.name ?? '',
+                  formatPrice(detail.price.toDouble()),
+                );
+              }),
 
+            if (!order.isReviewOnline)
+              ServicesCardAtHome(
+                order: orderNew ?? order,
+                orderOld: orderOld,
+              ),
             const SizedBox(height: 12),
-            buildSummary(
-                'Tiền đặt cọc', formatPrice(orderData.deposit.toDouble() ?? 0)),
+            //tiền đặt cọc
+            if (order.isReviewOnline)
+              buildSummary('Tiền đặt cọc',
+                  formatPrice(orderData.deposit.toDouble() ?? 0)),
+
             // Hiển thị các fee từ feeDetails
-            ...orderData.feeDetails.map((fee) {
-              return buildSummary(
-                fee.name,
-                formatPrice(fee.amount.toDouble()),
-              );
-            }),
+            if (order.isReviewOnline)
+              ...orderData.feeDetails.map((fee) {
+                return buildSummary(
+                  fee.name,
+                  formatPrice(fee.amount.toDouble()),
+                );
+              }),
 
             const Divider(
               color: Colors.grey,
@@ -296,38 +315,10 @@ class PriceDetails extends HookConsumerWidget {
                 ],
               ),
 
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   itemCount: order.vouchers?.length,
-            //   padding: const EdgeInsets.symmetric(
-            //     horizontal: AssetsConstants.defaultPadding - 15.0,
-            //   ),
-            //   itemBuilder: (_, index) {
-            //     if (index == order.vouchers?.length) {
-            //       if (order.vouchers?.length == 0) {
-            //         return const CustomCircular();
-            //       }
-            //       return Container();
-            //     }
-            //     final voucher = order.vouchers?[index];
-            //     // print("log care voucher ${order.vouchers?[index].bookingId}");
-            //     // print("log care voucher ${order.vouchers?[index].code}");
-            //     // print("log care voucher ${order.vouchers?[index].id}");
-            //     // print("log care voucher ${order.vouchers?[index].isActived}");
-            //     // print("log care voucher ${order.vouchers?[index].price}");
-            //     // print(
-            //     //     "log care voucher ${order.vouchers?[index].promotionCategoryId}");
-            //     // print(
-            //     //     "log care voucher userid ${order.vouchers?[index].userId}");
-            //     return VoucherInOrder(
-            //       voucher: voucher,
-            //     );
-            //   },
-            // ),
-
             //tổng giá không Vouchers
-            if (order.vouchers?.length == 0 || order.vouchers?.length == null)
+            if ((order.vouchers?.length == 0 ||
+                    order.vouchers?.length == null) &&
+                order.isReviewOnline)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -423,7 +414,7 @@ class PriceDetails extends HookConsumerWidget {
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: LabelText(
                       content: (bookingAsync.value?.totalReal != 0)
-                          ? 'Tiền còn lại'
+                          ? 'Tiền còn lại phải trả'
                           : 'Đã Thanh toán',
                       size: 16,
                       color: Colors.grey,
