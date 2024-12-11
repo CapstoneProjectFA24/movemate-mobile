@@ -53,7 +53,7 @@ class APIConstants {
   static const get_incident_list = '/bookingtrackers';
 // promotions
   static const promotions = '/promotions';
-// getPromotionNoUser 
+// getPromotionNoUser
   static const promotions_no_user = '/promotions/promotions';
 // get voucher for user by  promotions id
   static const post_voucher_for_user = '/vouchers';
@@ -67,12 +67,12 @@ class APIConstants {
   // static const apiVietMapKey =
   //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
   // api vietmap-key backup
-  static const apiVietMapKey =
-      "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
+  // static const apiVietMapKey =
+  //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
 
   // api vietmap-key backup-v2
-  // static const apiVietMapKey =
-  //     "e7fb2f56a9eca6890aae01882c6b789527a21dcf88c75145";
+  static const apiVietMapKey =
+      "e7fb2f56a9eca6890aae01882c6b789527a21dcf88c75145";
 
   // error
   static const Map<String, String> errorTrans = {

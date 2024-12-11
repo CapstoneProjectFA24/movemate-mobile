@@ -70,16 +70,11 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
     if (_navigationController != null && _staffLocation != null) {
       LatLng pickupPoint = _getPickupPointLatLng();
 
-      _navigationController?.buildRoute(
-        waypoints: [_staffLocation!, pickupPoint],
-        profile: DrivingProfile.drivingTraffic,
-      ).then((success) {
-        if (!success) {
-          print('Failed to build route');
-        }
-      }).catchError((error) {
-        print('Error building route: $error');
-      });
+      await _navigationController?.buildRoute(waypoints: [
+        // const LatLng(10.751169, 106.607249),
+        // const LatLng(10.775458, 106.601052)
+        _staffLocation!, pickupPoint
+      ], profile: DrivingProfile.drivingTraffic);
     }
   }
 
@@ -110,12 +105,6 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
       return;
     }
 
-    // _navigationController?.animateCamera(
-    //   latLng: _staffLocation!,
-    //   zoom: 15,
-    //   duration: const Duration(milliseconds: 1000),
-    // );
-
     _buildRoute();
   }
 
@@ -139,8 +128,6 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
 
   @override
   Widget build(BuildContext context) {
-    LatLng pickupPoint = _getPickupPointLatLng();
-
     return Scaffold(
         appBar: const CustomAppBar(
           title: "Theo dõi tiến trình của người đánh giá",
@@ -155,25 +142,9 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
                 setState(() {
                   _navigationController = controller;
                   _isMapReady = true;
-
+                  _updateMapView();
                   _addMarker();
                 });
-
-                if (_staffLocation != null) {
-                  _updateMapView();
-                } else {
-                  // Khi chưa có staff location, hiển thị route từ điểm pickup đến chính nó
-                  controller.buildRoute(
-                    waypoints: [pickupPoint, pickupPoint],
-                    profile: DrivingProfile.drivingTraffic,
-                  ).then((success) {
-                    if (!success) {
-                      print('Failed to build initial route');
-                    }
-                  }).catchError((error) {
-                    print('Error building initial route: $error');
-                  });
-                }
               },
               onRouteProgressChange: (RouteProgressEvent routeProgressEvent) {
                 print('-----------ProgressChange----------');
