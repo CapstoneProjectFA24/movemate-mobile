@@ -30,7 +30,9 @@ class ReviewedToComingModal extends HookConsumerWidget {
       }
     }
 
-    return Dialog(
+    return 
+    
+    Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
@@ -228,5 +230,7 @@ class ReviewedToComingModal extends HookConsumerWidget {
         ),
       ),
     );
+ 
+ 
   }
 }
