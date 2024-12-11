@@ -58,10 +58,10 @@ class ServiceInfoCard extends HookConsumerWidget {
 
     // Kiểm tra xem hiện tại có trước thời gian bookingAt trừ đi 1 giờ hay không
     final bool isBeforeOneHour = now.isBefore(oneHourBeforeBooking);
-    print("checking date time 1 $isBeforeOneHour");
-    print("checking date time 2 $bookingAtDateTime");
-    print("checking date time 3 $oneHourBeforeBooking");
-    print("checking date time 4 ${order.bookingAt}");
+    // print("checking date time 1 $isBeforeOneHour");
+    // print("checking date time 2 $bookingAtDateTime");
+    // print("checking date time 3 $oneHourBeforeBooking");
+    // print("checking date time 4 ${order.bookingAt}");
     bool isChangeDateEnabled() {
       return bookingStatus.canReviewSuggestion ||
           bookingStatus.canAcceptSchedule ||

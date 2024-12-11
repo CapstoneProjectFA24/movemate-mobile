@@ -68,7 +68,7 @@ class PriceDetails extends HookConsumerWidget {
       context: context,
     );
 
-    print('log care order new ${useFetcholdOrderNew.data?.isDeposited}');
+    // print('log care order new ${useFetcholdOrderNew.data?.isDeposited}');
     final orderOld = useFetcholdOrder.data;
 
     final orderObj = orderEntity.data;
@@ -191,11 +191,11 @@ class PriceDetails extends HookConsumerWidget {
       // bookingStatus.canConfirmCompletion;
     }
 
-    print('log care order ${order.vouchers?.length}');
+    // print('log care order ${order.vouchers?.length}');
     final checkIsdeposit = order.isDeposited;
     final checkIsdepositData = orderData.isDeposited;
-    print('log care order 1 $checkIsdeposit');
-    print('log care order 2 $checkIsdepositData');
+    // print('log care order 1 $checkIsdeposit');
+    // print('log care order 2 $checkIsdepositData');
     return LoadingOverlay(
       isLoading: stateBooking.isLoading || stateOldBooking.isLoading,
       child: Container(

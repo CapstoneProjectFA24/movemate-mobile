@@ -11,8 +11,6 @@ import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/providers/wallet_provider.dart';
 
-
-
 class BalanceIndicator extends HookConsumerWidget {
   const BalanceIndicator({super.key});
 
@@ -22,7 +20,7 @@ class BalanceIndicator extends HookConsumerWidget {
     final wallet = ref.read(walletProvider);
     final useFetchResultWallet = useFetchObject<WalletEntity>(
       function: (context) async {
-        print('check screen');
+        // print('check screen');
         return ref.read(profileControllerProvider.notifier).getWallet(context);
       },
       context: context,
@@ -45,7 +43,7 @@ class BalanceIndicator extends HookConsumerWidget {
         useFetchResultWallet.isFetchingData ? 0 : wallet?.balance ?? 0;
     // final result = useFetchResultWallet.refresh;
 
-    print(" số dư : $walletUser");
+    // print(" số dư : $walletUser");
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: FadeInLeft(

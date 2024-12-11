@@ -130,14 +130,14 @@ class ProfileController extends _$ProfileController {
     final walletRepository = ref.read(profileRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-    print("check controller");
+    // print("check controller");
     state = await AsyncValue.guard(() async {
       final response = await walletRepository.getWallet(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         // request: request,
       );
       walletInfor = response.payload;
-      print("controller response $walletInfor");
+      // print("controller response $walletInfor");
 
       final walletEntity = WalletEntity(
         balance: response.payload.balance,
@@ -159,8 +159,11 @@ class ProfileController extends _$ProfileController {
       ref.read(walletProvider.notifier).update(
             (state) => ref.read(walletProvider),
           );
+      // ref.read(refreshWallet.notifier).update(
+      //       (state) => !ref.read(refreshWallet),
+      //     );
       ref.read(refreshWallet.notifier).update(
-            (state) => !ref.read(refreshWallet),
+            (state) => ref.read(refreshWallet),
           );
     });
 
@@ -185,7 +188,7 @@ class ProfileController extends _$ProfileController {
       });
     }
 
-    print("controller return ${walletInfor?.balance}");
+    // print("controller return ${walletInfor?.balance}");
     return walletInfor;
   }
 //unlock Wallet

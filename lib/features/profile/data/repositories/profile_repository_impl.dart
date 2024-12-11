@@ -67,7 +67,7 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
     //  PagingModel? request,
     required String accessToken,
   }) async {
-    print("check repo");
+    // print("check repo");
     return getDataOf(
       request: () => _profileSource.getWallet(
         APIConstants.contentType,

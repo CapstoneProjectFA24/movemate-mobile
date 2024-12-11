@@ -208,8 +208,9 @@ class IncidentsScreen extends HookConsumerWidget {
     void handleAmountInput(String value) {
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
       int parsedValue = int.tryParse(cleanedValue) ?? 0;
-
-      if (parsedValue < 10000) {
+      if (parsedValue == 0) {
+        errorMessage.value = "Yêu cầu nhập số tiền";
+      } else if (parsedValue < 10000) {
         errorMessage.value = "Giá phải lớn hơn 10,000 đ";
       } else {
         errorMessage.value = null;
@@ -219,6 +220,8 @@ class IncidentsScreen extends HookConsumerWidget {
           NumberFormat("#,###", "vi_VN").format(parsedValue);
       estimatedAmountController.selection = TextSelection.collapsed(
           offset: estimatedAmountController.text.length);
+      // Cập nhật giá trị số tiền
+      estimatedAmount.value = parsedValue.toDouble();
     }
 
     return LoadingOverlay(
@@ -406,6 +409,7 @@ class IncidentsScreen extends HookConsumerWidget {
                         Expanded(
                           child: TextField(
                             controller: estimatedAmountController,
+
                             textAlign: TextAlign.right,
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true), // Allow decimal input
@@ -442,6 +446,19 @@ class IncidentsScreen extends HookConsumerWidget {
                         ),
                       ),
                     ),
+                  // Error Message (if any)
+                  // if (errorMessage.value != null)
+                  //   Padding(
+                  //     padding: const EdgeInsets.only(top: 8.0),
+                  //     child: Text(
+                  //       errorMessage.value!,
+                  //       style: const TextStyle(
+                  //         color: Colors.red,
+                  //         fontSize: 12,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ),
                   const SizedBox(height: 16),
 
                   const Text('Mô tả',
@@ -579,33 +596,33 @@ class IncidentsScreen extends HookConsumerWidget {
                             double.tryParse(estimatedAmountText) ?? 0.0;
                         // print('object tuan checking userReportRequest $amount');
                         // Get the current position first
-                        Position currentPosition = await getCurrentPosition();
+                        // Position currentPosition = await getCurrentPosition();
 
                         // Fetch the address and position info
-                        var addressInfo =
-                            await getAddressFromLatLng(currentPosition);
+                        // var addressInfo =
+                        //     await getAddressFromLatLng(currentPosition);
 
                         // Now we have both the display address and position
-                        String? displayAddress = addressInfo['display'];
-                        Position position = addressInfo['position'];
+                        // String? displayAddress = addressInfo['display'];
+                        // Position position = addressInfo['position'];
                         // print(
                         //     "tuan checking userReportRequest resourceList 0000 ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
                         // Create the UserReportRequest using the display address and position
-                        userReportRequest.value = UserReportRequest(
-                          bookingId: order.id,
-                          resourceList: userReportRequest.value.resourceList,
-                          location: displayAddress,
-                          point: "${position.latitude}, ${position.longitude}",
-                          description: description.value,
-                          title: supportType.value,
-                          reason: reason.value,
-                          estimatedAmount: amount,
-                          isInsurance: isInsurance.value,
-                        );
-                        print(
-                            "tuan checking  ${userReportRequest.value.resourceList.length}");
-                        print(
-                            "tuan checking  ${userReportRequest.value.estimatedAmount}");
+                        // userReportRequest.value = UserReportRequest(
+                        //   bookingId: order.id,
+                        //   resourceList: userReportRequest.value.resourceList,
+                        //   location: displayAddress,
+                        //   point: "${position.latitude}, ${position.longitude}",
+                        //   description: description.value,
+                        //   title: supportType.value,
+                        //   reason: reason.value,
+                        //   estimatedAmount: amount,
+                        //   isInsurance: isInsurance.value,
+                        // );
+                        // print(
+                        //     "tuan checking  ${userReportRequest.value.resourceList.length}");
+                        // print(
+                        //     "tuan checking  ${userReportRequest.value.estimatedAmount}");
                         // print(
                         //     "tuan checking formattedAddress value ${formattedAddress.value.toString()}");
                         // print(
@@ -616,8 +633,8 @@ class IncidentsScreen extends HookConsumerWidget {
                         //         userReportRequest.value, context, order.id);
 
                         // Reset lỗi trước khi kiểm tra
-                        imageError.value = null;
-                        amountError.value = null;
+                        // imageError.value = null;
+                        // amountError.value = null;
 
                         bool hasError = false;
 
@@ -679,7 +696,11 @@ class IncidentsScreen extends HookConsumerWidget {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
+                        backgroundColor:
+                            (userReportRequest.value.resourceList.isNotEmpty &&
+                                    estimatedAmount != 0)
+                                ? Colors.orange
+                                : Colors.grey,
                         padding: const EdgeInsets.symmetric(
                             vertical: 14,
                             horizontal: AssetsConstants.defaultBorder),
@@ -687,12 +708,22 @@ class IncidentsScreen extends HookConsumerWidget {
                           borderRadius: BorderRadius.circular(8), // Bo góc
                         ),
                       ),
-                      child: const LabelText(
-                        content: 'Gửi yêu cầu',
-                        size: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AssetsConstants.whiteColor,
-                      ),
+                      child: state.isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AssetsConstants.whiteColor),
+                                strokeWidth: 2.0,
+                              ),
+                            )
+                          : const LabelText(
+                              content: 'Gửi yêu cầu',
+                              size: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AssetsConstants.whiteColor,
+                            ),
                     ),
                   ),
                 ],

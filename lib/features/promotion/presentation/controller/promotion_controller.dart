@@ -92,16 +92,16 @@ class PromotionController extends _$PromotionController {
     final promotionRepository = ref.read(promotionRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-    print("tuan checking controller 1");
+    // print("tuan checking controller 1");
     final result = await AsyncValue.guard(() async {
       final response = await promotionRepository.getPromotionNoUser(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
       );
-      print("tuan checking controller 2  ${response.payload}");
+      // print("tuan checking controller 2  ${response.payload}");
 
       return response.payload;
     });
-    print("tuan checking controller 3 $result");
+    // print("tuan checking controller 3 $result");
 
     state = result;
 
