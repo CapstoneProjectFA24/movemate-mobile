@@ -100,9 +100,7 @@ class WalletScreen extends HookConsumerWidget {
         },
       ),
       resizeToAvoidBottomInset: false,
-      body:
-      
-       Column(
+      body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
@@ -136,7 +134,7 @@ class WalletScreen extends HookConsumerWidget {
                         const Icon(Icons.account_balance_wallet,
                             color: AssetsConstants.primaryMain),
                         Text(
-                          'Số dư Ví: ${PriceHelper.formatPrice(wallet?.balance.toInt() ?? 0)}',
+                          'Số dư Ví: ${PriceHelper.formatPrice(wallet?.balance.toDouble() ?? 0)}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -297,8 +295,6 @@ class WalletScreen extends HookConsumerWidget {
           ),
         ],
       ),
-   
-   
     );
   }
 
@@ -338,6 +334,4 @@ class WalletScreen extends HookConsumerWidget {
       ),
     );
   }
-
-
 }

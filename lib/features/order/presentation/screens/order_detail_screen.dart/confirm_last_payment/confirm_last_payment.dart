@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 import '../../../../../../utils/commons/widgets/widgets_common_export.dart';
@@ -100,7 +101,7 @@ class ConfirmLastPayment extends HookConsumerWidget {
               ...orderObj!.bookingDetails.map<Widget>((detail) {
                 return _OrderItem(
                   label: detail.name ?? '',
-                  price: formatPrice(detail.price.toInt()),
+                  price: formatPrice(detail.price.toDouble()),
                 );
               }),
               const SizedBox(height: 8),
@@ -108,19 +109,19 @@ class ConfirmLastPayment extends HookConsumerWidget {
               const SizedBox(height: 8),
               _OrderItem(
                 label: 'Đặt cọc',
-                price: formatPrice(orderObj!.deposit.toInt()),
+                price: formatPrice(orderObj!.deposit.toDouble()),
               ),
               const SizedBox(height: 8),
               _OrderItem(
                 label: 'Tổng giá',
-                price: formatPrice(orderObj!.total.toInt()),
+                price: formatPrice(orderObj!.total.toDouble()),
               ),
               const SizedBox(height: 8),
               _OrderItem(
                 label: 'Số tiền còn lại phải thanh toán',
                 isBold: true,
                 price: formatPrice(
-                    ((orderObj!.total) - (orderObj!.deposit)).toInt()),
+                    ((orderObj!.total) - (orderObj!.deposit)).toDouble()),
               ),
               const SizedBox(height: 16),
               _SummaryItem(
@@ -192,11 +193,17 @@ class _OrderItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                fontSize: 16.0, // Adjust font size as needed
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis, // Adds ellipsis if text exceeds
             ),
           ),
           Text(
@@ -244,9 +251,4 @@ class _SummaryItem extends StatelessWidget {
       ),
     );
   }
-}
-
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }

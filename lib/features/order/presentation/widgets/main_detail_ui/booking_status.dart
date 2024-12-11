@@ -23,6 +23,43 @@ class BookingStatus extends HookConsumerWidget {
         bookingStatus.canReviewSuggestion;
 
     final isComplete = bookingStatus.isCompleted;
+    final isRefunding = bookingStatus.isRefunding;
+
+    String statusText = bookingStatus.statusMessage;
+    String statusTextDetails = bookingStatus.statusMessage;
+
+    if (isComplete) {
+      if (order.isCancel) {
+        if (order.isRefunded) {
+          statusText = 'Đã hoàn tiền';
+          statusTextDetails = 'Đã hoàn lại tiền vào ví của bạn';
+        } else {
+          statusText = 'Đã hủy';
+          statusTextDetails = 'Đơn hàng đã bị hủy';
+        }
+      } else if (order.isRefunded) {
+        statusText = 'Đã hoàn tiền';
+        statusTextDetails = 'Đã hoàn lại tiền vào ví của bạn';
+      } else if (isComplete && !order.isCancel) {
+        statusText = 'Đã hoàn thành';
+        statusTextDetails = 'Đơn hàng đã hoàn thành';
+      } else {
+        statusText = 'Đã hủy';
+        statusTextDetails = 'Đơn hàng đã bị hủy';
+      }
+    } else if (isRefunding) {
+      statusText = 'Đang chờ hoàn tiền';
+      statusTextDetails =
+          'Chúng tôi đang xử lý yêu cầu hoàn tiền cho đơn hàng này';
+    } else if (isCancelled) {
+      statusText = 'Đã hủy';
+      statusTextDetails = 'Đơn hàng đã bị hủy';
+    } else if (!insTructionIconFolowStatus) {
+      statusText = 'Đang chờ thực hiện';
+    } else {
+      statusText = 'Đang thực hiện';
+      statusTextDetails = bookingStatus.statusMessage;
+    }
 
     return FadeIn(
       duration: const Duration(milliseconds: 800),
@@ -32,13 +69,7 @@ class BookingStatus extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             LabelText(
-              content: isCancelled
-                  ? 'Đã hủy'
-                  : isComplete
-                      ? 'Hoàn thành'
-                      : !insTructionIconFolowStatus
-                          ? 'Đang chờ thực hiện'
-                          : 'Đang thực hiện',
+              content: statusText,
               size: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -46,7 +77,7 @@ class BookingStatus extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: LabelText(
-                  content: bookingStatus.statusMessage,
+                  content: statusTextDetails,
                   size: 14,
                   color: Colors.grey[600],
                   fontWeight: FontWeight.w500,
@@ -56,7 +87,7 @@ class BookingStatus extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
-                  'Nếu cần hỗ trợ thêm, bạn vui lòng truy cập Trung tâm Trợ giúp nhé.',
+                  'Nếu cần hỗ trợ thêm, bạn vui lòng truy cập Trung tâm trợ giúp',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],

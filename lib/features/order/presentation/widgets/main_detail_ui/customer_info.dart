@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 
 class CustomerInfo extends StatelessWidget {
   final ValueNotifier<bool> isExpanded;
@@ -62,17 +63,11 @@ class CustomerInfo extends StatelessWidget {
             ...order!.bookingDetails.map<Widget>((detail) {
               return buildPriceItem(
                 detail.name ?? '',
-                formatPrice(detail.price.toInt()),
+                formatPrice(detail.price.toDouble()),
               );
             }),
         ],
       ),
     );
   }
-}
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }

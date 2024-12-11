@@ -9,6 +9,7 @@ import 'package:movemate/features/booking/data/models/resquest/cancel_booking.da
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/sub_service_tile.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -99,21 +100,21 @@ class RefundScreen extends HookConsumerWidget {
                   title: 'Giá trị hoàn ước tính',
                   content:
                       'Hoàn tiền 100% tiền đặt cọc nếu hủy đặt lịch ít nhất 48 giờ trước thời gian dọn nhà',
-                  amount: formatPrice(order.deposit.toInt()),
+                  amount: formatPrice(order.deposit.toDouble()),
                 ),
                 const SizedBox(height: 10),
                 _buildRefundPolicyCard(
                   title: 'Hoàn Tiền 70% tiền đặt cọc',
                   content:
                       'Nếu hủy dịch vụ trong vòng 24 đến 48 giờ trước thời gian dọn nhà, MoveMate sẽ hoàn lại 70% phí đặt lịch để bù đắp chi phí chuẩn bị',
-                  amount: formatPrice((order.deposit * 0.7).toInt()),
+                  amount: formatPrice((order.deposit * 0.7).toDouble()),
                 ),
                 const SizedBox(height: 10),
                 _buildRefundPolicyCard(
                   title: 'Hoàn Tiền 50% tiền đặt cọc',
                   content:
                       'Nếu hủy trong vòng 1 đến 24 giờ trước thời gian dọn nhà, MoveMate sẽ hoàn lại 50% phí dịch vụ',
-                  amount: formatPrice((order.deposit * 0.5).toInt()),
+                  amount: formatPrice((order.deposit * 0.5).toDouble()),
                 ),
                 const SizedBox(height: 20),
                 const SizedBox(height: 20),

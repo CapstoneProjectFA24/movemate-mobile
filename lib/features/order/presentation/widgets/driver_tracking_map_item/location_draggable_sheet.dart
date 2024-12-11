@@ -10,6 +10,7 @@ import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/models/user_model.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
 
 class DeliveryDetailsBottomSheet extends HookConsumerWidget {
@@ -303,11 +304,11 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
                   const SizedBox(height: 16),
                   _buildCustomerInfo(profile: profile),
                   const SizedBox(height: 3),
-                  _buildConfirmationImageLink(
-                    context: context, job: job,
+                  // _buildConfirmationImageLink(
+                  //   context: context, job: job,
 
-                    // status: status
-                  ),
+                  //   // status: status
+                  // ),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -584,12 +585,6 @@ Widget buildPriceItem(String description, String price) {
   );
 }
 
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
-
 Widget buildServicesList(List<BookingDetailResponseEntity> bookingDetails,
     {bool isFilterByTruck = false}) {
   // Lọc các dịch vụ có type là 'TRUCK'
@@ -602,7 +597,7 @@ Widget buildServicesList(List<BookingDetailResponseEntity> bookingDetails,
   return Column(
     children: filteredServices.map((detail) {
       return buildPriceItem(detail.name ?? 'Unknown Service',
-          formatPrice(detail.price.toInt() ?? 0));
+          formatPrice(detail.price.toDouble() ?? 0));
     }).toList(),
   );
 }

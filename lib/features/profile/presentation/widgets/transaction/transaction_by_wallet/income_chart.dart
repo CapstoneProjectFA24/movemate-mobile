@@ -5,6 +5,7 @@ import 'package:movemate/features/profile/domain/entities/transaction_entity.dar
 import 'package:movemate/features/profile/presentation/controllers/transaction_controller/transaction_controller.dart';
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'dart:math';
 
@@ -71,7 +72,7 @@ class IncomeChart extends HookConsumerWidget {
                       style: TextStyle(fontSize: 12),
                     ),
                     Text(
-                      formatPrice(totalIncome.toInt()),
+                      formatPrice(totalIncome.toDouble()),
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

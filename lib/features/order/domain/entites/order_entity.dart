@@ -28,6 +28,7 @@ class OrderEntity {
   final bool isDeposited;
   final bool isBonus;
   final bool isReported;
+  final bool isRefunded;
   final String? reportedReason;
   final bool isDeleted;
   final DateTime createdAt;
@@ -87,6 +88,7 @@ class OrderEntity {
     required this.isDeposited,
     required this.isBonus,
     required this.isReported,
+    required this.isRefunded,
     required this.reportedReason,
     required this.isDeleted,
     required this.createdAt,
@@ -150,6 +152,7 @@ class OrderEntity {
       isDeposited: map['isDeposited'] ?? false,
       isBonus: map['isBonus'] ?? false,
       isReported: map['isReported'] ?? false,
+      isRefunded: map['isRefunded'] ?? false,
       reportedReason: map['reportedReason'],
       isDeleted: map['isDeleted'] ?? false,
       isUpdated: map['isUpdated'] ?? false,
@@ -234,6 +237,7 @@ class OrderEntity {
       'isDeposited': isDeposited,
       'isBonus': isBonus,
       'isReported': isReported,
+      'isRefunded': isRefunded,
       'reportedReason': reportedReason,
       'isDeleted': isDeleted,
       'createdAt': createdAt.toIso8601String(),
@@ -314,6 +318,7 @@ class OrderEntity {
       isDeposited: response.isDeposited,
       isBonus: response.isBonus,
       isReported: response.isReported,
+      isRefunded: response.isRefunded,
       reportedReason: response.reportedReason,
       isDeleted: response.isDeleted,
       createdAt: parseDate(response.createdAt),

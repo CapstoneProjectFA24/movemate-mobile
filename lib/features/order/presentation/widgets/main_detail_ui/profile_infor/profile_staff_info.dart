@@ -39,6 +39,7 @@ class ProfileStaffInfo extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileDriverControllerProvider);
+    
     final useFetchResultProfileAssign = useFetchObject<StaffProfileEntity>(
       function: (context) async {
         return ref
@@ -47,12 +48,13 @@ class ProfileStaffInfo extends HookConsumerWidget {
       },
       context: context,
     );
+
     final staff = useFetchResultProfileAssign.data;
     print("updateing $staff");
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
     final isStateController = state.isLoading;
 
     String getCardTitle(String staffType) {

@@ -22,6 +22,7 @@ import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart'
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 
 import 'package:movemate/features/promotion/presentation/widgets/voucher_modal/voucher_modal.dart';
+import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -87,6 +88,7 @@ class ReviewOnline extends HookConsumerWidget {
 
     final truckBookingDetail = getTruckBookingDetail(order);
     final getServiceId = truckBookingDetail.serviceId;
+    final selectedVouchers = useState<List<VoucherEntity>>([]);
 
     final useFetchResultProfile = useFetchObject<ProfileEntity>(
       function: (context) async {
@@ -117,8 +119,9 @@ class ReviewOnline extends HookConsumerWidget {
       return null;
     }, []); // Empty dependency array means it runs once on mount
 
+    // print(
+    //     ' check list promotion promotionUser.length ${useFetchResultPromotion.data!.promotionUser.any((e) => e.serviceId != null)}');
     // Khởi tạo trạng thái để lưu các voucher được chọn
-    final selectedVouchers = useState<List<VoucherEntity>>([]);
 
     // Hàm callback để thêm voucher vào danh sách đã chọn
     void addVoucher(VoucherEntity voucher) {
@@ -140,6 +143,8 @@ class ReviewOnline extends HookConsumerWidget {
       // Get all serviceIds from bookingDetails
       final bookingServiceIds =
           order.bookingDetails.map((detail) => detail.serviceId).toSet();
+
+      // print("validVouchers checking serviceIds $bookingServiceIds");
       final matchingVouchers = <VoucherEntity>[];
 
       for (var promotion in promotions) {
@@ -147,18 +152,25 @@ class ReviewOnline extends HookConsumerWidget {
         if (bookingServiceIds.contains(promotion.serviceId)) {
           // Check if promotion is currently valid
           final now = DateTime.now();
-          if (now.isAfter(promotion.startDate) &&
-              now.isBefore(promotion.endDate)) {
+          // print('validVouchers checking 1 dateTime $now');
+          // print(
+          //     'validVouchers checking 2 dateTime ${now.isAfter(promotion.startDate)}');
+          // print(
+          // 'validVouchers checking 3 dateTime ${now.isBefore(promotion.endDate)}');
+          if (now.isBefore(promotion.endDate)) {
             // Add vouchers that are:
             // 1. Active
             // 2. Not used (bookingId is null)
             // 3. Either not assigned to a user (userId is null) or assigned to the order's user
             final validVouchers = promotion.vouchers.where((voucher) =>
                 voucher.isActived &&
-                voucher.bookingId == null &&
+                voucher.bookingId == 0 &&
                 (voucher.userId == order.userId));
 
+            // print("validVouchers checking  4 ${validVouchers.length}");
             matchingVouchers.addAll(validVouchers);
+            // print("validVouchers checking  5 ${matchingVouchers.length}");
+            // print("validVouchers checking 6 ");
           }
         }
       }
@@ -175,14 +187,28 @@ class ReviewOnline extends HookConsumerWidget {
           order: order,
           promotions: useFetchResultPromotion.data!.promotionUser,
         );
+        // print('validVouchers checking 1 $validVouchers');
+        // print(
+        //     'validVouchers checking 2 ${useFetchResultPromotion.data!.promotionUser.where((e) => e.serviceId != 0).toList().toString()}');
+        // print('validVouchers checking 3 $validVouchers');
         matchingVouchers.value = validVouchers;
       }
       return null;
     }, [useFetchResultPromotion.data]);
+    final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+
+    final bookingStatus =
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
     // Validate data
     final isDataValid = getAssID != 0 && getServiceId != 0;
     final checkIsUnchanged = order.isUnchanged == true;
+
+    final checkDepossit = bookingAsync.value?.status == 'DEPOSITING';
+
+    final checkReviwed = bookingAsync.value?.status == 'REVIEWED';
+    // print('log care 1  ${!checkDepossit && checkReviwed}');
+    // print('log care 2 $checkReviwed');
     return LoadingOverlay(
       isLoading: stateProfile.isLoading ||
           stateService.isLoading ||
@@ -227,14 +253,17 @@ class ReviewOnline extends HookConsumerWidget {
                         staffAssignment: staffResponsibility,
                       ),
                       const SizedBox(height: 10),
-                      ConfirmationLink(
-                        order: order,
-                        vouchers: matchingVouchers.value,
-                        selectedVouchers:
-                            selectedVouchers.value, // Truyền danh sách đã chọn
-                        onVoucherSelected: addVoucher,
-                        onVoucherRemoved: removeVoucher,
-                      ),
+                      if (matchingVouchers.value.isNotEmpty &&
+                          !checkDepossit &&
+                          checkReviwed)
+                        ConfirmationLink(
+                          order: order,
+                          vouchers: matchingVouchers.value,
+                          selectedVouchers: selectedVouchers
+                              .value, // Truyền danh sách đã chọn
+                          onVoucherSelected: addVoucher,
+                          onVoucherRemoved: removeVoucher,
+                        ),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -254,60 +283,53 @@ class ReviewOnline extends HookConsumerWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // if (selectedVouchers.value.isNotEmpty)
-                      //   Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       const Text(
-                      //         'Các phiếu giảm giá đã chọn:',
-                      //         style: TextStyle(
-                      //             fontSize: 16, fontWeight: FontWeight.bold),
-                      //       ),
-                      //       const SizedBox(height: 8),
-                      //       ...selectedVouchers.value.map((voucher) => ListTile(
-                      //             title: Text('Voucher ID: ${voucher.id}'),
-                      //             subtitle: Text(
-                      //                 'Category ID: ${voucher.promotionCategoryId}'),
-                      //             trailing: IconButton(
-                      //               icon: const Icon(Icons.remove_circle,
-                      //                   color: Colors.red),
-                      //               onPressed: () => removeVoucher(voucher),
-                      //             ),
-                      //           )),
-                      //       const SizedBox(height: 16),
-                      //     ],
-                      //   ),
-                      buildButton(
-                        'Xác nhận',
-                        Colors.orange,
-                        onPressed: () async {
-                          final bookingStatus =
-                              order.status.toBookingTypeEnum();
+                      if (checkDepossit)
+                        buildButton(
+                          'Thanh toán',
+                          Colors.orange,
+                          textColor: Colors.white,
+                          borderColor: Colors.orange,
+                          onPressed: () {
+                            context.router
+                                .push(PaymentScreenRoute(id: order.id));
+                          },
+                        ),
+                      if (checkReviwed)
+                        buildButton(
+                          'Xác nhận',
+                          Colors.orange,
+                          textColor: Colors.white,
+                          borderColor: Colors.orange,
+                          onPressed: () async {
+                            // final bookingStatus =
+                            //     order.status.toBookingTypeEnum();
 
-                          final reviewerStatusRequest = ReviewerStatusRequest(
-                            status: BookingStatusType.depositing,
-                            vouchers: selectedVouchers.value
-                                .map((v) => Voucher(
-                                      id: v.id,
-                                      promotionCategoryId:
-                                          v.promotionCategoryId,
-                                    ))
-                                .toList(),
-                          );
-                          print(
-                              'ReviewerStatusRequest: ${reviewerStatusRequest.toJson()}');
+                            final reviewerStatusRequest = ReviewerStatusRequest(
+                              status: BookingStatusType.depositing,
+                              vouchers: selectedVouchers.value
+                                  .map((v) => Voucher(
+                                        id: v.id,
+                                        promotionCategoryId:
+                                            v.promotionCategoryId,
+                                      ))
+                                  .toList(),
+                            );
+                            // print(
+                            //     'ReviewerStatusRequest: ${reviewerStatusRequest.toJson()}');
 
-                          print('order: $reviewerStatusRequest');
-                          await ref
-                              .read(bookingControllerProvider.notifier)
-                              .confirmReviewBooking(
-                                request: reviewerStatusRequest,
-                                order: order,
-                                context: context,
-                              );
-                        },
+                            // print('order: $reviewerStatusRequest');
+                            await ref
+                                .read(bookingControllerProvider.notifier)
+                                .confirmReviewBooking(
+                                  request: reviewerStatusRequest,
+                                  order: order,
+                                  context: context,
+                                );
+                          },
+                        ),
+                      const SizedBox(
+                        height: 8,
                       ),
-                      const SizedBox(height: 12),
                       buildButton(
                         'Hủy',
                         Colors.white,

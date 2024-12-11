@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/profile/domain/entities/transaction_entity.dart';
 import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_detail_dialog.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/enums/payment_method_type.dart';
 import 'package:movemate/utils/enums/transaction_status_enum.dart';
 
@@ -146,7 +147,7 @@ class TransactionItem extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                "$amountPrefix${formatPrice(amount.toInt())}",
+                                "$amountPrefix${formatPrice(amount.toDouble())}",
                                 style: TextStyle(
                                   color: amountColor,
                                   fontWeight: FontWeight.w700,
@@ -242,10 +243,4 @@ class TransactionItem extends StatelessWidget {
       ),
     );
   }
-}
-
-// Utility functions remain the same
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }

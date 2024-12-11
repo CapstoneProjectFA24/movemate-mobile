@@ -7,6 +7,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/confirm_last_payment/confirm_last_payment.dart';
 import 'package:movemate/features/profile/domain/entities/order_tracker_entity_response.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
 
@@ -39,7 +40,7 @@ class IncidentDetailsScreen extends HookConsumerWidget {
     final user = ref.read(authProvider);
     // Xử lý realAmount nếu là null
     final realAmountText = incident.realAmount != null
-        ? formatPrice(incident.realAmount?.toInt() ?? 0)
+        ? formatPrice(incident.realAmount?.toDouble() ?? 0)
         : 'Đang chờ...';
     String statusText = '';
     Color statusColor = Colors.black;
@@ -158,7 +159,7 @@ class IncidentDetailsScreen extends HookConsumerWidget {
                   const SizedBox(height: 10),
                   _buildInfoRow(
                     'Số tiền yêu cầu',
-                    formatPrice(incident.estimatedAmount.toInt()),
+                    formatPrice(incident.estimatedAmount.toDouble()),
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),
@@ -174,20 +175,21 @@ class IncidentDetailsScreen extends HookConsumerWidget {
                   _buildInfoRow('Ngày', ' $time  $date'),
                   _buildInfoRow(
                     'Tiền đặt cọc',
-                    formatPrice(incident.deposit.toInt()),
+                    formatPrice(incident.deposit.toDouble()),
                     valueFontWeight: FontWeight.bold,
                   ),
                   _buildInfoRow(
                     'Tổng giá',
-                    formatPrice(incident.totalReal.toInt()),
+                    formatPrice(incident.totalReal.toDouble()),
                     valueFontWeight: FontWeight.bold,
                   ),
                   const SizedBox(height: 30),
                   _buildSectionTitle('Lý do:', Icons.receipt_sharp),
                   Center(
                     child: Text(
-                      // ' ${incident.failedReason}',
-                      ' ${incident.failedReason}',
+                      incident.failedReason?.isNotEmpty == true
+                          ? incident.failedReason!
+                          : 'Không có lý do',
                       style: const TextStyle(
                         fontSize: 14.0,
                         color: Colors.grey,
@@ -282,12 +284,16 @@ class IncidentDetailsScreen extends HookConsumerWidget {
           ),
         ),
         const Spacer(),
-        Text(
-          status,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: statusColor ?? const Color(0xFF333333),
+        Flexible(
+          child: Text(
+            status,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: statusColor ?? const Color(0xFF333333),
+            ),
           ),
         ),
       ],

@@ -19,7 +19,7 @@ class TimelineSteps extends HookConsumerWidget {
     required this.order,
   });
   List<Map<String, dynamic>> _buildStepsFromStatus(
-      BookingStatusResult status, bool isReviewOnline) {
+      BookingStatusResult status, bool isReviewOnline, OrderEntity order) {
     if (isReviewOnline) {
       // Define completed states for online flow
       final hasPassedProcess = !status.isProcessingRequest;
@@ -29,6 +29,9 @@ class TimelineSteps extends HookConsumerWidget {
       final hasPassedSuggestion =
           hasPassedReview && !status.canReviewSuggestion;
       final hasPassedPayment = hasPassedSuggestion && !status.canMakePayment;
+      final iscancel = status.isCancelled;
+      final isComplete = status.isCompleted;
+      final isReduning = status.isRefunding;
 
       return [
         {
@@ -74,7 +77,39 @@ class TimelineSteps extends HookConsumerWidget {
             status.isMovingInProgress,
             status.isMovingInProgress
           ]
-        }
+        },
+        if (isComplete && !order.isCancel)
+          {
+            'title': 'Hoàn thành',
+            'isActive': isComplete,
+            'details': ['Đơn hàng đã hoàn thành'],
+            'detailsStatus': [isComplete]
+          },
+        if (isComplete && order.isCancel && !isReduning)
+          {
+            'title': 'Đã hủy',
+            'isActive': (isComplete && order.isCancel && !isReduning),
+            'details': ['Đơn hàng đã bị hủy'],
+            'detailsStatus': [isComplete && order.isCancel && !isReduning]
+          },
+        if (isReduning && order.isCancel)
+          {
+            'title': 'Đang chờ hoàn tiền',
+            'isActive': (isReduning && order.isCancel),
+            'details': ['Đang chờ hoàn tiền'],
+            'detailsStatus': [isReduning && order.isCancel]
+          },
+        if (isComplete && order.isCancel && order.isRefunded)
+          {
+            'title': 'Đã hoàn tiền',
+            'isActive': isReduning,
+            'details': [
+              'Đã hoàn tiền',
+            ],
+            'detailsStatus': [
+              isComplete && order.isCancel && order.isRefunded,
+            ]
+          }
       ];
     } else {
       // Define completed states for offline flow
@@ -89,6 +124,13 @@ class TimelineSteps extends HookConsumerWidget {
           !status.isSuggestionReady;
       final hasPassedSuggestion =
           hasPassedReview && !status.canReviewSuggestion;
+      final hasCancelPassed =
+          hasPassedSuggestion && status.isCompleted || status.isRefunding;
+
+      final isComplete = status.isCompleted;
+
+      final isReduning = status.isRefunding;
+
       return [
         {
           'title': 'Xử lý yêu cầu',
@@ -144,19 +186,66 @@ class TimelineSteps extends HookConsumerWidget {
             status.isMovingInProgress,
             status.isMovingInProgress
           ]
-        }
+        },
+        if (isComplete && !order.isCancel)
+          {
+            'title': 'Hoàn thành',
+            'isActive': isComplete,
+            'details': ['Đơn hàng đã hoàn thành'],
+            'detailsStatus': [isComplete]
+          },
+        if (isComplete && order.isCancel && !isReduning)
+          {
+            'title': 'Đã hủy',
+            'isActive': (isComplete && order.isCancel && !isReduning),
+            'details': ['Đơn hàng đã bị hủy'],
+            'detailsStatus': [isComplete && order.isCancel && !isReduning]
+          },
+        if (isReduning && order.isCancel)
+          {
+            'title': 'Đang chờ hoàn tiền',
+            'isActive': (isReduning && order.isCancel),
+            'details': ['Đang chờ hoàn tiền'],
+            'detailsStatus': [isReduning && order.isCancel]
+          },
+        if (isComplete && order.isCancel && order.isRefunded)
+          {
+            'title': 'Đã hoàn tiền',
+            'isActive': isReduning,
+            'details': [
+              'Đã hoàn tiền',
+            ],
+            'detailsStatus': [
+              isComplete && order.isCancel && order.isRefunded,
+            ]
+          }
       ];
     }
   }
 
-  int _getCurrentStepIndex(BookingStatusResult status, bool isReviewOnline) {
+  int _getCurrentStepIndex(
+      BookingStatusResult status, bool isReviewOnline, OrderEntity order) {
     if (isReviewOnline) {
       if (status.isMovingInProgress) return 4;
       if (status.canMakePayment) return 3;
       if (status.canReviewSuggestion) return 2;
       if (status.isOnlineReviewing || status.isOnlineSuggestionReady) return 1;
-      if (status.isProcessingRequest) return 0;
-      if (status.isCancelled) return 0;
+      if (status.isProcessingRequest) {
+        return 0;
+      }
+      if (status.isCompleted) {
+        if (order.isCancel) {
+          return 7;
+        } else {
+          return 6;
+        }
+      }
+      if (status.isRefunding) {
+        return 8;
+      }
+      if (status.isCancelled) {
+        return 0;
+      }
       return 0;
     } else {
       if (status.isMovingInProgress) return 5;
@@ -168,6 +257,16 @@ class TimelineSteps extends HookConsumerWidget {
       if (status.canAcceptSchedule) return 1;
       if (status.isWaitingStaffSchedule) return 0;
       if (status.isCancelled) return 0;
+      if (status.isCompleted) {
+        if (order.isCancel) {
+          return 7;
+        } else {
+          return 6;
+        }
+      }
+      if (status.isRefunding) {
+        return 8;
+      }
       return 0;
     }
   }
@@ -176,11 +275,12 @@ class TimelineSteps extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
-    final steps = _buildStepsFromStatus(bookingStatus, order.isReviewOnline);
-    final currentStepIndex =
-        _getCurrentStepIndex(bookingStatus, order.isReviewOnline);
+    final steps = _buildStepsFromStatus(
+        bookingStatus, order.isReviewOnline ?? false, order);
+    final currentStepIndex = _getCurrentStepIndex(
+        bookingStatus, order.isReviewOnline ?? false, order);
 
     // Convert animation controller to hooks
     final animationController = useAnimationController(

@@ -6,19 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/providers/wallet_provider.dart';
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
-
-final refreshWallet = StateProvider.autoDispose<bool>(
-  (ref) => true,
-);
 
 class BalanceIndicator extends HookConsumerWidget {
   const BalanceIndicator({super.key});
@@ -29,7 +20,7 @@ class BalanceIndicator extends HookConsumerWidget {
     final wallet = ref.read(walletProvider);
     final useFetchResultWallet = useFetchObject<WalletEntity>(
       function: (context) async {
-        print('check screen');
+        // print('check screen');
         return ref.read(profileControllerProvider.notifier).getWallet(context);
       },
       context: context,
@@ -41,15 +32,18 @@ class BalanceIndicator extends HookConsumerWidget {
           refreshWallet, (_, __) => useFetchResultWallet.refresh());
       return null;
     }, []);
-    // final walletUser = useFetchResultWallet.isFetchingData
-    //     ? 0
-    //     : useFetchResultWallet.data?.balance ?? 0;
+
+    // Call refreshBookingData when the widget is first built
+    // useEffect(() {
+    //   useFetchResultWallet.refresh;
+    //   return null;
+    // }, []);
 
     final walletUser =
         useFetchResultWallet.isFetchingData ? 0 : wallet?.balance ?? 0;
     // final result = useFetchResultWallet.refresh;
 
-    print(" số dư : $walletUser");
+    // print(" số dư : $walletUser");
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: FadeInLeft(
@@ -61,7 +55,7 @@ class BalanceIndicator extends HookConsumerWidget {
           ),
           child: Center(
             child: LabelText(
-              content: 'Số dư ${formatPrice(walletUser.toInt())}',
+              content: 'Số dư ${formatPrice(walletUser.toDouble())}',
               size: 14,
               fontWeight: FontWeight.w600,
               color: AssetsConstants.whiteColor,

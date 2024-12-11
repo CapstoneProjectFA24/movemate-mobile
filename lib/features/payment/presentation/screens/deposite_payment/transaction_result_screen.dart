@@ -6,13 +6,8 @@ import 'package:movemate/features/booking/presentation/screens/controller/bookin
 import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 // Hàm phân tích allUri
 Map<String, dynamic> parseAllUri(String allUri) {
@@ -277,20 +272,21 @@ class TransactionResultScreen extends HookConsumerWidget {
                                   buildTransactionDetailPriceRow(
                                       'Đặt cọc',
                                       formatPrice(
-                                          ((result?.deposit ?? 0)).toInt()),
+                                          ((result?.deposit ?? 0)).toDouble()),
                                       containerWidth,
                                       true),
                                   const SizedBox(height: 2),
                                   buildTransactionDetailPriceRow(
                                       'Tổng tiền',
-                                      formatPrice((result?.total ?? 0).toInt()),
+                                      formatPrice(
+                                          (result?.total ?? 0).toDouble()),
                                       containerWidth * 0.80,
                                       false),
                                   buildTransactionDetailPriceRow(
                                       'Số tiền còn lại phải thanh toán',
                                       formatPrice(((result?.total ?? 0) -
                                               (result?.deposit ?? 0))
-                                          .toInt()),
+                                          .toDouble()),
                                       containerWidth * 0.80,
                                       false),
                                 ],

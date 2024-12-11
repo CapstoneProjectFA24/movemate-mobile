@@ -6,12 +6,8 @@ import 'package:movemate/features/booking/domain/entities/sub_service_entity.dar
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/service_trailing_widget.dart';
 import 'package:movemate/features/booking/presentation/providers/booking_provider.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
-
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 class SubServiceTile extends ConsumerWidget {
   final SubServiceEntity subService;
@@ -35,7 +31,7 @@ class SubServiceTile extends ConsumerWidget {
     final int quantity = currentSubService.quantity ?? 0;
 
     // Giá mặc định từ subService.amount
-    double displayPrice = subService.amount.toInt().toDouble();
+    double displayPrice = subService.amount.toDouble().toDouble();
 
     if (priceSystem != null) {
       // Tìm BookingDetailResponseEntity có serviceId trùng với subService.id
@@ -106,7 +102,7 @@ class SubServiceTile extends ConsumerWidget {
                       ],
                     ),
                     Text(
-                      formatPrice(displayPrice.toInt()).toString(),
+                      formatPrice(displayPrice.toDouble()).toString(),
                       style: const TextStyle(fontSize: 16),
                     ),
                   ],

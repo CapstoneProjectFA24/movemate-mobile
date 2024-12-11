@@ -15,6 +15,7 @@ import 'package:movemate/features/order/presentation/screens/order_detail_screen
 import 'package:movemate/hooks/use_fetch.dart';
 import 'package:movemate/models/request/paging_model.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
@@ -186,7 +187,7 @@ class VehiclePriceListScreen extends HookConsumerWidget {
                   currentIndex < fetchResultdata.length)
                 buildPriceSection(
                   'Cước ban đầu tối thiểu',
-                  formatPrice(fetchResultdata[currentIndex].price),
+                  formatPrice((fetchResultdata[currentIndex].price).toDouble()),
                 ),
               const SizedBox(height: 16),
               if (fetchResultdata.isNotEmpty &&
@@ -197,7 +198,7 @@ class VehiclePriceListScreen extends HookConsumerWidget {
                       .feeSettings
                       .skip(1) // Bỏ qua fee setting đầu tiên (cước ban đầu)
                       .map((fee) =>
-                          '${formatPrice(fee.amount)}/km (${fee.description})')
+                          '${formatPrice((fee.amount)?.toDouble() ?? 0)}/km (${fee.description})')
                       .join('\n'),
                 ),
             ],

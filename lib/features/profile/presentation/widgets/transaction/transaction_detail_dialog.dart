@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/sub_service_tile.dart';
 import 'package:movemate/features/profile/domain/entities/transaction_entity.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 
 class TransactionDetailDialog extends StatelessWidget {
   final TransactionEntity transaction;
@@ -44,7 +45,7 @@ class TransactionDetailDialog extends StatelessWidget {
             const SizedBox(height: 24),
             _buildDetailRow('Mã giao dịch', transaction.transactionCode),
             _buildDetailRow('Loại giao dịch', transaction.transactionType),
-            _buildDetailRow('Số tiền', formatPrice(transaction.amount.toInt())),
+            _buildDetailRow('Số tiền', formatPrice(transaction.amount.toDouble())),
             _buildDetailRow('Trạng thái', transaction.status ?? ''),
             _buildDetailRow(
                 'Phương thức thanh toán', transaction.paymentMethod),

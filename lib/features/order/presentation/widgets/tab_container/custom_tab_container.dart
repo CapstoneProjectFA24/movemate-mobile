@@ -102,7 +102,7 @@ class CustomTabContainer extends HookConsumerWidget {
     }, [porterItems, driverItems]);
 
     return Container(
-      height: 400,
+      height: 260,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),

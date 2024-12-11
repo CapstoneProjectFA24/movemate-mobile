@@ -7,14 +7,9 @@ import 'package:movemate/features/booking/domain/entities/booking_response/booki
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 import 'package:movemate/utils/providers/common_provider.dart';
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 // Hàm phân tích allUri
 Map<String, dynamic> parseAllUri(String allUri) {
@@ -201,7 +196,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                       // Container chính
                       Container(
                         width: containerWidth,
-                        height: containerHeight,
+                        height: 550,
                         margin: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -298,7 +293,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                           serviceDetails.name,
                                           formatPrice(
                                               (serviceDetails.price ?? 0)
-                                                  .toInt()),
+                                                  .toDouble()),
                                           containerWidth * 0.80,
                                         );
                                       }),
@@ -321,14 +316,14 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                   buildTransactionDetailPriceRow(
                                       'Tổng tiền',
                                       formatPrice(
-                                          ((result?.total ?? 0)).toInt()),
+                                          ((result?.total ?? 0)).toDouble()),
                                       containerWidth,
                                       false),
                                   const SizedBox(height: 2),
                                   buildTransactionDetailPriceRow(
                                       'Tiền đã đặt cọc',
                                       formatPrice(
-                                          (result?.deposit ?? 0).toInt()),
+                                          (result?.deposit ?? 0).toDouble()),
                                       containerWidth,
                                       false),
                                   const SizedBox(height: 2),
@@ -336,7 +331,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                       'Số tiền còn lại đã thanh toán',
                                       formatPrice(((result?.total ?? 0) -
                                               (result?.deposit ?? 0))
-                                          .toInt()),
+                                          .toDouble()),
                                       containerWidth,
                                       true),
                                 ],

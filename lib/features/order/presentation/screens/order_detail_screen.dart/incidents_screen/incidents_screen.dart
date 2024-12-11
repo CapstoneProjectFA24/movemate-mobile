@@ -76,7 +76,12 @@ class IncidentsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final supportType = useState<String?>('Vỡ hàng');
     final isInsurance = useState<bool?>(false);
+
+    final stateIsLoading = useState<bool?>(false);
+
     final state = ref.watch(orderControllerProvider);
+
+    final isLoadingButton = state is AsyncLoading;
 
     final descriptionController = useTextEditingController();
     final reasonController = useTextEditingController();
@@ -99,18 +104,8 @@ class IncidentsScreen extends HookConsumerWidget {
     final isRequestSent = useState<bool>(false);
     final images = useState<List<String>>([]);
     final fullScreenImage = useState<String?>(null);
-
-    // print("tuan checking 1 ${images.toString()}");
-
-    // final imagePublicIds = useState<List<String>>(
-    //   images.value.map((url) {
-    //     final uri = Uri.parse(url);
-    //     final pathSegments = uri.pathSegments;
-    //     return pathSegments.length > 1
-    //         ? '${pathSegments[pathSegments.length - 2]}/${pathSegments.last}' // Bao gồm phần mở rộng
-    //         : '';
-    //   }).toList(),
-    // );
+    final imageError = useState<String?>(null);
+    final amountError = useState<String?>(null);
 
     // Thêm useEffect để lấy và format địa chỉ
     useEffect(() {
@@ -148,6 +143,8 @@ class IncidentsScreen extends HookConsumerWidget {
     List<String> supportTypes = [
       'Bảo hành',
       'Vỡ hàng',
+      'Test 1',
+      'Checkking 1',
     ];
 
     int checkInsuranceValidService(OrderEntity order) {
@@ -218,8 +215,9 @@ class IncidentsScreen extends HookConsumerWidget {
     void handleAmountInput(String value) {
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
       int parsedValue = int.tryParse(cleanedValue) ?? 0;
-
-      if (parsedValue < 10000) {
+      if (parsedValue == 0) {
+        errorMessage.value = "Yêu cầu nhập số tiền";
+      } else if (parsedValue < 10000) {
         errorMessage.value = "Giá phải lớn hơn 10,000 đ";
       } else {
         errorMessage.value = null;
@@ -229,8 +227,11 @@ class IncidentsScreen extends HookConsumerWidget {
           NumberFormat("#,###", "vi_VN").format(parsedValue);
       estimatedAmountController.selection = TextSelection.collapsed(
           offset: estimatedAmountController.text.length);
+      // Cập nhật giá trị số tiền
+      estimatedAmount.value = parsedValue.toDouble();
     }
 
+    print('estimatedAmountController $estimatedAmount');
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Scaffold(
@@ -341,24 +342,6 @@ class IncidentsScreen extends HookConsumerWidget {
                   ),
 
                   // const SizedBox(height: 16),
-
-                  // const Text('Mã đơn hàng',
-                  //     style: TextStyle(
-                  //         color: Colors.black, fontWeight: FontWeight.bold)),
-                  // TextFormField(
-                  //   controller: orderIdController,
-                  //   enabled: isRequestSent
-                  //       .value, // Disable editing for "Yêu cầu đã gửi"
-                  //   decoration: InputDecoration(
-                  //     hintText: orderIdController.toString(),
-                  //     filled: true,
-                  //     fillColor: Colors.white,
-                  //     border: OutlineInputBorder(
-                  //       borderSide: const BorderSide(color: Colors.grey),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(height: 8),
                   const Text('Bảo hiểm đồ vật giá trị cao (>50 triệu)',
                       style: TextStyle(
@@ -434,6 +417,7 @@ class IncidentsScreen extends HookConsumerWidget {
                         Expanded(
                           child: TextField(
                             controller: estimatedAmountController,
+
                             textAlign: TextAlign.right,
                             keyboardType: const TextInputType.numberWithOptions(
                                 decimal: true), // Allow decimal input
@@ -453,12 +437,16 @@ class IncidentsScreen extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  // Error Message (if any)
-                  if (errorMessage.value != null)
+                  // Thông báo lỗi nếu số tiền bằng 0
+                  if ((estimatedAmount.value == 0 ||
+                          errorMessage.value != null) &&
+                      isRequestSent.value == false)
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        errorMessage.value!,
+                        estimatedAmount.value == 0
+                            ? 'Yêu cầu nhập số tiền'
+                            : errorMessage.value!,
                         style: const TextStyle(
                           color: Colors.red,
                           fontSize: 12,
@@ -466,7 +454,19 @@ class IncidentsScreen extends HookConsumerWidget {
                         ),
                       ),
                     ),
-
+                  // Error Message (if any)
+                  // if (errorMessage.value != null)
+                  //   Padding(
+                  //     padding: const EdgeInsets.only(top: 8.0),
+                  //     child: Text(
+                  //       errorMessage.value!,
+                  //       style: const TextStyle(
+                  //         color: Colors.red,
+                  //         fontSize: 12,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ),
                   const SizedBox(height: 16),
 
                   const Text('Mô tả',
@@ -562,8 +562,21 @@ class IncidentsScreen extends HookConsumerWidget {
                       isEnabled: !isRequestSent.value,
                       showCameraButton: true,
                       request: userReportRequest.value),
-                  const SizedBox(height: 16),
 
+// Thông báo lỗi nếu không có hình ảnh
+                  if (userReportRequest.value.resourceList.isEmpty &&
+                      isRequestSent.value == false)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Yêu cầu chụp hình xác minh',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   const Text('Dung lượng không vượt quá 5Mb',
                       style: TextStyle(color: Colors.grey, fontSize: 12)),
 
@@ -572,61 +585,103 @@ class IncidentsScreen extends HookConsumerWidget {
                   SizedBox(
                     width: double.infinity, // Chiều ngang toàn màn hình
                     child: ElevatedButton(
-                      onPressed: () async {
-                        description.value = descriptionController.text;
-                        reason.value = reasonController.text;
+                      onPressed: stateIsLoading.value == false
+                          ? () async {
+                              description.value = descriptionController.text;
 
-                        // Convert the text from the controller to a double value
-                        estimatedAmount.value = double.tryParse(
-                                estimatedAmountController.text.replaceAll(
-                                    RegExp(r'[^0-9.]'),
-                                    '') // Remove non-numeric characters
-                                ) ??
-                            0;
-                        final estimatedAmountText = estimatedAmountController
-                            .text
-                            .replaceAll(RegExp(r'[^0-9]'), '');
+                              stateIsLoading.value = true;
 
-                        final amount =
-                            double.tryParse(estimatedAmountText) ?? 0.0;
-                        print('object tuan checking userReportRequest $amount');
-                        // Get the current position first
-                        Position currentPosition = await getCurrentPosition();
+                              reason.value = reasonController.text;
+                              final bookingState =
+                                  ref.watch(orderControllerProvider);
 
-                        // Fetch the address and position info
-                        var addressInfo =
-                            await getAddressFromLatLng(currentPosition);
+                              final isLoading = bookingState is AsyncLoading;
 
-                        // Now we have both the display address and position
-                        String? displayAddress = addressInfo['display'];
-                        Position position = addressInfo['position'];
-                        print(
-                            "tuan checking userReportRequest resourceList 0000 ${userReportRequest.value.resourceList.first.resourceUrl.toString()}");
-                        // Create the UserReportRequest using the display address and position
-                        userReportRequest.value = UserReportRequest(
-                          bookingId: order.id,
-                          resourceList: userReportRequest.value.resourceList,
-                          location: displayAddress,
-                          point: "${position.latitude}, ${position.longitude}",
-                          description: description.value,
-                          title: supportType.value,
-                          reason: reason.value,
-                          estimatedAmount: amount,
-                          isInsurance: isInsurance.value,
-                        );
-                        print(
-                            "tuan checking userReportRequest ${userReportRequest.value.toString()}");
-                        // print(
-                        //     "tuan checking formattedAddress value ${formattedAddress.value.toString()}");
-                        print(
-                            "tuan checking userReportRequest resourceList ${userReportRequest.value.resourceList.toString()}");
-                        await ref
-                            .read(orderControllerProvider.notifier)
-                            .postUserReport(
-                                userReportRequest.value, context, order.id);
-                      },
+                              if (isLoading) return;
+
+                              // Convert the text from the controller to a double value
+                              estimatedAmount.value = double.tryParse(
+                                      estimatedAmountController.text.replaceAll(
+                                          RegExp(r'[^0-9.]'),
+                                          '') // Remove non-numeric characters
+                                      ) ??
+                                  0;
+                              final estimatedAmountText =
+                                  estimatedAmountController.text
+                                      .replaceAll(RegExp(r'[^0-9]'), '');
+
+                              final amount =
+                                  double.tryParse(estimatedAmountText) ?? 0.0;
+
+                              bool hasError = false;
+
+                              // Kiểm tra nếu không có hình ảnh
+                              if (userReportRequest
+                                  .value.resourceList.isEmpty) {
+                                imageError.value = 'Yêu cầu chụp hình xác minh';
+                                hasError = true;
+                              }
+
+                              // Kiểm tra nếu số tiền bằng 0 hoặc không hợp lệ
+                              if (amount == 0) {
+                                amountError.value = 'Yêu cầu nhập số tiền';
+                                hasError = true;
+                              } else if (amount < 10000) {
+                                amountError.value = 'Giá phải lớn hơn 10,000 đ';
+                                hasError = true;
+                              }
+
+                              if (hasError) {
+                                // Nếu có lỗi, không thực hiện gửi yêu cầu
+                                return;
+                              }
+
+                              try {
+                                // Get current position
+                                Position currentPosition =
+                                    await getCurrentPosition();
+
+                                // Fetch address info
+                                var addressInfo =
+                                    await getAddressFromLatLng(currentPosition);
+
+                                String? displayAddress = addressInfo['display'];
+                                Position position = addressInfo['position'];
+
+                                // Create UserReportRequest
+                                userReportRequest.value = UserReportRequest(
+                                  bookingId: order.id,
+                                  resourceList:
+                                      userReportRequest.value.resourceList,
+                                  location: displayAddress,
+                                  point:
+                                      "${position.latitude}, ${position.longitude}",
+                                  description: description.value,
+                                  title: supportType.value,
+                                  reason: reason.value,
+                                  estimatedAmount: amount,
+                                  isInsurance: isInsurance.value,
+                                );
+
+                                await ref
+                                    .read(orderControllerProvider.notifier)
+                                    .postUserReport(userReportRequest.value,
+                                        context, order.id);
+
+                                // Đánh dấu yêu cầu đã được gửi
+                                isRequestSent.value = true;
+                              } catch (e) {
+                                // Xử lý lỗi nếu có
+                                print('Error sending report: $e');
+                              }
+                            }
+                          : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
+                        backgroundColor:
+                            (userReportRequest.value.resourceList.isNotEmpty &&
+                                    estimatedAmount.value != 0)
+                                ? Colors.orange
+                                : Colors.grey,
                         padding: const EdgeInsets.symmetric(
                             vertical: 14,
                             horizontal: AssetsConstants.defaultBorder),
@@ -634,12 +689,26 @@ class IncidentsScreen extends HookConsumerWidget {
                           borderRadius: BorderRadius.circular(8), // Bo góc
                         ),
                       ),
-                      child: const LabelText(
-                        content: 'Gửi yêu cầu',
-                        size: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AssetsConstants.whiteColor,
-                      ),
+                      child: Consumer(builder: (context, ref, _) {
+                        final bookingState = ref.watch(orderControllerProvider);
+                        final isLoading = bookingState is AsyncLoading;
+                        return isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      AssetsConstants.whiteColor),
+                                  strokeWidth: 2.0,
+                                ),
+                              )
+                            : const LabelText(
+                                content: 'Gửi yêu cầu',
+                                size: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AssetsConstants.whiteColor,
+                              );
+                      }),
                     ),
                   ),
                 ],

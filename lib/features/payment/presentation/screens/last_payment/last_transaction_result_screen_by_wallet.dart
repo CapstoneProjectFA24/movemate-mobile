@@ -9,13 +9,8 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
-
-// Giữ nguyên các hàm định dạng
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 String formatDate(DateTime date) {
   final formatter = DateFormat('dd-MM-yyyy');
@@ -77,7 +72,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
     }
 
     final listServices = getListSerVices(result);
-    double containerHeight = listServices.length * 120.0;
+    double containerHeight = listServices.length * 800.0;
 
     return LoadingOverlay(
       isLoading: stateWallet.isLoading,
@@ -103,11 +98,12 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                           children: [
                             Container(
                               width: containerWidth,
+                              // height:  MediaQuery.of(context).size.height * 0.9,
                               constraints: BoxConstraints(
                                 maxHeight:
-                                    MediaQuery.of(context).size.height * 0.8,
+                                    MediaQuery.of(context).size.height * 0.9,
                               ),
-                              height: containerHeight,
+                              height: 550,
                               margin: const EdgeInsets.all(24),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -205,7 +201,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                                   formatPrice(
                                                       (serviceDetails.price ??
                                                               0)
-                                                          .toInt()),
+                                                          .toDouble()),
                                                   containerWidth * 0.80,
                                                 );
                                               },
@@ -229,8 +225,8 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                         children: [
                                           buildTransactionDetailPriceRow(
                                             'Tổng tiền',
-                                            formatPrice(
-                                                ((result?.total ?? 0)).toInt()),
+                                            formatPrice(((result?.total ?? 0))
+                                                .toDouble()),
                                             containerWidth,
                                             false,
                                           ),
@@ -238,7 +234,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                           buildTransactionDetailPriceRow(
                                               'Tiền đã đặt cọc',
                                               formatPrice((result?.deposit ?? 0)
-                                                  .toInt()),
+                                                  .toDouble()),
                                               containerWidth * 0.80,
                                               false),
                                           // Added back the missing row
@@ -247,7 +243,7 @@ class LastTransactionResultScreenByWallet extends HookConsumerWidget {
                                               formatPrice(((result?.total ??
                                                           0) -
                                                       (result?.deposit ?? 0))
-                                                  .toInt()),
+                                                  .toDouble()),
                                               containerWidth * 0.80,
                                               true),
                                         ],

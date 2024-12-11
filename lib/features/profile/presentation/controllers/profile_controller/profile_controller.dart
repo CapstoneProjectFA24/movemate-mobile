@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/features/auth/domain/repositories/auth_repository.dart';
 import 'package:movemate/features/auth/presentation/screens/sign_in/sign_in_controller.dart';
 import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
@@ -22,6 +23,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // utils
 
 part 'profile_controller.g.dart';
+
+final refreshWallet = StateProvider.autoDispose<bool>(
+  (ref) => true,
+);
 
 @riverpod
 class ProfileController extends _$ProfileController {
@@ -125,14 +130,14 @@ class ProfileController extends _$ProfileController {
     final walletRepository = ref.read(profileRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
-    print("check controller");
+    // print("check controller");
     state = await AsyncValue.guard(() async {
       final response = await walletRepository.getWallet(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         // request: request,
       );
       walletInfor = response.payload;
-      print("controller response $walletInfor");
+      // print("controller response $walletInfor");
 
       final walletEntity = WalletEntity(
         balance: response.payload.balance,
@@ -149,6 +154,16 @@ class ProfileController extends _$ProfileController {
 
       ref.read(walletProvider.notifier).update(
             (state) => walletEntity,
+          );
+
+      ref.read(walletProvider.notifier).update(
+            (state) => ref.read(walletProvider),
+          );
+      // ref.read(refreshWallet.notifier).update(
+      //       (state) => !ref.read(refreshWallet),
+      //     );
+      ref.read(refreshWallet.notifier).update(
+            (state) => ref.read(refreshWallet),
           );
     });
 
@@ -173,7 +188,7 @@ class ProfileController extends _$ProfileController {
       });
     }
 
-    print("controller return ${walletInfor?.balance}");
+    // print("controller return ${walletInfor?.balance}");
     return walletInfor;
   }
 //unlock Wallet

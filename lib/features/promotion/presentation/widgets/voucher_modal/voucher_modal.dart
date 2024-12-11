@@ -18,6 +18,7 @@ import 'package:movemate/utils/enums/booking_status_type.dart';
 class VoucherModal extends HookConsumerWidget {
   final List<VoucherEntity> vouchers;
   final OrderEntity order;
+  // final OrderEntity order;
   final List<VoucherEntity> selectedVouchers; // Thêm danh sách đã chọn
   final Function(VoucherEntity) onVoucherUsed;
   final Function(VoucherEntity) onVoucherCanceled;
@@ -76,8 +77,9 @@ class VoucherModal extends HookConsumerWidget {
       );
     }
 
-    print("object voucher length ${vouchers.length} ");
-    final filteredVouchers = vouchers.where((v) => v.userId != null).toList();
+    // print("object voucher length ${vouchers.length} ");
+    final filteredVouchers = vouchers.where((v) => v.userId != 0).toList();
+
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: DraggableScrollableSheet(
@@ -168,6 +170,7 @@ class VoucherModal extends HookConsumerWidget {
 
                     return VoucherModalCard(
                       voucher: currentVoucher,
+                      order: order,
                       isSelected: isSelected,
                       isDisabled: isDisabled,
                       onVoucherUsed: (voucher) {
@@ -187,7 +190,7 @@ class VoucherModal extends HookConsumerWidget {
                       index: index,
                     );
 
-                    // Card(
+                    //     Card(
                     //   color: Colors.white,
                     //   margin: const EdgeInsets.only(bottom: 16.0),
                     //   elevation: 3.0,
@@ -209,7 +212,8 @@ class VoucherModal extends HookConsumerWidget {
                     //             const SizedBox(width: 16.0),
                     //             Expanded(
                     //               child: Column(
-                    //                 crossAxisAlignment: CrossAxisAlignment.start,
+                    //                 crossAxisAlignment:
+                    //                     CrossAxisAlignment.start,
                     //                 children: [
                     //                   Text(
                     //                     'Phiếu giảm giá ${filteredVouchers[index].code}',
@@ -278,7 +282,8 @@ class VoucherModal extends HookConsumerWidget {
                     //                         localSelectedVouchers.value =
                     //                             localSelectedVouchers.value
                     //                                 .where((v) =>
-                    //                                     v.id != currentVoucher.id)
+                    //                                     v.id !=
+                    //                                     currentVoucher.id)
                     //                                 .toList();
                     //                         onVoucherCanceled(currentVoucher);
 
@@ -337,8 +342,4 @@ class VoucherModal extends HookConsumerWidget {
   }
 }
 
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
+

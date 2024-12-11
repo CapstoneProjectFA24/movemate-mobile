@@ -15,6 +15,7 @@ import 'package:movemate/features/booking/presentation/screens/service_screen/se
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/booking_status.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/customer_info.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/incidents_content_modal.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/price_details.dart';
 
@@ -24,6 +25,10 @@ import 'package:movemate/features/order/presentation/widgets/main_detail_ui/serv
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/timeline_steps.dart';
 import 'package:movemate/features/order/presentation/widgets/tab_container/custom_tab_container.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
+import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
+import 'package:movemate/features/promotion/domain/entities/voucher_entity.dart';
+import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/chat_services/models/chat_model.dart';
@@ -53,7 +58,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
     final state = ref.watch(orderControllerProvider);
     final stateProfile = ref.watch(profileControllerProvider);
     final stateService = ref.watch(serviceControllerProvider);
-
+    final stateBooking = ref.watch(bookingControllerProvider);
     final statusAsync =
         ref.watch(orderStatusStreamProvider(order.id.toString()));
 
@@ -65,7 +70,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
 
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
     final bookingStatus =
-        useBookingStatus(bookingAsync.value, order.isReviewOnline);
+        useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
+
     final canRepostBooking = bookingStatus.isProcessingRequest;
 
     final bookingAssignment = bookingAsync.value?.assignments.length;
@@ -133,8 +139,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 .where((e) => e.staffType == 'PORTER')
                 .toList();
 
-        print(
-            "object cheking liststaffPorterInOrder ${staffResponsibility.toString()}");
+        // print(
+        //     "object cheking liststaffPorterInOrder ${staffResponsibility.toString()}");
 
         return staffResponsibility;
       } catch (e) {
@@ -143,10 +149,27 @@ class OrderDetailsScreen extends HookConsumerWidget {
       }
     }
 
+    // List<VouchersRealtimeEntity>? getListVoucher(OrderEntity order) {
+    //   try {
+    //     final voucherAvailable = ref
+    //         .watch(bookingStreamProvider(order.id.toString()))
+    //         .value
+    //         ?.vouchers
+    //         .where((e) => e.bookingId == order.id)
+    //         .toList();
+
+    //     return voucherAvailable;
+    //   } catch (e) {
+    //     print('Error: $e');
+    //     return [];
+    //   }
+    // }
+
     final listStaffResponsibility = getListStaffResponsibility(order);
 
     final listStaffDriverInOrder = getListStaffDriverInOrder(order);
     final listStaffPorterInOrder = getListStaffPorterInOrder(order);
+    // final listVoucher = getListVoucher(order);
     // final currentListStaff = ref
     //     .watch(bookingStreamProvider(order.id.toString()))
     //     .value
@@ -194,6 +217,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
         context: context);
 
     ref.listen<bool>(refreshOrderList, (_, __) => orderEntity.refresh());
+    ref.listen<bool>(refreshOrderDetailsById, (_, __) => orderEntity.refresh());
     ref.listen<bool>(refreshOrderDetails, (_, __) => orderEntity.refresh());
 
     useEffect(() {
@@ -254,10 +278,10 @@ class OrderDetailsScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BookingStatus(order: order),
+                BookingStatus(order: orderEntity.data ?? order),
                 const SizedBox(height: 20),
                 TimelineSteps(
-                  order: order,
+                  order: orderEntity.data ?? order,
                   expandedIndex: expandedIndex,
                 ),
                 const SizedBox(height: 14),
@@ -276,8 +300,8 @@ class OrderDetailsScreen extends HookConsumerWidget {
                           );
                         }),
                     const SizedBox(height: 20),
-                    if (listStaffPorterInOrder!.isNotEmpty ||
-                        listStaffPorterInOrder.isNotEmpty)
+                    if (listStaffDriverInOrder!.isNotEmpty ||
+                        listStaffPorterInOrder!.isNotEmpty)
                       CustomTabContainer(
                         porterItems: listStaffPorterInOrder ?? [],
                         driverItems: listStaffDriverInOrder ?? [],
@@ -321,16 +345,19 @@ class OrderDetailsScreen extends HookConsumerWidget {
                 //     : Container(),
                 const SizedBox(height: 10),
                 // (statusOrders == BookingStatusType.reviewed)
-                //     ? CustomerInfo(
-                //         isExpanded: isExpanded,
-                //         toggleDropdown: toggleDropdown,
-                //       )
-                //     : Container(),
-                // const SizedBox(height: 20),
+                // //?
+                // CustomerInfo(
+                //   isExpanded: isExpanded,
+                //   order: order,
+                //   toggleDropdown: toggleDropdown,
+                // ),
+                // : Container(),
+                const SizedBox(height: 20),
                 PriceDetails(
-                  order: order,
+                  order: orderEntity.data ?? order,
                   serviceData: serviceData,
                   statusAsync: statusAsync,
+                  // listVoucher: listVoucher ?? [],
                 ),
               ],
             ),

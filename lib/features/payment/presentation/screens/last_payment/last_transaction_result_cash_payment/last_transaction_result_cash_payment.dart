@@ -8,13 +8,8 @@ import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/profile/domain/entities/wallet_entity.dart';
 import 'package:movemate/features/profile/presentation/controllers/profile_controller/profile_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
-}
 
 // Hàm hỗ trợ để định dạng ngày tháng
 String formatDate(DateTime date) {
@@ -98,7 +93,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                         // Container chính
                         Container(
                           width: containerWidth,
-                          height: containerHeight,
+                          height: 550,
                           margin: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -197,7 +192,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                                             serviceDetails.name,
                                             formatPrice(
                                                 (serviceDetails.price ?? 0)
-                                                    .toInt()),
+                                                    .toDouble()),
                                             containerWidth * 0.80,
                                           );
                                         },
@@ -222,7 +217,7 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                                     buildTransactionDetailPriceRow(
                                       'Tổng tiền',
                                       formatPrice(
-                                          ((result?.total ?? 0)).toInt()),
+                                          ((result?.total ?? 0)).toDouble()),
                                       containerWidth,
                                       false,
                                     ),
@@ -230,14 +225,14 @@ class LastTransactionResultCashPayment extends HookConsumerWidget {
                                     buildTransactionDetailPriceRow(
                                         'Tiền đã đặt cọc',
                                         formatPrice(
-                                            (result?.deposit ?? 0).toInt()),
+                                            (result?.deposit ?? 0).toDouble()),
                                         containerWidth * 0.80,
                                         false),
                                     buildTransactionDetailPriceRow(
                                         'Số tiền còn lại đã thanh toán',
                                         formatPrice(((result?.total ?? 0) -
                                                 (result?.deposit ?? 0))
-                                            .toInt()),
+                                            .toDouble()),
                                         containerWidth * 0.80,
                                         true),
                                   ],

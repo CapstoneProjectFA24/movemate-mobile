@@ -10,6 +10,7 @@ import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/order_stream_manager.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import '../../../../../configs/routes/app_router.dart';
 import '../../../../../utils/commons/widgets/widgets_common_export.dart';
 import '../../../../../utils/constants/asset_constant.dart';
@@ -30,11 +31,7 @@ class OrderItem extends HookConsumerWidget {
     final size = MediaQuery.sizeOf(context);
 
     // Listen to the real-time status from Firestore
-    // Hàm hỗ trợ để định dạng giá
-    String formatPrice(int price) {
-      final formatter = NumberFormat('#,###', 'vi_VN');
-      return '${formatter.format(price)} đ';
-    }
+ 
 
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
 
@@ -82,7 +79,39 @@ class OrderItem extends HookConsumerWidget {
                 child: bookingAsync.when(
                   data: (data) {
                     final bookingStatus = useBookingStatus(
-                        bookingAsync.value, order.isReviewOnline);
+                        bookingAsync.value, order.isReviewOnline ?? false);
+                    // Extract necessary flags from bookingStatus
+                    final bool isCancelled = bookingStatus.isCancelled;
+                    final bool instructionIconFollowStatus =
+                        bookingStatus.canMakePayment ||
+                            bookingStatus.canAcceptSchedule ||
+                            bookingStatus.canReviewSuggestion;
+
+                    final bool isComplete = bookingStatus.isCompleted;
+                    final bool isRefunding = bookingStatus.isRefunding;
+
+                    String statusTextDetails = bookingStatus.statusMessage;
+
+                    if (isComplete) {
+                      if (order.isCancel) {
+                        if (order.isRefunded) {
+                          statusTextDetails = 'Đã hoàn lại tiền';
+                        } else {
+                          statusTextDetails = 'Đơn hàng đã bị hủy';
+                        }
+                      } else if (order.isRefunded) {
+                        statusTextDetails = 'Đã hoàn lại tiền';
+                      } else if (isComplete) {
+                        statusTextDetails = 'Đơn hàng đã hoàn thành';
+                      } else
+                        statusTextDetails = bookingStatus.statusMessage;
+                    } else if (isRefunding) {
+                      statusTextDetails = 'Đang xử lý yêu cầu hoàn tiền';
+                    } else if (isCancelled) {
+                      statusTextDetails = 'Đơn hàng đã bị hủy';
+                    } else {
+                      statusTextDetails = bookingStatus.statusMessage;
+                    }
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,15 +166,15 @@ class OrderItem extends HookConsumerWidget {
                               height: 10,
                               width: 10,
                               decoration: BoxDecoration(
-                                color: getStatusColor(bookingStatus),
+                                color: getStatusColor(bookingStatus, order),
                                 shape: BoxShape.circle,
                               ),
                             ),
                             const SizedBox(width: 5),
                             LabelText(
                               // content: getBookingStatusText(status).statusText,
-                              content: bookingStatus.statusMessage,
-                              color: getStatusColor(bookingStatus),
+                              content: statusTextDetails,
+                              color: getStatusColor(bookingStatus, order),
                               size: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -156,7 +185,7 @@ class OrderItem extends HookConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             LabelText(
-                              content: formatPrice(order.total.toInt()),
+                              content: formatPrice(order.total.toDouble()),
                               size: 18,
                               color: AssetsConstants.primaryMain,
                               fontWeight: FontWeight.bold,
@@ -355,7 +384,21 @@ class OrderItem extends HookConsumerWidget {
   }
 }
 
-Color getStatusColor(BookingStatusResult status) {
+Color getStatusColor(
+  BookingStatusResult status,
+  OrderEntity order,
+) {
+  // New Conditions
+  if (status.isCompleted) {
+    if (order.isRefunded) {
+      return Colors.blue; // Example color for "Đã hoàn tiền"
+    } else if (order.isCancel) {
+      return Colors.red; // Example color for "Đã hủy"
+    } else {
+      return const Color(0xFF673AB7); // Existing color for "Hoàn thành"
+    }
+  }
+
   // Các trạng thái chờ xác nhận từ khách hàng (Màu xanh dương)
   if (status.canAcceptSchedule) {
     return const Color(0xFF2196F3); // Xanh dương đậm
@@ -404,10 +447,10 @@ Color getStatusColor(BookingStatusResult status) {
     return const Color(0xFFFF5722); // Cam đậm
   }
 
-  // Trạng thái hoàn thành (Màu tím đậm)
-  if (status.isCompleted) {
-    return const Color(0xFF673AB7); // Tím đậm
-  }
+  // // Trạng thái hoàn thành (Màu tím đậm)
+  // if (status.isCompleted) {
+  //   return const Color(0xFF673AB7); // Tím đậm
+  // }
 
   // Màu mặc định cho các trạng thái khác (Xám)
   return const Color(0xFF9E9E9E); // Xám

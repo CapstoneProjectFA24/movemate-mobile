@@ -45,7 +45,10 @@ class BookingStatusResult {
   final bool isMovingInProgress; // Đang vận chuyển (coming)
   final bool isCompleted; // Hoàn thành
   final bool isCancelled; // Đã hủy
+  final bool isRefunding; // Đã hoàn tiền
   final bool isRefunded; // Đã hoàn tiền
+  final bool isReviewed; // Đã hoàn tiền
+  final bool isWaiting; // Đã hoàn tiền
 
   BookingStatusResult({
     required this.statusMessage,
@@ -71,7 +74,10 @@ class BookingStatusResult {
     this.isPorterProcessingMoving = false,
     this.isCompleted = false,
     this.isCancelled = false,
+    this.isRefunding = false,
     this.isRefunded = false,
+    this.isReviewed = false,
+    this.isWaiting = false,
   });
 }
 
@@ -97,6 +103,7 @@ BookingStatusResult useBookingStatus(
     bool hasAssignmentInbooking(String staffType) {
       return assignments.any((a) => a.staffType == staffType);
     }
+    // Helper function to check isCanceled in booking
 
     // Check reviewer states
     final hasReviewerAssigned =
@@ -416,7 +423,10 @@ BookingStatusResult useBookingStatus(
       isMovingInProgress: status == BookingStatusType.coming,
       isCompleted: status == BookingStatusType.completed,
       isCancelled: status == BookingStatusType.cancelled,
+      isRefunding: status == BookingStatusType.refunding,
       isRefunded: status == BookingStatusType.refunded,
+      isReviewed: status == BookingStatusType.reviewed,
+      isWaiting: status == BookingStatusType.waiting,
     );
   }, [booking, isReviewOnline]);
 }
@@ -477,8 +487,8 @@ String _getDefaultStatusMessage(BookingStatusType status) {
       return "Dịch vụ đã hoàn thành";
     case BookingStatusType.cancelled:
       return "Đơn hàng đã bị hủy";
-    case BookingStatusType.refunded:
-      return "Đã hoàn tiền";
+    case BookingStatusType.refunding:
+      return "Đang chờ hoàn tiền";
     case BookingStatusType.pending:
       return "Đang xử lý yêu cầu";
     default:

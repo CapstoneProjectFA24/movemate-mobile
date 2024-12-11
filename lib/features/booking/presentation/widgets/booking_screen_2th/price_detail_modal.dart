@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart'; // Import Riverpod
 // Import booking_provider
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
+import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/constants/asset_constant.dart';
 
 class ServiceItem {
@@ -29,12 +30,6 @@ class ServiceItem {
       totalPrice: totalPrice ?? this.totalPrice,
     );
   }
-}
-
-// Hàm hỗ trợ để định dạng giá
-String formatPrice(int price) {
-  final formatter = NumberFormat('#,###', 'vi_VN');
-  return '${formatter.format(price)} đ';
 }
 
 class PriceDetailModal extends ConsumerWidget {
@@ -103,7 +98,7 @@ class PriceDetailModal extends ConsumerWidget {
                 ),
               ),
               Text(
-                formatPrice(bookingStateResponse.total.toInt()),
+                formatPrice(bookingStateResponse.total.toDouble()),
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -176,7 +171,7 @@ class PriceDetailModal extends ConsumerWidget {
           Expanded(
             flex: 3,
             child: Text(
-              formatPrice(price.toInt()),
+              formatPrice(price.toDouble()),
               textAlign: TextAlign.right,
               style: const TextStyle(
                 fontSize: 14,
