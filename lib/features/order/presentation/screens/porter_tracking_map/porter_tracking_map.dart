@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -46,6 +47,9 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
 
   // Marker handling
   List<NavigationMarker>? _currentMarkers;
+
+  // realtime
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -111,40 +115,153 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
     _buildRoute();
   }
 
+  Future<Map<String, dynamic>?> _getBookingData() async {
+    try {
+      final docSnapshot = await _firestore
+          .collection('bookings')
+          .doc(widget.job.id.toString())
+          .get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      }
+      return null;
+    } catch (e) {
+      print("Error getting Firestore data: $e");
+      return null;
+    }
+  }
+
+  Map<String, bool> _getPorterAssignmentStatus(List assignments) {
+    return {
+      'isPorterWaiting': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "WAITING"),
+      'isPorterAssigned': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ASSIGNED"),
+      'isPorterIncoming': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "INCOMING"),
+      'isPorterArrived': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ARRIVED"),
+      'isPorterInprogress': assignments.any(
+          (a) => a['StaffType'] == "PORTER" && a["Status"] == "IN_PROGRESS"),
+      'isPorterPacking': assignments
+          .any((a) => a["StaffType"] == "PORTER" && a["Status"] == "PACKING"),
+      'isPorterOngoing': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ONGOING"),
+      'isPorterDelivered': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "DELIVERED"),
+      'isPorterUnloaded': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "UNLOADED"),
+      'isPorterCompleted': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "COMPLETED"),
+      'isPorterFailed': assignments
+          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "FAILED"),
+    };
+  }
+
+  Map<String, bool> _getBuildRouteFlags(
+      Map<String, bool> porterAssignmentStatus, String fireStoreBookingStatus) {
+    bool isPorterStartBuildRoute = false;
+    bool isPorterAtDeliveryPointBuildRoute = false;
+    bool isPorterEndDeliveryPointBuildRoute = false;
+
+    switch (fireStoreBookingStatus) {
+      case "COMING":
+        isPorterStartBuildRoute = porterAssignmentStatus['isPorterWaiting']! ||
+            porterAssignmentStatus['isPorterAssigned']! ||
+            porterAssignmentStatus['isPorterIncoming']! ||
+            (!porterAssignmentStatus['isPorterInprogress']! &&
+                !porterAssignmentStatus['isPorterCompleted']! &&
+                !porterAssignmentStatus['isPorterFailed']!);
+
+        break;
+      case "IN_PROGRESS":
+        isPorterStartBuildRoute = porterAssignmentStatus['isPorterWaiting']! ||
+            porterAssignmentStatus['isPorterAssigned']! ||
+            porterAssignmentStatus['isPorterIncoming']! ||
+            (!porterAssignmentStatus['isPorterInprogress']! &&
+                !porterAssignmentStatus['isPorterArrived']! &&
+                !porterAssignmentStatus['isPorterPacking']! &&
+                !porterAssignmentStatus['isPorterDelivered']! &&
+                !porterAssignmentStatus['isPorterOngoing']! &&
+                !porterAssignmentStatus['isPorterCompleted']! &&
+                !porterAssignmentStatus['isPorterFailed']!);
+        isPorterAtDeliveryPointBuildRoute =
+            (porterAssignmentStatus['isPorterArrived']! ||
+                    porterAssignmentStatus['isPorterInprogress']! ||
+                    porterAssignmentStatus["isPorterPacking"]! ||
+                    porterAssignmentStatus["isPorterOngoing"]!) &&
+                (!porterAssignmentStatus["isPorterUnloaded"]! ||
+                    !porterAssignmentStatus['isPorterDelivered']! ||
+                    !porterAssignmentStatus['isPorterCompleted']! ||
+                    !porterAssignmentStatus['isPorterIncoming']! ||
+                    !porterAssignmentStatus['isPorterAssigned']! ||
+                    !porterAssignmentStatus['isPorterUnloaded']! ||
+                    !porterAssignmentStatus['isPorterFailed']!);
+        isPorterEndDeliveryPointBuildRoute =
+            (porterAssignmentStatus['isPorterCompleted']! ||
+                    porterAssignmentStatus["isPorterDelivered"]! ||
+                    porterAssignmentStatus["isPorterUnloaded"]!) &&
+                !porterAssignmentStatus['isPorterFailed']!;
+
+        break;
+      case "COMPLETED":
+        isPorterEndDeliveryPointBuildRoute =
+            (porterAssignmentStatus['isPorterCompleted']! ||
+                    porterAssignmentStatus["isPorterDelivered"]! ||
+                    porterAssignmentStatus["isPorterUnloaded"]!) &&
+                !porterAssignmentStatus['isPorterFailed']!;
+        setState(() {
+          // canDriverConfirmIncomingFlag = false;
+          // canDriverStartMovingFlag = false;
+        });
+        break;
+      default:
+        break;
+    }
+
+    return {
+      'isPorterStartBuildRoute': isPorterStartBuildRoute,
+      'isPorterAtDeliveryPointBuildRoute': isPorterAtDeliveryPointBuildRoute,
+      'isPorterEndDeliveryPointBuildRoute': isPorterEndDeliveryPointBuildRoute,
+    };
+  }
+
   void _buildRoute() async {
     if (_navigationController != null && _staffLocation != null) {
       List<LatLng> waypoints = [];
 
-      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
-        LatLng pickupPoint = _getPickupPointLatLng();
-        waypoints = [pickupPoint, _staffLocation!];
-      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
-        LatLng deliveryPoint = _getDeliveryPointLatLng();
-        waypoints = [_staffLocation!, deliveryPoint];
-      } else {
-        return;
-      }
-      print(
-          "waypoints 1 : ${widget.bookingStatus.isStaffDriverComingToBuildRoute}");
-      print(
-          "waypoints 2 : ${widget.bookingStatus.isDriverInProgressToBuildRoute}");
-      print("waypoints $waypoints");
-      _navigationController
-          ?.buildRoute(
-        waypoints: waypoints,
-        profile: DrivingProfile.cycling,
-      )
-          .then((success) {
-        if (!success) {
-          print('Failed to build route');
-        }
-      }).catchError((error) {
-        print('Error building route: $error');
-      });
+      final bookingData = await _getBookingData();
 
-      print('tuan check Delivery Point: ${_getDeliveryPointLatLng()}');
-      //"10.774934,106.623477
-      print('tuan check Staff Location: $_staffLocation');
+      if (bookingData != null &&
+          bookingData["Assignments"] != null &&
+          bookingData["Status"] != null) {
+        final assignments = bookingData["Assignments"] as List;
+        final fireStoreBookingStatus = bookingData["Status"] as String;
+
+        final porterAssignmentStatus = _getPorterAssignmentStatus(assignments);
+        final buildRouteFlags =
+            _getBuildRouteFlags(porterAssignmentStatus, fireStoreBookingStatus);
+
+        print("vinh debug ${buildRouteFlags["isPorterStartBuildRoute"]!}");
+        print(
+            "vinh debug 1 ${buildRouteFlags["isPorterAtDeliveryPointBuildRoute"]!}");
+
+        if (buildRouteFlags["isPorterStartBuildRoute"]!) {
+          LatLng pickupPoint = _getPickupPointLatLng();
+          waypoints = [pickupPoint, _staffLocation!];
+        } else if (buildRouteFlags["isPorterAtDeliveryPointBuildRoute"]!) {
+          LatLng deliveryPoint = _getDeliveryPointLatLng();
+          waypoints = [_staffLocation!, deliveryPoint];
+        } else {
+          return;
+        }
+
+        await _navigationController?.buildRoute(
+          waypoints: waypoints,
+          profile: DrivingProfile.drivingTraffic,
+        );
+      }
     }
   }
 
@@ -236,20 +353,9 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
               setState(() {
                 _navigationController = controller;
                 _isMapReady = true;
+                _updateMapView();
                 _updateDriverMarker();
               });
-
-              if (_staffLocation != null) {
-                _updateMapView();
-              } else {
-                controller.buildRoute(
-                  waypoints: [
-                    _getDeliveryPointLatLng(),
-                    _getDeliveryPointLatLng()
-                  ],
-                  profile: DrivingProfile.cycling,
-                );
-              }
             },
             onRouteProgressChange: (RouteProgressEvent event) {
               setState(() {
@@ -261,6 +367,7 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
             const Center(
               child: Card(
                 elevation: 4,
+                color: AssetsConstants.primaryLight,
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
@@ -269,7 +376,7 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
                       CircularProgressIndicator(),
                       SizedBox(height: 16),
                       Text(
-                        'Đang tìm vị trí tài xế...',
+                        'Đang tìm vị trí bốc vác...',
                         style: TextStyle(fontSize: 16),
                       ),
                     ],

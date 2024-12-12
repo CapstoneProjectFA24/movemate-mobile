@@ -213,6 +213,9 @@ class AppRouter extends _$AppRouter {
           page: TrackingDriverMapRoute.page,
         ),
         AutoRoute(
+          page: PorterTrackingMapRoute.page,
+        ),
+        AutoRoute(
           page: ReviewerTrackingMapRoute.page,
         ),
         AutoRoute(
