@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/house_type_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/house_type_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
@@ -20,8 +22,10 @@ class HouseInformationAtHome extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(servicePackageControllerProvider);
-
+    // final state = ref.watch(servicePackageControllerProvider);
+    final stateBooking = ref.watch(bookingControllerProvider);
+    final stateOldBooking = ref.watch(orderControllerProvider);
+    final stateOldhouseType = ref.watch(houseTypeControllerProvider);
     // Format date and time for new order
     final formattedDateNew = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(order.bookingAt.toString()));
@@ -44,43 +48,46 @@ class HouseInformationAtHome extends HookConsumerWidget {
           .getHouseTypeById(order.houseTypeId, context),
       context: context,
     );
+    print('object list houseTypeId ${orderOld?.houseTypeId}');
+
     final useFetchResultOld = useFetchObject<HouseTypeEntity>(
       function: (context) => ref
-          .read(servicePackageControllerProvider.notifier)
-          .getHouseTypeById(orderOld!.houseTypeId, context),
+          .read(houseTypeControllerProvider.notifier)
+          .getHouseTypeOldById(orderOld!.houseTypeId, context),
       context: context,
     );
 
     // final houseTypeDataOld = useFetchResultOld.data;
-    // final houseTypeDataNew = useFetchResultNew.data;
+    final houseTypeDataNew = useFetchResultNew.data;
 
     final houseTypeDataOld = useFetchResultOld.data;
 
     // Add null check before using
-    final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
 
     // Get house type, floor and room information for both old and new orders
-    final houseTypeNew = houseTypeDataOld?.name ?? "Unknown";
+    final houseTypeNew = houseTypeDataNew?.name ?? "Unknown";
     final floorNumberNew = order.floorsNumber.toString() ?? "Unknown";
     final roomNumberNew = order.roomNumber.toString() ?? "Unknown";
 
-    // final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
+    final houseTypeOld = houseTypeDataOld?.name ?? "Unknown";
     final floorNumberOld = orderOld?.floorsNumber.toString() ?? "Unknown";
     final roomNumberOld = orderOld?.roomNumber.toString() ?? "Unknown";
 
     final bool checkDateTime = formattedDateNew == formattedDateOld &&
         formattedTimeOld == formattedTimeNew;
-    print('check house type 1  ${useFetchResultNew.data}');
-    print('check house type 1.111  ${orderOld!.houseTypeId}');
-    print('check house type 1.1  ${useFetchResultOld.data}');
-    print('check house type 2 $houseTypeOld');
+    // print('check house type 1  ${useFetchResultNew.data}');
+    // print('check house type 1.111  ${orderOld!.houseTypeId}');
+    // print('check house type 1.1  ${useFetchResultOld.data}');
+    // print('check house type 2 $houseTypeOld');
 
     if (useFetchResultOld.isFetchingData) {
       return const Center(child: CircularProgressIndicator());
     }
 
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: stateOldhouseType.isLoading ||
+          stateOldBooking.isLoading ||
+          stateBooking.isLoading,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

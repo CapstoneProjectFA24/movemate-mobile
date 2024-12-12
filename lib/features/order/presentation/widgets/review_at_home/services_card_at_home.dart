@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/service_package_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
@@ -27,15 +28,26 @@ class ServicesCardAtHome extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(servicePackageControllerProvider);
 
+    // final stateBooking = ref.watch(bookingControllerProvider);
+    final stateOldBooking = ref.watch(orderControllerProvider);
+
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+    print('object list service housetypr ${orderOld?.houseTypeId}');
     final bool checkingHouseType = order.houseTypeId != orderOld?.houseTypeId ||
         order.roomNumber != orderOld?.roomNumber ||
         order.floorsNumber != orderOld?.floorsNumber ||
         order.bookingAt != orderOld?.bookingAt;
 
     print('checking lisst ${orderOld?.houseTypeId}');
+
+    //     if (useFetchResultOld.isFetchingData) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
+
     return LoadingOverlay(
-      isLoading: state.isLoading,
+      isLoading: state.isLoading ||
+          // stateBooking.isLoading ||
+          stateOldBooking.isLoading,
       child: Container(
         width: double.infinity,
         height: checkingHouseType

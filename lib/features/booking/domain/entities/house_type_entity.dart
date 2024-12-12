@@ -21,7 +21,7 @@ class HouseTypeEntity {
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       isActived: map['isActived'],
-      bookingId: map['bookingId'],
+      bookingId: map['bookingId'] ?? 0,
     );
   }
 

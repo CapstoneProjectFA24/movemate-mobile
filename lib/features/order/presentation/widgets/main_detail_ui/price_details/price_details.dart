@@ -258,12 +258,14 @@ class PriceDetails extends HookConsumerWidget {
                 );
               }),
 
+//hiển thị nếu review offline
             if (!order.isReviewOnline)
               ServicesCardAtHome(
-                order: orderNew ?? order,
-                orderOld: orderOld,
+                order: order,
+                orderOld: orderOld ?? order,
               ),
             const SizedBox(height: 12),
+
             //tiền đặt cọc
             if (order.isReviewOnline)
               buildSummary('Tiền đặt cọc',

@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'booking_controller.dart';
+part of 'house_type_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$bookingControllerHash() => r'b9c8069b3fa97bd55acdc8888273d95f2af374b7';
+String _$houseTypeControllerHash() =>
+    r'9fc5df03949c7844da4760c61ecbd5402e6d7097';
 
-/// See also [BookingController].
-@ProviderFor(BookingController)
-final bookingControllerProvider =
-    AutoDisposeAsyncNotifierProvider<BookingController, void>.internal(
-  BookingController.new,
-  name: r'bookingControllerProvider',
+/// See also [HouseTypeController].
+@ProviderFor(HouseTypeController)
+final houseTypeControllerProvider =
+    AutoDisposeAsyncNotifierProvider<HouseTypeController, void>.internal(
+  HouseTypeController.new,
+  name: r'houseTypeControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$bookingControllerHash,
+      : _$houseTypeControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$BookingController = AutoDisposeAsyncNotifier<void>;
+typedef _$HouseTypeController = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

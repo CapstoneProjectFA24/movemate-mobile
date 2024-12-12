@@ -151,7 +151,7 @@ class ServicePackageController extends _$ServicePackageController {
       );
 
       houseType = response.payload;
-      // print('vinh log ${houseType?.toJson()}');
+      print('vinh log house type${houseType?.name.toString()}');
     });
 
     if (state.hasError) {
