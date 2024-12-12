@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
@@ -46,6 +47,9 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
 
   // Marker handling
   List<NavigationMarker>? _currentMarkers;
+
+  // realtime
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -111,40 +115,121 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     _buildRoute();
   }
 
+  Future<Map<String, dynamic>?> _getBookingData() async {
+    try {
+      final docSnapshot = await _firestore
+          .collection('bookings')
+          .doc(widget.job.id.toString())
+          .get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      }
+      return null;
+    } catch (e) {
+      print("Error getting Firestore data: $e");
+      return null;
+    }
+  }
+
+  Map<String, bool> _getDriverAssignmentStatus(List assignments) {
+    return {
+      'isDriverWaiting': assignments
+          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "WAITING"),
+      'isDriverAssigned': assignments
+          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "ASSIGNED"),
+      'isDriverIncoming': assignments
+          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "INCOMING"),
+      'isDriverArrived': assignments
+          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "ARRIVED"),
+      'isDriverInprogress': assignments.any(
+          (a) => a['StaffType'] == "DRIVER" && a["Status"] == "IN_PROGRESS"),
+      'isDriverCompleted': assignments
+          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "COMPLETED"),
+      'isDriverFailed': assignments
+          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "FAILED"),
+    };
+  }
+
+  Map<String, bool> _getBuildRouteFlags(
+      Map<String, bool> driverAssignmentStatus, String fireStoreBookingStatus) {
+    bool isDriverStartBuildRoute = false;
+    bool isStaffDriverComingToBuildRoute = false;
+    bool isDriverInProgressToBuildRoute = false;
+
+    switch (fireStoreBookingStatus) {
+      case "COMING":
+        isStaffDriverComingToBuildRoute =
+            driverAssignmentStatus["isDriverWaiting"]! ||
+                driverAssignmentStatus["isDriverAssigned"]! ||
+                driverAssignmentStatus["isDriverIncoming"]! ||
+                (!driverAssignmentStatus['isDriverInprogress']! &&
+                    !driverAssignmentStatus['isDriverCompleted']! &&
+                    !driverAssignmentStatus['isDriverFailed']! &&
+                    !driverAssignmentStatus['isDriverArrived']!);
+        break;
+      case "IN_PROGRESS":
+        isStaffDriverComingToBuildRoute =
+            driverAssignmentStatus["isDriverWaiting"]! ||
+                driverAssignmentStatus["isDriverAssigned"]! ||
+                driverAssignmentStatus["isDriverIncoming"]! ||
+                (!driverAssignmentStatus['isDriverInprogress']! &&
+                    !driverAssignmentStatus['isDriverCompleted']! &&
+                    !driverAssignmentStatus['isDriverFailed']! &&
+                    !driverAssignmentStatus['isDriverArrived']!);
+
+        isDriverInProgressToBuildRoute =
+            driverAssignmentStatus["isDriverArrived"]! ||
+                driverAssignmentStatus["isDriverInprogress"]!;
+        break;
+      case "COMPLETED":
+        break;
+      default:
+        break;
+    }
+
+    return {
+      'isDriverStartBuildRoute': isDriverStartBuildRoute,
+      'isStaffDriverComingToBuildRoute': isStaffDriverComingToBuildRoute,
+      'isDriverInProgressToBuildRoute': isDriverInProgressToBuildRoute,
+    };
+  }
+
   void _buildRoute() async {
     if (_navigationController != null && _staffLocation != null) {
       List<LatLng> waypoints = [];
 
-      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
-        LatLng pickupPoint = _getPickupPointLatLng();
-        waypoints = [pickupPoint, _staffLocation!];
-      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
-        LatLng deliveryPoint = _getDeliveryPointLatLng();
-        waypoints = [_staffLocation!, deliveryPoint];
-      } else {
-        return;
-      }
-      print(
-          "waypoints 1 : ${widget.bookingStatus.isStaffDriverComingToBuildRoute}");
-      print(
-          "waypoints 2 : ${widget.bookingStatus.isDriverInProgressToBuildRoute}");
-      print("waypoints $waypoints");
-      _navigationController
-          ?.buildRoute(
-        waypoints: waypoints,
-        profile: DrivingProfile.cycling,
-      )
-          .then((success) {
-        if (!success) {
-          print('Failed to build route');
-        }
-      }).catchError((error) {
-        print('Error building route: $error');
-      });
+      final bookingData = await _getBookingData();
 
-      print('tuan check Delivery Point: ${_getDeliveryPointLatLng()}');
-      //"10.774934,106.623477
-      print('tuan check Staff Location: $_staffLocation');
+      if (bookingData != null &&
+          bookingData["Assignments"] != null &&
+          bookingData["Status"] != null) {
+        final assignments = bookingData["Assignments"] as List;
+        final fireStoreBookingStatus = bookingData["Status"] as String;
+        final driverAssignmentStatus = _getDriverAssignmentStatus(assignments);
+        final buildRouteFlags =
+            _getBuildRouteFlags(driverAssignmentStatus, fireStoreBookingStatus);
+
+        print(
+            "vinh debug ${buildRouteFlags["isStaffDriverComingToBuildRoute"]!}");
+        print(
+            "vinh debug 1 ${buildRouteFlags["isDriverInProgressToBuildRoute"]!}");
+
+        if (buildRouteFlags["isStaffDriverComingToBuildRoute"]!) {
+          LatLng pickupPoint = _getPickupPointLatLng();
+          waypoints = [pickupPoint, _staffLocation!];
+        } else if (buildRouteFlags["isDriverInProgressToBuildRoute"]!) {
+          LatLng deliveryPoint = _getDeliveryPointLatLng();
+          waypoints = [_staffLocation!, deliveryPoint];
+        } else {
+          return;
+        }
+
+        await _navigationController?.buildRoute(
+          waypoints: waypoints,
+          profile: DrivingProfile.drivingTraffic,
+        );
+      }
     }
   }
 
@@ -236,20 +321,9 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
               setState(() {
                 _navigationController = controller;
                 _isMapReady = true;
+                _updateMapView();
                 _updateDriverMarker();
               });
-
-              if (_staffLocation != null) {
-                _updateMapView();
-              } else {
-                controller.buildRoute(
-                  waypoints: [
-                    _getDeliveryPointLatLng(),
-                    _getDeliveryPointLatLng()
-                  ],
-                  profile: DrivingProfile.cycling,
-                );
-              }
             },
             onRouteProgressChange: (RouteProgressEvent event) {
               setState(() {
