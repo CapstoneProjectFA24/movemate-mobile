@@ -51,6 +51,8 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
   // realtime
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  bool isOpenHeaderTrackingStatus = false;
+
   @override
   void initState() {
     super.initState();
@@ -268,43 +270,57 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
   Future<void> _updateDriverMarker() async {
     if (_navigationController == null || _staffLocation == null) return;
 
-    if (_currentMarkers != null) {
-      await _navigationController!.removeMarkers(
-        _currentMarkers!.map((m) => m.markerId!).toList(),
-      );
-    }
+    final bookingData = await _getBookingData();
+    if (bookingData != null &&
+        bookingData["Assignments"] != null &&
+        bookingData["Status"] != null) {
+      // logic
+      final assignments = bookingData["Assignments"] as List;
+      final fireStoreBookingStatus = bookingData["Status"] as String;
 
-    List<NavigationMarker> markers = [];
-    // print(
-    //     'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
-    // Add destination marker
-    if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
-      markers.add(NavigationMarker(
-        imagePath:
-            "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
-        height: 80,
-        width: 80,
-        latLng: _getPickupPointLatLng(),
-      ));
-    } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
-      markers.add(NavigationMarker(
-        imagePath:
-            "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
-        height: 80,
-        width: 80,
-        latLng: _getDeliveryPointLatLng(),
-      ));
-    }
+      final porterAssignmentStatus = _getPorterAssignmentStatus(assignments);
+
+      final buildRouteFlags =
+          _getBuildRouteFlags(porterAssignmentStatus, fireStoreBookingStatus);
+
+      if (_currentMarkers != null) {
+        await _navigationController!.removeMarkers(
+          _currentMarkers!.map((m) => m.markerId!).toList(),
+        );
+      }
+
+      List<NavigationMarker> markers = [];
+      // print(
+      //     'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
+      // Add destination marker
+      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
+        markers.add(NavigationMarker(
+          imagePath:
+              "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
+          height: 80,
+          width: 80,
+          latLng: _getPickupPointLatLng(),
+        ));
+      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
+        markers.add(NavigationMarker(
+          imagePath:
+              "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
+          height: 80,
+          width: 80,
+          latLng: _getDeliveryPointLatLng(),
+        ));
+      }
 // assets/images/booking/vehicles/abf959e9.png
-    markers.add(NavigationMarker(
-      // imagePath: "assets/images/booking/vehicles/truck1.png",
-      imagePath: "assets/images/booking/vehicles/abf959e9.png",
-      height: 60,
-      width: 60,
-      latLng: _staffLocation!,
-    ));
+      markers.add(NavigationMarker(
+        // imagePath: "assets/images/booking/vehicles/truck1.png",
+        imagePath: "assets/images/booking/vehicles/abf959e9.png",
+        height: 60,
+        width: 60,
+        latLng: _staffLocation!,
+      ));
 
-    _currentMarkers = await _navigationController!.addImageMarkers(markers);
+      _currentMarkers = await _navigationController!.addImageMarkers(markers);
+    }
   }
 
   LatLng _parseCoordinates(String coordinateString) {
@@ -339,6 +355,7 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Theo dõi tiến trình của tài xế",

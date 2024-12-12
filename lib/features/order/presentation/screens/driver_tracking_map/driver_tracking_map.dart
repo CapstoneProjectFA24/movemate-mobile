@@ -225,6 +225,7 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
               _staffLocation?.longitude != pickupPoint.longitude) {
             waypoints = [pickupPoint, _staffLocation!];
           } else {
+
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -411,6 +412,8 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
                 );
               },
             );
+         
+         
           }
         } else if (buildRouteFlags["isDriverInProgressToBuildRoute"]!) {
           LatLng deliveryPoint = _getDeliveryPointLatLng();
