@@ -251,28 +251,32 @@ class WalletContent extends HookConsumerWidget {
           right: 20,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
+              backgroundColor: selectedMethod != null
+                  ? const Color(0xFFFF7F00) // Màu cam khi đã chọn phương thức
+                  : Colors.grey, // Màu xám khi chưa chọn phương thức
               padding: const EdgeInsets.all(10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
               elevation: 0,
             ),
-            onPressed: isWalletLocked
-                ? handleUnlockWallet
-                : () {
+            onPressed: !isWalletLocked
+                ? () {
                     handlePaymentButtonPressed();
-                  },
+                  }
+                : null, // Disable button nếu chưa chọn phương thức nạp tiền
             child: Container(
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    AssetsConstants.primaryMain,
-                    AssetsConstants.primaryLight,
-                  ],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
+                gradient: selectedMethod != null
+                    ? const LinearGradient(
+                        colors: [
+                          AssetsConstants.primaryMain,
+                          AssetsConstants.primaryLight,
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      )
+                    : null, // Gradient chỉ áp dụng khi đã chọn phương thức
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: const EdgeInsets.all(10),
@@ -285,7 +289,7 @@ class WalletContent extends HookConsumerWidget {
               ),
             ),
           ),
-        ),
+        )
       ],
     );
   }

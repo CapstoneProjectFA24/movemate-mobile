@@ -258,10 +258,10 @@ class PriceDetails extends HookConsumerWidget {
                 );
               }),
 
-//hiển thị nếu review offline
+            //hiển thị nếu review offline
             if (!order.isReviewOnline)
               ServicesCardAtHome(
-                order: order,
+                order: orderObj ?? order,
                 orderOld: orderOld ?? order,
               ),
             const SizedBox(height: 12),

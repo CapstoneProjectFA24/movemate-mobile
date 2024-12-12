@@ -32,22 +32,20 @@ class ServicesCardAtHome extends HookConsumerWidget {
     final stateOldBooking = ref.watch(orderControllerProvider);
 
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
-    print('object list service housetypr ${orderOld?.houseTypeId}');
+    // print('object list service housetypr ${orderOld?.houseTypeId}');
     final bool checkingHouseType = order.houseTypeId != orderOld?.houseTypeId ||
         order.roomNumber != orderOld?.roomNumber ||
         order.floorsNumber != orderOld?.floorsNumber ||
         order.bookingAt != orderOld?.bookingAt;
 
-    print('checking lisst ${orderOld?.houseTypeId}');
+    // print('checking lisst ${orderOld?.houseTypeId}');
 
     //     if (useFetchResultOld.isFetchingData) {
     //   return const Center(child: CircularProgressIndicator());
     // }
 
     return LoadingOverlay(
-      isLoading: state.isLoading ||
-          // stateBooking.isLoading ||
-          stateOldBooking.isLoading,
+      isLoading: state.isLoading || stateOldBooking.isLoading,
       child: Container(
         width: double.infinity,
         height: checkingHouseType
@@ -99,6 +97,8 @@ class ServicesCardAtHome extends HookConsumerWidget {
                     // Hiển thị dịch vụ (bookingDetails)
                     if (index < order.bookingDetails.length) {
                       final newService = order.bookingDetails[index];
+                      // final oldServices = orderOld?.bookingDetails[index] ??
+                      //     order.bookingDetails[index];
                       final oldService = orderOld?.bookingDetails.firstWhere(
                         (e) =>
                             e.serviceId == newService.serviceId &&
