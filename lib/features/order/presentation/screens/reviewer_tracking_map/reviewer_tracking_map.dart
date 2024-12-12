@@ -81,7 +81,7 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
       } else {
         ispauleModal = true;
         if ((_staffLocation?.latitude == pickupPoint.latitude ||
-                _staffLocation?.longitude == pickupPoint) &&
+                _staffLocation?.longitude == pickupPoint.longitude) &&
             ispauleModal) {
           showDialog(
             context: context,
@@ -270,6 +270,7 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
               );
             },
           );
+      
         }
       }
     }
