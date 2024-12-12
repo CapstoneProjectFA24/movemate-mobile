@@ -369,7 +369,7 @@ BookingStatusResult useBookingStatus(
     bool isPorterProcessingMoving = false;
     switch (status) {
       case BookingStatusType.coming:
-        if (isPorterIncoming || isPorterInProgress) {
+        if (isPorterIncoming || isPorterInProgress || isPorterAssigned) {
           isPorterProcessingMoving = true;
         }
         break;

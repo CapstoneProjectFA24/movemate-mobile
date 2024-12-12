@@ -7,7 +7,7 @@ part of 'house_type_controller.dart';
 // **************************************************************************
 
 String _$houseTypeControllerHash() =>
-    r'9fc5df03949c7844da4760c61ecbd5402e6d7097';
+    r'76404513978908a262bb17ebe662b3aed8f85258';
 
 /// See also [HouseTypeController].
 @ProviderFor(HouseTypeController)

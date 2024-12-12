@@ -102,7 +102,7 @@ class ListItemWidget extends HookConsumerWidget {
         case "DRIVER":
           return bookingStatus.isDriverProcessingMoving;
         case "PORTER":
-          return bookingStatus.isDriverProcessingMoving;
+          return bookingStatus.isPorterProcessingMoving;
         default:
           return false;
       }
@@ -119,34 +119,12 @@ class ListItemWidget extends HookConsumerWidget {
           ));
           break;
         case "PORTER":
-          // context.router.push(PorterTrackingMapRoute(
-          //   staffId: userId,
-          //   job: order,
-          //   bookingStatus: bookingStatus,
+          context.router.push(PorterTrackingMapRoute(
+            staffId: userId,
+            job: order,
+            bookingStatus: bookingStatus,
+          ));
 
-          // ));
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text(
-                "Chỉ có thể xem vị trí của tài xế",
-                style: TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.orange.withOpacity(
-                  0.7), // You can choose any color that fits your design
-              behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.only(
-                top: 20.0,
-                left: 10.0,
-                right: 10.0,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              duration: const Duration(
-                  seconds: 3), // Duration the SnackBar is visible
-            ),
-          );
           break;
       }
     }
