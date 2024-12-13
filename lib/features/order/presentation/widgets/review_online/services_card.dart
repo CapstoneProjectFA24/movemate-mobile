@@ -69,296 +69,331 @@ class ServiceCard extends HookConsumerWidget {
               child: Scrollbar(
                 thumbVisibility: true,
                 thickness: 5,
-                child: ListView.builder(
-                  itemCount: order.bookingDetails.length +
-                      order.feeDetails.length +
-                      1, // 1 for the deposit
-                  itemBuilder: (context, index) {
-                    // Hiển thị dịch vụ (bookingDetails)
-                    if (index < order.bookingDetails.length) {
-                      final newService = order.bookingDetails[index];
-                      final oldService = orderOld?.bookingDetails.firstWhere(
-                        (e) =>
-                            e.serviceId == newService.serviceId &&
-                            e.type == "TRUCK",
-                        orElse: () => BookingDetailResponseEntity(
-                          bookingId: 0,
-                          id: 0,
-                          type: "TRUCK",
-                          serviceId: 0,
-                          quantity: 0,
-                          price: 0,
-                          status: "READY",
-                          name: "No Service",
-                          description: "No description",
-                          imageUrl: "",
-                        ),
-                      );
-                      final oldServiceTruck =
-                          orderOld?.bookingDetails.firstWhere(
-                        (e) => e.type == "TRUCK",
-                      );
-
-                      if (newService.type == "TRUCK") {
-                        if (oldServiceTruck?.serviceId != 0) {
-                          if (newService.serviceId == oldService?.serviceId) {
-                            print(
-                                "test truck 1 oldtruck ${oldService?.serviceId.toString()}");
-                            print(
-                                "test truck 2 newtruck ${newService.serviceId.toString()}");
-                            if (newService.price.toDouble() ==
-                                oldService?.price.toDouble()) {
-                              return buildPriceItem(newService.name,
-                                  formatPrice(newService.price.toDouble()));
-                            } else {
-                              return Column(
-                                children: [
-                                  buildPriceItem(
-                                      "${oldService?.name}",
-                                      formatPrice(
-                                          (oldService?.price ?? 0).toDouble()),
-                                      isStrikethrough: true),
-                                  buildPriceItem(newService.name,
-                                      formatPrice(newService.price.toDouble()),
-                                      isStrikethrough: false),
-                                ],
-                              );
-                            }
-                          } else {
-                            print(
-                                "test truck 3 oldtruck ${oldService?.serviceId.toString()}");
-                            print(
-                                "test truck 4 newtruck ${newService.serviceId.toString()}");
-                            return Column(
-                              children: [
-                                buildPriceItem(
-                                    "${oldServiceTruck?.name}",
-                                    formatPrice((oldServiceTruck?.price ?? 0)
-                                        .toDouble()),
-                                    isStrikethrough: true),
-                                buildPriceItem(newService.name,
-                                    formatPrice(newService.price.toDouble()),
-                                    isStrikethrough: false),
-                              ],
-                            );
-                          }
-                        } else {
-                          return buildPriceItem(newService.name,
-                              formatPrice(newService.price.toDouble()));
-                        }
-                      } else {
-                        final oldServiceNonTruck = orderOld?.bookingDetails
-                            .firstWhere(
-                                (e) =>
-                                    e.serviceId == newService.serviceId &&
-                                    e.type != "TRUCK",
-                                orElse: () => BookingDetailResponseEntity(
-                                      bookingId: 0,
-                                      id: 0,
-                                      type: "TRUCK",
-                                      serviceId: 0,
-                                      quantity: 0,
-                                      price: 0,
-                                      status: "READY",
-                                      name: "No Service",
-                                      description: "No description",
-                                      imageUrl: "",
-                                    ));
-                        final oldServicesNonTruck = orderOld?.bookingDetails
-                            .firstWhere((e) => e.type != "TRUCK",
-                                orElse: () => BookingDetailResponseEntity(
-                                      bookingId: 0,
-                                      id: 0,
-                                      type: "TRUCK",
-                                      serviceId: 0,
-                                      quantity: 0,
-                                      price: 0,
-                                      status: "READY",
-                                      name: "No Service",
-                                      description: "No description",
-                                      imageUrl: "",
-                                    ));
-
-                        if (newService.serviceId ==
-                                oldServiceNonTruck?.serviceId &&
-                            newService.price == oldServiceNonTruck?.price) {
-                          print('go here 1');
-                          return buildPriceItem(
-                            newService.name,
-                            formatPrice(newService.price.toDouble()),
-                            quantity: newService.quantity,
-                            // isStrikethrough: false,
-                          );
-                        }
-
-                        if (newService.serviceId ==
-                                oldServiceNonTruck?.serviceId &&
-                            newService.price != oldServiceNonTruck?.price) {
-                          print('go here 2');
-
-                          return Column(
-                            children: [
-                              buildPriceItem(
-                                "${oldServiceNonTruck?.name}" ?? 'Unknown',
-                                formatPrice(
-                                    oldServiceNonTruck?.price.toDouble() ?? 0),
-                                isStrikethrough: true,
-                                quantity: oldServicesNonTruck?.quantity ?? 0,
-                              ),
-                              buildPriceItem(
-                                newService.name,
-                                formatPrice(newService.price.toDouble()),
-                                quantity: newService.quantity,
-                                isStrikethrough: false,
-                              ),
-                            ],
-                          );
-                        }
-                        if (newService.serviceId !=
-                                oldServiceNonTruck?.serviceId &&
-                            newService.price != oldServiceNonTruck?.price &&
-                            newService.type != oldServicesNonTruck?.type) {
-                          print('go here 3');
-
-                          return const Column(
-                            children: [
-                              // buildPriceItem(
-                              //   "${oldServicesNonTruck?.name}" ?? 'Unknown',
-                              //   formatPrice(
-                              //       oldServicesNonTruck?.price.toDouble() ?? 0),
-                              //   isStrikethrough: true,
-                              //   quantity: oldServicesNonTruck?.quantity ?? 0,
-                              // ),
-                              // buildPriceItem(
-                              //   newService.name,
-                              //   formatPrice(newService.price.toDouble()),
-                              //   quantity: newService.quantity,
-                              //   isStrikethrough: false,
-                              // ),
-                            ],
-                          );
-                        }
-                        //  else if (  ) {
-                        //   return buildPriceItem(
-                        //     oldService!.name,
-                        //     formatPrice(oldService.price.toDouble()),
-                        //     quantity: oldService.quantity,
-                        //     // isStrikethrough: true,
-                        //   );
-                        // }
-                        else {
-                          print('go here 4');
-
-                          return buildPriceItem(
-                            newService.name,
-                            formatPrice(newService.price.toDouble()),
-                            quantity: newService.quantity,
-                            // isStrikethrough: true,
-                          );
-                        }
-                      }
-                    }
-
-                    // Hiển thị deposit (tiền đặt cọc)
-                    if (index == order.bookingDetails.length) {
-                      if (orderOld != null) {
-                        if (order.deposit == orderOld?.deposit) {
-                          return buildPriceItem('Tiền đặt cọc',
-                              formatPrice(order.deposit.toDouble()));
-                        } else {
-                          return Column(
-                            children: [
-                              buildPriceItem(
-                                  'Tiền đặt cọc cũ',
-                                  formatPrice(
-                                      orderOld?.deposit.toDouble() ?? 0),
-                                  isStrikethrough: true),
-                              buildPriceItem('Tiền đặt cọc mới',
-                                  formatPrice(order.deposit.toDouble()),
-                                  isStrikethrough: false),
-                            ],
-                          );
-                        }
-                      } else {
-                        return buildPriceItem('Tiền đặt cọc',
-                            formatPrice(order.deposit.toDouble()));
-                      }
-                    }
-
-                    // Hiển thị feeDetails
-                    final fee = order
-                        .feeDetails[index - order.bookingDetails.length - 1];
-                    return buildPriceItem(
-                        fee.name, formatPrice(fee.amount.toDouble()));
-                  },
-                ),
+                child: _buildServiceList(),
               ),
             ),
             const SizedBox(height: 12),
             // Tổng giá
-            if (orderOld != null ||
-                (order.vouchers?.length != 0 &&
-                    order.vouchers?.length != null)) ...[
-              if ((bookingAsync.value?.total == orderOld?.total) ||
-                  (order.total == orderOld?.total))
-                buildSummary(
-                    'Tổng giá',
-                    formatPrice(bookingAsync.value?.total.toDouble() ??
-                        order.total.toDouble()),
-                    fontWeight: FontWeight.w600)
-              else ...[
-                buildPriceItem(
-                    'Tổng giá cũ', formatPrice(orderOld?.total.toDouble() ?? 0),
-                    isStrikethrough: true),
-                buildPriceItem(
-                  'Tổng giá mới',
-                  formatPrice(
-                    bookingAsync.value?.total.toDouble() ??
-                        order.total.toDouble(),
-                  ),
-                  isStrikethrough: false,
-                ),
-              ]
-            ] else ...[
-              buildSummary('Tổng giá', formatPrice(order.total.toDouble()),
-                  fontWeight: FontWeight.w600),
-            ],
+            _buildTotalPrice(bookingAsync),
 
             // Note colors for service types
             const SizedBox(height: 12),
-            FittedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 10,
-                    height: 12,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Thông tin cũ', style: TextStyle(fontSize: 10)),
-                  const SizedBox(width: 16),
-                  Container(
-                    width: 10,
-                    height: 12,
-                    color: Colors.green,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Thông tin cập nhật',
-                      style: TextStyle(fontSize: 10)),
-                  const SizedBox(width: 16),
-                  Container(
-                    width: 10,
-                    height: 12,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Không thay đổi', style: TextStyle(fontSize: 10)),
-                ],
-              ),
-            ),
+            _buildLegend(),
           ],
         ),
+      ),
+    );
+  }
+
+  BookingDetailResponseEntity _createEmptyBookingDetail() {
+    return BookingDetailResponseEntity(
+      bookingId: 0,
+      id: 0,
+      type: "TRUCK",
+      serviceId: 0,
+      quantity: 0,
+      price: 0,
+      status: "READY",
+      name: "No Service",
+      description: "No description",
+      imageUrl: "",
+    );
+  }
+
+  Widget _buildServiceList() {
+    List<Widget> allServiceWidgets = [];
+    List<int> processedOldServices = [];
+
+    // 1. Xử lý danh sách services hiện tại trước
+    for (var newService in order.bookingDetails) {
+      if (newService.type == "TRUCK") {
+        if (orderOld != null) {
+          final oldServiceTruck = orderOld?.bookingDetails.firstWhere(
+            (e) => e.type == "TRUCK",
+            orElse: () => _createEmptyBookingDetail(),
+          );
+
+          if (oldServiceTruck?.serviceId != 0) {
+            processedOldServices.add(oldServiceTruck!.serviceId);
+          }
+        }
+        allServiceWidgets.addAll(_buildTruckServiceWidgets(newService));
+      } else {
+        if (orderOld != null) {
+          final oldServiceNonTruck = orderOld?.bookingDetails.firstWhere(
+            (e) => e.serviceId == newService.serviceId && e.type != "TRUCK",
+            orElse: () => _createEmptyBookingDetail(),
+          );
+
+          if (oldServiceNonTruck?.serviceId != 0) {
+            processedOldServices.add(oldServiceNonTruck!.serviceId);
+          }
+        }
+        allServiceWidgets.addAll(_buildNonTruckServiceWidgets(newService));
+      }
+    }
+
+    // 2. Xử lý các services đã bị xóa
+    if (orderOld != null) {
+      for (var oldService in orderOld!.bookingDetails) {
+        if (!processedOldServices.contains(oldService.serviceId)) {
+          allServiceWidgets.add(
+            buildPriceItem(
+              "${oldService.name} (Đã xóa)",
+              formatPrice(oldService.price.toDouble()),
+              isStrikethrough: true,
+              quantity: oldService.quantity,
+            ),
+          );
+        }
+      }
+    }
+
+    // 3. Xử lý deposit
+    allServiceWidgets.addAll(_buildDepositWidgets());
+
+    // 4. Xử lý fee details
+    for (var fee in order.feeDetails) {
+      allServiceWidgets.add(
+        buildPriceItem(fee.name, formatPrice(fee.amount.toDouble())),
+      );
+    }
+
+    return ListView(children: allServiceWidgets);
+  }
+
+  List<Widget> _buildTruckServiceWidgets(
+      BookingDetailResponseEntity newService) {
+    List<Widget> widgets = [];
+
+    // Case 1: Không có order cũ -> service mới hoàn toàn
+    if (orderOld == null) {
+      widgets.add(buildPriceItem(
+        "${newService.name} (Mới)",
+        formatPrice(newService.price.toDouble()),
+        quantity: newService.quantity,
+        isStrikethrough: false,
+      ));
+      return widgets;
+    }
+
+    // Tìm service truck cũ
+    final oldServiceTruck = orderOld?.bookingDetails.firstWhere(
+      (e) => e.type == "TRUCK",
+      orElse: () => _createEmptyBookingDetail(),
+    );
+
+    // Case 2: Service truck mới (không có service truck cũ)
+    if (oldServiceTruck?.serviceId == 0) {
+      widgets.add(buildPriceItem(
+        "${newService.name} (Mới)",
+        formatPrice(newService.price.toDouble()),
+        quantity: newService.quantity,
+        isStrikethrough: false,
+      ));
+      return widgets;
+    }
+
+    // Case 3: Cùng service và có thay đổi (giá hoặc số lượng)
+    if (newService.serviceId == oldServiceTruck?.serviceId &&
+        (newService.price != oldServiceTruck?.price ||
+            newService.quantity != oldServiceTruck?.quantity)) {
+      widgets.addAll([
+        buildPriceItem(
+          oldServiceTruck!.name,
+          formatPrice(oldServiceTruck.price.toDouble()),
+          isStrikethrough: true,
+          quantity: oldServiceTruck.quantity,
+        ),
+        buildPriceItem(
+          newService.name,
+          formatPrice(newService.price.toDouble()),
+          quantity: newService.quantity,
+        ),
+      ]);
+      return widgets;
+    }
+
+    // Case 4: Thay đổi sang service truck khác
+    if (newService.serviceId != oldServiceTruck?.serviceId) {
+      widgets.addAll([
+        buildPriceItem(
+          oldServiceTruck!.name,
+          formatPrice(oldServiceTruck.price.toDouble()),
+          isStrikethrough: true,
+          quantity: oldServiceTruck.quantity,
+        ),
+        buildPriceItem(
+          "${newService.name} (Thay thế)",
+          formatPrice(newService.price.toDouble()),
+          quantity: newService.quantity,
+          isStrikethrough: false,
+        ),
+      ]);
+      return widgets;
+    }
+
+    // Case 5: Không có thay đổi
+    widgets.add(buildPriceItem(
+      newService.name,
+      formatPrice(newService.price.toDouble()),
+      quantity: newService.quantity,
+    ));
+    return widgets;
+  }
+
+  List<Widget> _buildNonTruckServiceWidgets(
+      BookingDetailResponseEntity newService) {
+    List<Widget> widgets = [];
+
+    // Case 1: Không có order cũ -> service mới
+    if (orderOld == null) {
+      widgets.add(buildPriceItem(
+        "${newService.name} (Mới)",
+        formatPrice(newService.price.toDouble()),
+        quantity: newService.quantity,
+        isStrikethrough: false,
+      ));
+      return widgets;
+    }
+
+    // Tìm service non-truck cũ
+    final oldServiceNonTruck = orderOld?.bookingDetails.firstWhere(
+      (e) => e.serviceId == newService.serviceId && e.type != "TRUCK",
+      orElse: () => _createEmptyBookingDetail(),
+    );
+
+    // Case 2: Service non-truck mới
+    if (oldServiceNonTruck?.serviceId == 0) {
+      widgets.add(buildPriceItem(
+        "${newService.name} (Mới)",
+        formatPrice(newService.price.toDouble()),
+        quantity: newService.quantity,
+        isStrikethrough: false,
+      ));
+      return widgets;
+    }
+
+    // Case 3: Cùng service và có thay đổi (giá hoặc số lượng)
+    if (newService.serviceId == oldServiceNonTruck?.serviceId &&
+        (newService.price != oldServiceNonTruck?.price ||
+            newService.quantity != oldServiceNonTruck?.quantity)) {
+      widgets.addAll([
+        buildPriceItem(
+          oldServiceNonTruck!.name,
+          formatPrice(oldServiceNonTruck.price.toDouble()),
+          isStrikethrough: true,
+          quantity: oldServiceNonTruck.quantity,
+        ),
+        buildPriceItem(
+          newService.name,
+          formatPrice(newService.price.toDouble()),
+          quantity: newService.quantity,
+        ),
+      ]);
+      return widgets;
+    }
+
+    // Case 4: Không có thay đổi
+    widgets.add(buildPriceItem(
+      newService.name,
+      formatPrice(newService.price.toDouble()),
+      quantity: newService.quantity,
+    ));
+    return widgets;
+  }
+
+  List<Widget> _buildDepositWidgets() {
+    List<Widget> widgets = [];
+
+    if (orderOld == null) {
+      widgets.add(buildPriceItem(
+        'Tiền đặt cọc',
+        formatPrice(order.deposit.toDouble()),
+      ));
+      return widgets;
+    }
+
+    if (order.deposit == orderOld?.deposit) {
+      widgets.add(buildPriceItem(
+        'Tiền đặt cọc',
+        formatPrice(order.deposit.toDouble()),
+      ));
+    } else {
+      widgets.addAll([
+        buildPriceItem(
+          'Tiền đặt cọc cũ',
+          formatPrice(orderOld?.deposit.toDouble() ?? 0),
+          isStrikethrough: true,
+        ),
+        buildPriceItem(
+          'Tiền đặt cọc mới',
+          formatPrice(order.deposit.toDouble()),
+          isStrikethrough: false,
+        ),
+      ]);
+    }
+
+    return widgets;
+  }
+
+  Widget _buildTotalPrice(AsyncValue<dynamic> bookingAsync) {
+    if (orderOld == null &&
+        (order.vouchers == null || order.vouchers!.isEmpty)) {
+      return buildSummary(
+        'Tổng giá',
+        formatPrice(order.total.toDouble()),
+        fontWeight: FontWeight.w600,
+      );
+    }
+
+    final bool pricesEqual = (bookingAsync.value?.total == orderOld?.total) ||
+        (order.total == orderOld?.total);
+
+    if (pricesEqual) {
+      return buildSummary(
+        'Tổng giá',
+        formatPrice(
+            bookingAsync.value?.total.toDouble() ?? order.total.toDouble()),
+        fontWeight: FontWeight.w600,
+      );
+    }
+
+    return Column(
+      children: [
+        buildPriceItem(
+          'Tổng giá cũ',
+          formatPrice(orderOld?.total.toDouble() ?? 0),
+          isStrikethrough: true,
+        ),
+        buildPriceItem(
+          'Tổng giá mới',
+          formatPrice(
+            bookingAsync.value?.total.toDouble() ?? order.total.toDouble(),
+          ),
+          isStrikethrough: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegend() {
+    return FittedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(width: 10, height: 12, color: Colors.red),
+          const SizedBox(width: 8),
+          const Text('Thông tin cũ', style: TextStyle(fontSize: 10)),
+          const SizedBox(width: 16),
+          Container(width: 10, height: 12, color: Colors.green),
+          const SizedBox(width: 8),
+          const Text('Thông tin cập nhật', style: TextStyle(fontSize: 10)),
+          const SizedBox(width: 16),
+          Container(width: 10, height: 12, color: Colors.black),
+          const SizedBox(width: 8),
+          const Text('Không thay đổi', style: TextStyle(fontSize: 10)),
+        ],
       ),
     );
   }
