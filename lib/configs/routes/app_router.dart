@@ -2,8 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/configs/routes/guard/auth_guard.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/booking_screen_service.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home.dart';
+import 'package:movemate/features/booking/presentation/screens/review_screen/review_at_home/review_at_home_reviewed.dart';
 import 'package:movemate/features/booking/presentation/screens/review_screen/review_online/review_online.dart';
 import 'package:movemate/features/booking/presentation/screens/service_screen/service_screen.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/fee_system/system_fee_screen.dart';
@@ -16,6 +18,8 @@ import 'package:movemate/features/order/presentation/screens/order_detail_screen
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/refund_screen/refund_screen.dart';
 import 'package:movemate/features/order/presentation/screens/porter_tracking_map/porter_tracking_map.dart';
 import 'package:movemate/features/order/presentation/widgets/details/time_line_booking.dart';
+import 'package:movemate/features/order/presentation/widgets/tab_container/driver_uploaded_image_screen.dart';
+import 'package:movemate/features/order/presentation/widgets/tab_container/porter_uploaded_image_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/last_payment/last_payment_screen.dart';
 import 'package:movemate/features/payment/presentation/screens/last_payment/last_transaction_result_cash_payment/cash_payment_waiting.dart';
 import 'package:movemate/features/payment/presentation/screens/last_payment/last_transaction_result_cash_payment/last_transaction_result_cash_payment.dart';
@@ -225,6 +229,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           // initial: true,
           page: ServiceScreenRoute.page,
+        ),
+        AutoRoute(
+          // initial: true,
+          page: PorterUploadedImageScreenRoute.page,
+        ),
+        AutoRoute(
+          // initial: true,
+          page: DriverUploadedImageScreenRoute.page,
         ),
 
         //xem bảng giá niêm yết xe

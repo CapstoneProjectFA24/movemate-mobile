@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/assignment_response_entity.dart';
+import 'package:movemate/features/booking/domain/entities/booking_response/booking_response_entity.dart';
+import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/screens/order_detail_screen.dart/order_details_screen.dart';
 import 'package:movemate/features/profile/domain/entities/profile_entity.dart';
@@ -129,6 +131,10 @@ class ListItemWidget extends HookConsumerWidget {
       }
     }
 
+    final checkStaffTypeDriver = item.staffType.toUpperCase() == "DRIVER";
+    final checkStaffTypePorter = item.staffType.toUpperCase() == "PORTER";
+
+    final canShowCheckImage = item.isResponsible == true;
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Card(
@@ -211,7 +217,7 @@ class ListItemWidget extends HookConsumerWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       FittedBox(
                         child: Row(
                           children: [
@@ -241,6 +247,45 @@ class ListItemWidget extends HookConsumerWidget {
                           ],
                         ),
                       ),
+                      if (canShowCheckImage) const SizedBox(height: 13),
+                      if (canShowCheckImage)
+                        InkWell(
+                          onTap: () {
+                            if (item.staffType == 'DRIVER') {
+                              print('check xem hinh tai xe');
+                              context.router.push(
+                                  DriverUploadedImageScreenRoute(job: order));
+                            } else {
+                              context.router.push(
+                                  PorterUploadedImageScreenRoute(job: order));
+                              print('check xem hinh boc vac');
+                            }
+
+                            // context.router.push();
+                          },
+                          child: FittedBox(
+                            child: Row(
+                              children: [
+                                if (checkStaffTypeDriver)
+                                  const Text(
+                                    ' Xem hình ảnh cạp nhật tài xế',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                if (checkStaffTypePorter)
+                                  const Text(
+                                    ' Xem hình ảnh cạp nhật bốc vác',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),

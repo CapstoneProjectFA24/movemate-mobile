@@ -112,6 +112,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DriverUploadedImageScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<DriverUploadedImageScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DriverUploadedImageScreen(
+          key: args.key,
+          job: args.job,
+        ),
+      );
+    },
     HomeScreenRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -308,6 +318,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PorterUploadedImageScreenRoute.name: (routeData) {
+      final args = routeData.argsAs<PorterUploadedImageScreenRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PorterUploadedImageScreen(
+          key: args.key,
+          job: args.job,
+        ),
+      );
+    },
     PrivacyPolicyScreenRoute.name: (routeData) {
       final args = routeData.argsAs<PrivacyPolicyScreenRouteArgs>(
           orElse: () => const PrivacyPolicyScreenRouteArgs());
@@ -371,6 +391,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ReviewAtHome(
           key: args.key,
           order: args.order,
+        ),
+      );
+    },
+    ReviewAtHomeReviewedRoute.name: (routeData) {
+      final args = routeData.argsAs<ReviewAtHomeReviewedRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ReviewAtHomeReviewed(
+          key: args.key,
+          order: args.order,
+          orderOld: args.orderOld,
         ),
       );
     },
@@ -863,6 +894,45 @@ class CouponDetailScreenRouteArgs {
   @override
   String toString() {
     return 'CouponDetailScreenRouteArgs{key: $key, promotion: $promotion}';
+  }
+}
+
+/// generated route for
+/// [DriverUploadedImageScreen]
+class DriverUploadedImageScreenRoute
+    extends PageRouteInfo<DriverUploadedImageScreenRouteArgs> {
+  DriverUploadedImageScreenRoute({
+    Key? key,
+    required OrderEntity job,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DriverUploadedImageScreenRoute.name,
+          args: DriverUploadedImageScreenRouteArgs(
+            key: key,
+            job: job,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DriverUploadedImageScreenRoute';
+
+  static const PageInfo<DriverUploadedImageScreenRouteArgs> page =
+      PageInfo<DriverUploadedImageScreenRouteArgs>(name);
+}
+
+class DriverUploadedImageScreenRouteArgs {
+  const DriverUploadedImageScreenRouteArgs({
+    this.key,
+    required this.job,
+  });
+
+  final Key? key;
+
+  final OrderEntity job;
+
+  @override
+  String toString() {
+    return 'DriverUploadedImageScreenRouteArgs{key: $key, job: $job}';
   }
 }
 
@@ -1502,6 +1572,45 @@ class PorterTrackingMapRouteArgs {
 }
 
 /// generated route for
+/// [PorterUploadedImageScreen]
+class PorterUploadedImageScreenRoute
+    extends PageRouteInfo<PorterUploadedImageScreenRouteArgs> {
+  PorterUploadedImageScreenRoute({
+    Key? key,
+    required OrderEntity job,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PorterUploadedImageScreenRoute.name,
+          args: PorterUploadedImageScreenRouteArgs(
+            key: key,
+            job: job,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PorterUploadedImageScreenRoute';
+
+  static const PageInfo<PorterUploadedImageScreenRouteArgs> page =
+      PageInfo<PorterUploadedImageScreenRouteArgs>(name);
+}
+
+class PorterUploadedImageScreenRouteArgs {
+  const PorterUploadedImageScreenRouteArgs({
+    this.key,
+    required this.job,
+  });
+
+  final Key? key;
+
+  final OrderEntity job;
+
+  @override
+  String toString() {
+    return 'PorterUploadedImageScreenRouteArgs{key: $key, job: $job}';
+  }
+}
+
+/// generated route for
 /// [PrivacyPolicyScreen]
 class PrivacyPolicyScreenRoute
     extends PageRouteInfo<PrivacyPolicyScreenRouteArgs> {
@@ -1724,6 +1833,50 @@ class ReviewAtHomeRouteArgs {
   @override
   String toString() {
     return 'ReviewAtHomeRouteArgs{key: $key, order: $order}';
+  }
+}
+
+/// generated route for
+/// [ReviewAtHomeReviewed]
+class ReviewAtHomeReviewedRoute
+    extends PageRouteInfo<ReviewAtHomeReviewedRouteArgs> {
+  ReviewAtHomeReviewedRoute({
+    Key? key,
+    required OrderEntity order,
+    required OrderEntity? orderOld,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ReviewAtHomeReviewedRoute.name,
+          args: ReviewAtHomeReviewedRouteArgs(
+            key: key,
+            order: order,
+            orderOld: orderOld,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ReviewAtHomeReviewedRoute';
+
+  static const PageInfo<ReviewAtHomeReviewedRouteArgs> page =
+      PageInfo<ReviewAtHomeReviewedRouteArgs>(name);
+}
+
+class ReviewAtHomeReviewedRouteArgs {
+  const ReviewAtHomeReviewedRouteArgs({
+    this.key,
+    required this.order,
+    required this.orderOld,
+  });
+
+  final Key? key;
+
+  final OrderEntity order;
+
+  final OrderEntity? orderOld;
+
+  @override
+  String toString() {
+    return 'ReviewAtHomeReviewedRouteArgs{key: $key, order: $order, orderOld: $orderOld}';
   }
 }
 

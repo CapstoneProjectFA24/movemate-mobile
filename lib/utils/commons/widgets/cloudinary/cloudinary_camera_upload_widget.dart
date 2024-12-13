@@ -11,6 +11,7 @@ import 'package:movemate/features/booking/domain/entities/booking_request/resour
 
 class CloudinaryCameraUploadWidget extends HookConsumerWidget {
   final bool disabled;
+  final bool disabledDelete;
   final Function(String url, String publicId) onImageUploaded;
   final Function(String publicId) onImageRemoved;
   final List<String> imagePublicIds;
@@ -35,6 +36,7 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
     required this.imagePublicIds,
     required this.onImageTapped,
     this.optionalButton,
+    this.disabledDelete = false,
     this.showCameraButton = true,
     this.onUploadComplete,
     this.overlayText, // Optional
@@ -195,19 +197,20 @@ class CloudinaryCameraUploadWidget extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Material(
-                        color: Colors.black.withOpacity(0.5),
-                        shape: const CircleBorder(),
-                        child: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.white),
-                          onPressed: () =>
-                              onImageRemoved(imagePublicIds[index]),
+                    if (!disabledDelete)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Material(
+                          color: Colors.black.withOpacity(0.5),
+                          shape: const CircleBorder(),
+                          child: IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.white),
+                            onPressed: () =>
+                                onImageRemoved(imagePublicIds[index]),
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 );
               },

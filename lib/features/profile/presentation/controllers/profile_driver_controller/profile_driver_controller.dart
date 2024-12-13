@@ -30,20 +30,22 @@ class ProfileDriverController extends _$ProfileDriverController {
   ) async {
     StaffProfileEntity? profileDriverInfor;
 //flag
-    print("controller flag");
+    print(
+        "----------------------------controller flag-------------------------------");
     state = const AsyncLoading();
     final profileRepository = ref.read(profileRepositoryProvider);
     final authRepository = ref.read(authRepositoryProvider);
     final user = await SharedPreferencesUtils.getInstance('user_token');
 
     state = await AsyncValue.guard(() async {
-      print("controlle 2 flag");
+      // print("controlle 2 flag");
       final response = await profileRepository.getProfileDriverInforById(
         accessToken: APIConstants.prefixToken + user!.tokens.accessToken,
         id: id,
       );
       profileDriverInfor = response.payload;
-      print("controller 3 ${profileDriverInfor?.email}");
+      print("controller account  ${profileDriverInfor?.email}");
+      // print("controller passwork  ${profileDriverInfor}");
     });
 
     if (state.hasError) {
