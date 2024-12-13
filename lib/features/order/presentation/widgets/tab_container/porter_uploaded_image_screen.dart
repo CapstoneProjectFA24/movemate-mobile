@@ -292,7 +292,7 @@ class PorterUploadedImageScreen extends HookConsumerWidget {
       appBar: const CustomAppBar(
         backgroundColor: primaryOrange,
         backButtonColor: AssetsConstants.whiteColor,
-        title: "Xác nhận hình ảnh",
+        title: "Xem hình ảnh bốc vác gửi lên",
         showBackButton: true,
       ),
       body: Stack(
