@@ -157,6 +157,7 @@ class IncidentsContentModal extends HookConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     // Add logic for when the user selects this option
+                    Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white, // White background

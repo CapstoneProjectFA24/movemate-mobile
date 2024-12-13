@@ -47,18 +47,24 @@ class BalanceIndicator extends HookConsumerWidget {
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: FadeInLeft(
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 7.0),
-          decoration: BoxDecoration(
-            color: AssetsConstants.primaryLighter,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: LabelText(
-              content: 'Số dư ${formatPrice(walletUser.toDouble())}',
-              size: 14,
-              fontWeight: FontWeight.w600,
-              color: AssetsConstants.whiteColor,
+        child: GestureDetector(
+          onTap: () {
+            print('checking wallet ${useFetchResultWallet.data?.balance}');
+            useFetchResultWallet.refresh();
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 7.0),
+            decoration: BoxDecoration(
+              color: AssetsConstants.primaryLighter,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: LabelText(
+                content: 'Số dư ${formatPrice(walletUser.toDouble())}',
+                size: 14,
+                fontWeight: FontWeight.w600,
+                color: AssetsConstants.whiteColor,
+              ),
             ),
           ),
         ),
