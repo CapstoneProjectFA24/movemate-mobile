@@ -49,7 +49,6 @@ class BalanceIndicator extends HookConsumerWidget {
       child: FadeInLeft(
         child: GestureDetector(
           onTap: () {
-            print('checking wallet ${useFetchResultWallet.data?.balance}');
             useFetchResultWallet.refresh();
           },
           child: Container(
@@ -59,12 +58,22 @@ class BalanceIndicator extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Center(
-              child: LabelText(
-                content: 'Số dư ${formatPrice(walletUser.toDouble())}',
-                size: 14,
-                fontWeight: FontWeight.w600,
-                color: AssetsConstants.whiteColor,
-              ),
+              child: useFetchResultWallet.isFetchingData
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AssetsConstants.whiteColor),
+                      ),
+                    )
+                  : LabelText(
+                      content: 'Số dư ${formatPrice(walletUser.toDouble())}',
+                      size: 14,
+                      fontWeight: FontWeight.w600,
+                      color: AssetsConstants.whiteColor,
+                    ),
             ),
           ),
         ),
