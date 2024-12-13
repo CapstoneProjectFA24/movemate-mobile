@@ -91,9 +91,6 @@ class ListTransactionScreen extends HookConsumerWidget {
                   children: [
                     SizedBox(width: 35), // Optional space between cards
                     CreditCardWidget(
-                        // cardNumber: '1234 5678 9876 5432',
-                        // cardHolder: 'John Doe',
-                        // expiryDate: '11/24',
                         ),
                   ],
                 ),

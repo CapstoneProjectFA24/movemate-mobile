@@ -13,6 +13,17 @@ class CreditCardWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Get screen size
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 360;
+    final isMediumScreen = screenSize.width < 600 && screenSize.width >= 360;
+
+    // Calculate responsive dimensions
+    final cardWidth = screenSize.width < 600
+        ? screenSize.width * 0.80 // For mobile devices
+        : screenSize.width * 0.4; // For tablets and larger
+    final cardPadding = screenSize.width * 0.05;
+
     final wallet = ref.read(walletProvider);
     // final isCardLocked = useState<bool>(true);
     final isCardLocked = useState<bool>(wallet?.isLocked ?? true);
@@ -167,6 +178,7 @@ class CreditCardWidget extends HookConsumerWidget {
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
                               ),
+                              maxLength: 20,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Tên không được để trống';
@@ -283,8 +295,8 @@ class CreditCardWidget extends HookConsumerWidget {
         }
       },
       child: Container(
-        width: 300,
-        padding: const EdgeInsets.all(20),
+        width: cardWidth,
+        padding: EdgeInsets.all(cardPadding),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           gradient: isCardLocked.value
@@ -353,11 +365,17 @@ class CreditCardWidget extends HookConsumerWidget {
                               fontSize: 12,
                             ),
                           ),
-                          Text(
-                            cardHolder.value,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
+                          FittedBox(
+                            child: Row(
+                              children: [
+                                Text(
+                                  cardHolder.value,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
