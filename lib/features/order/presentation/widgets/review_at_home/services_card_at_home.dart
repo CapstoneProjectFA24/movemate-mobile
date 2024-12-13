@@ -86,6 +86,7 @@ class ServicesCardAtHome extends HookConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
+
             // Compare the service details from both lists
             Expanded(
               child: Scrollbar(
@@ -287,6 +288,7 @@ class ServicesCardAtHome extends HookConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
+
             // Tổng giá
             if (orderOld != null ||
                 (order.vouchers?.length != 0 &&

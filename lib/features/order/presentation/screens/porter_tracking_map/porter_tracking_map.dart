@@ -88,7 +88,7 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
           if (_isFollowingDriver) {
             _throttledCameraUpdate();
           }
-          _updateDriverMarker();
+          _updatePorterMarker();
         });
       }
     });
@@ -135,30 +135,81 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
   }
 
   Map<String, bool> _getPorterAssignmentStatus(List assignments) {
+    if (widget.staffId.isEmpty) {
+      return {
+        'isPorterWaiting': false,
+        'isPorterAssigned': false,
+        'isPorterIncoming': false,
+        'isPorterArrived': false,
+        'isPorterInprogress': false,
+        'isPorterPacking': false,
+        'isPorterOngoing': false,
+        'isPorterDelivered': false,
+        'isPorterUnloaded': false,
+        'isPorterCompleted': false,
+      };
+    }
+
+    final staffAssignment = assignments.firstWhere(
+      (a) {
+        return a['StaffType'] == 'PORTER' &&
+            a['UserId'].toString() == widget.staffId.toString();
+      },
+      orElse: () => null,
+    );
+
+    if (staffAssignment == null) {
+      return {
+        'isPorterWaiting': false,
+        'isPorterAssigned': false,
+        'isPorterIncoming': false,
+        'isPorterArrived': false,
+        'isPorterInprogress': false,
+        'isPorterPacking': false,
+        'isPorterOngoing': false,
+        'isPorterDelivered': false,
+        'isPorterUnloaded': false,
+        'isPorterCompleted': false,
+      };
+    }
     return {
-      'isPorterWaiting': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "WAITING"),
-      'isPorterAssigned': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ASSIGNED"),
-      'isPorterIncoming': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "INCOMING"),
-      'isPorterArrived': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ARRIVED"),
-      'isPorterInprogress': assignments.any(
-          (a) => a['StaffType'] == "PORTER" && a["Status"] == "IN_PROGRESS"),
-      'isPorterPacking': assignments
-          .any((a) => a["StaffType"] == "PORTER" && a["Status"] == "PACKING"),
-      'isPorterOngoing': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ONGOING"),
-      'isPorterDelivered': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "DELIVERED"),
-      'isPorterUnloaded': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "UNLOADED"),
-      'isPorterCompleted': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "COMPLETED"),
-      'isPorterFailed': assignments
-          .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "FAILED"),
+      'isPorterWaiting': staffAssignment["Status"] == "WAITING",
+      'isPorterAssigned': staffAssignment["Status"] == "ASSIGNED",
+      'isPorterIncoming': staffAssignment["Status"] == "INCOMING",
+      'isPorterArrived': staffAssignment["Status"] == "ARRIVED",
+      'isPorterInprogress': staffAssignment["Status"] == "IN_PROGRESS",
+      'isPorterPacking': staffAssignment["Status"] == "PACKING",
+      'isPorterOngoing': staffAssignment["Status"] == "ONGOING",
+      'isPorterDelivered': staffAssignment["Status"] == "DELIVERED",
+      'isPorterUnloaded': staffAssignment["Status"] == "UNLOADED",
+      'isPorterCompleted': staffAssignment["Status"] == "COMPLETED",
+      'isPorterFailed': staffAssignment["Status"] == "FAILED",
     };
+
+    // return {
+    //   'isPorterWaiting': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "WAITING"),
+    //   'isPorterAssigned': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ASSIGNED"),
+    //   'isPorterIncoming': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "INCOMING"),
+    //   'isPorterArrived': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ARRIVED"),
+    //   'isPorterInprogress': assignments.any(
+    //       (a) => a['StaffType'] == "PORTER" && a["Status"] == "IN_PROGRESS"),
+    //   'isPorterPacking': assignments
+    //       .any((a) => a["StaffType"] == "PORTER" && a["Status"] == "PACKING"),
+    //   'isPorterOngoing': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "ONGOING"),
+    //   'isPorterDelivered': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "DELIVERED"),
+    //   'isPorterUnloaded': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "UNLOADED"),
+    //   'isPorterCompleted': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "COMPLETED"),
+    //   'isPorterFailed': assignments
+    //       .any((a) => a['StaffType'] == "PORTER" && a["Status"] == "FAILED"),
+    // };
   }
 
   Map<String, bool> _getBuildRouteFlags(
@@ -267,13 +318,15 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
     }
   }
 
-  Future<void> _updateDriverMarker() async {
+  Future<void> _updatePorterMarker() async {
     if (_navigationController == null || _staffLocation == null) return;
 
     final bookingData = await _getBookingData();
     if (bookingData != null &&
         bookingData["Assignments"] != null &&
         bookingData["Status"] != null) {
+      LatLng pickupPoint = _getPickupPointLatLng();
+      LatLng deliveryPoint = _getDeliveryPointLatLng();
       // logic
       final assignments = bookingData["Assignments"] as List;
       final fireStoreBookingStatus = bookingData["Status"] as String;
@@ -293,32 +346,33 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
       // print(
       //     'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
       // Add destination marker
-      if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
+      if (buildRouteFlags["isPorterStartBuildRoute"]!) {
         markers.add(NavigationMarker(
-          imagePath:
-              "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
+          imagePath: "assets/icons/icons8-home-80.png",
           height: 80,
           width: 80,
-          latLng: _getPickupPointLatLng(),
+          latLng: pickupPoint,
         ));
-      } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
+      } else if (buildRouteFlags["isPorterAtDeliveryPointBuildRoute"]!) {
         markers.add(NavigationMarker(
-          imagePath:
-              "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
+          imagePath: "assets/icons/icons8-home-80.png",
           height: 80,
           width: 80,
-          latLng: _getDeliveryPointLatLng(),
+          latLng: deliveryPoint,
         ));
       }
-// assets/images/booking/vehicles/abf959e9.png
       markers.add(NavigationMarker(
-        // imagePath: "assets/images/booking/vehicles/truck1.png",
-        imagePath: "assets/images/booking/vehicles/abf959e9.png",
+        imagePath: "assets/images/booking/vehicles/truck1.png",
         height: 60,
         width: 60,
         latLng: _staffLocation!,
       ));
 
+      _currentMarkers = await _navigationController!.addImageMarkers(markers);
+      if (_staffLocation != null) {
+        await _navigationController!
+            .removeAllMarkers(); // Xóa tất cả markers cũ
+      }
       _currentMarkers = await _navigationController!.addImageMarkers(markers);
     }
   }
@@ -355,10 +409,9 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: const CustomAppBar(
-        title: "Theo dõi tiến trình của tài xế",
+        title: "Theo dõi tiến trình của bốc vác",
         backButtonColor: AssetsConstants.whiteColor,
         backgroundColor: AssetsConstants.mainColor,
       ),
@@ -371,7 +424,7 @@ class PorterTrackingMapState extends State<PorterTrackingMap> {
                 _navigationController = controller;
                 _isMapReady = true;
                 _updateMapView();
-                _updateDriverMarker();
+                _updatePorterMarker();
               });
             },
             onRouteProgressChange: (RouteProgressEvent event) {

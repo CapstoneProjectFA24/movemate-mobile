@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/details/priceItem.dart';
 import 'package:movemate/features/order/presentation/widgets/review_online/house_information.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
@@ -23,8 +24,11 @@ class ServiceCard extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(order.id.toString()));
+
+    final state = ref.watch(orderControllerProvider);
+
     return LoadingOverlay(
-      isLoading: order == null,
+      isLoading: state.isLoading,
       child: Container(
         width: double.infinity,
         height: 520, // Cố định chiều cao của buildServiceCard
@@ -98,14 +102,19 @@ class ServiceCard extends HookConsumerWidget {
                       if (newService.type == "TRUCK") {
                         if (oldServiceTruck?.serviceId != 0) {
                           if (newService.serviceId == oldService?.serviceId) {
-                            if (newService.price == oldService?.price) {
+                            print(
+                                "test truck 1 oldtruck ${oldService?.serviceId.toString()}");
+                            print(
+                                "test truck 2 newtruck ${newService.serviceId.toString()}");
+                            if (newService.price.toDouble() ==
+                                oldService?.price.toDouble()) {
                               return buildPriceItem(newService.name,
                                   formatPrice(newService.price.toDouble()));
                             } else {
                               return Column(
                                 children: [
                                   buildPriceItem(
-                                      " ${oldService?.name}",
+                                      "${oldService?.name}",
                                       formatPrice(
                                           (oldService?.price ?? 0).toDouble()),
                                       isStrikethrough: true),
@@ -116,6 +125,10 @@ class ServiceCard extends HookConsumerWidget {
                               );
                             }
                           } else {
+                            print(
+                                "test truck 3 oldtruck ${oldService?.serviceId.toString()}");
+                            print(
+                                "test truck 4 newtruck ${newService.serviceId.toString()}");
                             return Column(
                               children: [
                                 buildPriceItem(
@@ -169,18 +182,24 @@ class ServiceCard extends HookConsumerWidget {
                         if (newService.serviceId ==
                                 oldServiceNonTruck?.serviceId &&
                             newService.price == oldServiceNonTruck?.price) {
+                          print('go here 1');
                           return buildPriceItem(
                             newService.name,
                             formatPrice(newService.price.toDouble()),
                             quantity: newService.quantity,
+                            // isStrikethrough: false,
                           );
-                        } else if (newService.serviceId ==
+                        }
+
+                        if (newService.serviceId ==
                                 oldServiceNonTruck?.serviceId &&
                             newService.price != oldServiceNonTruck?.price) {
+                          print('go here 2');
+
                           return Column(
                             children: [
                               buildPriceItem(
-                                oldServiceNonTruck?.name ?? 'Unknown',
+                                "${oldServiceNonTruck?.name}" ?? 'Unknown',
                                 formatPrice(
                                     oldServiceNonTruck?.price.toDouble() ?? 0),
                                 isStrikethrough: true,
@@ -194,32 +213,47 @@ class ServiceCard extends HookConsumerWidget {
                               ),
                             ],
                           );
-                        } else if (newService.serviceId !=
+                        }
+                        if (newService.serviceId !=
                                 oldServiceNonTruck?.serviceId &&
                             newService.price != oldServiceNonTruck?.price &&
-                            newService.type == oldServicesNonTruck?.type) {
-                          return Column(
+                            newService.type != oldServicesNonTruck?.type) {
+                          print('go here 3');
+
+                          return const Column(
                             children: [
-                              buildPriceItem(
-                                oldServicesNonTruck?.name ?? 'Unknown',
-                                formatPrice(
-                                    oldServicesNonTruck?.price.toDouble() ?? 0),
-                                isStrikethrough: true,
-                                quantity: oldServicesNonTruck?.quantity ?? 0,
-                              ),
-                              buildPriceItem(
-                                newService.name,
-                                formatPrice(newService.price.toDouble()),
-                                quantity: newService.quantity,
-                                isStrikethrough: false,
-                              ),
+                              // buildPriceItem(
+                              //   "${oldServicesNonTruck?.name}" ?? 'Unknown',
+                              //   formatPrice(
+                              //       oldServicesNonTruck?.price.toDouble() ?? 0),
+                              //   isStrikethrough: true,
+                              //   quantity: oldServicesNonTruck?.quantity ?? 0,
+                              // ),
+                              // buildPriceItem(
+                              //   newService.name,
+                              //   formatPrice(newService.price.toDouble()),
+                              //   quantity: newService.quantity,
+                              //   isStrikethrough: false,
+                              // ),
                             ],
                           );
-                        } else {
+                        }
+                        //  else if (  ) {
+                        //   return buildPriceItem(
+                        //     oldService!.name,
+                        //     formatPrice(oldService.price.toDouble()),
+                        //     quantity: oldService.quantity,
+                        //     // isStrikethrough: true,
+                        //   );
+                        // }
+                        else {
+                          print('go here 4');
+
                           return buildPriceItem(
                             newService.name,
                             formatPrice(newService.price.toDouble()),
                             quantity: newService.quantity,
+                            // isStrikethrough: true,
                           );
                         }
                       }
