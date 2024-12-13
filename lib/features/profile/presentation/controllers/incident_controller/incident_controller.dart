@@ -74,4 +74,5 @@ class IncidentController extends _$IncidentController {
 
     return incidents;
   }
+
 }

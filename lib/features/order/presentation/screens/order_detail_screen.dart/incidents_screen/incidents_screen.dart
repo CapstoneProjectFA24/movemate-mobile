@@ -77,7 +77,7 @@ class IncidentsScreen extends HookConsumerWidget {
     final supportType = useState<String?>('Vỡ hàng');
     final isInsurance = useState<bool?>(false);
 
-    final stateIsLoading = useState<bool?>(false);
+    final stateIsLoading = useState<bool>(false);
 
     final state = ref.watch(orderControllerProvider);
 
@@ -106,6 +106,7 @@ class IncidentsScreen extends HookConsumerWidget {
     final fullScreenImage = useState<String?>(null);
     final imageError = useState<String?>(null);
     final amountError = useState<String?>(null);
+    final reasonError = useState<String?>(null);
 
     // Thêm useEffect để lấy và format địa chỉ
     useEffect(() {
@@ -507,6 +508,14 @@ class IncidentsScreen extends HookConsumerWidget {
                     // enabled: isRequestSent
                     //     .value, // Disable editing for "Yêu cầu đã gửi"
                     maxLines: 4,
+                    onChanged: (value) {
+                      // Update error message khi người dùng nhập
+                      if (value.trim().isEmpty) {
+                        reasonError.value = 'Yêu cầu nhập lý do';
+                      } else {
+                        reasonError.value = null;
+                      }
+                    },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.orange),
@@ -518,6 +527,10 @@ class IncidentsScreen extends HookConsumerWidget {
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8),
+                      ),
+                      errorText: reasonError.value,
+                      errorStyle: const TextStyle(
+                        color: Colors.red,
                       ),
                     ),
                   ),
@@ -581,136 +594,151 @@ class IncidentsScreen extends HookConsumerWidget {
                       style: TextStyle(color: Colors.grey, fontSize: 12)),
 
                   const SizedBox(height: 16),
-
                   SizedBox(
-                    width: double.infinity, // Chiều ngang toàn màn hình
+                    width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: stateIsLoading.value == false
-                          ? () async {
-                              description.value = descriptionController.text;
+                      onPressed: () async {
+                        if (stateIsLoading.value)
+                          return; // Prevent double submission
 
-                              stateIsLoading.value = true;
+                        try {
+                          description.value = descriptionController.text;
+                          reason.value = reasonController.text;
 
-                              reason.value = reasonController.text;
-                              final bookingState =
-                                  ref.watch(orderControllerProvider);
+                          // Convert amount
+                          final estimatedAmountText = estimatedAmountController
+                              .text
+                              .replaceAll(RegExp(r'[^0-9]'), '');
+                          final amount =
+                              double.tryParse(estimatedAmountText) ?? 0.0;
 
-                              final isLoading = bookingState is AsyncLoading;
+                          // Validation checks
+                          bool hasError = false;
+                          if (userReportRequest.value.resourceList.isEmpty) {
+                            imageError.value = 'Yêu cầu chụp hình xác minh';
+                            hasError = true;
+                          }
+                          if (amount == 0) {
+                            amountError.value = 'Yêu cầu nhập số tiền';
+                            hasError = true;
+                          } else if (amount < 10000) {
+                            amountError.value = 'Giá phải lớn hơn 10,000 đ';
+                            hasError = true;
+                          }
+                          if (reasonController.text.trim().isEmpty) {
+                            reasonError.value = 'Yêu cầu nhập lý do';
+                            hasError = true;
+                          }
+                          if (hasError) return;
 
-                              if (isLoading) return;
+                          // Show loading indicator
+                          stateIsLoading.value = true;
 
-                              // Convert the text from the controller to a double value
-                              estimatedAmount.value = double.tryParse(
-                                      estimatedAmountController.text.replaceAll(
-                                          RegExp(r'[^0-9.]'),
-                                          '') // Remove non-numeric characters
-                                      ) ??
-                                  0;
-                              final estimatedAmountText =
-                                  estimatedAmountController.text
-                                      .replaceAll(RegExp(r'[^0-9]'), '');
+                          // Show loading dialog
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (ctx) => const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      AssetsConstants.primaryMain),
+                                ),
+                              ),
+                            );
+                          }
 
-                              final amount =
-                                  double.tryParse(estimatedAmountText) ?? 0.0;
+                          // Get current position
+                          Position currentPosition = await getCurrentPosition();
+                          var addressInfo =
+                              await getAddressFromLatLng(currentPosition);
 
-                              bool hasError = false;
+                          // Create request
+                          userReportRequest.value = UserReportRequest(
+                            bookingId: order.id,
+                            resourceList: userReportRequest.value.resourceList,
+                            location: addressInfo['display'],
+                            point:
+                                "${currentPosition.latitude}, ${currentPosition.longitude}",
+                            description: description.value,
+                            title: supportType.value,
+                            reason: reason.value,
+                            estimatedAmount: amount,
+                            isInsurance: isInsurance.value,
+                          );
 
-                              // Kiểm tra nếu không có hình ảnh
-                              if (userReportRequest
-                                  .value.resourceList.isEmpty) {
-                                imageError.value = 'Yêu cầu chụp hình xác minh';
-                                hasError = true;
-                              }
+                          // Send request
+                          await ref
+                              .read(orderControllerProvider.notifier)
+                              .postUserReport(
+                                  userReportRequest.value, context, order.id);
 
-                              // Kiểm tra nếu số tiền bằng 0 hoặc không hợp lệ
-                              if (amount == 0) {
-                                amountError.value = 'Yêu cầu nhập số tiền';
-                                hasError = true;
-                              } else if (amount < 10000) {
-                                amountError.value = 'Giá phải lớn hơn 10,000 đ';
-                                hasError = true;
-                              }
+                          // Handle success
+                          if (context.mounted) {
+                            Navigator.of(context)
+                                .pop(); // Remove loading dialog
 
-                              if (hasError) {
-                                // Nếu có lỗi, không thực hiện gửi yêu cầu
-                                return;
-                              }
+                            // Show success message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Gửi yêu cầu thành công'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
 
-                              try {
-                                // Get current position
-                                Position currentPosition =
-                                    await getCurrentPosition();
-
-                                // Fetch address info
-                                var addressInfo =
-                                    await getAddressFromLatLng(currentPosition);
-
-                                String? displayAddress = addressInfo['display'];
-                                Position position = addressInfo['position'];
-
-                                // Create UserReportRequest
-                                userReportRequest.value = UserReportRequest(
-                                  bookingId: order.id,
-                                  resourceList:
-                                      userReportRequest.value.resourceList,
-                                  location: displayAddress,
-                                  point:
-                                      "${position.latitude}, ${position.longitude}",
-                                  description: description.value,
-                                  title: supportType.value,
-                                  reason: reason.value,
-                                  estimatedAmount: amount,
-                                  isInsurance: isInsurance.value,
-                                );
-
-                                await ref
-                                    .read(orderControllerProvider.notifier)
-                                    .postUserReport(userReportRequest.value,
-                                        context, order.id);
-
-                                // Đánh dấu yêu cầu đã được gửi
-                                isRequestSent.value = true;
-                              } catch (e) {
-                                // Xử lý lỗi nếu có
-                                print('Error sending report: $e');
-                              }
-                            }
-                          : null,
+                            // Navigate or update UI
+                            isRequestSent.value = true;
+                          }
+                        } catch (e) {
+                          // Handle error
+                          if (context.mounted) {
+                            Navigator.of(context)
+                                .pop(); // Remove loading dialog
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Lỗi: ${e.toString()}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        } finally {
+                          stateIsLoading.value = false;
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             (userReportRequest.value.resourceList.isNotEmpty &&
-                                    estimatedAmount.value != 0)
+                                    estimatedAmount.value != 0 &&
+                                    !stateIsLoading.value)
                                 ? Colors.orange
                                 : Colors.grey,
                         padding: const EdgeInsets.symmetric(
                             vertical: 14,
                             horizontal: AssetsConstants.defaultBorder),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8), // Bo góc
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Consumer(builder: (context, ref, _) {
-                        final bookingState = ref.watch(orderControllerProvider);
-                        final isLoading = bookingState is AsyncLoading;
-                        return isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AssetsConstants.whiteColor),
-                                  strokeWidth: 2.0,
-                                ),
-                              )
-                            : const LabelText(
-                                content: 'Gửi yêu cầu',
-                                size: 16,
+                      child: stateIsLoading.value
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AssetsConstants.whiteColor),
+                                strokeWidth: 2.0,
+                              ),
+                            )
+                          : const Text(
+                              'Gửi yêu cầu',
+                              style: TextStyle(
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: AssetsConstants.whiteColor,
-                              );
-                      }),
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
