@@ -268,7 +268,7 @@ class ListItemWidget extends HookConsumerWidget {
                               children: [
                                 if (checkStaffTypeDriver)
                                   const Text(
-                                    ' Xem hình ảnh cạp nhật tài xế',
+                                    ' Xem hình ảnh cập nhật tài xế',
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -276,7 +276,7 @@ class ListItemWidget extends HookConsumerWidget {
                                   ),
                                 if (checkStaffTypePorter)
                                   const Text(
-                                    ' Xem hình ảnh cạp nhật bốc vác',
+                                    ' Xem hình ảnh cập nhật bốc vác',
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
