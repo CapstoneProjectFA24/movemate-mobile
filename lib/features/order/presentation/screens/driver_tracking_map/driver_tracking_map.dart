@@ -57,8 +57,30 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
   @override
   void initState() {
     super.initState();
+
     _initNavigation();
     _initStaffTracking();
+  }
+
+  LatLng _parseCoordinates(String coordinateString) {
+    try {
+      final coordinates = coordinateString.split(',');
+      return LatLng(
+        double.parse(coordinates[0].trim()),
+        double.parse(coordinates[1].trim()),
+      );
+    } catch (e) {
+      print('Error parsing coordinates: $e');
+      return const LatLng(0, 0);
+    }
+  }
+
+  LatLng _getPickupPointLatLng() {
+    return _parseCoordinates(widget.job.pickupPoint);
+  }
+
+  LatLng _getDeliveryPointLatLng() {
+    return _parseCoordinates(widget.job.deliveryPoint);
   }
 
   Future<void> _initNavigation() async {
@@ -136,21 +158,58 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
   }
 
   Map<String, bool> _getDriverAssignmentStatus(List assignments) {
+    // print("check log id assgfn 1 ${widget.staffId}");
+    // Kiểm tra xem staffId có giá trị và không rỗng không
+    if (widget.staffId.isEmpty) {
+      // print("Staff ID is null or empty");
+      return {
+        'isDriverWaiting': false,
+        'isDriverAssigned': false,
+        'isDriverIncoming': false,
+        'isDriverArrived': false,
+        'isDriverInprogress': false,
+        'isDriverCompleted': false,
+        'isDriverFailed': false,
+      };
+    }
+
+    // print("check log id assgfn 2 ${widget.staffId}");
+
+    final staffAssignment = assignments.firstWhere(
+      (a) {
+        // print("check log Checking assignment: $a");
+        // print("check log StaffType: ${a['StaffType']}");
+        // print("check log UserId: ${a['UserId']}");
+        // print("check log Comparing with staffId: ${widget.staffId}");
+        return a['StaffType'] == 'DRIVER' &&
+            a['UserId'].toString() == widget.staffId.toString();
+      },
+      orElse: () => null,
+    );
+
+    print("check log assignment 3 $assignments");
+    print("check log assignment 4 $staffAssignment");
+
+    if (staffAssignment == null) {
+      return {
+        'isDriverWaiting': false,
+        'isDriverAssigned': false,
+        'isDriverIncoming': false,
+        'isDriverArrived': false,
+        'isDriverInprogress': false,
+        'isDriverCompleted': false,
+        'isDriverFailed': false,
+      };
+    }
+
     return {
-      'isDriverWaiting': assignments
-          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "WAITING"),
-      'isDriverAssigned': assignments
-          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "ASSIGNED"),
-      'isDriverIncoming': assignments
-          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "INCOMING"),
-      'isDriverArrived': assignments
-          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "ARRIVED"),
-      'isDriverInprogress': assignments.any(
-          (a) => a['StaffType'] == "DRIVER" && a["Status"] == "IN_PROGRESS"),
-      'isDriverCompleted': assignments
-          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "COMPLETED"),
-      'isDriverFailed': assignments
-          .any((a) => a['StaffType'] == "DRIVER" && a["Status"] == "FAILED"),
+      'isDriverWaiting': staffAssignment['Status'] == 'WAITING',
+      'isDriverAssigned': staffAssignment['Status'] == 'ASSIGNED',
+      'isDriverIncoming': staffAssignment['Status'] == 'INCOMING',
+      'isDriverArrived': staffAssignment['Status'] == 'ARRIVED',
+      'isDriverInprogress': staffAssignment['Status'] == 'IN_PROGRESS',
+      'isDriverCompleted': staffAssignment['Status'] == 'COMPLETED',
+      'isDriverFailed': staffAssignment['Status'] == 'FAILED',
     };
   }
 
@@ -225,7 +284,6 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
               _staffLocation?.longitude != pickupPoint.longitude) {
             waypoints = [pickupPoint, _staffLocation!];
           } else {
-
             showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -412,8 +470,6 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
                 );
               },
             );
-         
-         
           }
         } else if (buildRouteFlags["isDriverInProgressToBuildRoute"]!) {
           LatLng deliveryPoint = _getDeliveryPointLatLng();
@@ -803,11 +859,20 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
           waypoints: waypoints,
           profile: DrivingProfile.drivingTraffic,
         );
+        _updateDriverMarker();
       }
     }
   }
 
   Future<void> _updateDriverMarker() async {
+    final bookingData = await _getBookingData();
+    final assignments = bookingData!["Assignments"] as List;
+
+    final fireStoreBookingStatus = bookingData["Status"] as String;
+    final driverAssignmentStatus = _getDriverAssignmentStatus(assignments);
+    final buildRouteFlags =
+        _getBuildRouteFlags(driverAssignmentStatus, fireStoreBookingStatus);
+
     if (_navigationController == null || _staffLocation == null) return;
 
     if (_currentMarkers != null) {
@@ -820,54 +885,51 @@ class TrackingDriverMapState extends State<TrackingDriverMap> {
     // print(
     //     'tuan log in map ${widget.bookingStatus.isStaffDriverComingToBuildRoute} ');
     // Add destination marker
-    if (widget.bookingStatus.isStaffDriverComingToBuildRoute) {
-      markers.add(NavigationMarker(
-        imagePath:
-            "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
-        height: 80,
-        width: 80,
-        latLng: _getPickupPointLatLng(),
-      ));
-    } else if (widget.bookingStatus.isDriverInProgressToBuildRoute) {
-      markers.add(NavigationMarker(
-        imagePath:
-            "https://res.cloudinary.com/dietfw7lr/image/upload/v1731880138/house-fif-1_gif_800_600_uiug9w.gif",
-        height: 80,
-        width: 80,
-        latLng: _getDeliveryPointLatLng(),
-      ));
-    }
+    if (_navigationController != null && _staffLocation != null) {
+      LatLng pickupPoint = _getPickupPointLatLng();
+      LatLng deliveryPoint = _getDeliveryPointLatLng();
+      // print(
+      //     'check status  isStaffDriverComingToBuildRoute 1 ${buildRouteFlags["isStaffDriverComingToBuildRoute"]!}');
+      // print(
+      //     'check status  isDriverInProgressToBuildRoute 2 ${buildRouteFlags["isDriverInProgressToBuildRoute"]!}');
+
+      if (buildRouteFlags["isStaffDriverComingToBuildRoute"]!) {
+        markers.add(NavigationMarker(
+          imagePath: "assets/icons/icons8-home-80.png",
+          height: 80,
+          width: 80,
+          latLng: pickupPoint,
+        ));
+        markers.add(NavigationMarker(
+          imagePath: "assets/images/booking/vehicles/truck1.png",
+          height: 70,
+          width: 70,
+          latLng: _staffLocation!,
+        ));
+      } else if (buildRouteFlags["isDriverInProgressToBuildRoute"]!) {
+        markers.add(NavigationMarker(
+          imagePath: "assets/icons/icons8-home-80.png",
+          height: 80,
+          width: 80,
+          latLng: deliveryPoint,
+        ));
+
+        markers.add(NavigationMarker(
+          imagePath: "assets/images/booking/vehicles/truck1.png",
+          height: 70,
+          width: 70,
+          latLng: _staffLocation!,
+        ));
+      }
 // assets/images/booking/vehicles/abf959e9.png
-    markers.add(NavigationMarker(
-      // imagePath: "assets/images/booking/vehicles/truck1.png",
-      imagePath: "assets/images/booking/vehicles/abf959e9.png",
-      height: 60,
-      width: 60,
-      latLng: _staffLocation!,
-    ));
 
-    _currentMarkers = await _navigationController!.addImageMarkers(markers);
-  }
-
-  LatLng _parseCoordinates(String coordinateString) {
-    try {
-      final coordinates = coordinateString.split(',');
-      return LatLng(
-        double.parse(coordinates[0].trim()),
-        double.parse(coordinates[1].trim()),
-      );
-    } catch (e) {
-      print('Error parsing coordinates: $e');
-      return const LatLng(0, 0);
+      await _navigationController!.addImageMarkers(markers);
+      if (_staffLocation != null) {
+        await _navigationController!
+            .removeAllMarkers(); // Xóa tất cả markers cũ
+      }
+      await _navigationController!.addImageMarkers(markers);
     }
-  }
-
-  LatLng _getPickupPointLatLng() {
-    return _parseCoordinates(widget.job.pickupPoint);
-  }
-
-  LatLng _getDeliveryPointLatLng() {
-    return _parseCoordinates(widget.job.deliveryPoint);
   }
 
   void _toggleFollowDriver() {

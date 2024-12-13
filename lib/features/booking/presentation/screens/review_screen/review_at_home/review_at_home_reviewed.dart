@@ -33,11 +33,12 @@ import 'package:movemate/utils/constants/asset_constant.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
 
 @RoutePage()
-class ReviewOnline extends HookConsumerWidget {
+class ReviewAtHomeReviewed extends HookConsumerWidget {
   final OrderEntity order;
   final OrderEntity? orderOld;
   static const double spacing = 10.0;
-  const ReviewOnline({super.key, required this.order, required this.orderOld});
+  const ReviewAtHomeReviewed(
+      {super.key, required this.order, required this.orderOld});
 
   get vouchers => null;
 
@@ -75,8 +76,6 @@ class ReviewOnline extends HookConsumerWidget {
       ),
     );
   }
-
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -154,25 +153,16 @@ class ReviewOnline extends HookConsumerWidget {
         if (bookingServiceIds.contains(promotion.serviceId)) {
           // Check if promotion is currently valid
           final now = DateTime.now();
-          // print('validVouchers checking 1 dateTime $now');
-          // print(
-          //     'validVouchers checking 2 dateTime ${now.isAfter(promotion.startDate)}');
-          // print(
-          // 'validVouchers checking 3 dateTime ${now.isBefore(promotion.endDate)}');
+
           if (now.isBefore(promotion.endDate)) {
-            // Add vouchers that are:
-            // 1. Active
-            // 2. Not used (bookingId is null)
-            // 3. Either not assigned to a user (userId is null) or assigned to the order's user
+ 
             final validVouchers = promotion.vouchers.where((voucher) =>
                 voucher.isActived &&
                 voucher.bookingId == 0 &&
                 (voucher.userId == order.userId));
 
-            // print("validVouchers checking  4 ${validVouchers.length}");
             matchingVouchers.addAll(validVouchers);
-            // print("validVouchers checking  5 ${matchingVouchers.length}");
-            // print("validVouchers checking 6 ");
+     
           }
         }
       }
@@ -255,17 +245,7 @@ class ReviewOnline extends HookConsumerWidget {
                         staffAssignment: staffResponsibility,
                       ),
                       const SizedBox(height: 10),
-                      if (matchingVouchers.value.isNotEmpty &&
-                          !checkDepossit &&
-                          checkReviwed)
-                        ConfirmationLink(
-                          order: order,
-                          vouchers: matchingVouchers.value,
-                          selectedVouchers: selectedVouchers
-                              .value, // Truyền danh sách đã chọn
-                          onVoucherSelected: addVoucher,
-                          onVoucherRemoved: removeVoucher,
-                        ),
+             
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -316,10 +296,7 @@ class ReviewOnline extends HookConsumerWidget {
                                       ))
                                   .toList(),
                             );
-                            // print(
-                            //     'ReviewerStatusRequest: ${reviewerStatusRequest.toJson()}');
-
-                            // print('order: $reviewerStatusRequest');
+             
                             await ref
                                 .read(bookingControllerProvider.notifier)
                                 .confirmReviewBooking(
