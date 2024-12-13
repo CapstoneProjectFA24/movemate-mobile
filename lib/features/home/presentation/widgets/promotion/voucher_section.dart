@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movemate/features/promotion/data/models/response/promotion_about_user_response.dart';
+import 'package:movemate/features/promotion/domain/entities/promotion_entity.dart';
 import 'package:movemate/features/promotion/presentation/controller/promotion_controller.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
@@ -47,37 +48,40 @@ class DiscountCodesWidget extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
-                  'Mã Khuyến Mãi',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                if (promotionUserNotGet.isNotEmpty)
+                  const Text(
+                    'Mã Khuyến Mãi',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
                 const SizedBox(height: 12),
-                SizedBox(
-                  height: 180, // Điều chỉnh chiều cao phù hợp
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal, // Cuộn ngang
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: promotionUserNotGet.length,
-                    itemBuilder: (context, index) {
-                      final promo = promotionUserNotGet[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 12.0),
-                        child: VuochersCard(
-                          promoCode: promo.id.toString(),
-                          description: promo.description ?? '',
-                          companyLogo:
-                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s', // Assuming promo.companyLogo is available
-                        ),
-                      );
-                    },
+                if (promotionUserNotGet.isNotEmpty)
+                  SizedBox(
+                    height: 180, // Điều chỉnh chiều cao phù hợp
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal, // Cuộn ngang
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: promotionUserNotGet.length,
+                      itemBuilder: (context, index) {
+                        final promo = promotionUserNotGet[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 12.0),
+                          child: VuochersCard(
+                            promoCode: promo.id.toString(),
+                            promotionNoUser: promo,
+                            description: promo.description ?? '',
+                            companyLogo:
+                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrJzam42WkZj1p3UDnYjduuv7dtyB51i_yGQ&s', // Assuming promo.companyLogo is available
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -91,12 +95,14 @@ class VuochersCard extends StatelessWidget {
   final String promoCode;
   final String description;
   final String companyLogo;
+  final PromotionEntity promotionNoUser;
 
   const VuochersCard({
     super.key,
     required this.promoCode,
     required this.description,
     required this.companyLogo,
+    required this.promotionNoUser,
   });
 
   @override
@@ -196,7 +202,7 @@ class VuochersCard extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          promoCode,
+                          promotionNoUser.type.toUpperCase(),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -206,11 +212,14 @@ class VuochersCard extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: promoCode));
+                          Clipboard.setData(ClipboardData(
+                              text: promotionNoUser.type.toUpperCase()));
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Đã sao chép mã $promoCode!'),
-                              duration: const Duration(seconds: 2),
+                              content: Text(
+                                'Đã sao chép mã ${promotionNoUser.type.toUpperCase()}',
+                              ),
+                              duration: const Duration(seconds: 1),
                             ),
                           );
                         },
