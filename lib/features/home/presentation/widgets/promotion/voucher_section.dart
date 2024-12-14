@@ -146,7 +146,7 @@ class VuochersCard extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 const SizedBox(height: 16),
                 Row(
@@ -178,14 +178,20 @@ class VuochersCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF666666),
+                FittedBox(
+                  child: Row(
+                    children: [
+                      Text(
+                        description,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -202,9 +208,9 @@ class VuochersCard extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          promotionNoUser.type.toUpperCase(),
+                          promotionNoUser.type,
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -214,19 +220,19 @@ class VuochersCard extends StatelessWidget {
                         onPressed: () {
                           Clipboard.setData(ClipboardData(
                               text: promotionNoUser.type.toUpperCase()));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Đã sao chép mã ${promotionNoUser.type.toUpperCase()}',
-                              ),
-                              duration: const Duration(seconds: 1),
-                            ),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text(
+                          //       'Đã sao chép mã ${promotionNoUser.type.toUpperCase()}',
+                          //     ),
+                          //     duration: const Duration(seconds: 1),
+                          //   ),
+                          // );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.shade200,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
+                              horizontal: 10, vertical: 4),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -234,7 +240,7 @@ class VuochersCard extends StatelessWidget {
                         child: const Text(
                           'SAO CHÉP',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 10,
                             color: Colors.orange,
                             fontWeight: FontWeight.bold,
                           ),

@@ -29,21 +29,35 @@ class WalletContent extends HookConsumerWidget {
     final amountController = useTextEditingController();
     final errorMessage = useState<String?>(null);
     final isWalletLocked = wallet?.isLocked ?? false;
+    // Thêm biến trạng thái để lưu trữ giá trị trước đó hợp lệ
+    final previousValidValue = useState<double?>(0.0);
 
     void handleAmountInput(String value) {
+      // Loại bỏ tất cả các ký tự không phải số
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
       int parsedValue = int.tryParse(cleanedValue) ?? 0;
 
       if (parsedValue < 10000) {
         errorMessage.value = "Giá phải lớn hơn 10,000 đ";
+      } else if (parsedValue > 10000000) {
+        errorMessage.value = "Số tiền không được vượt quá 10 triệu";
+        // Khôi phục lại giá trị trước đó
+        parsedValue = previousValidValue.value!.toInt();
+        amountController.text =
+            NumberFormat("#,###", "vi_VN").format(parsedValue);
+        // Đặt vị trí con trỏ ở cuối text
+        amountController.selection =
+            TextSelection.collapsed(offset: amountController.text.length);
       } else {
         errorMessage.value = null;
+        // Cập nhật giá trị trước đó
+        previousValidValue.value = parsedValue.toDouble();
+        // Cập nhật lại định dạng tiền tệ
+        amountController.text =
+            NumberFormat("#,###", "vi_VN").format(parsedValue);
+        amountController.selection =
+            TextSelection.collapsed(offset: amountController.text.length);
       }
-
-      amountController.text =
-          NumberFormat("#,###", "vi_VN").format(parsedValue);
-      amountController.selection =
-          TextSelection.collapsed(offset: amountController.text.length);
     }
 
     Future<void> handlePaymentButtonPressed() async {
@@ -54,6 +68,11 @@ class WalletContent extends HookConsumerWidget {
 
         if (amount < 10000) {
           errorMessage.value = "Giá phải lớn hơn 10,000 đ";
+          return;
+        }
+
+        if (amount > 10000000) {
+          errorMessage.value = "Số tiền không được vượt quá 10 triệu";
           return;
         }
 

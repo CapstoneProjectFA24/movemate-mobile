@@ -215,12 +215,27 @@ class IncidentsScreen extends HookConsumerWidget {
     void handleAmountInput(String value) {
       String cleanedValue = value.replaceAll(RegExp(r'[^0-9]'), '');
       int parsedValue = int.tryParse(cleanedValue) ?? 0;
+
+      // Check if amount exceeds 50 million
+      if (parsedValue > 50000000) {
+        // Revert to the previous valid value
+        estimatedAmountController.text =
+            NumberFormat("#,###", "vi_VN").format(estimatedAmount.value ?? 0);
+
+        // Show temporary error message
+        errorMessage.value = "Tiền nhập không vượt quá 50.000.0000 đ";
+
+        // Clear the error message after 1 second
+        Future.delayed(const Duration(seconds: 1), () {
+          errorMessage.value = null;
+        });
+        return;
+      }
+
       if (parsedValue == 0) {
         errorMessage.value = "Yêu cầu nhập số tiền";
       } else if (parsedValue < 10000) {
         errorMessage.value = "Giá phải lớn hơn 10,000 đ";
-      } else if (parsedValue > 50000001) {
-        errorMessage.value = "Số tiền tối đa là 50 triệu";
       } else {
         errorMessage.value = null;
       }
@@ -229,6 +244,7 @@ class IncidentsScreen extends HookConsumerWidget {
           NumberFormat("#,###", "vi_VN").format(parsedValue);
       estimatedAmountController.selection = TextSelection.collapsed(
           offset: estimatedAmountController.text.length);
+
       // Cập nhật giá trị số tiền
       estimatedAmount.value = parsedValue.toDouble();
     }
