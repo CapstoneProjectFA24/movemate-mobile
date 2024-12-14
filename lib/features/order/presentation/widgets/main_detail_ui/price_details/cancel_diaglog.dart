@@ -20,7 +20,9 @@ class _CancelDialogState extends State<CancelDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return
+    
+     AlertDialog(
       backgroundColor: Colors.white,
       title: const LabelText(
         size: 16,
@@ -65,6 +67,8 @@ class _CancelDialogState extends State<CancelDialog> {
         ),
       ],
     );
+  
+  
   }
 
   Widget buildReasonOptions() {

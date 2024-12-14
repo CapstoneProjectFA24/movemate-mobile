@@ -113,14 +113,14 @@ class DeliveryDetailsBottomSheet extends HookConsumerWidget {
       try {
         // Xác định vai trò và loại nhân viên dựa trên `Assignments`
         final isResponsible = assignments?.isResponsible == true;
-        final checkRole = isResponsible ? 'Trưởng' : 'Nhân viên';
+        final checkRole = isResponsible ? 'chịu tránh nhiệm' : 'Nhân viên';
 
         final staffType = assignments?.staffType;
         final checkType = () {
           if (staffType == 'DRIVER') {
-            return 'Tài xế ${isResponsible ? 'Trưởng ' : ''}';
+            return 'Tài xế ${isResponsible ? 'chịu tránh nhiệm ' : ''}';
           } else if (staffType == 'PORTER') {
-            return 'Bốc vác ${isResponsible ? 'Trưởng ' : ''}';
+            return 'Bốc vác ${isResponsible ? 'chịu tránh nhiệm ' : ''}';
           } else if (staffType == 'REVIEWER') {
             return 'Người đánh giá';
           } else {

@@ -7,6 +7,7 @@ import 'package:movemate/features/booking/presentation/screens/controller/bookin
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/modal_action/reviewed_to_coming_modal.dart';
+import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/accept_pause.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/cancel_button.dart';
 import 'package:movemate/features/order/presentation/widgets/main_detail_ui/price_details/voucher_in_order.dart';
 import 'package:movemate/features/order/presentation/widgets/review_at_home/services_card_at_home.dart';
@@ -203,6 +204,7 @@ class PriceDetails extends HookConsumerWidget {
     // print('log care order ${order.vouchers?.length}');
     final checkIsdeposit = order.isDeposited;
     final checkIsdepositData = orderData.isDeposited;
+    final checkIsPause = bookingAsync.value?.status.toUpperCase() == 'PAUSED';
     // print('log care order 1 $checkIsdeposit');
     // print('log care order 2 $checkIsdepositData');
     return LoadingOverlay(
@@ -287,6 +289,7 @@ class PriceDetails extends HookConsumerWidget {
             ),
 
             if (order.vouchers?.length != 0 && order.vouchers?.length != null)
+           
               // phiếu giảm giá
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -491,8 +494,13 @@ class PriceDetails extends HookConsumerWidget {
                   ),
                 ),
               ),
-            const SizedBox(height: 16),
 
+            const SizedBox(height: 16),
+            if (checkIsPause)
+              AcceptPause(
+                order: order,
+              ),
+            const SizedBox(height: 16),
             // Cancel button
             if (bookingAsync.hasValue &&
                 !bookingStatus.isCompleted &&
