@@ -646,8 +646,9 @@ class IncidentsScreen extends HookConsumerWidget {
                               ),
                             );
                           }
-                          final String failReason = " ${reason.value} "
-                              "/nMô tả :  ${description.value}";
+                          final String failReason = reason.value;
+                          // final String failReason = " ${reason.value} "
+                          //     "\nMô tả :  ${description.value ?? 'Không có mô tả'}";
                           // Get current position
                           Position currentPosition = await getCurrentPosition();
                           var addressInfo =
@@ -660,10 +661,10 @@ class IncidentsScreen extends HookConsumerWidget {
                             location: addressInfo['display'],
                             point:
                                 "${currentPosition.latitude}, ${currentPosition.longitude}",
-                            description: description.value,
+                            description: failReason,
                             title: supportType.value,
                             // reason: reason.value,
-                            reason: failReason,
+                            // reason: failReason,
                             estimatedAmount: amount,
                             isInsurance: isInsurance.value,
                           );
