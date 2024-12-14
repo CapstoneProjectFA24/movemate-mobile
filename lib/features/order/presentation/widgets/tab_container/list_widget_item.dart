@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,6 +18,7 @@ import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/realtime_service/booking_realtime_entity/booking_realtime_entity.dart';
 import 'package:movemate/services/realtime_service/booking_status_realtime/booking_status_stream_provider.dart';
 import 'package:movemate/utils/commons/widgets/loading_overlay.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 // Navigation function cho cả Driver và Porter
 void navigateToChatScreen({
@@ -96,6 +98,88 @@ class ListItemWidget extends HookConsumerWidget {
     final bookingStatus =
         useBookingStatus(bookingAsync.value, order.isReviewOnline ?? false);
 
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final bookingData = useState<Map<String, dynamic>?>(null);
+
+    useEffect(() {
+      // Tạo subscription để lắng nghe thay đổi
+      final subscription = firestore
+          .collection('bookings')
+          .doc(order.id.toString())
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists) {
+          bookingData.value = snapshot.data();
+        }
+      });
+
+      return () => subscription.cancel();
+    }, []);
+
+    Map<String, bool> getDriverAssignmentStatus(List assignments) {
+      final staffAssignment = assignments.firstWhere(
+          (a) => a['StaffType'] == 'DRIVER' && a['UserId'] == item.userId,
+          orElse: () => null);
+
+      if (staffAssignment == null) {
+        return {
+          'isDriverWaiting': false,
+          'isDriverAssigned': false,
+          'isDriverIncoming': false,
+          'isDriverArrived': false,
+          'isDriverInprogress': false,
+          'isDriverCompleted': false,
+          'isDriverFailed': false,
+        };
+      }
+
+      return {
+        'isDriverWaiting': staffAssignment['Status'] == 'WAITING',
+        'isDriverAssigned': staffAssignment['Status'] == 'ASSIGNED',
+        'isDriverIncoming': staffAssignment['Status'] == 'INCOMING',
+        'isDriverArrived': staffAssignment['Status'] == 'ARRIVED',
+        'isDriverInprogress': staffAssignment['Status'] == 'IN_PROGRESS',
+        'isDriverCompleted': staffAssignment['Status'] == 'COMPLETED',
+        'isDriverFailed': staffAssignment['Status'] == 'FAILED',
+      };
+    }
+
+    Map<String, bool> getPorterAssignmentStatus(List assignments) {
+      final staffAssignment = assignments.firstWhere(
+          (a) => a['StaffType'] == 'PORTER' && a['UserId'] == item.userId,
+          orElse: () => null);
+
+      if (staffAssignment == null) {
+        return {
+          'isPorterWaiting': false,
+          'isPorterAssigned': false,
+          'isPorterIncoming': false,
+          'isPorterArrived': false,
+          'isPorterInprogress': false,
+          'isPorterPacking': false,
+          'isPorterOngoing': false,
+          'isPorterDelivered': false,
+          'isPorterUnloaded': false,
+          'isPorterCompleted': false,
+          'isPorterFailed': false,
+        };
+      }
+
+      return {
+        'isPorterWaiting': staffAssignment['Status'] == "WAITING",
+        'isPorterAssigned': staffAssignment['Status'] == "ASSIGNED",
+        'isPorterIncoming': staffAssignment['Status'] == "INCOMING",
+        'isPorterArrived': staffAssignment['Status'] == "ARRIVED",
+        'isPorterInprogress': staffAssignment['Status'] == "IN_PROGRESS",
+        'isPorterPacking': staffAssignment['Status'] == "PACKING",
+        'isPorterOngoing': staffAssignment['Status'] == "ONGOING",
+        'isPorterDelivered': staffAssignment['Status'] == "DELIVERED",
+        'isPorterUnloaded': staffAssignment['Status'] == "UNLOADED",
+        'isPorterCompleted': staffAssignment['Status'] == "COMPLETED",
+        'isPorterFailed': staffAssignment['Status'] == "FAILED",
+      };
+    }
+
     final canCheckDriverTracking = bookingStatus.isDriverProcessingMoving;
     final canCheckPorterTracking = bookingStatus.isPorterProcessingMoving;
 
@@ -135,6 +219,11 @@ class ListItemWidget extends HookConsumerWidget {
     final checkStaffTypePorter = item.staffType.toUpperCase() == "PORTER";
 
     final canShowCheckImage = item.isResponsible == true;
+
+    if (bookingData.value == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return LoadingOverlay(
       isLoading: state.isLoading,
       child: Card(
@@ -217,6 +306,48 @@ class ListItemWidget extends HookConsumerWidget {
                           ),
                         ],
                       ),
+                      const SizedBox(width: 8),
+                      if (bookingData.value != null &&
+                          bookingData.value!['Assignments'] != null)
+                        Builder(
+                          builder: (context) {
+                            final assignments =
+                                bookingData.value!['Assignments'] as List;
+                            if (item.staffType.toUpperCase() == 'DRIVER') {
+                              final driverStatus =
+                                  getDriverAssignmentStatus(assignments);
+                              final status = driverStatus.entries
+                                  .firstWhere((entry) => entry.value == true,
+                                      orElse: () => const MapEntry(
+                                          'isDriverWaiting', true))
+                                  .key
+                                  .replaceAll('isDriver', '')
+                                  .toUpperCase();
+                              return StatusBadge(
+                                status: status.toDisplayText(),
+                                backgroundColor: status.getStatusColor(),
+                                textColor: status.getTextColor(),
+                              );
+                            } else if (item.staffType.toUpperCase() ==
+                                'PORTER') {
+                              final porterStatus =
+                                  getPorterAssignmentStatus(assignments);
+                              final status = porterStatus.entries
+                                  .firstWhere((entry) => entry.value == true,
+                                      orElse: () => const MapEntry(
+                                          'isPorterWaiting', true))
+                                  .key
+                                  .replaceAll('isPorter', '')
+                                  .toUpperCase();
+                              return StatusBadge(
+                                status: status.toDisplayText(),
+                                backgroundColor: status.getStatusColor(),
+                                textColor: status.getTextColor(),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
                       const SizedBox(height: 3),
                       FittedBox(
                         child: Row(
@@ -333,5 +464,127 @@ class ListItemWidget extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+// Status Badge Widget
+class StatusBadge extends StatelessWidget {
+  final String status;
+  final Color backgroundColor;
+  final Color textColor;
+
+  const StatusBadge({
+    super.key,
+    required this.status,
+    required this.backgroundColor,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        status,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+extension StatusDisplay on String {
+  String toDisplayText() {
+    switch (this) {
+      case 'WAITING':
+        return 'Đang chờ';
+      case 'ASSIGNED':
+        return 'Đã phân công';
+      case 'INCOMING':
+        return 'Đang đến';
+      case 'ARRIVED':
+        return 'Đã đến';
+      case 'IN_PROGRESS':
+        return 'Đang thực hiện';
+      case 'COMPLETED':
+        return 'Hoàn thành';
+      case 'FAILED':
+        return 'Có sự cố';
+      case 'PACKING':
+        return 'Đang đóng gói';
+      case 'ONGOING':
+        return 'Đang di chuyển';
+      case 'DELIVERED':
+        return 'Đã vẫn chuyển';
+      case 'UNLOADED':
+        return 'Đã dỡ hàng';
+      default:
+        return this;
+    }
+  }
+
+  Color getStatusColor() {
+    switch (this) {
+      case 'WAITING':
+        return Colors.grey.shade100;
+      case 'ASSIGNED':
+        return Colors.blue.shade50;
+      case 'INCOMING':
+        return Colors.orange.shade50;
+      case 'ARRIVED':
+        return Colors.green.shade50;
+      case 'IN_PROGRESS':
+        return Colors.purple.shade50;
+      case 'COMPLETED':
+        return Colors.green.shade50;
+      case 'FAILED':
+        return Colors.red.shade50;
+      case 'PACKING':
+        return Colors.amber.shade50;
+      case 'ONGOING':
+        return Colors.indigo.shade50;
+      case 'DELIVERED':
+        return Colors.teal.shade50;
+      case 'UNLOADED':
+        return Colors.lime.shade50;
+      default:
+        return Colors.grey.shade100;
+    }
+  }
+
+  Color getTextColor() {
+    switch (this) {
+      case 'WAITING':
+        return Colors.grey.shade700;
+      case 'ASSIGNED':
+        return Colors.blue.shade700;
+      case 'INCOMING':
+        return Colors.orange.shade700;
+      case 'ARRIVED':
+        return Colors.green.shade700;
+      case 'IN_PROGRESS':
+        return Colors.purple.shade700;
+      case 'COMPLETED':
+        return Colors.green.shade700;
+      case 'FAILED':
+        return Colors.red.shade700;
+      case 'PACKING':
+        return Colors.amber.shade700;
+      case 'ONGOING':
+        return Colors.indigo.shade700;
+      case 'DELIVERED':
+        return Colors.teal.shade700;
+      case 'UNLOADED':
+        return Colors.lime.shade700;
+      default:
+        return Colors.grey.shade700;
+    }
   }
 }
