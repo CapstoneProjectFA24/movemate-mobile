@@ -512,6 +512,43 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const TransactionDetailsOrder(),
       );
     },
+    TransactionOrderResultFailedScreenRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args =
+          routeData.argsAs<TransactionOrderResultFailedScreenRouteArgs>(
+              orElse: () => TransactionOrderResultFailedScreenRouteArgs(
+                    isSuccess: pathParams.getBool('isSuccess'),
+                    bookingId: pathParams.getString('bookingId'),
+                    allUri: pathParams.getString(''),
+                  ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TransactionOrderResultFailedScreen(
+          key: args.key,
+          isSuccess: args.isSuccess,
+          bookingId: args.bookingId,
+          allUri: args.allUri,
+        ),
+      );
+    },
+    TransactionResultFailedScreenRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final args = routeData.argsAs<TransactionResultFailedScreenRouteArgs>(
+          orElse: () => TransactionResultFailedScreenRouteArgs(
+                isSuccess: pathParams.getBool('isSuccess'),
+                bookingId: pathParams.getString('bookingId'),
+                allUri: pathParams.getString(''),
+              ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TransactionResultFailedScreen(
+          key: args.key,
+          isSuccess: args.isSuccess,
+          bookingId: args.bookingId,
+          allUri: args.allUri,
+        ),
+      );
+    },
     TransactionResultScreenRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
       final args = routeData.argsAs<TransactionResultScreenRouteArgs>(
@@ -2217,6 +2254,114 @@ class TransactionDetailsOrderRoute extends PageRouteInfo<void> {
   static const String name = 'TransactionDetailsOrderRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [TransactionOrderResultFailedScreen]
+class TransactionOrderResultFailedScreenRoute
+    extends PageRouteInfo<TransactionOrderResultFailedScreenRouteArgs> {
+  TransactionOrderResultFailedScreenRoute({
+    Key? key,
+    required bool isSuccess,
+    required String bookingId,
+    required String allUri,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TransactionOrderResultFailedScreenRoute.name,
+          args: TransactionOrderResultFailedScreenRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+            bookingId: bookingId,
+            allUri: allUri,
+          ),
+          rawPathParams: {
+            'isSuccess': isSuccess,
+            'bookingId': bookingId,
+            '': allUri,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionOrderResultFailedScreenRoute';
+
+  static const PageInfo<TransactionOrderResultFailedScreenRouteArgs> page =
+      PageInfo<TransactionOrderResultFailedScreenRouteArgs>(name);
+}
+
+class TransactionOrderResultFailedScreenRouteArgs {
+  const TransactionOrderResultFailedScreenRouteArgs({
+    this.key,
+    required this.isSuccess,
+    required this.bookingId,
+    required this.allUri,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  final String bookingId;
+
+  final String allUri;
+
+  @override
+  String toString() {
+    return 'TransactionOrderResultFailedScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId, allUri: $allUri}';
+  }
+}
+
+/// generated route for
+/// [TransactionResultFailedScreen]
+class TransactionResultFailedScreenRoute
+    extends PageRouteInfo<TransactionResultFailedScreenRouteArgs> {
+  TransactionResultFailedScreenRoute({
+    Key? key,
+    required bool isSuccess,
+    required String bookingId,
+    required String allUri,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TransactionResultFailedScreenRoute.name,
+          args: TransactionResultFailedScreenRouteArgs(
+            key: key,
+            isSuccess: isSuccess,
+            bookingId: bookingId,
+            allUri: allUri,
+          ),
+          rawPathParams: {
+            'isSuccess': isSuccess,
+            'bookingId': bookingId,
+            '': allUri,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'TransactionResultFailedScreenRoute';
+
+  static const PageInfo<TransactionResultFailedScreenRouteArgs> page =
+      PageInfo<TransactionResultFailedScreenRouteArgs>(name);
+}
+
+class TransactionResultFailedScreenRouteArgs {
+  const TransactionResultFailedScreenRouteArgs({
+    this.key,
+    required this.isSuccess,
+    required this.bookingId,
+    required this.allUri,
+  });
+
+  final Key? key;
+
+  final bool isSuccess;
+
+  final String bookingId;
+
+  final String allUri;
+
+  @override
+  String toString() {
+    return 'TransactionResultFailedScreenRouteArgs{key: $key, isSuccess: $isSuccess, bookingId: $bookingId, allUri: $allUri}';
+  }
 }
 
 /// generated route for

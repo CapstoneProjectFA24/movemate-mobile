@@ -51,12 +51,12 @@ final paymentList = [
 ];
 
 @RoutePage()
-class TransactionResultFailedScreen extends HookConsumerWidget {
+class TransactionOrderResultFailedScreen extends HookConsumerWidget {
   final String bookingId;
   final bool isSuccess;
   final String allUri;
 
-  const TransactionResultFailedScreen({
+  const TransactionOrderResultFailedScreen({
     super.key,
     @PathParam('isSuccess') required this.isSuccess,
     @PathParam('bookingId') required this.bookingId,
@@ -100,9 +100,13 @@ class TransactionResultFailedScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('go here 3');
+
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
     double containerHeight = MediaQuery.of(context).size.height * 0.35;
-    print('allUri: $allUri');
+    // print('allUri: $allUri');
+    // print('checking booking ad 1 $bookingId');
+    // print('checking booking ad 2 ${int.parse(bookingId)}');
 
     final useFetchResultOrder = useFetchObject<OrderEntity>(
       function: (context) async {
@@ -157,6 +161,7 @@ class TransactionResultFailedScreen extends HookConsumerWidget {
 
     // Lấy displayName từ enum hoặc sử dụng tên mặc định
     String paymentDisplayName = paymentMethodType?.displayName ?? paymentMethod;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -405,8 +410,7 @@ class TransactionResultFailedScreen extends HookConsumerWidget {
                           ),
                         ),
                       ),
-
-                      // const SizedBox(width: 16),
+                      const SizedBox(width: 16),
 
                       // Expanded(
                       //   child: SizedBox(
@@ -416,6 +420,8 @@ class TransactionResultFailedScreen extends HookConsumerWidget {
                       //         // Trích xuất phần số nguyên từ bookingId để lấy id
                       //         final idPart = bookingId.split('-').first;
                       //         final id = int.tryParse(idPart);
+                      //         print(' iid $id');
+                      //         print('go here 4');
 
                       //         if (id != null) {
                       //           // Sử dụng BookingController để lấy OrderEntity
@@ -425,9 +431,12 @@ class TransactionResultFailedScreen extends HookConsumerWidget {
                       //               .getOrderEntityById(id);
 
                       //           if (orderEntity != null) {
+                      //             print('go here 5');
+
                       //             // Điều hướng đến OrderDetailsScreen với orderEntity
-                      //             context.router.push(OrderDetailsScreenRoute(
-                      //                 order: orderEntity));
+                      //             context.router.replaceAll([
+                      //               OrderDetailsScreenRoute(order: orderEntity)
+                      //             ]);
                       //           } else {
                       //             // Xử lý lỗi nếu không tìm thấy OrderEntity
                       //             ScaffoldMessenger.of(context).showSnackBar(

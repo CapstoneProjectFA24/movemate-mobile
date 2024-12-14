@@ -68,27 +68,47 @@ void handleDeepLink(String link, WidgetRef ref) {
     ref.read(paymentResultProvider.notifier).state = isSuccess;
 
     print("Received payment result $allUri");
+    if (uri.queryParameters['isSuccess'] == 'true') {
+      if (category == 'DEPOSIT') {
+        // Điều hướng tới TransactionResultScreen và truyền bookingId
+        ref.read(appRouterProvider).push(TransactionResultScreenRoute(
+              isSuccess: isSuccess,
+              bookingId: bookingId ?? '',
+              allUri: allUri.toString(),
+            ));
+      } else if (category == 'PAYMENT_WALLET') {
+        ref
+            .read(appRouterProvider)
+            .push(TransactionResultScreenRechargeWalletRoute(
+              isSuccess: isSuccess,
+              allUri: allUri.toString(),
+            ));
+      } else if (category == 'PAYMENT_TOTAL') {
+        ref.read(appRouterProvider).push(LastTransactionResultScreenRoute(
+              isSuccess: isSuccess,
+              bookingId: bookingId ?? '',
+              allUri: allUri.toString(),
+            ));
+      }
+    } else {
+      if (category == 'PAYMENT_WALLET') {
+        print('go here 1');
+        ref.read(appRouterProvider).push(TransactionResultFailedScreenRoute(
+              isSuccess: isSuccess,
+              bookingId: bookingId ?? '',
+              allUri: allUri.toString(),
+            ));
+      } else {
+        print('go here 2');
 
-    if (category == 'DEPOSIT') {
-      // Điều hướng tới TransactionResultScreen và truyền bookingId
-      ref.read(appRouterProvider).push(TransactionResultScreenRoute(
-            isSuccess: isSuccess,
-            bookingId: bookingId ?? '',
-            allUri: allUri.toString(),
-          ));
-    } else if (category == 'PAYMENT_WALLET') {
-      ref
-          .read(appRouterProvider)
-          .push(TransactionResultScreenRechargeWalletRoute(
-            isSuccess: isSuccess,
-            allUri: allUri.toString(),
-          ));
-    } else if (category == 'PAYMENT_TOTAL') {
-      ref.read(appRouterProvider).push(LastTransactionResultScreenRoute(
-            isSuccess: isSuccess,
-            bookingId: bookingId ?? '',
-            allUri: allUri.toString(),
-          ));
+        ref
+            .read(appRouterProvider)
+            .push(TransactionOrderResultFailedScreenRoute(
+              isSuccess: isSuccess,
+              bookingId: bookingId ?? '',
+              allUri: allUri.toString(),
+            ));
+      }
     }
 
     // ref.read(appRouterProvider).push(TransactionResultScreenRoute(

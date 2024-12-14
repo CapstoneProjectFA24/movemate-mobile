@@ -179,7 +179,7 @@ class PriceDetails extends HookConsumerWidget {
         } else if (bookingStatus.canReviewSuggestion) {
           return 'Xem xét đề xuất';
         } else if (bookingStatus.canMakePayment) {
-          return 'Thanh toán ngay';
+          return 'Thanh toán';
         } else if (bookingStatus.canMakePaymentLast) {
           return 'Xác nhận thanh toán';
         }
