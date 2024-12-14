@@ -219,6 +219,8 @@ class IncidentsScreen extends HookConsumerWidget {
         errorMessage.value = "Yêu cầu nhập số tiền";
       } else if (parsedValue < 10000) {
         errorMessage.value = "Giá phải lớn hơn 10,000 đ";
+      } else if (parsedValue > 50000001) {
+        errorMessage.value = "Số tiền tối đa là 50 triệu";
       } else {
         errorMessage.value = null;
       }
@@ -664,7 +666,7 @@ class IncidentsScreen extends HookConsumerWidget {
                             description: failReason,
                             title: supportType.value,
                             // reason: reason.value,
-                            // reason: failReason,
+                            reason: '',
                             estimatedAmount: amount,
                             isInsurance: isInsurance.value,
                           );

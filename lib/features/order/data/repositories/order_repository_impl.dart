@@ -159,7 +159,7 @@ class OrderRepositoryImpl extends RemoteBaseRepository
       isInsurance: request.isInsurance,
       location: request.location,
       point: request.point,
-      // reason: request.reason,
+      reason: request.reason,
       title: request.title,
       bookingId: id,
       resourceList: request.resourceList,

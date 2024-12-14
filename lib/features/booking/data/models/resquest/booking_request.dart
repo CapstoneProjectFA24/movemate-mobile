@@ -217,8 +217,8 @@ class BookingRequest {
         booking.estimatedDistance ?? '0'; // Có thể tính toán dựa trên tọa độ
 
     // Tính toán thời gian giao hàng ước tính (ví dụ)
-    String estimatedDeliveryTime =
-        '3'; // Có thể tính toán hoặc đặt giá trị phù hợp
+    // String estimatedDeliveryTime =
+    //     '3'; // Có thể tính toán hoặc đặt giá trị phù hợp
 
     // Chuyển đổi thời gian đặt chỗ sang định dạng ISO8601
     String bookingAt = booking.bookingDate?.toIso8601String() ??

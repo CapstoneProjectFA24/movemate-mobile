@@ -295,60 +295,65 @@ class ListItemWidget extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            ' ${staffProFile.data?.name ?? ''}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            Text(
+                              ' ${staffProFile.data?.name ?? ''}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      if (bookingData.value != null &&
-                          bookingData.value!['Assignments'] != null)
-                        Builder(
-                          builder: (context) {
-                            final assignments =
-                                bookingData.value!['Assignments'] as List;
-                            if (item.staffType.toUpperCase() == 'DRIVER') {
-                              final driverStatus =
-                                  getDriverAssignmentStatus(assignments);
-                              final status = driverStatus.entries
-                                  .firstWhere((entry) => entry.value == true,
-                                      orElse: () => const MapEntry(
-                                          'isDriverWaiting', true))
-                                  .key
-                                  .replaceAll('isDriver', '')
-                                  .toUpperCase();
-                              return StatusBadge(
-                                status: status.toDisplayText(),
-                                backgroundColor: status.getStatusColor(),
-                                textColor: status.getTextColor(),
-                              );
-                            } else if (item.staffType.toUpperCase() ==
-                                'PORTER') {
-                              final porterStatus =
-                                  getPorterAssignmentStatus(assignments);
-                              final status = porterStatus.entries
-                                  .firstWhere((entry) => entry.value == true,
-                                      orElse: () => const MapEntry(
-                                          'isPorterWaiting', true))
-                                  .key
-                                  .replaceAll('isPorter', '')
-                                  .toUpperCase();
-                              return StatusBadge(
-                                status: status.toDisplayText(),
-                                backgroundColor: status.getStatusColor(),
-                                textColor: status.getTextColor(),
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          },
+                            const SizedBox(width: 8),
+                            if (bookingData.value != null &&
+                                bookingData.value!['Assignments'] != null)
+                              Builder(
+                                builder: (context) {
+                                  final assignments =
+                                      bookingData.value!['Assignments'] as List;
+                                  if (item.staffType.toUpperCase() ==
+                                      'DRIVER') {
+                                    final driverStatus =
+                                        getDriverAssignmentStatus(assignments);
+                                    final status = driverStatus.entries
+                                        .firstWhere(
+                                            (entry) => entry.value == true,
+                                            orElse: () => const MapEntry(
+                                                'isDriverWaiting', true))
+                                        .key
+                                        .replaceAll('isDriver', '')
+                                        .toUpperCase();
+                                    return StatusBadge(
+                                      status: status.toDisplayText(),
+                                      backgroundColor: status.getStatusColor(),
+                                      textColor: status.getTextColor(),
+                                    );
+                                  } else if (item.staffType.toUpperCase() ==
+                                      'PORTER') {
+                                    final porterStatus =
+                                        getPorterAssignmentStatus(assignments);
+                                    final status = porterStatus.entries
+                                        .firstWhere(
+                                            (entry) => entry.value == true,
+                                            orElse: () => const MapEntry(
+                                                'isPorterWaiting', true))
+                                        .key
+                                        .replaceAll('isPorter', '')
+                                        .toUpperCase();
+                                    return StatusBadge(
+                                      status: status.toDisplayText(),
+                                      backgroundColor: status.getStatusColor(),
+                                      textColor: status.getTextColor(),
+                                    );
+                                  }
+                                  return const SizedBox.shrink();
+                                },
+                              ),
+                          ],
                         ),
-                      const SizedBox(height: 3),
+                      ),
+                      const SizedBox(height: 12),
                       FittedBox(
                         child: Row(
                           children: [
