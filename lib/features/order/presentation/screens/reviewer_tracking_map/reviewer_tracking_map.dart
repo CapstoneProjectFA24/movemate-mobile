@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/widgets/driver_tracking_map_item/chat_screen.dart';
+import 'package:movemate/features/order/presentation/widgets/driver_tracking_map_item/location_draggable_sheet.dart';
+import 'package:movemate/features/order/presentation/widgets/reviewer_tracking_map_item/location_draggable_sheet.dart';
 import 'package:movemate/features/order/presentation/widgets/reviewer_tracking_map_item/reviewer_status_bottom_sheet.dart';
 import 'package:movemate/hooks/use_booking_status.dart';
 import 'package:movemate/utils/commons/widgets/app_bar.dart';
@@ -270,7 +272,6 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
               );
             },
           );
-      
         }
       }
     }
@@ -384,12 +385,31 @@ class ReviewerTrackingMapState extends State<ReviewerTrackingMap> {
                   ),
                 ),
               ),
+            // Positioned(
+            //   bottom: 0,
+            //   left: 0,
+            //   right: 0,
+            //   child: DeliveryDetailsBottomSheetReviewer(
+            //     stadffId: int.parse(widget.staffId),
+            //     job: widget.job,
+            //   ),
+            // ),
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
-              child: ReviewerStatusBottomSheet(
-                job: widget.job,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height *
+                    0.7, // Chiều cao giới hạn
+                child:
+
+                    // TrackingMapBottomSheet(
+                    //   job: widget.job,
+                    // ),
+                    DeliveryDetailsBottomSheetReviewer(
+                  stadffId: int.parse(widget.staffId),
+                  job: widget.job,
+                ),
               ),
             ),
             // Positioned(
