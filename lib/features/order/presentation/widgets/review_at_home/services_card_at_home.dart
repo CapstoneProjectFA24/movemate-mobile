@@ -312,6 +312,7 @@ class ServicesCardAtHome extends HookConsumerWidget {
           newService.name,
           formatPrice(newService.price.toDouble()),
           quantity: newService.quantity,
+          isStrikethrough: false,
         ),
       ]);
       return widgets;
