@@ -217,7 +217,7 @@ class ReviewOnline extends HookConsumerWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: CustomAppBar(
-          title: checkDepossit == true ? 'Xác nhận dịch vụ' : 'Gợi ý dịch vụ',
+          title: checkDepossit == true ? 'Xác nhận dịch vụ' : 'Xem xét dịch vụ',
           backButtonColor: AssetsConstants.whiteColor,
           centerTitle: true,
         ),
@@ -228,21 +228,21 @@ class ReviewOnline extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        checkDepossit == true
-                            ? 'Vui lòng xác nhận'
-                            : 'Chọn xe không hợp lý',
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        checkDepossit == true
-                            ? 'Xem các dịch vụ thay đổi'
-                            : 'Chúng tôi đề xuất cho bạn như sau',
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
+                      // Text(
+                      //   checkDepossit == true
+                      //       ? 'Vui lòng xác nhận'
+                      //       : 'Xem xét dịch vụ',
+                      //   style: const TextStyle(
+                      //       fontSize: 16, fontWeight: FontWeight.bold),
+                      // ),
+                      const SizedBox(height: 12),
+                      // Text(
+                      //   checkDepossit == true
+                      //       ? 'Xem các dịch vụ thay đổi'
+                      //       : 'Chúng tôi đề xuất cho bạn như sau',
+                      //   style:
+                      //       const TextStyle(fontSize: 14, color: Colors.grey),
+                      // ),
                       const SizedBox(height: 16),
                       ServiceCard(
                         order: order,

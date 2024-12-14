@@ -187,6 +187,8 @@ class VuochersCard extends StatelessWidget {
                           fontSize: 12,
                           color: Color(0xFF666666),
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.visible,
                       ),
                     ],
                   ),
