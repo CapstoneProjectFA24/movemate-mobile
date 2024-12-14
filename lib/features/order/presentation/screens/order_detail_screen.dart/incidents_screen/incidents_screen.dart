@@ -142,7 +142,6 @@ class IncidentsScreen extends HookConsumerWidget {
     );
 
     List<String> supportTypes = [
-      'Bảo hành',
       'Vỡ hàng',
       // 'Test 1',
       // 'Checkking 1',
@@ -647,7 +646,8 @@ class IncidentsScreen extends HookConsumerWidget {
                               ),
                             );
                           }
-
+                          final String failReason = " ${reason.value} "
+                              "/nMô tả :  ${description.value}";
                           // Get current position
                           Position currentPosition = await getCurrentPosition();
                           var addressInfo =
@@ -662,11 +662,12 @@ class IncidentsScreen extends HookConsumerWidget {
                                 "${currentPosition.latitude}, ${currentPosition.longitude}",
                             description: description.value,
                             title: supportType.value,
-                            reason: reason.value,
+                            // reason: reason.value,
+                            reason: failReason,
                             estimatedAmount: amount,
                             isInsurance: isInsurance.value,
                           );
-
+                          print('check reuqest ${userReportRequest.value}');
                           // Send request
                           await ref
                               .read(orderControllerProvider.notifier)

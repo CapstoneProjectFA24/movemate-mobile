@@ -187,8 +187,8 @@ class IncidentDetailsScreen extends HookConsumerWidget {
                   _buildSectionTitle('Lý do:', Icons.receipt_sharp),
                   Center(
                     child: Text(
-                      incident.failedReason?.isNotEmpty == true
-                          ? incident.failedReason!
+                      incident.description.isNotEmpty == true
+                          ? incident.description
                           : 'Không có lý do',
                       style: const TextStyle(
                         fontSize: 14.0,
