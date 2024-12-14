@@ -168,6 +168,7 @@ class VuochersCard extends StatelessWidget {
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
+                        overflow: TextOverflow.fade,
                       ),
                     ),
                     const Icon(
@@ -178,19 +179,17 @@ class VuochersCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                FittedBox(
-                  child: Row(
-                    children: [
-                      Text(
-                        description,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF666666),
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.visible,
-                      ),
-                    ],
+                Tooltip(
+                  message:
+                      '', // Hiển thị toàn bộ mô tả khi hover hoặc long-press
+                  child: Text(
+                    description,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF666666),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis, // Cắt ngắn với dấu '...'
                   ),
                 ),
                 const SizedBox(height: 10),
