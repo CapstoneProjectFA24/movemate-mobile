@@ -8,6 +8,7 @@ import 'package:icons_plus/icons_plus.dart';
 
 // config
 import 'package:movemate/configs/routes/app_router.dart';
+import 'package:movemate/features/auth/presentation/widgets/handle_modal/development_modal.dart';
 
 // utils
 import 'package:movemate/utils/constants/asset_constant.dart';
@@ -70,6 +71,19 @@ class SignInScreen extends HookConsumerWidget with Validations {
     final isEmailSelected = useState(true);
 
     final state = ref.watch(signInControllerProvider);
+
+// Trong SignInScreen class
+    void showDevelopmentModal(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const DevelopmentModal(
+            description:
+                'Chức năng này hiện đang được phát triển. Vui lòng quay lại sau.',
+          );
+        },
+      );
+    }
 
     return LoadingOverlay(
       isLoading: state.isLoading,
@@ -301,6 +315,8 @@ class SignInScreen extends HookConsumerWidget with Validations {
                           onTap: () {
                             print(
                                 "object chức năng google đang trong quá trình phát triển");
+
+                            showDevelopmentModal(context);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

@@ -205,6 +205,7 @@ class PriceDetails extends HookConsumerWidget {
     final checkIsdeposit = order.isDeposited;
     final checkIsdepositData = orderData.isDeposited;
     final checkIsPause = bookingAsync.value?.status.toUpperCase() == 'PAUSED';
+    print(" check ispause $checkIsdeposit");
     // print('log care order 1 $checkIsdeposit');
     // print('log care order 2 $checkIsdepositData');
     return LoadingOverlay(
@@ -250,24 +251,35 @@ class PriceDetails extends HookConsumerWidget {
                 description: truckDetail.description ?? 'Không có mô tả',
               );
             }),
+            Column(
+              children: [
+                if (order.status == 'PAUSED')
+                  ServicesCardAtHome(
+                    order: order,
+                    orderOld: orderOld ?? order,
+                  )
+                else ...[
+                  // Price details
+                  if (order.isReviewOnline)
+                    ...orderData.bookingDetails.map<Widget>((detail) {
+                      return buildPriceItem(
+                        detail.name ?? '',
+                        formatPrice(detail.price.toDouble()),
+                      );
+                    }),
 
-            // Price details
-            if (order.isReviewOnline)
-              ...orderData.bookingDetails.map<Widget>((detail) {
-                return buildPriceItem(
-                  detail.name ?? '',
-                  formatPrice(detail.price.toDouble()),
-                );
-              }),
+                  // Hiển thị nếu review offline
+                  if (!order.isReviewOnline)
+                    ServicesCardAtHome(
+                      order: order,
+                      orderOld: orderOld ?? order,
+                    ),
 
-//hiển thị nếu review offline
-            if (!order.isReviewOnline)
-              ServicesCardAtHome(
-                order: order,
-                orderOld: orderOld ?? order,
-              ),
+                  const SizedBox(height: 12),
+                ],
+              ],
+            ),
             const SizedBox(height: 12),
-
             //tiền đặt cọc
             if (order.isReviewOnline)
               buildSummary('Tiền đặt cọc',
@@ -493,7 +505,7 @@ class PriceDetails extends HookConsumerWidget {
               ),
 
             const SizedBox(height: 16),
-            if (checkIsPause)
+            if (checkIsPause == true)
               AcceptPause(
                 order: order,
               ),

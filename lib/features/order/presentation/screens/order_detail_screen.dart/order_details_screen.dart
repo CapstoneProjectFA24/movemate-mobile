@@ -239,7 +239,7 @@ class OrderDetailsScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: CustomAppBar(
           backgroundColor: AssetsConstants.primaryMain,
-          iconFirst: bookingStatus.canReport ? Icons.error : null,
+          iconFirst: bookingStatus.canReport ? Icons.error : Icons.refresh,
           iconFirstColor: AssetsConstants.whiteColor,
           onCallBackFirst: bookingStatus.canReport
               ? () {
@@ -252,7 +252,9 @@ class OrderDetailsScreen extends HookConsumerWidget {
                     },
                   );
                 }
-              : () {},
+              : () {
+                  orderEntity.refresh();
+                },
           backButtonColor: AssetsConstants.whiteColor,
           title: "Thông tin đơn hàng BOK${order.id ?? ""}",
           iconSecond: Icons.home_outlined,

@@ -416,8 +416,10 @@ class TransactionResultScreen extends HookConsumerWidget {
 
                                   if (orderEntity != null) {
                                     // Điều hướng đến OrderDetailsScreen với orderEntity
-                                    context.router.push(OrderDetailsScreenRoute(
-                                        order: orderEntity));
+                                    context.router.replaceAll([
+                                      OrderDetailsScreenRoute(
+                                          order: orderEntity)
+                                    ]);
                                   } else {
                                     // Xử lý lỗi nếu không tìm thấy OrderEntity
                                     ScaffoldMessenger.of(context).showSnackBar(
