@@ -18,8 +18,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupFlutterNotifications();
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
+
   if (kDebugMode) {
     print('Handling a background message ${message.messageId}');
   }
@@ -34,6 +33,15 @@ Future<void> setupFlutterNotifications() async {
   if (isFlutterLocalNotificationsInitialized) {
     return;
   }
+
+  // Yêu cầu quyền thông báo (đối với iOS)
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+    provisional: false,
+  );
+
   channel = const AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
@@ -45,27 +53,29 @@ Future<void> setupFlutterNotifications() async {
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   /// Create an Android Notification Channel.
-  ///
-  /// We use this channel in the `AndroidManifest.xml` file to override the
-  /// default FCM channel to enable heads up notifications.
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+  final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+      flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+
+  if (androidImplementation != null) {
+    await androidImplementation.createNotificationChannel(channel);
+  }
 
   /// Update the iOS foreground notification presentation options to allow
   /// heads up notifications.
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
+    alert: true, // Hiển thị thông báo khi ở foreground
+    badge: true, // Hiển thị badge
+    sound: true, // Phát âm thanh
   );
+
   isFlutterLocalNotificationsInitialized = true;
 }
 
 void showFlutterNotification(RemoteMessage message) {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
+
   if (notification != null && android != null && !kIsWeb) {
     flutterLocalNotificationsPlugin.show(
       notification.hashCode,
@@ -77,6 +87,14 @@ void showFlutterNotification(RemoteMessage message) {
           channel.name,
           channelDescription: channel.description,
           icon: '@drawable/movemate_logo',
+          // Thêm các tùy chọn để hiển thị thông báo ngay trong app
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
         ),
       ),
     );
@@ -85,12 +103,25 @@ void showFlutterNotification(RemoteMessage message) {
 
 // init func
 Future<void> initFirebaseMessaging() async {
+  // Khởi tạo Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessage.listen(showFlutterNotification);
 
-  // if (!kIsWeb) {
-  //   await setupFlutterNotifications();
-  // }
+  // Xử lý thông báo khi app đang mở (foreground)
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Received message in foreground: ${message.notification?.title}');
+    showFlutterNotification(message);
+  });
+
+  // Xử lý khi người dùng nhấp vào thông báo
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    print('A new onMessageOpenedApp event was published!');
+    // Điều hướng đến màn hình cụ thể dựa trên thông báo nếu cần
+    // Ví dụ: Navigator.pushNamed(context, '/message_screen');
+  });
+
+  // Setup thông báo
   await setupFlutterNotifications();
 }
