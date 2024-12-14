@@ -203,8 +203,10 @@ class TransactionResultScreen extends HookConsumerWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.check,
-                                color: Colors.orange.shade500,
+                                isSuccessParsed ? Icons.check : Icons.cancel,
+                                color: isSuccess
+                                    ? Colors.orange.shade500
+                                    : Colors.red,
                                 size: containerWidth *
                                     0.1, // Tăng kích thước icon
                               ),
@@ -213,10 +215,14 @@ class TransactionResultScreen extends HookConsumerWidget {
                             Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               child: Text(
-                                'Đặt cọc thành công',
+                                isSuccessParsed
+                                    ? 'Đặt cọc thành công'
+                                    : 'Đặt cọc thất bại',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.orange.shade500,
+                                  color: isSuccess
+                                      ? Colors.orange.shade500
+                                      : Colors.red,
                                   fontWeight: FontWeight.bold,
                                   fontSize: containerWidth * 0.06,
                                 ),
@@ -391,60 +397,61 @@ class TransactionResultScreen extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              // Trích xuất phần số nguyên từ bookingId để lấy id
-                              final idPart = bookingId.split('-').first;
-                              final id = int.tryParse(idPart);
+                      if (isSuccessParsed)
+                        Expanded(
+                          child: SizedBox(
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                // Trích xuất phần số nguyên từ bookingId để lấy id
+                                final idPart = bookingId.split('-').first;
+                                final id = int.tryParse(idPart);
 
-                              if (id != null) {
-                                // Sử dụng BookingController để lấy OrderEntity
-                                final bookingController = ref
-                                    .read(bookingControllerProvider.notifier);
-                                final orderEntity = await bookingController
-                                    .getOrderEntityById(id);
+                                if (id != null) {
+                                  // Sử dụng BookingController để lấy OrderEntity
+                                  final bookingController = ref
+                                      .read(bookingControllerProvider.notifier);
+                                  final orderEntity = await bookingController
+                                      .getOrderEntityById(id);
 
-                                if (orderEntity != null) {
-                                  // Điều hướng đến OrderDetailsScreen với orderEntity
-                                  context.router.push(OrderDetailsScreenRoute(
-                                      order: orderEntity));
+                                  if (orderEntity != null) {
+                                    // Điều hướng đến OrderDetailsScreen với orderEntity
+                                    context.router.push(OrderDetailsScreenRoute(
+                                        order: orderEntity));
+                                  } else {
+                                    // Xử lý lỗi nếu không tìm thấy OrderEntity
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Không tìm thấy thông tin đơn hàng')),
+                                    );
+                                  }
                                 } else {
-                                  // Xử lý lỗi nếu không tìm thấy OrderEntity
+                                  // Xử lý lỗi nếu không thể trích xuất id
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text(
-                                            'Không tìm thấy thông tin đơn hàng')),
+                                            'Không thể lấy id từ bookingId')),
                                   );
                                 }
-                              } else {
-                                // Xử lý lỗi nếu không thể trích xuất id
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Không thể lấy id từ bookingId')),
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade800,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange.shade800,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              'Chi tiết đơn hàng',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: containerWidth * 0.040,
-                                color: Colors.white,
+                              child: Text(
+                                'Chi tiết đơn hàng',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: containerWidth * 0.040,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),

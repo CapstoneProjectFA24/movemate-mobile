@@ -144,8 +144,8 @@ class IncidentsScreen extends HookConsumerWidget {
     List<String> supportTypes = [
       'Bảo hành',
       'Vỡ hàng',
-      'Test 1',
-      'Checkking 1',
+      // 'Test 1',
+      // 'Checkking 1',
     ];
 
     int checkInsuranceValidService(OrderEntity order) {

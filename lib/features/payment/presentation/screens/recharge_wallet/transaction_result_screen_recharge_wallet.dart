@@ -182,8 +182,10 @@ class TransactionResultScreenRechargeWallet extends HookConsumerWidget {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  Icons.check,
-                                  color: Colors.orange.shade500,
+                                  isSuccess ? Icons.check : Icons.cancel,
+                                  color: isSuccess
+                                      ? Colors.orange.shade500
+                                      : Colors.red,
                                   size: containerWidth *
                                       0.1, // Tăng kích thước icon dựa trên chiều rộng container
                                 ),
@@ -192,10 +194,14 @@ class TransactionResultScreenRechargeWallet extends HookConsumerWidget {
                               Container(
                                 margin: const EdgeInsets.only(bottom: 16),
                                 child: Text(
-                                  "Nạp tiền thành công",
+                                  isSuccess
+                                      ? "Nạp tiền thành công"
+                                      : "Nạp tiền thất bại",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.orange.shade500,
+                                    color: isSuccess
+                                        ? Colors.orange.shade500
+                                        : Colors.red,
                                     fontWeight: FontWeight.bold,
                                     fontSize: containerWidth *
                                         0.06, // Điều chỉnh kích thước phông chữ theo chiều rộng container

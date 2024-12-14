@@ -2,14 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movemate/configs/routes/app_router.dart';
-import 'package:intl/intl.dart';
-import 'package:movemate/features/booking/domain/entities/booking_response/booking_detail_response_entity.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:intl/intl.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/enums/enums_export.dart';
-import 'package:movemate/utils/providers/common_provider.dart';
 
 // Hàm phân tích allUri
 Map<String, dynamic> parseAllUri(String allUri) {
@@ -53,12 +51,12 @@ final paymentList = [
 ];
 
 @RoutePage()
-class LastTransactionResultScreen extends HookConsumerWidget {
+class TransactionResultFailedScreen extends HookConsumerWidget {
   final String bookingId;
   final bool isSuccess;
   final String allUri;
 
-  const LastTransactionResultScreen({
+  const TransactionResultFailedScreen({
     super.key,
     @PathParam('isSuccess') required this.isSuccess,
     @PathParam('bookingId') required this.bookingId,
@@ -103,8 +101,18 @@ class LastTransactionResultScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double containerWidth = MediaQuery.of(context).size.width * 0.9;
-
+    double containerHeight = MediaQuery.of(context).size.height * 0.465;
     print('allUri: $allUri');
+
+    final useFetchResultOrder = useFetchObject<OrderEntity>(
+      function: (context) async {
+        return ref
+            .read(bookingControllerProvider.notifier)
+            .getOrderEntityById(int.parse(bookingId));
+      },
+      context: context,
+    );
+    final result = useFetchResultOrder.data;
 
     // Phân tích allUri thành Map
     Map<String, dynamic> allUriMap;
@@ -149,33 +157,6 @@ class LastTransactionResultScreen extends HookConsumerWidget {
 
     // Lấy displayName từ enum hoặc sử dụng tên mặc định
     String paymentDisplayName = paymentMethodType?.displayName ?? paymentMethod;
-    final state = ref.watch(bookingControllerProvider);
-    final useFetchResultOrder = useFetchObject<OrderEntity>(
-      function: (context) async {
-        return ref
-            .read(bookingControllerProvider.notifier)
-            .getOrderEntityById(int.parse(bookingId));
-      },
-      context: context,
-    );
-    final result = useFetchResultOrder.data;
-
-    final user = ref.read(authProvider);
-
-    List<BookingDetailResponseEntity> getListSerVices(OrderEntity? order) {
-      try {
-        final listServicesDetails =
-            order!.bookingDetails.where((e) => e.quantity > 0).toList();
-        return listServicesDetails;
-      } catch (e) {
-        print('Error: $e');
-        return [];
-      }
-    }
-
-    final listServices = getListSerVices(result);
-    double containerHeight =
-        MediaQuery.of(context).size.height * (listServices.length * 0.120);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -196,7 +177,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                       // Container chính
                       Container(
                         width: containerWidth,
-                        height: 550,
+                        height: containerHeight,
                         margin: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -222,10 +203,8 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                isSuccessParsed ? Icons.check : Icons.cancel,
-                                color: isSuccessParsed
-                                    ? Colors.orange.shade500
-                                    : Colors.red,
+                                Icons.check,
+                                color: Colors.orange.shade500,
                                 size: containerWidth *
                                     0.1, // Tăng kích thước icon
                               ),
@@ -234,35 +213,40 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                             Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               child: Text(
-                                isSuccessParsed
-                                    ? 'Thanh toán thành công'
-                                    : 'Thanh toán thất bại',
+                                'Đặt cọc thành công',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: isSuccessParsed
-                                      ? Colors.orange.shade500
-                                      : Colors.red,
+                                  color: Colors.orange.shade500,
                                   fontWeight: FontWeight.bold,
                                   fontSize: containerWidth * 0.06,
                                 ),
                               ),
                             ),
                             // Thông tin giao dịch
+
+                            // // Đường kẻ nét đứt
+                            // Container(
+                            //   margin: const EdgeInsets.symmetric(vertical: 16),
+                            //   padding:
+                            //       const EdgeInsets.symmetric(horizontal: 24),
+                            //   child: DashedLine(color: Colors.grey.shade300),
+                            // ),
+                            // Chi tiết mã giao dịch
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 24),
                               child: Column(
                                 children: [
                                   buildTransactionDetailRow('Mã đơn hàng',
-                                      '${result?.id}', containerWidth * 0.89),
-                                  const SizedBox(height: 4),
+                                      '${result?.id}', containerWidth),
+                                  const SizedBox(height: 8),
                                   buildTransactionDetailRow('Nguồn tiền',
-                                      paymentMethod, containerWidth * 0.89),
-                                  const SizedBox(height: 4),
+                                      paymentMethod, containerWidth),
+                                  const SizedBox(height: 8),
                                   buildTransactionDetailRow(
                                       'Thời gian giao dịch',
                                       formattedDate,
-                                      containerWidth * 0.89),
+                                      containerWidth),
                                   const SizedBox(height: 2),
                                   buildTransactionDetailRow(
                                     '',
@@ -274,41 +258,7 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                             ),
                             // Đường kẻ nét đứt
                             Container(
-                              margin: const EdgeInsets.symmetric(vertical: 12),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 24),
-                              child: DashedLine(color: Colors.grey.shade300),
-                            ),
-                            // Chi tiết mã giao dịch
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 24),
-                              child: Column(
-                                children: [
-                                  // Đường kẻ nét đứt
-
-                                  ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const AlwaysScrollableScrollPhysics(),
-                                      itemCount: listServices.length,
-                                      itemBuilder: (context, index) {
-                                        final serviceDetails =
-                                            listServices[index];
-                                        return buildListService(
-                                          serviceDetails.name,
-                                          formatPrice(
-                                              (serviceDetails.price ?? 0)
-                                                  .toDouble()),
-                                          containerWidth * 0.80,
-                                        );
-                                      }),
-                                ],
-                              ),
-                            ),
-                            // const SizedBox(height: 24),
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 12),
+                              margin: const EdgeInsets.symmetric(vertical: 16),
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 24),
                               child: DashedLine(color: Colors.grey.shade300),
@@ -319,31 +269,29 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                                   const EdgeInsets.symmetric(horizontal: 24),
                               child: Column(
                                 children: [
+                                  buildTransactionDetailPriceRow(
+                                      'Đặt cọc',
+                                      formatPrice(
+                                          ((result?.deposit ?? 0)).toDouble()),
+                                      containerWidth,
+                                      true),
+                                  const SizedBox(height: 2),
                                   buildTransactionDetailPriceRow(
                                       'Tổng tiền',
                                       formatPrice(
-                                          ((result?.total ?? 0)).toDouble()),
-                                      containerWidth,
+                                          (result?.total ?? 0).toDouble()),
+                                      containerWidth * 0.80,
                                       false),
-                                  const SizedBox(height: 2),
                                   buildTransactionDetailPriceRow(
-                                      'Tiền đã đặt cọc',
-                                      formatPrice(
-                                          (result?.deposit ?? 0).toDouble()),
-                                      containerWidth,
-                                      false),
-                                  const SizedBox(height: 2),
-                                  buildTransactionDetailPriceRow(
-                                      'Số tiền còn lại đã thanh toán',
+                                      'Số tiền còn lại phải thanh toán',
                                       formatPrice(((result?.total ?? 0) -
                                               (result?.deposit ?? 0))
                                           .toDouble()),
-                                      containerWidth,
-                                      true),
+                                      containerWidth * 0.80,
+                                      false),
                                 ],
                               ),
                             ),
-                            // const SizedBox(height: 4),
                           ],
                         ),
                       ),
@@ -436,7 +384,62 @@ class LastTransactionResultScreen extends HookConsumerWidget {
                               style: TextStyle(
                                 color: Colors.orange.shade500,
                                 fontWeight: FontWeight.bold,
-                                fontSize: containerWidth * 0.045,
+                                fontSize: containerWidth * 0.040,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: SizedBox(
+                          height: 48,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              // Trích xuất phần số nguyên từ bookingId để lấy id
+                              final idPart = bookingId.split('-').first;
+                              final id = int.tryParse(idPart);
+
+                              if (id != null) {
+                                // Sử dụng BookingController để lấy OrderEntity
+                                final bookingController = ref
+                                    .read(bookingControllerProvider.notifier);
+                                final orderEntity = await bookingController
+                                    .getOrderEntityById(id);
+
+                                if (orderEntity != null) {
+                                  // Điều hướng đến OrderDetailsScreen với orderEntity
+                                  context.router.push(OrderDetailsScreenRoute(
+                                      order: orderEntity));
+                                } else {
+                                  // Xử lý lỗi nếu không tìm thấy OrderEntity
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Không tìm thấy thông tin đơn hàng')),
+                                  );
+                                }
+                              } else {
+                                // Xử lý lỗi nếu không thể trích xuất id
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Không thể lấy id từ bookingId')),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange.shade800,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Chi tiết đơn hàng',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: containerWidth * 0.040,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -456,100 +459,61 @@ class LastTransactionResultScreen extends HookConsumerWidget {
   Widget buildTransactionDetailRow(
       String title, String value, double containerWidth) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0.1),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Text(
-              value,
-              style: TextStyle(
+        padding: const EdgeInsets.symmetric(vertical: 0.1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade500,
+                color: Colors.black,
                 fontWeight: FontWeight.w300,
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade500,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   Widget buildTransactionDetailPriceRow(
       String title, String value, double containerWidth, bool isBold) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.black,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 12,
-                color: isBold ? Colors.black : Colors.grey.shade500,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildListService(String title, String value, double containerWidth) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start, // Align to the top
-
-        children: [
-          Expanded(
-            flex: 5, // Allocate space for the title
-            child: Text(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
               title,
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey[700],
+                color: Colors.black,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
               ),
-              softWrap: true, // Allow wrapping
-              overflow: TextOverflow.visible, // Ensure text is not clipped
             ),
-          ),
-          const SizedBox(width: 10), // Add spacing between title and value
-          Expanded(
-            flex: 2, // Allocate space for the value
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color.fromARGB(255, 174, 178, 183),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isBold ? Colors.black : Colors.grey.shade500,
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.w300,
+                ),
               ),
-              softWrap: true, // Allow wrapping
-              overflow: TextOverflow.visible, // Ensure text is not clipped
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }
 

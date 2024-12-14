@@ -60,7 +60,7 @@ void handleDeepLink(String link, WidgetRef ref) {
 
   if (link.startsWith('movemate://payment-result')) {
     final uri = Uri.parse(link);
-    final isSuccess = uri.queryParameters['isSuccess'] == 'true';
+    final bool isSuccess = uri.queryParameters['isSuccess'] == 'true';
     final bookingId = uri.queryParameters['bookingId'];
     final category = uri.queryParameters['category'];
 // isDeposit = false
@@ -68,6 +68,7 @@ void handleDeepLink(String link, WidgetRef ref) {
     ref.read(paymentResultProvider.notifier).state = isSuccess;
 
     print("Received payment result $allUri");
+
     if (category == 'DEPOSIT') {
       // Điều hướng tới TransactionResultScreen và truyền bookingId
       ref.read(appRouterProvider).push(TransactionResultScreenRoute(

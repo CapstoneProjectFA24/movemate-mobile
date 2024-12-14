@@ -289,7 +289,7 @@ class PriceDetails extends HookConsumerWidget {
             ),
 
             if (order.vouchers?.length != 0 && order.vouchers?.length != null)
-           
+
               // phiếu giảm giá
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -339,9 +339,7 @@ class PriceDetails extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: LabelText(
-                      content: formatPrice(
-                          (bookingAsync.value?.total ?? order.total)
-                              .toDouble()),
+                      content: formatPrice((order.total).toDouble()),
                       size: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -367,14 +365,13 @@ class PriceDetails extends HookConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: LabelText(
-                      content: formatPrice(
-                          ((bookingAsync.value?.total ?? order.total) +
-                                  order.vouchers!.fold<double>(
-                                    0,
-                                    (total, voucher) =>
-                                        total + (voucher.price ?? 0),
-                                  ))
-                              .toDouble()),
+                      content: formatPrice(((order.total) +
+                              order.vouchers!.fold<double>(
+                                0,
+                                (total, voucher) =>
+                                    total + (voucher.price ?? 0),
+                              ))
+                          .toDouble()),
                       size: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
