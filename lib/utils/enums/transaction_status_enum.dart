@@ -7,7 +7,8 @@ enum TransactionStatus {
   DEPOSIT("Đặt cọc"),
   PAYMENT("Thanh toán"),
   RECEIVE("Nhận tiền"),
-  TRANFER("Chuyển tiền");
+  TRANFER("Chuyển tiền"),
+  WITHDRAW("Rút tiền");
 
   final String vietnameseName;
 
@@ -37,6 +38,8 @@ extension TransactionStatusExtension on TransactionStatus {
         return "Nhận tiền";
       case TransactionStatus.TRANFER:
         return "Chuyển tiền";
+      case TransactionStatus.WITHDRAW:
+        return "Rút tiền";
     }
   }
 
@@ -52,6 +55,8 @@ extension TransactionStatusExtension on TransactionStatus {
         return TransactionStatus.RECEIVE;
       case "TRANFER":
         return TransactionStatus.TRANFER;
+      case "WITHDRAW":
+        return TransactionStatus.WITHDRAW;
       default:
         return null;
     }
@@ -69,6 +74,8 @@ IconData getIconForTransactionType(String type) {
     case 'RECHARGE':
       return Icons.credit_card_rounded;
     case 'PAYMENT':
+      return Icons.account_balance_wallet_rounded;
+    case 'WITHDRAW':
       return Icons.account_balance_wallet_rounded;
     default:
       return Icons.help_outline;
@@ -98,6 +105,8 @@ Color getCardColorWallet(String type) {
       return Colors.green.shade300.withOpacity(0.7);
     case 'PAYMENT':
       return Colors.orange.withOpacity(0.7);
+    case 'WITHDRAW':
+      return Colors.orange.withOpacity(0.5);
     default:
       return Colors.orange.shade50.withOpacity(0.7);
   }
@@ -115,6 +124,8 @@ String defineAmountPrefix(String type) {
       return '+ ';
     case 'PAYMENT':
       return '- ';
+    case 'WITHDRAW':
+      return '- ';
     default:
       return '- ';
   }
@@ -131,6 +142,8 @@ String defineTransactionInCome(String type) {
     case 'RECHARGE':
       return ' ';
     case 'PAYMENT':
+      return ' ';
+    case 'WITHDRAW':
       return ' ';
     default:
       return ' ';

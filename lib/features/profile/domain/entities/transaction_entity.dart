@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class TransactionEntity {
   final int id;
-  final int paymentId;
+  final int? paymentId;
   final int walletId;
   final String? resource;
   final double amount;
@@ -17,7 +17,7 @@ class TransactionEntity {
 
   TransactionEntity({
     required this.id,
-    required this.paymentId,
+    this.paymentId,
     required this.walletId,
     this.resource,
     required this.amount,
