@@ -148,6 +148,7 @@ class IncidentsScreen extends HookConsumerWidget {
     ];
 
     int checkInsuranceValidService(OrderEntity order) {
+      print("checking order.isInsurance ${order.isInsurance} ");
       if (order.isInsurance == true) {
         try {
           final checkInsuranceValidService = order.bookingDetails

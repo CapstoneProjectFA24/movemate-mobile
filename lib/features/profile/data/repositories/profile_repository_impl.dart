@@ -1,6 +1,7 @@
 // import local
 import 'package:movemate/features/profile/data/models/queries/incident_queries.dart';
 import 'package:movemate/features/profile/data/models/queries/transaction_queries.dart';
+import 'package:movemate/features/profile/data/models/queries/with_draw_queries.dart';
 import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
 import 'package:movemate/features/profile/data/models/response/incident_response.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
@@ -95,6 +96,30 @@ class ProfileRepositoryImpl extends RemoteBaseRepository
         APIConstants.contentType,
         accessToken,
         requestUnlock,
+      ),
+    );
+  }
+
+//with draw wallet
+  @override
+  Future<SuccessModel> withDrawWallet({
+    required String accessToken,
+    required WithDrawQueries request,
+  }) async {
+    print("check repo");
+    print("go here repo 1");
+    final amount = WithDrawQueries(
+      amount: request.amount,
+    );
+    print("go here repo 2 ${request.amount}");
+
+    print("go here repo 3");
+
+    return getDataOf(
+      request: () => _profileSource.withDrawWallet(
+        APIConstants.contentType,
+        accessToken,
+        amount,
       ),
     );
   }

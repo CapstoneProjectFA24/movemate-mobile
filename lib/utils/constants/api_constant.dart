@@ -47,6 +47,8 @@ class APIConstants {
   static const get_wallet = '/wallets/balance';
   //unlock wallet
   static const unlock_wallet = '/wallets';
+  //user withdraws
+  static const with_draw = '/wallets/with-draw';  
   //transactions
   static const get_transaction = '/transactions';
   //get incident list

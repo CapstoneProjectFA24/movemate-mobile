@@ -56,6 +56,7 @@ Future<void> initUniLinks(BuildContext context, WidgetRef ref) async {
 // }
 
 void handleDeepLink(String link, WidgetRef ref) {
+  
   print('Received deep link: $link');
 
   if (link.startsWith('movemate://payment-result')) {

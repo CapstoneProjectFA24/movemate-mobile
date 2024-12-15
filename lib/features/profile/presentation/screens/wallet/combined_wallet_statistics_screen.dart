@@ -9,6 +9,7 @@ import 'package:movemate/features/payment/presentation/screens/last_payment/last
 import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/income_breakdown.dart';
 import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/income_statistics_content.dart';
 import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/wallet_content.dart';
+import 'package:movemate/features/profile/presentation/widgets/transaction/transaction_by_wallet/withdraw_content.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'dart:math';
 
@@ -59,7 +60,9 @@ class CombinedWalletStatisticsScreen extends HookConsumerWidget {
             Expanded(
               child: selectedTab.value == 0
                   ? const WalletContent()
-                  : const IncomeStatisticsContent(),
+                  : selectedTab.value == 1
+                      ? const IncomeStatisticsContent()
+                      : const WithdrawContent(), 
             ),
           ],
         ),
@@ -94,6 +97,11 @@ class _StatisticsTabs extends StatelessWidget {
             text: 'Thống kê',
             isSelected: selectedTab.value == 1,
             onTap: () => onTabChanged(1),
+          ),
+             _TabItem(
+            text: 'Rút tiền', // Thêm tab mới
+            isSelected: selectedTab.value == 2,
+            onTap: () => onTabChanged(2),
           ),
         ],
       ),

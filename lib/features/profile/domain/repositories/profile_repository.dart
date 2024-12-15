@@ -1,4 +1,5 @@
 // local
+import 'package:movemate/features/profile/data/models/queries/with_draw_queries.dart';
 import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
 import 'package:movemate/features/profile/data/models/response/incident_response.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
@@ -39,8 +40,16 @@ abstract class ProfileRepository {
   });
 
   // unlock Wallet
-  Future<WalletResponse> unlockWallet(
-      {required String accessToken, required UnlockWalletRequest request});
+  Future<WalletResponse> unlockWallet({
+    required String accessToken,
+    required UnlockWalletRequest request,
+  });
+
+  // with draw wallet
+  Future<SuccessModel> withDrawWallet({
+    required String accessToken,
+    required WithDrawQueries request,
+  });
 
   //transaction
   Future<TransactionResponse> getTransactionByUserId({

@@ -11,7 +11,7 @@ class TransactionDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // hàm để định dạng ngày tháng
+    // Function to format date and time
     final formattedDateReviewAt = DateFormat('dd-MM-yyyy')
         .format(DateTime.parse(transaction.createdAt.toString()));
     final formattedTimeReviewAt = DateFormat('HH:mm')
@@ -22,60 +22,67 @@ class TransactionDetailDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.0),
       ),
       backgroundColor: Colors.white,
-      child: Container(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                Icon(Icons.receipt, color: Colors.deepOrange, size: 28),
-                SizedBox(width: 12),
-                Text(
-                  'Chi tiết giao dịch',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepOrange,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          // Adjust the max height as needed
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            // Removed mainAxisSize.min to allow flexibility with scrolling
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.receipt, color: Colors.deepOrange, size: 28),
+                  SizedBox(width: 12),
+                  Text(
+                    'Chi tiết giao dịch',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrange,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            _buildDetailRow('Mã giao dịch', transaction.transactionCode),
-            _buildDetailRow('Loại giao dịch', transaction.transactionType),
-            _buildDetailRow('Số tiền', formatPrice(transaction.amount.toDouble())),
-            _buildDetailRow('Trạng thái', transaction.status ?? ''),
-            _buildDetailRow(
-                'Phương thức thanh toán', transaction.paymentMethod),
-            _buildDetailRow('Ngày giao dịch', formattedDateReviewAt ?? ''),
-            // Các thông tin khác...
-            const SizedBox(height: 24),
-            Align(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
-                  iconColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildDetailRow('Mã giao dịch', transaction.transactionCode),
+              _buildDetailRow('Loại giao dịch', transaction.transactionType),
+              _buildDetailRow(
+                  'Số tiền', formatPrice(transaction.amount.toDouble())),
+              _buildDetailRow('Trạng thái', transaction.status ?? ''),
+              _buildDetailRow(
+                  'Phương thức thanh toán', transaction.paymentMethod),
+              _buildDetailRow('Ngày giao dịch', formattedDateReviewAt ?? ''),
+              // Add more detail rows if necessary
+              const SizedBox(height: 24),
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepOrange,
+                    iconColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24.0),
+                  child: const Text(
+                    'Đóng',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
-                ),
-                child: const Text(
-                  'Đóng',
-                  style: TextStyle(fontSize: 18),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -92,7 +99,7 @@ class TransactionDetailDialog extends StatelessWidget {
             child: Text(
               label,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey,
               ),
@@ -103,7 +110,7 @@ class TransactionDetailDialog extends StatelessWidget {
             flex: 3,
             child: Text(
               value,
-              style: const TextStyle(fontSize: 18, color: Colors.black87),
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movemate/features/profile/data/models/queries/with_draw_queries.dart';
 import 'package:movemate/features/profile/data/models/request/unlock_wallet_request.dart';
 import 'package:movemate/features/profile/data/models/response/incident_response.dart';
 import 'package:movemate/features/profile/data/models/response/profile_response.dart';
@@ -54,6 +55,13 @@ abstract class ProfileSource {
     @Header(APIConstants.authHeader) String accessToken,
     @Body() UnlockWalletRequest request,
   );
+  // with draw wallet
+  @POST(APIConstants.with_draw)
+  Future<HttpResponse<SuccessModel>> withDrawWallet(
+    @Header(APIConstants.contentHeader) String contentType,
+    @Header(APIConstants.authHeader) String accessToken,
+    @Queries() WithDrawQueries amount,
+  );
 
   // get transaction
   @GET(APIConstants.get_transaction)
@@ -62,7 +70,7 @@ abstract class ProfileSource {
     @Header(APIConstants.authHeader) String accessToken,
     @Queries() Map<String, dynamic> request,
   );
-  // get list incident 
+  // get list incident
   @GET(APIConstants.get_incident_list)
   Future<HttpResponse<IncidentResponse>> getIncidentListByUserId(
     @Header(APIConstants.contentHeader) String contentType,
