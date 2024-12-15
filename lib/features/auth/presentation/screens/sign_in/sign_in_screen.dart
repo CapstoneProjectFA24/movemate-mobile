@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -83,6 +84,20 @@ class SignInScreen extends HookConsumerWidget with Validations {
           );
         },
       );
+    }
+
+    void showForgotPasswordSnackbar(BuildContext context) {
+      Flushbar(
+        message: "Vui lòng lấy lại mật khẩu trên trang chủ",
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.orange, // Màu chủ đạo (cam)
+        margin: const EdgeInsets.all(8.0),
+        borderRadius: BorderRadius.circular(8.0),
+        flushbarPosition: FlushbarPosition.TOP, // Hiển thị từ trên xuống
+        forwardAnimationCurve: Curves.easeInOut,
+        reverseAnimationCurve: Curves.easeInOut,
+        // Bạn có thể thêm các tùy chỉnh khác nếu cần
+      ).show(context);
     }
 
     return LoadingOverlay(
@@ -234,6 +249,7 @@ class SignInScreen extends HookConsumerWidget with Validations {
                               onTap: () {
                                 // Forgot password navigation
                                 // context.router.push(EnterEmailScreenRoute());
+                                showForgotPasswordSnackbar(context);
                               },
                               child: const LabelText(
                                 content: 'Quên mật khẩu?',
