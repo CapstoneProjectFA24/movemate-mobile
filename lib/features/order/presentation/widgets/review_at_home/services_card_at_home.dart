@@ -97,7 +97,7 @@ class ServicesCardAtHome extends HookConsumerWidget {
             ),
             const SizedBox(height: 12),
 
-            _buildTotalPrice(bookingAsync),
+            if (!order.isDeposited) _buildTotalPrice(bookingAsync),
 
             // Note colors for service types
             const SizedBox(height: 12),
@@ -338,24 +338,24 @@ class ServicesCardAtHome extends HookConsumerWidget {
       return widgets;
     }
 
-    if (order.deposit == orderOld?.deposit) {
-      widgets.add(buildPriceItem(
-        'Tiền đặt cọc',
-        formatPrice(order.deposit.toDouble()),
-      ));
+    if ((order.deposit == orderOld?.deposit)) {
+      // widgets.add(buildPriceItem(
+      //   'Tiền đặt cọc',
+      //   formatPrice(order.deposit.toDouble()),
+      // ));
     } else {
-      widgets.addAll([
-        buildPriceItem(
-          'Tiền đặt cọc cũ',
-          formatPrice(orderOld?.deposit.toDouble() ?? 0),
-          isStrikethrough: true,
-        ),
-        buildPriceItem(
-          'Tiền đặt cọc mới',
-          formatPrice(order.deposit.toDouble()),
-          isStrikethrough: false,
-        ),
-      ]);
+      // widgets.addAll([
+      //   buildPriceItem(
+      //     'Tiền đặt cọc cũ',
+      //     formatPrice(orderOld?.deposit.toDouble() ?? 0),
+      //     isStrikethrough: true,
+      //   ),
+      //   buildPriceItem(
+      //     'Tiền đặt cọc mới',
+      //     formatPrice(order.deposit.toDouble()),
+      //     isStrikethrough: false,
+      //   ),
+      // ]);
     }
 
     return widgets;

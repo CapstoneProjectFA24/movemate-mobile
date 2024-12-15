@@ -282,6 +282,7 @@ class TransactionResultScreen extends HookConsumerWidget {
                                       containerWidth,
                                       true),
                                   const SizedBox(height: 2),
+                                     if(result?.isReviewOnline == false ?? true)
                                   buildTransactionDetailPriceRow(
                                       'Tổng tiền',
                                       formatPrice(

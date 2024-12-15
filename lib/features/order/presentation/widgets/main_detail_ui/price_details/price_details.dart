@@ -424,13 +424,66 @@ class PriceDetails extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: 'Tổng giá',
+                      size: 12,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: (bookingAsync.value?.total != 0)
+                          ? formatPrice(
+                              bookingAsync.value?.total.toDouble() ?? 0)
+                          : '',
+                      size: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            if (order.isDeposited == true)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content: 'Tiền đặt cọc',
+                      size: 12,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: LabelText(
+                      content:
+                          "- ${(bookingAsync.value?.deposit != 0) ? formatPrice(bookingAsync.value?.deposit.toDouble() ?? 0) : ''}",
+                      size: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+
+            if (bookingAsync.value?.total != bookingAsync.value?.totalReal)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6),
                     child: LabelText(
                       content: (bookingAsync.value?.totalReal != 0)
                           ? 'Tiền còn lại phải trả'
                           : 'Đã Thanh toán',
-                      size: 16,
+                      size: 12,
                       color: Colors.grey,
                       fontWeight: FontWeight.w500,
                     ),
@@ -442,7 +495,7 @@ class PriceDetails extends HookConsumerWidget {
                           ? formatPrice(
                               bookingAsync.value?.totalReal.toDouble() ?? 0)
                           : '',
-                      size: 18,
+                      size: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
