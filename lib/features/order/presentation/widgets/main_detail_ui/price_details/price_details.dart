@@ -261,7 +261,7 @@ class PriceDetails extends HookConsumerWidget {
                 else ...[
                   // Price details
                   if (order.isReviewOnline)
-                    ...orderData.bookingDetails.map<Widget>((detail) {
+                    ...order.bookingDetails.map<Widget>((detail) {
                       return buildPriceItem(
                         detail.name ?? '',
                         formatPrice(detail.price.toDouble()),
@@ -281,7 +281,7 @@ class PriceDetails extends HookConsumerWidget {
             ),
             const SizedBox(height: 12),
             //tiền đặt cọc
-            if (order.isReviewOnline)
+            if (order.isReviewOnline && !order.isDeposited)
               buildSummary('Tiền đặt cọc',
                   formatPrice(orderData.deposit.toDouble() ?? 0)),
 
