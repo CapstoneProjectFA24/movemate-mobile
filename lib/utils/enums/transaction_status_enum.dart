@@ -1,7 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
+// RECHARGE,
+//         DEPOSIT,
+//         PAYMENT,
+//         RECEIVE,
+//         TRANFER,
+//         WITHDRAW
 enum TransactionStatus {
   RECHARGE("Nạp tiền"),
   DEPOSIT("Đặt cọc"),

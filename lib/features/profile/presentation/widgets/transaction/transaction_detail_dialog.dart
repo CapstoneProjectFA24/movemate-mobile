@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:movemate/features/booking/presentation/widgets/booking_screen_2th/booking_package/sub_service_tile.dart';
 import 'package:movemate/features/profile/domain/entities/transaction_entity.dart';
 import 'package:movemate/utils/commons/widgets/format_price.dart';
+import 'package:movemate/utils/enums/payment_method_type.dart';
+import 'package:movemate/utils/enums/transaction_status_enum.dart';
 
 class TransactionDetailDialog extends StatelessWidget {
   final TransactionEntity transaction;
@@ -16,7 +18,25 @@ class TransactionDetailDialog extends StatelessWidget {
         .format(DateTime.parse(transaction.createdAt.toString()));
     final formattedTimeReviewAt = DateFormat('HH:mm')
         .format(DateTime.parse(transaction.createdAt.toString()));
+    final name = transaction.transactionType;
+    // Chuyển đổi trạng thái sang enum
+    final transactionStatus = TransactionStatus.fromString(name);
 
+    // Lấy tên tiếng Việt
+    final statusVietnamese =
+        transactionStatus?.toVietnamese() ?? 'Không xác định';
+    String status = '';
+    PaymentMethodType? methodType =
+        PaymentMethodType.fromString(transaction.paymentMethod);
+
+    String paymentMethodName = methodType?.displayName ??
+        'Unknown'; // Fallback to 'Unknown' if not found
+
+    if (transaction.status.toString() == 'SUCCESS') {
+      status = 'Thanh toán thành công';
+    } else {
+      status = 'Thanh toán thất bại'; // Bạn có thể thêm trường hợp khác nếu cần
+    }
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -49,12 +69,11 @@ class TransactionDetailDialog extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               _buildDetailRow('Mã giao dịch', transaction.transactionCode),
-              _buildDetailRow('Loại giao dịch', transaction.transactionType),
+              _buildDetailRow('Loại giao dịch', statusVietnamese),
               _buildDetailRow(
                   'Số tiền', formatPrice(transaction.amount.toDouble())),
-              _buildDetailRow('Trạng thái', transaction.status ?? ''),
-              _buildDetailRow(
-                  'Phương thức thanh toán', transaction.paymentMethod),
+              _buildDetailRow('Trạng thái', status ?? ''),
+              _buildDetailRow('Phương thức thanh toán', paymentMethodName),
               _buildDetailRow('Ngày giao dịch', formattedDateReviewAt ?? ''),
               // Add more detail rows if necessary
               const SizedBox(height: 24),

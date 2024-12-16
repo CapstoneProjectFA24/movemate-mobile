@@ -59,12 +59,15 @@ class TransactionItem extends StatelessWidget {
         methodType?.imageUrl ?? ''; // Fallback to empty string if not found
     String paymentMethodName = methodType?.displayName ??
         'Unknown'; // Fallback to 'Unknown' if not found
+
+    print("object check payment method $paymentMethodName");
     final status = TransactionStatus.DEPOSIT.toVietnamese();
 
     String amountPrefix = '';
     if (transactionStatus == TransactionStatus.DEPOSIT ||
         transactionStatus == TransactionStatus.PAYMENT ||
-        transactionStatus == TransactionStatus.TRANFER) {
+        transactionStatus == TransactionStatus.TRANFER ||
+        transactionStatus == TransactionStatus.WITHDRAW) {
       amountPrefix = '- ';
     } else if (transactionStatus == TransactionStatus.RECHARGE ||
         transactionStatus == TransactionStatus.RECEIVE) {
@@ -207,7 +210,7 @@ class TransactionItem extends StatelessWidget {
                                     ],
                                     Expanded(
                                       child: Text(
-                                        paymentMethod,
+                                        paymentMethodName,
                                         style: TextStyle(
                                           color: Colors.grey[700],
                                           fontSize: 13,

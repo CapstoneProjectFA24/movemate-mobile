@@ -48,7 +48,7 @@ class APIConstants {
   //unlock wallet
   static const unlock_wallet = '/wallets';
   //user withdraws
-  static const with_draw = '/wallets/with-draw';  
+  static const with_draw = '/wallets/with-draw';
   //transactions
   static const get_transaction = '/transactions';
   //get incident list
@@ -69,12 +69,12 @@ class APIConstants {
   // static const apiVietMapKey =
   //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
   // api vietmap-key backup
-  static const apiVietMapKey =
-      "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
+  // static const apiVietMapKey =
+  //     "be00f7e132bdd086ccd57e21460209836f5d37ce56beaa42";
 
   // api vietmap-key backup-v2
-  // static const apiVietMapKey =
-  //     "e7fb2f56a9eca6890aae01882c6b789527a21dcf88c75145";
+  static const apiVietMapKey =
+      "e7fb2f56a9eca6890aae01882c6b789527a21dcf88c75145";
 
   // error
   static const Map<String, String> errorTrans = {
