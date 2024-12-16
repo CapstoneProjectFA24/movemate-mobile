@@ -5,6 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
+import 'package:movemate/features/order/domain/entites/order_entity.dart';
+import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
+import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/format_price.dart';
 import 'package:movemate/utils/commons/widgets/widgets_common_export.dart';
@@ -34,7 +37,12 @@ class PaymentScreen extends HookConsumerWidget {
     final bookingController = ref.read(bookingControllerProvider.notifier);
 
     final wallet = ref.read(walletProvider);
-
+    final useFetcholdOrderNew = useFetchObject<OrderEntity>(
+      function: (context) => ref
+          .read(orderControllerProvider.notifier)
+          .getBookingNewById(id, context),
+      context: context,
+    );
     // Call refreshBookingData when the widget is first built
     // useEffect(() {
     //   bookingController.refreshBookingData(id: id);
@@ -298,6 +306,40 @@ class PaymentScreen extends HookConsumerWidget {
                                 TextStyle(fontSize: 14, color: Colors.black87),
                           ),
                         ),
+
+
+                          if (order.vouchers?.length != 0 && order.vouchers?.length != null)
+
+              // phiếu giảm giá
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        LabelText(
+                          content: 'Phiếu giảm giá',
+                          size: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                  LabelText(
+                    content: '- ${formatPrice((order.vouchers!.fold<double>(
+                      0,
+                      (total, voucher) => total + (voucher.price ?? 0),
+                    )).toDouble())}',
+                    size: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ],
+              ),
+
                       ],
                     ),
                   ),
