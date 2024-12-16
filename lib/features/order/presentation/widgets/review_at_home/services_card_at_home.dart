@@ -97,7 +97,9 @@ class ServicesCardAtHome extends HookConsumerWidget {
             ),
             const SizedBox(height: 12),
 
-            if (!order.isDeposited) _buildTotalPrice(bookingAsync),
+            // if (order.isDeposited == true)
+            //
+            _buildTotalPrice(bookingAsync),
 
             // Note colors for service types
             const SizedBox(height: 12),

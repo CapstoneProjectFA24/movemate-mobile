@@ -332,7 +332,7 @@ class PriceDetails extends HookConsumerWidget {
                 ],
               ),
 
-            //tổng giá không Vouchers
+            //tổng giá không Vouchers và là review online
             if ((order.vouchers?.length == 0 ||
                     order.vouchers?.length == null) &&
                 order.isReviewOnline)
@@ -419,34 +419,37 @@ class PriceDetails extends HookConsumerWidget {
                 ],
               ),
 
-            //sau khi deposit xong
-            if (bookingAsync.value?.total != bookingAsync.value?.totalReal)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
-                    child: LabelText(
-                      content: 'Tổng giá',
-                      size: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: LabelText(
-                      content: (bookingAsync.value?.total != 0)
-                          ? formatPrice(
-                              bookingAsync.value?.total.toDouble() ?? 0)
-                          : '',
-                      size: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
+            //sau khi deposit xong review online
+            // if (bookingAsync.value?.total != bookingAsync.value?.totalReal &&
+            //     order.isReviewOnline)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       const Padding(
+            //         padding: EdgeInsets.symmetric(vertical: 6),
+            //         child: LabelText(
+            //           content: 'Tổng giá',
+            //           size: 12,
+            //           color: Colors.grey,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //       Padding(
+            //         padding: const EdgeInsets.symmetric(vertical: 6),
+            //         child: LabelText(
+            //           content: (bookingAsync.value?.total != 0)
+            //               ? formatPrice(
+            //                   bookingAsync.value?.total.toDouble() ?? 0)
+            //               : '',
+            //           size: 14,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.black,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+
+            //tiền đặt cọc sau khi deposit
             if (order.isDeposited == true)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
