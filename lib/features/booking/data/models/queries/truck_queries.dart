@@ -14,7 +14,7 @@ class TruckQueries {
   TruckQueries({
     this.search,
     required this.page,
-    this.perPage = 10,
+    this.perPage = 50,
     this.userId,
     this.type,
     this.sortColumn,
@@ -51,7 +51,7 @@ class TruckQueries {
     return TruckQueries(
       search: map['Search'],
       page: map['page']?.toInt() ?? 1,
-      perPage: map['per_page']?.toInt() ?? 10,
+      perPage: map['per_page']?.toInt() ?? 50,
       userId: map['UserId']?.toInt(),
       sortDir: map['SortDir']?.toInt(),
       sortColumn: map['SortColumn'],
