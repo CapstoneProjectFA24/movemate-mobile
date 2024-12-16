@@ -14,7 +14,7 @@ class PagingModel {
 
   PagingModel({
     this.pageNumber = 1,
-    this.pageSize = 10,
+    this.pageSize = 50,
     this.searchContent,
     this.sortContent,
     this.sortColumn,

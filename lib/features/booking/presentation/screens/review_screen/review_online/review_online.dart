@@ -243,17 +243,6 @@ class ReviewOnline extends HookConsumerWidget {
                       //   style:
                       //       const TextStyle(fontSize: 14, color: Colors.grey),
                       // ),
-                      const SizedBox(height: 16),
-                      ServiceCard(
-                        order: order,
-                        orderOld: orderOld,
-                      ),
-                      const SizedBox(height: 12),
-                      ContactCard(
-                        order: order,
-                        profileUserAssign: profileUserAssign,
-                        staffAssignment: staffResponsibility,
-                      ),
                       const SizedBox(height: 10),
                       if (matchingVouchers.value.isNotEmpty &&
                           !checkDepossit &&
@@ -266,6 +255,18 @@ class ReviewOnline extends HookConsumerWidget {
                           onVoucherSelected: addVoucher,
                           onVoucherRemoved: removeVoucher,
                         ),
+                      const SizedBox(height: 16),
+                      ServiceCard(
+                        order: order,
+                        orderOld: orderOld,
+                      ),
+                      const SizedBox(height: 12),
+                      ContactCard(
+                        order: order,
+                        profileUserAssign: profileUserAssign,
+                        staffAssignment: staffResponsibility,
+                      ),
+
                       const SizedBox(height: 20),
                     ],
                   ),
