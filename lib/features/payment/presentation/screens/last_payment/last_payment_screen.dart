@@ -308,6 +308,8 @@ class LastPaymentScreen extends HookConsumerWidget {
                                 ),
                               ],
                             ),
+                         
+                         
                             if (isExpanded.value)
                               Padding(
                                 padding:
@@ -341,6 +343,8 @@ class LastPaymentScreen extends HookConsumerWidget {
                                   ],
                                 ),
                               ),
+                          
+                          
                           ],
                         ),
                       ),

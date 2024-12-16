@@ -7,6 +7,7 @@ import 'package:movemate/configs/routes/app_router.dart';
 import 'package:movemate/features/booking/presentation/screens/controller/booking_controller.dart';
 import 'package:movemate/features/order/domain/entites/order_entity.dart';
 import 'package:movemate/features/order/presentation/controllers/order_controller/order_controller.dart';
+import 'package:movemate/features/payment/presentation/screens/deposite_payment/transaction_result_screen.dart';
 import 'package:movemate/hooks/use_fetch_obj.dart';
 import 'package:movemate/services/payment_services/controllers/payment_controller.dart';
 import 'package:movemate/utils/commons/widgets/format_price.dart';
@@ -35,6 +36,10 @@ class PaymentScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingController = ref.read(bookingControllerProvider.notifier);
+    final isExpanded = useState(false);
+    void toggleDropdown() {
+      isExpanded.value = !isExpanded.value;
+    }
 
     final wallet = ref.read(walletProvider);
     final useFetcholdOrderNew = useFetchObject<OrderEntity>(
@@ -43,6 +48,7 @@ class PaymentScreen extends HookConsumerWidget {
           .getBookingNewById(id, context),
       context: context,
     );
+    final order = useFetcholdOrderNew.data;
     // Call refreshBookingData when the widget is first built
     // useEffect(() {
     //   bookingController.refreshBookingData(id: id);
@@ -307,39 +313,41 @@ class PaymentScreen extends HookConsumerWidget {
                           ),
                         ),
 
+                        if (order?.vouchers?.length != 0 &&
+                            order?.vouchers?.length != null)
 
-                          if (order.vouchers?.length != 0 && order.vouchers?.length != null)
-
-              // phiếu giảm giá
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        LabelText(
-                          content: 'Phiếu giảm giá',
-                          size: 14,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ],
-                    ),
-                  ),
-                  LabelText(
-                    content: '- ${formatPrice((order.vouchers!.fold<double>(
-                      0,
-                      (total, voucher) => total + (voucher.price ?? 0),
-                    )).toDouble())}',
-                    size: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                  ),
-                ],
-              ),
-
+                          // phiếu giảm giá
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    LabelText(
+                                      content: 'Phiếu giảm giá',
+                                      size: 14,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              LabelText(
+                                content:
+                                    '- ${formatPrice((order?.vouchers!.fold<double>(
+                                          0,
+                                          (total, voucher) =>
+                                              total + (voucher.price ?? 0),
+                                        ))?.toDouble() ?? 0)}',
+                                size: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
@@ -384,15 +392,45 @@ class PaymentScreen extends HookConsumerWidget {
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black87,
                                 ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    '',
-                                    style: TextStyle(color: Color(0xFFFF7F00)),
+                                IconButton(
+                                  onPressed: toggleDropdown,
+                                  icon: Icon(
+                                    isExpanded.value
+                                        ? Icons.arrow_drop_up
+                                        : Icons.arrow_drop_down,
+                                    color: const Color(0xFFFF7F00),
                                   ),
                                 ),
                               ],
                             ),
+                            if (isExpanded.value)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Nội dung mở rộng ở đây
+                                    ...bookingResponse.bookingDetails
+                                        .map<Widget>((detail) {
+                                      return _OrderItem(
+                                        label: detail.name ?? '',
+                                        price: formatPrice(
+                                            detail.price.toDouble()),
+                                      );
+                                    }),
+                                    // Đường kẻ nét đứt
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 12),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
+                                      child: DashedLine(
+                                          color: Colors.grey.shade300),
+                                    ),
+                                  ],
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -428,6 +466,48 @@ class PaymentScreen extends HookConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _OrderItem extends StatelessWidget {
+  final String label;
+  final String price;
+  final bool isBold;
+
+  const _OrderItem({
+    required this.label,
+    required this.price,
+    this.isBold = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                fontSize: 14.0, // Adjust font size as needed
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis, // Adds ellipsis if text exceeds
+            ),
+          ),
+          const SizedBox(width: 16),
+          Text(
+            price,
+            style: TextStyle(
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }
