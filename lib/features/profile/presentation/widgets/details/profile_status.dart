@@ -29,7 +29,7 @@ class Section extends StatelessWidget {
             GestureDetector(
               onTap: onEditPressed,
               child: const Text(
-                'Chỉnh sửa',
+                '',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.blue,

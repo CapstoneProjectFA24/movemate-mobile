@@ -516,7 +516,7 @@ extension StatusDisplay on String {
         return 'Đang đến';
       case 'ARRIVED':
         return 'Đã đến';
-      case 'IN_PROGRESS':
+      case 'INPROGRESS':
         return 'Đang thực hiện';
       case 'COMPLETED':
         return 'Hoàn thành';
@@ -545,7 +545,7 @@ extension StatusDisplay on String {
         return Colors.orange.shade50;
       case 'ARRIVED':
         return Colors.green.shade50;
-      case 'IN_PROGRESS':
+      case 'INPROGRESS':
         return Colors.purple.shade50;
       case 'COMPLETED':
         return Colors.green.shade50;
@@ -574,7 +574,7 @@ extension StatusDisplay on String {
         return Colors.orange.shade700;
       case 'ARRIVED':
         return Colors.green.shade700;
-      case 'IN_PROGRESS':
+      case 'INPROGRESS':
         return Colors.purple.shade700;
       case 'COMPLETED':
         return Colors.green.shade700;

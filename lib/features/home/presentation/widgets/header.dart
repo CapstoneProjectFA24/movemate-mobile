@@ -71,7 +71,8 @@ class Header extends HookConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 50, left: 16, right: 16),
-      child: FutureBuilder<String>(
+      child:
+       FutureBuilder<String>(
         future: _getCurrentPosition()
             .then((position) => _getAddressFromLatLng(position)),
         builder: (context, snapshot) {
