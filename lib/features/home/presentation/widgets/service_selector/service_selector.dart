@@ -43,13 +43,17 @@ class ServiceSelector extends HookConsumerWidget {
     void validateDateTime() {
       if (bookingState.bookingDate != null) {
         int hour = bookingState.bookingDate!.hour;
+        int minute = bookingState.bookingDate!.minute;
         isDateTimeInvalid.value =
             bookingState.bookingDate!.isBefore(DateTime.now());
-        isDateTimeLimit.value = hour < 7 || hour > 16;
+        // isDateTimeLimit.value = hour < 7 || hour > 21;
+        isDateTimeLimit.value = hour < 7 || hour > 21;
+        // isDateTimeLimit.value = hour >= 7 && hour <= 21;
       } else {
         isDateTimeInvalid.value = true;
         isDateTimeLimit.value = true;
       }
+      print('checking datetimeLimit : ${isDateTimeLimit.value}');
     }
 
     void navigateToLocationSelectionScreen() {
@@ -317,10 +321,8 @@ class ServiceSelector extends HookConsumerWidget {
                   final isDropOffValid = bookingState.dropOffLocation != null &&
                       bookingState.dropOffLocation!.address != 'Chọn địa điểm';
                   final isDateValid = bookingState.bookingDate != null &&
-                          !isDateTimeInvalid.value
-
-                      //  &&!isDateTimeLimit.value
-                      ;
+                      !isDateTimeInvalid.value &&
+                      isDateTimeLimit.value == false;
 
                   final isPickUpSelected =
                       bookingState.pickUpLocation?.address != 'Chọn địa điểm';
