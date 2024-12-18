@@ -43,7 +43,6 @@ class ServiceSelector extends HookConsumerWidget {
     void validateDateTime() {
       if (bookingState.bookingDate != null) {
         int hour = bookingState.bookingDate!.hour;
-        int minute = bookingState.bookingDate!.minute;
         isDateTimeInvalid.value =
             bookingState.bookingDate!.isBefore(DateTime.now());
         // isDateTimeLimit.value = hour < 7 || hour > 21;
@@ -53,8 +52,42 @@ class ServiceSelector extends HookConsumerWidget {
         isDateTimeInvalid.value = true;
         isDateTimeLimit.value = true;
       }
-      print('checking datetimeLimit : ${isDateTimeLimit.value}');
     }
+
+    // void validateDateTime() {
+    //   if (bookingState.bookingDate != null) {
+    //     DateTime now = DateTime.now();
+    //     DateTime bookingDate = bookingState.bookingDate!;
+
+    //     // Kiểm tra xem ngày đặt có trước thời điểm hiện tại không
+    //     isDateTimeInvalid.value = bookingDate.isBefore(now);
+
+    //     // Lấy giờ và phút từ bookingDate
+    //     int hour = bookingDate.hour;
+    //     int minute = bookingDate.minute;
+
+    //     // Tính tổng số phút kể từ nửa đêm
+    //     int totalMinutes = hour * 60 + minute;
+
+    //     // Định nghĩa giới hạn thời gian
+    //     int startLimit = 7 * 60 + 00; // 7:00 AM
+    //     int endLimit = 21 * 60 + 59; // 21:20 PM
+
+    //     // Kiểm tra xem tổng số phút có nằm trong khoảng giới hạn không
+    //     if (totalMinutes >= startLimit && totalMinutes <= endLimit) {
+    //       isDateTimeLimit.value = false; // Thời gian hợp lệ
+    //     } else {
+    //       isDateTimeLimit.value = true; // Thời gian không hợp lệ
+    //     }
+
+    //     // **Hoặc bạn có thể viết gọn hơn:**
+    //     // isDateTimeLimit.value = !(totalMinutes >= startLimit && totalMinutes <= endLimit);
+    //   } else {
+    //     // Nếu bookingDate là null, đặt cả hai giá trị là true
+    //     isDateTimeInvalid.value = true;
+    //     isDateTimeLimit.value = true;
+    //   }
+    // }
 
     void navigateToLocationSelectionScreen() {
       Navigator.push(
